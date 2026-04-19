@@ -1,7 +1,6 @@
 package app.core.engines.browser
 
 import com.google.gson.*
-import kotlinx.coroutines.*
 import lib.process.*
 import java.net.*
 
@@ -11,12 +10,13 @@ data class RemoteBookmarkJson(val categories: List<Category>) {
 }
 
 private val logger = LogHelperUtils.from(RemoteBookmarkJson::class.java)
-
 private const val REMOTE_BOOKMARKS_URL =
-	"https://raw.githubusercontent.com/shibaFoss/AIO-Video-Downloader/refs/heads/master/others/bookmark_sites.json"
+	"https://raw.githubusercontent.com/shibaFoss/AIO-Video-Downloader/refs/" +
+		"heads/master/others/bookmark_sites.json"
 
-private suspend fun fetchBookmarksFromJson(remoteUrl: String = REMOTE_BOOKMARKS_URL):
-	List<AIOWebRecords> = withContext(Dispatchers.IO) {
+private suspend fun fetchBookmarksFromJson(
+	remoteUrl: String = REMOTE_BOOKMARKS_URL
+): List<AIOWebRecords> = withIOContext {
 	try {
 		val jsonText = URL(remoteUrl).readText()
 		val gson = Gson()
@@ -42,7 +42,7 @@ private suspend fun fetchBookmarksFromJson(remoteUrl: String = REMOTE_BOOKMARKS_
 }
 
 suspend fun syncDefaultBookmarks() {
-	withContext(Dispatchers.IO) {
+	withIOContext {
 		if (AIOWebRecordsRepo.getAllRecordsLazy().isEmpty()) {
 			fetchBookmarksFromJson().let { detailedBookmarks ->
 				detailedBookmarks.forEach { item ->

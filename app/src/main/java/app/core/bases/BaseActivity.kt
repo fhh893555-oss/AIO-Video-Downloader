@@ -35,6 +35,7 @@ import app.core.AIOTimer.*
 import app.core.bases.dialogs.*
 import app.core.bases.interfaces.*
 import app.core.bases.language.*
+import app.core.engines.browser.syncDefaultBookmarks
 import app.core.engines.services.*
 import app.core.engines.updater.*
 import app.ui.main.*
@@ -390,6 +391,7 @@ abstract class BaseActivity : LocaleActivityImpl(), BaseActivityInf, AIOTimerLis
 				launch { aioSettings.validateUserSelectedFolder() }
 				launch { INSTANCE.initializeYtDLP() }
 				launch { aioAdblocker.fetchAdFilters() }
+				launch { syncDefaultBookmarks() }
 				launch { attachMotherActivity(activityRef) }
 				launch { onResumeActivity() }
 			}
