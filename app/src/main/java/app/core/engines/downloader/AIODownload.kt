@@ -40,269 +40,97 @@ import lib.texts.CommonTextUtils.getText
 import lib.texts.CommonTextUtils.removeDuplicateSlashes
 import java.io.*
 
-/**
- * Data model representing a single download task within the application.
- *
- * This class serves as the primary entity for ObjectBox database persistence and contains
- * the comprehensive state of a download, including network metadata, file system paths,
- * multi-threading progress, and engine-specific configurations (e.g., yt-dlp).
- *
- * It provides lifecycle methods for:
- * 1. Persistence ([updateInDB])
- * 2. File management and migration ([migrateToPrivateStorage], [moveToSysGalleryFolder])
- * 3. Cleanup and deletion ([deleteInDB])
- * 4. UI-ready formatting of speeds, sizes, and statuses.
- *
- * @property id Unique identifier and primary key for database storage.
- * @property downloadStatus The current state of the task (e.g., [DownloadStatus.DOWNLOADING]).
- * @property fileName The name of the resulting file on disk.
- * @property fileURL The remote source URL of the file.
- * @property config A local, thread-safe snapshot of the user settings applied to this task.
- */
 @Entity
 class AIODownload : Serializable {
-
-	/** Local logger instance; not persisted in the database. */
 	@Transient var logger = LogHelperUtils.from(AIODownload::class.java)
-
-	/** Unique ObjectBox primary key for the download record. */
 	@Id var id: Long = 0L
-
-	/** Current operational status (e.g., DOWNLOADING, COMPLETE, CLOSE). */
 	@Index var downloadStatus: Int = CLOSE
-
-	/** True if the download engine is currently processing this task. */
 	@Index var isRunning: Boolean = false
-
-	/** True if the file has been fully downloaded and verified. */
 	@Index var isComplete: Boolean = false
-
-	/** Internal flag marking the record for soft deletion. */
 	@Index var isDeleted: Boolean = false
-
-	/** Flag indicating the record has been removed from the user's view. */
 	@Index var isRemoved: Boolean = false
-
-	/** True if the download failed because the source URL is no longer valid. */
 	@Index var isFileUrlExpired: Boolean = false
-
-	/** True if the download is paused specifically due to loss of internet connection. */
 	@Index var isWaitingForNetwork: Boolean = false
-
-	/** True if an error occurred specifically within the yt-dlp processing core. */
 	@Index var isYtdlpErrorFound: Boolean = false
-
-	/** The raw error string returned by the yt-dlp process. */
 	@Index var ytdlpErrorMessage: String = ""
-
-	/** Flag to check if the yt-dlp environment has been successfully prepared. */
 	@Index var isYtdlpInitialized: Boolean = false
-
-	/** Temporary filesystem path where yt-dlp stores intermediate mixing files. */
 	@Index var ytdlpTempOutputPath: String = ""
-
-	/** Real-time console output or status updates from the yt-dlp process. */
 	@Index var ytdlpStatusInfo: String = ""
-
-	/** True if the file was deleted or moved outside the app. */
 	@Index var isDestinationFileMissing: Boolean = false
-
-	/** True if the downloaded file hash does not match the source checksum. */
 	@Index var isChecksumInvalid: Boolean = false
-
-	/** Flag for generic File I/O permission or access issues. */
 	@Index var fileAccessFailed: Boolean = false
-
-	/** Tracks if the user has already seen the "URL Expired" notification. */
 	@Index var expiredUrlDialogShown: Boolean = false
-
-	/** True if the Smart Catalog (Auto-sorting) has been configured for this task. */
 	@Index var isSmartDirInitialized: Boolean = false
-
-	/** A localized message to be displayed to the user regarding task errors. */
 	@Index var userAlertMessage: String = ""
-
-	/** Indicates if the download was initiated via the internal WebView browser. */
 	@Index var isDownloadFromBrowser: Boolean = false
-
-	/** Custom HTTP headers (User-Agent, etc.) required to access the file. */
 	@Index var extraWebHeaders: Map<String, String>? = null
-
-	/** The final name of the file including extension. */
 	@Index var fileName: String = ""
-
-	/** The direct source link for the file. */
 	@Index var fileURL: String = ""
-
-	/** The webpage URL where the download was discovered. */
 	@Index var siteReferrer: String = ""
-
-	/** The physical directory path where the file is stored. */
 	@Index var fileDirectory: String = ""
-
-	/** Standard internet media type (e.g., video/mp4). */
 	@Index var fileMimeType: String = ""
-
-	/** Logical grouping for the file (e.g., Videos, Music). */
 	@Index var fileCategoryName: String = ""
-
-	/** A short, human-readable string summarizing the current status. */
 	@Index var downloadStatusInfo: String = "--"
-
-	/** HTTP header info describing file size and name from the server. */
 	var fileContentDisposition: String = ""
-
-	/** The session cookie string required for authenticated downloads. */
 	var siteCookie: String = ""
-
-	/** Local filesystem path to the cached thumbnail image. */
 	@Index var thumbPath: String = ""
-
-	/** Remote URL for the file's preview image. */
 	@Index var thumbnailUrl: String = ""
-
-	/** Android URI representation of the file directory for SAF operations. */
 	@Index var fileDirectoryURI: String = ""
-
-	/** Formatted string of when the download started (e.g., "Oct 12, 10:30 AM"). */
 	@Index var startTimeDateInFormat: String = ""
-
-	/** Unix timestamp of the download start time. */
 	@Index var startTimeDate: Long = 0L
-
-	/** Formatted string of the last time the file was touched or updated. */
 	@Index var lastModifiedTimeDateInFormat: String = ""
-
-	/** Unix timestamp of the last modification. */
 	@Index var lastModifiedTimeDate: Long = 0L
-
-	/** Total size of the file in bytes. */
 	@Index var fileSize: Long = 0L
-
-	/** Flag for streams where the total length is not provided by the server. */
 	@Index var isUnknownFileSize: Boolean = false
-
-	/** SHA/MD5 string used to verify file integrity. */
 	@Index var fileChecksum: String = "--"
-
-	/** Human-readable size (e.g., "1.2 GB"). */
 	@Index var fileSizeInFormat: String = ""
-
-	/** The calculated average speed of the entire download session. */
 	@Index var averageSpeed: Long = 0L
-
-	/** The highest recorded transfer speed for this task. */
 	@Index var maxSpeed: Long = 0L
-
-	/** The current instantaneous transfer speed. */
 	@Index var realtimeSpeed: Long = 0L
-
-	/** Formatted average speed (e.g., "5 MB/s"). */
 	@Index var averageSpeedInFormat: String = "--"
-
-	/** Formatted maximum speed. */
 	@Index var maxSpeedInFormat: String = "--"
-
-	/** Formatted current speed. */
 	@Index var realtimeSpeedInFormat: String = "--"
-
-	/** Indicates if the server supports the HTTP Range header for pausing. */
 	@Index var isResumeSupported: Boolean = false
-
-	/** True if the file can be split into multiple parallel segments. */
 	@Index var isMultiThreadSupported: Boolean = false
-
-	/** Number of times the engine has tried to resume a broken session. */
 	@Index var resumeSessionRetryCount: Int = 0
-
-	/** Total count of network connection failures during this task. */
 	@Index var totalTrackedConnectionRetries: Int = 0
-
-	/** Numeric progress from 0 to 100. */
 	@Index var progressPercentage: Long = 0L
-
-	/** Formatted progress string (e.g., "85%"). */
 	@Index var progressPercentageInFormat: String = ""
-
-	/** Total bytes successfully written to disk. */
 	@Index var downloadedByte: Long = 0L
-
-	/** Formatted written bytes (e.g., "500 MB"). */
 	@Index var downloadedByteInFormat: String = "--"
 
-	/* --- Multi-threading Segment Arrays (Support up to 18 threads) --- */
 	var partStartingPoint: LongArray = LongArray(18)
 	var partEndingPoint: LongArray = LongArray(18)
 	var partChunkSizes: LongArray = LongArray(18)
 	var partsDownloadedByte: LongArray = LongArray(18)
 	var partProgressPercentage: IntArray = IntArray(18)
 
-	/** Cumulative time spent actively downloading in milliseconds. */
 	@Index var timeSpentInMilliSec: Long = 0L
-
-	/** Estimated seconds remaining until completion. */
 	@Index var remainingTimeInSec: Long = 0L
-
-	/** Formatted elapsed time (e.g., "02:15"). */
 	@Index var timeSpentInFormat: String = "--"
-
-	/** Formatted ETA (e.g., "00:45"). */
 	@Index var remainingTimeInFormat: String = "--"
-
-	/** Complex metadata object from the video parser; not stored in DB. */
 	@Transient var videoInfo: AIOVideoInfo? = null
-
-	/** The unique database ID of the associated [videoInfo] metadata record. */
 	@Index var videoInfoId: Long = -1L
-
-	/** Specific stream format data; not stored in DB. */
 	@Transient var videoFormat: AIOVideoFormat? = null
-
-	/** The unique database ID of the associated [videoFormat] record. */
 	@Index var videoFormatId: Long = -1L
-
-	/** Basic remote file metadata; not stored in DB. */
 	@Transient var remoteFileInfo: AIORemoteFileInfo? = null
-
-	/** The unique database ID of the associated [remoteFileInfo] record. */
 	@Index var remoteFileInfoId: Long = -1L
-
-	/** The actual shell/CLI command used to invoke yt-dlp. */
 	@Index var executionCommand: String = ""
-
-	/** Total runtime of the media file (e.g., "10:02"). */
 	@Index var mediaFilePlaybackDuration: String = ""
-
-	/** Tracks if the user has clicked to play/view the file after completion. */
 	@Index var hasUserOpenedTheFile: Boolean = false
 
-	/** Local copy of the app settings for thread-safe access during download. */
 	@Transient var config: AIOSettings = (deepCopy(aioSettings)
 		?: aioSettings).apply { id = 0L }
-
-	/** The unique database ID of the associated [config] record. */
 	@Index var configId: Long = -1
 
 	companion object {
-		/** Intent extra key for passing ID between components. */
 		const val ID_DOWNLOAD_KEY = "DOWNLOAD_ID_KEY"
-
-		/** Filename suffix for the stored Netscape cookie file. */
 		const val COOKIES_EXTENSION = "_cookies.txt"
-
-		/** Filename suffix for the stored thumbnail image. */
 		const val THUMB_EXTENSION = "_thumb.jpg"
-
-		/** Extension appended to files that are still in progress. */
 		const val TEMP_EXTENSION = ".tmp_download"
 	}
 
-	/**
-	 * Initializer block ensures that every instance resolves its
-	 * physical storage path immediately upon creation or DB restoration.
-	 */
 	init {
-		// Automatically resolve the file directory upon object creation
 		initStorageLocation()
 	}
 
