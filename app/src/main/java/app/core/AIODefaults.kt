@@ -3,12 +3,26 @@ package app.core
 const val APP_DEFAULT_NAME = "TubeAIO"
 const val APP_DEFAULT_SHORT_NAME = "AIO"
 const val APP_DEFAULT_FULL_NAME = "TubeAIO Downloader"
+const val APP_OFFICIAL_SITE = "https://tubeaio.com/"
+
 const val APP_DOWNLOADS = "$APP_DEFAULT_SHORT_NAME Downloads"
 const val APP_DOWNLOADS_PAH = "/storage/emulated/0/Download/$APP_DEFAULT_SHORT_NAME Downloads"
-const val APP_OFFICIAL_SITE = "https://tubeaio.com/"
+const val APP_WHATSAPP_STATUS_DOWNLOADS_PATH = "/storage/emulated/0/Android/media/com.whatsapp" +
+	"/WhatsApp/Media/.Statuses/"
+
+const val APP_GITHUB_RAW_URL = "https://github.com/shibaFoss/AIO-Video-Downloader/raw/refs/" +
+	"heads/master/others/adblock_host.txt"
 
 const val APP_FULL_NUMBERS = "0123456789"
 const val APP_FULL_APPLETS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+const val APP_DEFAULT_HTTP_USER_AGENT =
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+		"Chrome/97.0.4692.99 Safari/537.36"
+
+const val APP_DEFAULT_MOBILE_HTTP_USER_AGENT =
+	"Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) " +
+		"Chrome/91.0.4472.77 Mobile Safari/537.36"
 
 val APP_DEFAULT_MOBILE_AGENTS = listOf(
 	"Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_5 like Mac OS X) AppleWebKit/601.1.46 (KHTML," +
@@ -22,9 +36,6 @@ val APP_DEFAULT_MOBILE_AGENTS = listOf(
 const val APP_ALL_MEDIA_TYPES = "text/html,application/xhtml+xml,application/xml;q=0.9," +
 	"image/webp,image/apng,image/avif,image/jpeg,image/png,image/gif,image/svg+xml,image/*," +
 	"*/*;q=0.8"
-
-const val APP_GITHUB_RAW_URL = "https://github.com/shibaFoss/AIO-Video-Downloader/raw/refs/" +
-	"heads/master/others/adblock_host.txt"
 
 const val APP_DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
 const val APP_DEFAULT_TIMESTAMP_PATTERN = "%02d:%02d:%02d"

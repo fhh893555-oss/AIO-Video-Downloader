@@ -37,9 +37,7 @@ class AIOSettings : Serializable {
 	var defaultDownloadLocationType: Int = SYSTEM_GALLERY
 	var selectedDownloadDirectory: String = AIO_DEFAULT_DOWNLOAD_PATH
 
-	var whatsAppStatusFullFolderPath: String =
-		getText(R.string.text_whatsapp_status_folder_path)
-
+	var whatsAppStatusFullFolderPath: String = APP_WHATSAPP_STATUS_DOWNLOADS_PATH
 	var selectedUiLanguage: String = ENGLISH
 	var selectedContentRegion: String = "IN"
 	var selectedThemeMode: Int = THEME_AUTO
@@ -90,8 +88,7 @@ class AIOSettings : Serializable {
 	var downloadVerifyChecksum: Boolean = false
 	var downloadMaxNetworkSpeed: Long = 0
 	var downloadWifiOnly: Boolean = false
-	var downloadHttpUserAgent: String =
-		getText(R.string.text_downloads_default_http_user_agent)
+	var downloadHttpUserAgent: String = APP_DEFAULT_HTTP_USER_AGENT
 	var downloadHttpProxyServer: String = ""
 	var numberOfMaxDownloadThreshold: Int = 1
 	var numberOfDownloadsUserDid: Int = 0
@@ -105,8 +102,7 @@ class AIOSettings : Serializable {
 	var browserEnableImages: Boolean = true
 	var browserEnablePopupBlocker: Boolean = true
 	var browserEnableVideoGrabber: Boolean = true
-	var browserHttpUserAgent: String =
-		getText(R.string.text_browser_default_mobile_http_user_agent)
+	var browserHttpUserAgent: String = APP_DEFAULT_MOBILE_HTTP_USER_AGENT
 
 	fun updateInDB() {
 		ThreadsUtility.executeInBackground(codeBlock = {
@@ -174,8 +170,6 @@ class AIOSettings : Serializable {
 	}
 
 	companion object {
-		private val logger = LogHelperUtils.from(AIOSettings::class.java)
-
 		const val DARK_MODE_INDICATOR_FIE: String = "darkmode.on"
 		const val THEME_AUTO = -1
 		const val THEME_DARK = 1
