@@ -19,10 +19,10 @@ open class ActiveTasksFragment : BaseFragment(), AIOTimerListener {
 	private val fragmentWeakRef = WeakReference(this)
 
 	val safeMotherActivityRef: MotherActivity?
-		get() = safeBaseActivityRef as? MotherActivity
+		get() = safeActivityRef as? MotherActivity
 
 	val safeActiveTasksFragmentRef: ActiveTasksFragment?
-		get() = safeBaseFragmentRef as? ActiveTasksFragment
+		get() = safeFragmentRef as? ActiveTasksFragment
 
 	open val activeTasksListViewContainer: LinearLayout? by lazy {
 		safeFragmentLayoutRef?.findViewById(R.id.container_download_tasks_queue)

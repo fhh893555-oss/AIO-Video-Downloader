@@ -106,12 +106,12 @@ class FinishedTasksFragment : BaseFragment(), FinishedTasksClickEvents, AIOTimer
 	/**
 	 * Provides a type-safe reference to the hosting [MotherActivity].
 	 *
-	 * This property attempts to cast [safeBaseActivityRef] to [MotherActivity],
+	 * This property attempts to cast [safeActivityRef] to [MotherActivity],
 	 * returning null if the activity is not yet attached, has been destroyed,
 	 * or is of a different activity type.
 	 */
 	val safeMotherActivityRef: MotherActivity?
-		get() = safeBaseActivityRef as? MotherActivity
+		get() = safeActivityRef as? MotherActivity
 
 	/**
 	 * Provides a type-safe reference to the current fragment as [FinishedTasksFragment].
@@ -122,7 +122,7 @@ class FinishedTasksFragment : BaseFragment(), FinishedTasksClickEvents, AIOTimer
 	 * is still valid and of the correct type, null otherwise.
 	 */
 	val safeFinishTasksFragment: FinishedTasksFragment?
-		get() = safeBaseFragmentRef as? FinishedTasksFragment
+		get() = safeFragmentRef as? FinishedTasksFragment
 
 	/**
 	 * Returns the layout resource ID for the finished tasks fragment.

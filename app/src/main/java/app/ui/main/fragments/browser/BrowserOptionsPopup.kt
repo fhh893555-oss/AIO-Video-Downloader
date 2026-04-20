@@ -76,7 +76,7 @@ class BrowserOptionsPopup(val browserFragment: BrowserFragment) {
 	 * management. Returns null if the activity is no longer available.
 	 */
 	private val safeMotherActivityRef
-		get() = browserFragment.safeBaseActivityRef as? MotherActivity
+		get() = browserFragment.safeActivityRef as? MotherActivity
 
 	/**
 	 * Popup builder instance responsible for rendering and managing the popup UI.

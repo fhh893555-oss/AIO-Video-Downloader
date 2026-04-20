@@ -430,7 +430,7 @@ class DownloaderRowUIManager(downloadRowView: View) {
 			downloadSystem.downloadsUIManager.activeTasksFragment?.let {
 				if (!isShowingAnyDialog) {
 					MsgDialogUtils.showMessageDialog(
-						baseActivityInf = it.safeBaseActivityRef,
+						baseActivityInf = it.safeActivityRef,
 						titleText = getText(R.string.title_download_failed),
 						isTitleVisible = true,
 						isCancelable = false,

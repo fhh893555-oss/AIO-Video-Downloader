@@ -23,7 +23,7 @@ class SettingsFragment : BaseFragment() {
 	private val weakRef = WeakReference(this)
 
 	val safeSettingsFragRef get() = weakRef.get()
-	val safeMotherActivityRef get() = safeBaseActivityRef as? MotherActivity
+	val safeMotherActivityRef get() = safeActivityRef as? MotherActivity
 
 	var settingsOnClickLogic: SettingsOnClickLogic? = null
 

@@ -115,7 +115,7 @@ class HomeFragment : BaseFragment(), AIOTimer.AIOTimerListener {
 	private val weakReferenceOfHomeFragment = WeakReference(this)
 
 	// Weak references to prevent memory leaks
-	private val safeMotherActivityRef get() = safeBaseActivityRef as? MotherActivity
+	private val safeMotherActivityRef get() = safeActivityRef as? MotherActivity
 
 	private val safeHomeFragmentRef get() = weakReferenceOfHomeFragment.get()
 

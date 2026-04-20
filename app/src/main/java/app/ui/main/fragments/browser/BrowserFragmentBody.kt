@@ -37,7 +37,7 @@ import lib.ui.builders.WaitingDialog
 class BrowserFragmentBody(val browserFragment: BrowserFragment) {
 
     /** Reference to the parent activity. */
-    val safeMotherActivityRef = browserFragment.safeBaseActivityRef!! as MotherActivity
+    val safeMotherActivityRef = browserFragment.safeActivityRef!! as MotherActivity
 
     /** WebView engine responsible for rendering and managing webpages. */
     var webviewEngine = WebViewEngine(browserFragment)

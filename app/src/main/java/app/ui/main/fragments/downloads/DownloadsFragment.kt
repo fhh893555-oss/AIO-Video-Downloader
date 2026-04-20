@@ -91,11 +91,11 @@ open class DownloadsFragment : BaseFragment() {
 	private val safeDownloadFragmentRef get() = weakReferenceOfDownloadsFragment.get()
 
 	/**
-	 * Provides a type-safe reference to the parent [MotherActivity] by casting [safeBaseActivityRef].
+	 * Provides a type-safe reference to the parent [MotherActivity] by casting [safeActivityRef].
 	 * Returns null if the fragment is not attached to an activity or if the activity is not
 	 * an instance of [MotherActivity].
 	 */
-	private val safeMotherActivityRef get() = safeBaseActivityRef as? MotherActivity
+	private val safeMotherActivityRef get() = safeActivityRef as? MotherActivity
 
 	/**
 	 * Reference to the root [View] of the fragment's layout.
@@ -403,7 +403,7 @@ open class DownloadsFragment : BaseFragment() {
 	 */
 	private fun showSortingDownloads(layoutView: View) {
 		SortingDownloads(
-			baseActivity = safeBaseActivityRef,
+			baseActivity = safeActivityRef,
 			anchorView = layoutView.findViewById<View>(R.id.btn_sort_the_list),
 			onSortOptionSelected = { selectionOption ->
 				updateDownloadSorting(selectionOption)
@@ -607,7 +607,7 @@ open class DownloadsFragment : BaseFragment() {
 
 		// Case B: Private files are hidden. Attempt to authenticate to show them.
 		// Retrieve the activity context; exit if unavailable (e.g., activity is destroyed)
-		val activity = safeBaseActivityRef ?: return
+		val activity = safeActivityRef ?: return
 
 		// Initialize BiometricManager to check hardware capabilities and enrollment status
 		val biometricManager = BiometricManager.from(activity)

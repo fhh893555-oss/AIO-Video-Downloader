@@ -32,7 +32,7 @@ class BrowserFragmentTop(val browserFragment: BrowserFragment) {
 	private val logger = LogHelperUtils.from(javaClass)
 
 	// Safe reference to the hosting activity
-	val safeMotherActivityRef = browserFragment.safeBaseActivityRef!! as MotherActivity
+	val safeMotherActivityRef = browserFragment.safeActivityRef!! as MotherActivity
 
 	// Current active WebView instance
 	val currentWebView by lazy { browserFragment.browserFragmentBody.webviewEngine.currentWebView }

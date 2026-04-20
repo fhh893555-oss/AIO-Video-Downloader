@@ -546,7 +546,7 @@ class SettingsOnClickLogic(settingsFragment: SettingsFragment) {
 	suspend fun openApplicationInformation() {
 		withMainContext {
 			val safeBaseActivityRef = this@SettingsOnClickLogic
-				.safeSettingsFragmentRef?.safeBaseActivityRef
+				.safeSettingsFragmentRef?.safeActivityRef
 			safeBaseActivityRef?.openAppInfoSetting()
 		}
 	}
@@ -563,7 +563,7 @@ class SettingsOnClickLogic(settingsFragment: SettingsFragment) {
 		withMainContext {
 			runCatching {
 				val safeBaseActivityRef = this@SettingsOnClickLogic
-					.safeSettingsFragmentRef?.safeBaseActivityRef
+					.safeSettingsFragmentRef?.safeActivityRef
 				safeBaseActivityRef?.let { activityRef ->
 					try {
 						val urlResId = R.string.text_aio_official_privacy_policy_url
@@ -589,7 +589,7 @@ class SettingsOnClickLogic(settingsFragment: SettingsFragment) {
 	suspend fun showTermsConditionActivity() {
 		withMainContext {
 			val safeBaseActivityRef = this@SettingsOnClickLogic
-				.safeSettingsFragmentRef?.safeBaseActivityRef
+				.safeSettingsFragmentRef?.safeActivityRef
 			safeBaseActivityRef?.let { activityRef ->
 				try {
 					val uri = getText(R.string.text_aio_official_terms_conditions_url)
@@ -622,7 +622,7 @@ class SettingsOnClickLogic(settingsFragment: SettingsFragment) {
 	suspend fun checkForNewApkVersion() {
 		withMainContext {
 			this@SettingsOnClickLogic.safeSettingsFragmentRef
-				?.safeBaseActivityRef?.let { activityRef ->
+				?.safeActivityRef?.let { activityRef ->
 					runCatching {
 						val waitingDialog = WaitingDialog(
 							baseActivityInf = activityRef,
@@ -708,7 +708,7 @@ class SettingsOnClickLogic(settingsFragment: SettingsFragment) {
 	suspend fun restartApplication() {
 		withMainContext {
 			this@SettingsOnClickLogic.safeSettingsFragmentRef
-				?.safeBaseActivityRef?.let { activityRef ->
+				?.safeActivityRef?.let { activityRef ->
 					val msgResId = R.string.text_cation_msg_of_restarting_application
 					getMessageDialog(
 						baseActivityInf = activityRef,

@@ -1,50 +1,38 @@
 package app.core.bases
 
-import android.content.Context
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import java.lang.ref.WeakReference
+import android.content.*
+import android.os.*
+import android.view.*
+import androidx.fragment.app.*
+import java.lang.ref.*
 
 abstract class BaseFragment : Fragment() {
 
-	private var weakReferenceOfActivity: WeakReference<BaseActivity>? = null
-	private var weakReferenceOfBaseFragment: WeakReference<BaseFragment>? = null
+	private var weakActivityRef: WeakReference<BaseActivity>? = null
+	private var weakFragmentRef: WeakReference<BaseFragment>? = null
 	private var _fragmentLayout: View? = null
 
-	open val safeBaseActivityRef: BaseActivity?
-		get() = weakReferenceOfActivity?.get()
-
-	open val safeBaseFragmentRef: BaseFragment?
-		get() = weakReferenceOfBaseFragment?.get()
-
-	open val safeFragmentLayoutRef: View?
-		get() = _fragmentLayout
+	open val safeActivityRef: BaseActivity? get() = weakActivityRef?.get()
+	open val safeFragmentRef: BaseFragment? get() = weakFragmentRef?.get()
+	open val safeFragmentLayoutRef: View? get() = _fragmentLayout
 
 	open var isFragmentRunning: Boolean = false
 
 	protected abstract fun getLayoutResId(): Int
-
 	protected abstract fun onAfterLayoutLoad(layoutView: View, state: Bundle?)
-
 	protected abstract fun onResumeFragment()
-
 	protected abstract fun onPauseFragment()
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
-		weakReferenceOfActivity = WeakReference(context as BaseActivity)
-		weakReferenceOfBaseFragment = WeakReference(this)
+		weakActivityRef = WeakReference(context as BaseActivity)
+		weakFragmentRef = WeakReference(this)
 	}
 
-	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View? = inflater.inflate(getLayoutResId(), container, false).also {
-		_fragmentLayout = it
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+	                          savedInstanceState: Bundle?): View? {
+		return inflater.inflate(getLayoutResId(), container, false)
+			.also { _fragmentLayout = it }
 	}
 
 	override fun onViewCreated(view: View, bundle: Bundle?) {
@@ -68,10 +56,10 @@ abstract class BaseFragment : Fragment() {
 		super.onDestroyView()
 		isFragmentRunning = false
 		_fragmentLayout = null
-		weakReferenceOfActivity?.clear()
-		weakReferenceOfActivity = null
+		weakActivityRef?.clear()
+		weakActivityRef = null
 
-		weakReferenceOfBaseFragment?.clear()
-		weakReferenceOfBaseFragment = null
+		weakFragmentRef?.clear()
+		weakFragmentRef = null
 	}
 }

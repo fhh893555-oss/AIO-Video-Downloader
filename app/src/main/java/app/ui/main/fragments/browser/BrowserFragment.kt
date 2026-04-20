@@ -95,7 +95,7 @@ class BrowserFragment : BaseFragment(), AIOTimer.AIOTimerListener {
 	 * Registers the fragment in the parent MotherActivity for inter-fragment communication.
 	 */
 	private fun registerSelfInMotherActivity() {
-		safeMotherActivityRef = (safeBaseActivityRef as MotherActivity)
+		safeMotherActivityRef = (safeActivityRef as MotherActivity)
 		safeMotherActivityRef.browserFragment = this@BrowserFragment
 		safeMotherActivityRef.sideNavigation?.closeDrawerNavigation()
 	}
