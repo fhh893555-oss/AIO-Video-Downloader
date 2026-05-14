@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.github.dangiashish.StyledCardView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/language_item_card"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  app:cardBackgroundColor="@color/color_cardview_bg"
-  app:cardCornerRadius="@dimen/radius_corder"
-  app:cardElevation="@dimen/_2">
+  android:layout_margin="@dimen/_5"
+  app:cornerRadius="@dimen/default_radius"
+  app:stroke_ColorType="gradient_sweep"
+  app:stroke_Gradient_Angle="-45"
+  app:stroke_Gradient_Color0="@color/color_secondary"
+  app:stroke_Gradient_Color1="@color/color_secondary_variant"
+  app:stroke_Width="@dimen/_1">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -24,18 +28,20 @@
       android:alpha=".5"
       android:importantForAccessibility="no"
       android:scaleType="centerCrop"
+      android:src="@drawable/img_bengali_lang_bg"
       tools:ignore="ImageContrastCheck" />
 
     <TextView
       android:id="@+id/language_name_text"
+      style="@style/style_textviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/_10"
       android:fontFamily="@font/font_family_medium"
       android:shadowColor="@color/color_primary"
       android:text="@string/title__"
-      android:textColor="@color/color_on_primary"
+      android:textColor="@color/color_text_primary"
       android:textSize="@dimen/message_text_size"
-      tools:ignore="TextContrastCheck,VisualLintSystemUi" />
+      tools:ignore="SpUsage,TextContrastCheck,VisualLintSystemUi,TextSizeCheck" />
   </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.github.dangiashish.StyledCardView>
