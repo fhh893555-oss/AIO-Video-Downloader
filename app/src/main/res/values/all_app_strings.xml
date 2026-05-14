@@ -2,9 +2,53 @@
 <resources>
   <string name="title_app_name" translatable="false">TubeAIO</string>
   <string name="title_app_name_full" translatable="false">Tube AIO - NextGen</string>
+  <string name="title_default_application_folder" translatable="false">TubeAIO Downloads</string>
+  <string name="title_tubeaio_images" translatable="false">TubeAIO Images</string>
+  <string name="title_tubeaio_videos" translatable="false">TubeAIO Videos</string>
+  <string name="title_tubeaio_sounds" translatable="false">TubeAIO Sounds</string>
+  <string name="title_tubeaio_documents" translatable="false">TubeAIO Documents</string>
+  <string name="title_tubeaio_programs" translatable="false">TubeAIO Programs</string>
+  <string name="title_tubeaio_archives" translatable="false">TubeAIO Archives</string>
+  <string name="title_tubeaio_others" translatable="false">TubeAIO Others</string>
+
+  <string name="text_sample_google_domain" translatable="false">https://www.google.com</string>
+  <string name="text_tubeaio_official_page_url" translatable="false">https://tubeaio.com/</string>
+  <string name="text_tubeaio_official_privacy_policy_url" translatable="false">https://tubeaio.com/privacy_policy/</string>
+  <string name="text_tubeaio_official_terms_conditions_url" translatable="false">https://tubeaio.com/terms_conditions/</string>
+  <string name="text_https_google_com" translatable="false">https://google.com/</string>
+  <string name="text_https_youtube_com" translatable="false">https://youtube.com/</string>
+  <string name="text_whatsapp_status_file_dir" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
+
+  <string name="text_downloads_default_http_user_agent" translatable="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36</string>
+  <string name="text_browser_default_mobile_http_user_agent" translatable="false">Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Mobile Safari/537.36</string>
+  <string name="text_browser_default_desktop_http_user_agent" translatable="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</string>
+  <string name="text_whatsapp_status_folder_path" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
+
   <string name="title_select_language">Select Language</string>
   <string name="title_skip_language">Skip Language</string>
   <string name="title__">__</string>
   <string name="title_tubeaio_downloader_tagline">Download, Watch &amp; Share With Friends</string>
   <string name="title_app_splash_credit">Made With ❤️  In India  🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>That’s all for today.</b> Have suggestions or feedback? We\'d love to hear from you. <a>Click here to send a message.</a></string>
+
+  <string name="title_unlock_requires">Unlock Requires</string>
+  <string name="title_setup_device_password">Set Up Device Lock First</string>
+  <string name="title_authentication_failed">Authentication Failed Or Cancelled</string>
+  <string name="title_cancel">Cancel</string>
+
+  <string name="title_no">No</string>
+  <string name="title_performed">Performed</string>
+  <string name="title_not_performed">Not Performed</string>
+  <string name="title_click_here_to_open">Click Here To Open</string>
+  <string name="title_sounds">Sounds</string>
+  <string name="title_archives">Archives</string>
+  <string name="title_programs">Programs</string>
+  <string name="title_videos">Videos</string>
+  <string name="title_documents">Documents</string>
+  <string name="title_images">Images</string>
+  <string name="title_others">Others</string>
+
+  <string name="title_mobile_user_agent">Mobile User Agent</string>
+  <string name="title_unknown">Unknown</string>
+  <string name="title_sharing_media_file">Sharing Media File…</string>
 </resources>

@@ -16,7 +16,7 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.GridLayoutSpacing;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.main.MainActivity;
+import userInterface.opening.OpeningActivity;
 
 public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> implements LanguageCallback {
     private final LoggerUtils logger = LoggerUtils.from(LanguageViewModel.class);
@@ -86,7 +86,7 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
     }
 
     private void openHomepageActivity() {
-        Intent intent = new Intent(LanguageActivity.this, MainActivity.class);
+        Intent intent = new Intent(LanguageActivity.this, OpeningActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         ActivityAnimator.animActivityFade(LanguageActivity.this);

@@ -25,9 +25,6 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 	
 	protected abstract VB inflateBinding(LayoutInflater inflater);
 	protected abstract void onLoadedLayout();
-	protected abstract void onActivityPause();
-	protected abstract void onActivityResume();
-	protected abstract void onActivityDestroyed();
 	protected abstract boolean shouldLockOrientation();
 	
 	@Override
@@ -61,24 +58,6 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 			int screenOrientationPortrait = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 			setRequestedOrientation(screenOrientationPortrait);
 		}
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		onActivityPause();
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		onActivityResume();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		onActivityDestroyed();
-		super.onDestroy();
 	}
 	
 	private void validateAppDirectories() {

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="ic_launcher_background">@color/color_background</color>
+
   <color name="lang_hindi_bg_color">#894CC7</color>
   <color name="lang_english_bg_color">#3554D7</color>
   <color name="lang_tamil_bg_color">#F34128</color>

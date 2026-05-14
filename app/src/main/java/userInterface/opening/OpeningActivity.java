@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.nextgen.databinding.ActivityOpening1Binding;
 
 import coreUtils.base.BaseActivity;
@@ -13,7 +14,6 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.main.MainActivity;
 import userInterface.language.LanguageActivity;
 
 public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
@@ -30,10 +30,13 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 
     @Override
     protected void onLoadedLayout() {
-        binding.loadingAnimationView.enableMergePathsForKitKatAndAbove(true);
+        LottieAnimationView animationView = binding.loadingAnimationView;
+        animationView.enableMergePathsForKitKatAndAbove(true);
+        
         loadVersionInfo();
+        startMainActivity();
     }
-
+    
     private void loadVersionInfo() {
         BaseApplication app = BaseApplication.AppContext;
         String versionCode = String.valueOf(VersionInfo.getVersionCode(app));
@@ -41,7 +44,6 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
         String versionInfo = versionName + " (" + versionCode + ")";
         logger.debug("Version result: " + versionInfo);
         binding.versionInfoText.setText(versionInfo);
-        startMainActivity();
     }
 
     private void startMainActivity() {
@@ -49,7 +51,8 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
             Intent intent = new Intent(OpeningActivity.this, LanguageActivity.class);
             if (AppConfigsRepo.getConfig().isLocaleConfigured) {
                 logger.debug("Locale is already configured.");
-                intent = new Intent(OpeningActivity.this, MainActivity.class);
+                intent = new Intent(OpeningActivity.this, LanguageActivity.class);
+                //todo: change the target class to main activity
             }
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

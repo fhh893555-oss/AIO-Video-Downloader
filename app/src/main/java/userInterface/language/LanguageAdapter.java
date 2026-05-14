@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.dangiashish.StyledCardView;
 import com.nextgen.R;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 
         private final TextView txtLanguageName;
         private final ImageView imgLanguageIllustration;
-        private final CardView languageContainer;
+        private final StyledCardView languageContainer;
 
         public LanguageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,7 +74,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
             Resources resources = itemView.getContext().getResources();
             int backgroundColorResId = languageItem.getBackgroundColorResId();
             int cardBackgroundColor = resources.getColor(backgroundColorResId, resources.newTheme());
-            languageContainer.setCardBackgroundColor(cardBackgroundColor);
+            languageContainer.setBackground_Color(cardBackgroundColor);
 
             itemView.setOnClickListener(v -> {
                 if (languageCallback != null) {
