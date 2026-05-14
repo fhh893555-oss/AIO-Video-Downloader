@@ -19,11 +19,13 @@ documentfile = "1.1.0"
 jsoup = "1.22.2"
 glide = "5.0.7"
 permissionx = "1.8.1"
+recyclerview = "1.4.0"
 
 [libraries]
 desugar-jdk-libs-nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 styled-cardview = { module = "com.github.dangiashish:StyledCardView", version.ref = "styled_cardview" }
 
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle_view_model" }

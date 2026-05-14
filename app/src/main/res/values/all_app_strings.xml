@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_app_name" translatable="false">TubeAIO</string>
+  <string name="title_select_language">Select Language</string>
+  <string name="title_skip_language">Skip Language</string>
+</resources>
