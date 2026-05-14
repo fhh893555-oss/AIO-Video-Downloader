@@ -25,7 +25,7 @@
   <string name="text_whatsapp_status_folder_path" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
 
   <string name="title_select_language">Select Language</string>
-  <string name="title_skip_language">Skip Language</string>
+  <string name="title_skip_for_now">Skip For Now</string>
   <string name="title__">__</string>
   <string name="title_tubeaio_downloader_tagline">Download, Watch &amp; Share With Friends</string>
   <string name="title_app_splash_credit">Made With ❤️  In India  🇮🇳</string>

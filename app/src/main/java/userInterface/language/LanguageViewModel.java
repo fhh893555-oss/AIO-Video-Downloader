@@ -40,8 +40,7 @@ public class LanguageViewModel extends ViewModel {
         list.add(new LanguageItem("অসমীয়া", "as", R.drawable.img_assamese_lang_bg, R.color.lang_assamese_bg_color));
         list.add(new LanguageItem("भोजपुरी", "bho", R.drawable.img_bhojpuri_lang_bg, R.color.lang_bhojpuri_bg_color));
         list.add(new LanguageItem("हरियाणवी", "hry", R.drawable.img_haryanvi_lang_bg, R.color.lang_haryanvi_bg_color));
-        list.add(new LanguageItem("राजस्थानी", "raj", R.drawable.img_rajasthani_lang_bg,
-                R.color.lang_rajasthani_bg_color));
+        list.add(new LanguageItem("राजस्थानी", "raj", R.drawable.img_rajasthani_lang_bg, R.color.lang_rajasthani_bg_color));
         languages.setValue(list);
     }
 }

@@ -6,13 +6,25 @@
   android:id="@+id/language_item_card"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_margin="@dimen/_5"
-  app:background_Color="@color/color_card"
-  app:background_Type="fill_stroke"
+  app:background_Type="stroke"
   app:cornerRadius="@dimen/default_radius"
-  app:stroke_Color="@color/color_card_stroke"
-  app:stroke_ColorType="solid"
-  app:stroke_Width="@dimen/_1">
+  app:shadow0_Outer_Alpha=".2"
+  app:shadow0_Outer_Angle="-45"
+  app:shadow0_Outer_Blur="@dimen/_2"
+  app:shadow0_Outer_Color="@color/color_primary"
+  app:shadow0_Outer_Distance="@dimen/_2"
+  app:shadow1_Outer_Alpha="0.2"
+  app:shadow1_Outer_Angle="360"
+  app:shadow1_Outer_Blur="@dimen/_2"
+  app:shadow1_Outer_Color="@color/color_background"
+  app:shadow1_Outer_Distance="@dimen/_2"
+  app:shadow_Outer_Area="@dimen/_2"
+  app:stroke_Alpha="1"
+  app:stroke_ColorType="gradient_sweep"
+  app:stroke_Gradient_Angle="-45"
+  app:stroke_Gradient_Color0="@color/color_background"
+  app:stroke_Gradient_Color1="@color/color_card_stroke"
+  app:stroke_Width="0.5dp">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -25,10 +37,9 @@
       android:layout_alignParentRight="true"
       android:layout_alignParentBottom="true"
       android:adjustViewBounds="true"
-      android:alpha=".5"
       android:importantForAccessibility="no"
       android:scaleType="centerCrop"
-
+      android:src="@color/lang_hindi_bg_color"
       tools:ignore="ImageContrastCheck" />
 
     <TextView
@@ -36,11 +47,16 @@
       style="@style/style_textviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/_10"
+      android:layout_marginLeft="@dimen/_15"
+      android:layout_marginTop="@dimen/_10"
+      android:layout_marginRight="@dimen/_15"
       android:fontFamily="@font/font_family_medium"
-      android:shadowColor="@color/color_primary"
+      android:shadowColor="@color/color_card_stroke"
+      android:shadowDx="1"
+      android:shadowDy="1"
+      android:shadowRadius=".1"
       android:text="@string/title__"
-      android:textColor="@color/color_text_primary"
+      android:textColor="@color/color_background"
       android:textSize="@dimen/message_text_size"
       tools:ignore="SpUsage,TextContrastCheck,VisualLintSystemUi,TextSizeCheck" />
   </RelativeLayout>
