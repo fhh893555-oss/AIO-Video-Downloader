@@ -4,8 +4,6 @@
 # TubeAIO NextGen
 
 ### 🎉 The Next Generation of All-in-One Video — Rewritten from the Ground Up
-[![TubeAIO NextGen](https://img.shields.io/badge/TubeAIO-NextGen-brightgreen?style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader)
-----
 [![Release version](https://img.shields.io/github/v/release/shibaFoss/AIO-Video-Downloader?color=brightgreen&label=Stable-Download&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/releases/latest/)
 [![GitHub all releases](https://img.shields.io/github/downloads/shibafoss/AIO-Video-Downloader/total?color=brightgreen&label=Total-Downloads&style=for-the-badge)](https://github.com/shibafoss/AIO-Video-Downloader/releases/)
 [![Follow on Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
