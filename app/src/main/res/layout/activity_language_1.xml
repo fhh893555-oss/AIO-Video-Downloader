@@ -5,13 +5,24 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/color_surface">
+  android:background="@drawable/ic_bg_activity">
+
+  <ImageView
+    android:id="@+id/language_selection_logo"
+    android:layout_width="@dimen/_100"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="@dimen/_10"
+    android:adjustViewBounds="true"
+    android:importantForAccessibility="no"
+    android:src="@drawable/img_app_logo" />
 
   <TextView
     android:id="@+id/language_selection_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/_40"
+    android:layout_below="@+id/language_selection_logo"
+    android:layout_marginTop="@dimen/_10"
     android:fontFamily="@font/font_family_black"
     android:gravity="center"
     android:text="@string/title_select_language"

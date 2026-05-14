@@ -37,7 +37,7 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		
 		applyGradientToTitle();
 		loadVersionInfo();
-		//startMainActivity();
+		startNextActivity();
 	}
 	
 	private void applyGradientToTitle() {
@@ -63,7 +63,7 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		binding.versionInfoText.setText(versionInfo);
 	}
 	
-	private void startMainActivity() {
+	private void startNextActivity() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			Intent intent = new Intent(OpeningActivity.this, LanguageActivity.class);
 			if (AppConfigsRepo.getConfig().isLocaleConfigured) {
