@@ -1,9 +1,17 @@
 package coreUtils.library.views;
 
+import android.graphics.Canvas;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.ReplacementSpan;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.text.BreakIterator;
 import java.util.Locale;
@@ -71,5 +79,44 @@ public class TextViewsUtils {
 			})
 			.build()
 			.start();
+	}
+	
+	public static void applyGradientSpan(@NonNull TextView textView, int startColor,
+	                                     int endColor, int startIndex, int endIndex) {
+		CharSequence text = textView.getText();
+		if (text == null || text.length() == 0) return;
+		if (!(text instanceof Spannable)) text = new SpannableStringBuilder(text);
+		
+		Spannable spannable = (Spannable) text;
+		int exclusive = Spannable.SPAN_EXCLUSIVE_EXCLUSIVE;
+		spannable.setSpan(new GradientSpan(startColor, endColor), startIndex, endIndex, exclusive);
+		textView.setText(spannable);
+	}
+	
+	private static class GradientSpan extends ReplacementSpan {
+		private final int startColor;
+		private final int endColor;
+		
+		GradientSpan(int startColor, int endColor) {
+			this.startColor = startColor;
+			this.endColor = endColor;
+		}
+		
+		@Override
+		public int getSize(@NonNull Paint paint, CharSequence text, int start, int end,
+		                   @Nullable Paint.FontMetricsInt fm) {
+			return (int) paint.measureText(text, start, end);
+		}
+		
+		@Override
+		public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y,
+		                 int bottom, @NonNull Paint paint) {
+			float textWidth = paint.measureText(text, start, end);
+			Shader shader = new LinearGradient(x, top, x + textWidth, top, startColor, endColor,
+				Shader.TileMode.CLAMP);
+			paint.setShader(shader);
+			canvas.drawText(text, start, end, x, bottom - paint.descent(), paint);
+			paint.setShader(null);
+		}
 	}
 }
