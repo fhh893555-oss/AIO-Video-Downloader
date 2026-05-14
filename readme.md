@@ -84,13 +84,13 @@ And of course — **everything the original AIO had, and more.** We're not leavi
 is being built from scratch with a fresh, modern design. Fresh screenshots coming soon!**
 
 <div align="center">
-![Screenshot 1](others/graphics/screenshots/1.0.jpg)
-![Screenshot 2](others/graphics/screenshots/2.0.jpg)
-![Screenshot 3](others/graphics/screenshots/3.0.jpg)
-
-![Screenshot 4](others/graphics/screenshots/4.0.jpg)
-![Screenshot 5](others/graphics/screenshots/5.0.jpg)
-![Screenshot 6](others/graphics/screenshots/6.0.jpg)
+  <img src="others/graphics/screenshots/1.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/2.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/3.0.jpg" width="30%" />
+  <br>
+  <img src="others/graphics/screenshots/4.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/5.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/6.0.jpg" width="30%" />
 </div>
 
 ## 💻 Tech Stack & Architecture
