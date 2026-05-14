@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="app/src/main/ic_rounded_publisher.png" width="130" height="130" alt="TubeAIO NextGen Logo">
+<img src="app/src/main/ic_rounded_publisher.png" width="150" height="150" alt="TubeAIO NextGen Logo">
 
 # TubeAIO NextGen
 
@@ -13,7 +13,8 @@
 [![GitHub Stars](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?color=gold&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
 [![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
 <br/>
-<a href="https://github.com/shibaFoss/AIO-Video-Downloader/releases"><img src="others/graphics/download.png" width="300" alt="Download TubeAIO NextGen"></a>
+[![Download AIO Video Downloader](https://a.fsdn.com/con/app/sf-download-button)](https://tubeaio.com/)
+<br/>
 [🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
 
 ![Feature Cover](others/graphics/feature_cover.png)
