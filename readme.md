@@ -14,7 +14,6 @@
 [![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
 <br/>
 <a href="https://github.com/shibaFoss/AIO-Video-Downloader/releases"><img src="others/graphics/download.png" width="300" alt="Download TubeAIO NextGen"></a>
-<br/>
 [🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
 
 ![Feature Cover](others/graphics/feature_cover.png)
