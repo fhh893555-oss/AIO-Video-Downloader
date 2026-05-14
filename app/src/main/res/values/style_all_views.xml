@@ -43,8 +43,9 @@
   </style>
 
   <style name="style_textviews.button" parent="style_textviews">
-    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_height">@dimen/_32</item>
+    <item name="android:padding">@dimen/_5</item>
     <item name="android:clickable">true</item>
-    <item name="background">@drawable/ic_negative_selector</item>
+    <item name="android:background">@drawable/ic_negative_selector</item>
   </style>
 </resources>

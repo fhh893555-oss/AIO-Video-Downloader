@@ -4,7 +4,8 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@color/color_surface">
 
   <TextView
     android:id="@+id/language_selection_title"
@@ -35,12 +36,10 @@
   <TextView
     android:id="@+id/skip_language_button"
     style="@style/style_textviews.button"
-    android:layout_width="wrap_content"
     android:layout_below="@+id/languages_recycler_view"
     android:layout_alignParentRight="true"
     android:layout_marginRight="@dimen/_15"
     android:layout_marginBottom="@dimen/_25"
-    android:background="@drawable/ic_negative_selector"
     android:clickable="true"
     android:drawableRight="@drawable/ic_arrow_circle_right"
     android:drawablePadding="@dimen/_5"
