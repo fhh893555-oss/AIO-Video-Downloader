@@ -2,18 +2,19 @@
 
 <img src="app/src/main/ic_rounded_publisher.png" width="130" height="130" alt="TubeAIO NextGen Logo">
 
-# 🌟 TubeAIO NextGen
+# TubeAIO NextGen
 
 ### *The Next Generation of All-in-One Video — Rewritten from the Ground Up*
 
 [![License](https://img.shields.io/badge/License-Open%20Source-green?style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader)
 [![Platform](https://img.shields.io/badge/Platform-Android%208.0%2B-blue?style=for-the-badge)](https://tubeaio.com)
 [![Website](https://img.shields.io/badge/🌐-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
+[![GitHub all releases](https://img.shields.io/github/downloads/shibafoss/AIO-Video-Downloader/total?color=brightgreen&label=Total-Downloads&style=for-the-badge)](https://github.com/shibafoss/AIO-Video-Downloader/releases/)
 [![GitHub Stars](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?color=gold&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
 [![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
-
-<a href="https://github.com/shibaFoss/AIO-Video-Downloader/releases"><img src="others/graphics/download.png" width="200" alt="Download TubeAIO NextGen"></a>
-
+<br/>
+<a href="https://github.com/shibaFoss/AIO-Video-Downloader/releases"><img src="others/graphics/download.png" width="300" alt="Download TubeAIO NextGen"></a>
+<br/>
 [🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
 
 ![Feature Cover](others/graphics/feature_cover.png)
@@ -67,7 +68,6 @@ deliver:
 
 And of course — **everything the original AIO had, and more.** We're not leaving any feature behind.
 
-
 ## ✨ Key Features
 
 |                                                      |                                                                  |                                                       |
@@ -76,7 +76,6 @@ And of course — **everything the original AIO had, and more.** We're not leavi
 | Smart content detection makes downloading effortless | Parallel connections and background processing for maximum speed | Hardware acceleration, subtitles, and casting support |
 | 🔒 **Private Vault**                                 | 🌐 **Universal Support**                                         | 🛡️ **Ad-Free Forever**                               |
 | Secure, app-locked storage for sensitive files       | Works with 1000+ sites and a built-in browser                    | No ads, no trackers, no nonsense                      |
-
 
 ## 📱 Screenshots
 
@@ -129,7 +128,6 @@ work on independent modules without stepping on each other's toes.
     - [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) — alternative extraction
       backend
 
-
 ## 🚀 Getting Started
 
 Ready to dive in? Here's how to get started with TubeAIO NextGen:
@@ -151,7 +149,6 @@ Ready to dive in? Here's how to get started with TubeAIO NextGen:
 4. **Download** — Watch the progress, manage queues, and continue browsing.
 5. **Watch** — Play downloaded content with the powerful built-in player or cast to your TV.
 6. **Secure** — Move sensitive files to the **Private Folder** to hide them from the gallery.
-
 
 ## 🤝 Join the Team
 
@@ -183,7 +180,6 @@ project that respects user privacy.
 > a [Discussions page](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) where we talk
 > about features, architecture, and the roadmap.
 
-
 ## 🔧 Technical Specifications
 
 | Specification          | Details                            |
@@ -196,14 +192,12 @@ project that respects user privacy.
 | **License**            | Custom Open Source License         |
 | **Website**            | [tubeaio.com](https://tubeaio.com) |
 
-
 ## 📜 Multi-Language Support
 
 We're committed to making TubeAIO NextGen accessible to everyone. The README is available in
 multiple languages:
 
 English | [简体中文](docs/README_ZH.md) | [हिन्दी](docs/README_HI.md) | [Español](docs/README_ES.md) | [Français](docs/README_FR.md) | [Bahasa Indonesia](docs/README_ID.md) | [Русский](docs/README_RU.md) | [Tiếng Việt](docs/README_VI.md)
-
 
 ### 🌟 If You Like What We're Building — Give Us a Star!
 
