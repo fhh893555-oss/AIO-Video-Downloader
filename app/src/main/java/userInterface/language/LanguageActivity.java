@@ -55,7 +55,7 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 		binding.languagesRecyclerView.setAdapter(languageAdapter);
 		GridLayoutManager manager = new GridLayoutManager(binding.getRoot().getContext(), 3);
 		binding.languagesRecyclerView.setLayoutManager(manager);
-		int spacingInPx = getResources().getDimensionPixelSize(R.dimen._5);
+		int spacingInPx = getResources().getDimensionPixelSize(R.dimen._2);
 		binding.languagesRecyclerView.addItemDecoration(new GridLayoutSpacing(spacingInPx, true));
 	}
 	
