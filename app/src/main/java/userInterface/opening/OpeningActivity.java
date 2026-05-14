@@ -34,7 +34,7 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
         animationView.enableMergePathsForKitKatAndAbove(true);
         
         loadVersionInfo();
-        startMainActivity();
+        //startMainActivity();
     }
     
     private void loadVersionInfo() {
