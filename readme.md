@@ -1,158 +1,228 @@
 <div align="center">
-<img src="app/src/main/ic_rounded_publisher.png" width=120 height=120 alt="TubeAIO NextGen Logo">
+
+<img src="app/src/main/ic_rounded_publisher.png" width=130 height=130 alt="TubeAIO NextGen Logo">
 
 # TubeAIO NextGen
 
-### 🎉 The Next Generation of All-in-One Video — Rewritten from the Ground Up
-[![Release version](https://img.shields.io/github/v/release/shibaFoss/AIO-Video-Downloader?color=brightgreen&label=Stable-Download&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/releases/latest/)
-[![GitHub all releases](https://img.shields.io/github/downloads/shibafoss/AIO-Video-Downloader/total?color=brightgreen&label=Total-Downloads&style=for-the-badge)](https://github.com/shibafoss/AIO-Video-Downloader/releases/)
-[![Follow on Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
-<p align="center">
-  <a href="#-about-the-project">About</a> •
-  <a href="#-vision--goals">Vision</a> •
-  <a href="#-key-features">Features</a> •
-  <a href="#-screenshots">Screenshots</a> •
-  <a href="#-tech-stack--architecture">Architecture</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-join-the-team">Contributing</a>
-</p>
+### *The Next Generation of All-in-One Video — Rewritten from the Ground Up*
 
-<details>
-  <summary>🌐 <b>Select Language (Read in your native language)</b></summary>
-  <p align="center">
-    <a href="README.md">English</a> | 
-    <a href="docs/README_ZH.md">简体中文</a> | 
-    <a href="docs/README_HI.md">हिन्दी</a> | 
-    <a href="docs/README_ES.md">Español</a> | 
-    <a href="docs/README_FR.md">Français</a> | 
-    <a href="docs/README_ID.md">Bahasa Indonesia</a> | 
-    <a href="docs/README_RU.md">Русский</a> | 
-    <a href="docs/README_VI.md">Tiếng Việt</a>
-  </p>
-</details>
+[![License](https://img.shields.io/badge/License-Open%20Source-green?style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader)
+[![Platform](https://img.shields.io/badge/Platform-Android%208.0%2B-blue?style=for-the-badge)](https://tubeaio.com)
+[![Website](https://img.shields.io/badge/🌐-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
+<br>
+[![GitHub Stars](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?color=gold&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
+[![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
 
 <br>
 
-![TubeAIO NextGen](others/graphics/feature_cover.png)
+### 📥 Download Latest Release
+[![Download TubeAIO NextGen](https://a.fsdn.com/con/app/sf-download-button)](https://tubeaio.com)
+
+<br>
+
+[🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
+
+<br>
+
+![TubeAIO NextGen Feature Cover](others/graphics/feature_cover.png)
+
 </div>
 
 ---
 
 ## 📌 About the Project
 
-**TubeAIO NextGen** is a ground-up rewrite of the beloved **[AIO Video Downloader](https://github.com/shibaFoss/AIO-Video-Downloader)** — one of the most popular open-source video downloaders on GitHub.
+Welcome to **TubeAIO NextGen** — a ground-up reimagining of the beloved [AIO Video Downloader](https://github.com/shibaFoss/AIO-Video-Downloader), one of the most popular open-source video downloaders on GitHub with millions of downloads and a thriving community.
 
-The original AIO was an incredible project. It served millions of users, was built on solid foundations like **yt-dlp**, and delivered a smooth, privacy-respecting experience that people genuinely loved. But as the feature set grew, so did the architectural constraints. Some ideas — like a recommendation engine, torrent support, a full-featured browser, and advanced background playback — were simply too complex to bolt onto the existing structure without compromising performance and maintainability.
+### Why a rewrite?
 
-**So we started fresh.**
+The original AIO Video Downloader was an incredible piece of software. Built on the rock-solid **yt-dlp** engine, it delivered a smooth, privacy-respecting experience that people genuinely loved. But as the feature requests grew — a recommendation engine, torrent support, a full-featured browser, advanced background playback, a movie section — it became clear that bolting these onto the existing architecture would eventually compromise performance, stability, and developer happiness.
 
-TubeAIO NextGen is a complete reimagining of what an all-in-one video platform can be on Android. Every line of code, every module, and every design decision has been reconsidered from the ground up to support the features we know our community wants and deserves. The soul of AIO remains — open, private, ad-free, and community-driven — but everything else has been rebuilt to be faster, more scalable, and ready for the future.
+So we made a bold decision: **start fresh.**
 
-> 🔗 **Heads up!** This project is a fresh branch of the original AIO Video Downloader. For the current stable release of the original AIO, check out the [main AIO repo here](https://github.com/shibaFoss/AIO-Video-Downloader).
+TubeAIO NextGen is a complete rebuild. Every module, every decision, every line of code has been reconsidered from the ground up — not because the old way was wrong, but because the future we want to build demands a stronger foundation. The spirit of AIO remains unchanged: open, private, ad-free, and community-driven. But now it's built to scale, evolve, and surprise you.
+
+> 🔗 **Coming from the original AIO?** This project is a fresh branch of the original AIO Video Downloader. For the current stable release, visit the [legacy AIO repo](https://github.com/shibaFoss/AIO-Video-Downloader). TubeAIO NextGen is a sibling project with an expanded vision and a fully redesigned architecture.
 
 ---
 
-## 🎯 Vision & Goals
+## 🎯 Our Vision — What We're Building
 
-TubeAIO NextGen isn't just an update — it's a statement of intent. Here's what we're building toward:
+This isn't just an update. It's a statement of intent. Here's what the NextGen platform is set to deliver:
 
-- 🤖 **Smart Recommendation Engine** — Get personalized video recommendations based on your watch history, searches, and interactions. Think of it as your own private curator.
-- 🎵 **Robust Background Audio Playback** — Keep the music and podcasts playing even when you switch apps or lock your screen. No interruptions, just pure audio.
-- 🌐 **Built-in Ad-Free Web Browser** — Browse the web without ads, and with a built-in video grabber that's always watching. Find a video anywhere, grab it instantly.
-- 🎬 **Movie Download Section** — A dedicated section to search movie repositories, stream or download films — all from within the app.
-- ⚡ **Torrent Support** — Download files and media directly via torrent, without needing a separate app.
-- 🔒 **Private Vault** — Secure, app-locked storage for sensitive media, keeping your files hidden from the gallery.
-- 🎬 **Powerful Video Player** — Hardware acceleration, subtitle support, and smooth playback up to 4K.
-- 🌍 **Universal Platform Support** — Works with 1000+ websites via yt-dlp, plus a built-in browser for everything else.
-- 🛡️ **100% Ad-Free & Open Source** — No ads, no trackers, no nonsense. Transparent, private, and community-owned.
+| Feature | Description |
+|---------|-------------|
+| 🤖 **Smart Recommendation Engine** | Personalized video recommendations based on your watch history, searches, and interactions. Think of it as your own private curator. |
+| 🎵 **Robust Background Audio** | Keep the music and podcasts playing while you use other apps or lock your screen. No interruptions — just pure audio. |
+| 🌐 **Built-in Ad-Free Browser** | Browse the web completely ad-free with a built-in video grabber that's always watching. Find a video anywhere, grab it instantly. |
+| 🎬 **Movie Download Section** | A dedicated section to search movie repositories, stream or download films — all from within the app. |
+| ⚡ **Torrent Support** | Download files and media directly via torrent, without needing a separate app or tool. |
+| 🔒 **Private Vault** | Secure, app-locked storage for your sensitive media — hidden from the gallery and protected. |
+| 🎬 **Powerful Video Player** | Hardware-accelerated playback, subtitle support, up to 4K quality, and casting support. |
+| 🌍 **Universal Platform Support** | Works with 1000+ websites via yt-dlp, plus the built-in browser for everything else. |
+| 🛡️ **100% Ad-Free & Open Source** | No ads, no trackers, no telemetry. Just you, your content, and your privacy. |
 
-And of course — everything the original AIO had and more. We're not leaving anything behind.
+And of course — **everything the original AIO had, and more.** We're not leaving any feature behind.
 
 ---
 
 ## ✨ Key Features
 
-- 🎯 **Simple & Intuitive** — One-tap downloads and smart content detection.
-- ⚡ **Supercharged Speed** — Multi-connection downloads and background processing.
-- 🎬 **Powerful Player** — HW acceleration, subtitle support, and background playback.
-- 🔒 **Private Vault** — Secure, app-locked storage for sensitive media.
-- 🌐 **Universal Support** — Works with 1000+ sites via built-in secure browser.
-- 🛡️ **Ad-Free & Open Source** — Transparent, safe, and privacy-respecting.
+<div align="center">
+
+| | | |
+|:--:|:--:|:--:|
+| 🎯 **One-Tap Simplicity** | ⚡ **Multi-Connection Speed** | 🎬 **4K Video Playback** |
+| Smart content detection makes downloading effortless | Parallel connections and background processing for maximum speed | Hardware acceleration, subtitles, and casting support |
+| 🔒 **Private Vault** | 🌐 **Universal Support** | 🛡️ **Ad-Free Forever** |
+| Secure, app-locked storage for sensitive files | Works with 1000+ sites and a built-in browser | No ads, no trackers, no nonsense |
+
+</div>
 
 ---
 
 ## 📱 Screenshots
 
-> 📸 **Screenshots below are from the original AIO Video Downloader (legacy). The TubeAIO NextGen UI is currently being built from scratch. Fresh screenshots coming soon!**
+> 📸 **Screenshots below are from the original AIO Video Downloader (legacy). The TubeAIO NextGen UI is being built from scratch with a fresh, modern design. Fresh screenshots coming soon!**
 
 <div align="center">
-  <img src="others/graphics/screenshots/1.0.jpg" width="30%" />
-  <img src="others/graphics/screenshots/2.0.jpg" width="30%" />
-  <img src="others/graphics/screenshots/3.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/1.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+  <img src="others/graphics/screenshots/2.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+  <img src="others/graphics/screenshots/3.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
   <br>
-  <img src="others/graphics/screenshots/4.0.jpg" width="30%" />
-  <img src="others/graphics/screenshots/5.0.jpg" width="30%" />
-  <img src="others/graphics/screenshots/6.0.jpg" width="30%" />
+  <img src="others/graphics/screenshots/4.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+  <img src="others/graphics/screenshots/5.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+  <img src="others/graphics/screenshots/6.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
 </div>
 
 ---
 
 ## 💻 Tech Stack & Architecture
 
+TubeAIO NextGen is built with modern Android development best practices in mind. The architecture is designed for **scalability**, **maintainability**, and **performance** — allowing contributors to work on independent modules without stepping on each other's toes.
+
+### 🏗️ Architecture Overview
+
+```
+┌─────────────────────────────────────────────┐
+│                 UI Layer                    │
+│  (Kotlin, Custom Views, MVVM, Coroutines)   │
+├─────────────────────────────────────────────┤
+│              Domain Layer                   │
+│  (Use Cases, Business Logic, Interfaces)    │
+├─────────────────────────────────────────────┤
+│               Data Layer                    │
+│  (Repositories, Data Sources, Caching)     │
+├─────────────────────────────────────────────┤
+│             Engine Layer                    │
+│   (yt-dlp, NewPipe, Torrent, Browser)      │
+└─────────────────────────────────────────────┘
+```
+
+### 🛠️ Technology Stack
+
 - **Language:** 100% Kotlin
-- **Architecture:** Modular MVVM with strict separation of concerns, designed for scalability
-- **Independent Modules:** Core logic is decoupled from UI for maintainability and testability
-- **Data Layer:** Robust metadata handling, recommendation logic, and file state management
-- **Custom UI:** Performance-optimized custom themes (Non-Material strict)
-- **Primary Engines:**
-  - [yt-dlp](https://github.com/yt-dlp/yt-dlp) / [youtubedl-android](https://github.com/yausername/youtubedl-android)
-  - [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor)
+- **Architecture:** Modular MVVM with Clean Architecture principles
+- **UI:** Custom performance-optimized themes (non-Material strict)
+- **Async:** Kotlin Coroutines + Flow for reactive data streams
+- **DI:** Dependency Injection for loose coupling
+- **Engines:**
+  - [yt-dlp](https://github.com/yt-dlp/yt-dlp) — the heart of video extraction
+  - [youtubedl-android](https://github.com/yausername/youtubedl-android) — Android wrapper for yt-dlp
+  - [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) — alternative extraction backend
 
 ---
 
 ## 🚀 Getting Started
 
-1. **Browse or Search** — Use the built-in ad-free browser or search for movies and videos directly in the app.
-2. **Auto-Detect** — The app automatically finds high-quality streams and torrents.
-3. **Choose & Download** — Select your resolution (up to 4K) or pick a torrent to start downloading.
-4. **Watch Anywhere** — Play back downloaded content with the powerful built-in player, or cast to your TV.
-5. **Stay Private** — Move sensitive downloads to the **Private Folder** to hide them from the gallery.
+Ready to dive in? Here's how to get started with TubeAIO NextGen:
+
+### 🔽 Installation
+
+1. Download the latest APK from [tubeaio.com](https://tubeaio.com) or from the [Releases page](https://github.com/shibaFoss/AIO-Video-Downloader/releases).
+2. Install the APK on your Android 8.0+ device.
+3. Grant the necessary permissions (storage, network) and you're good to go.
+
+### 🎬 Using the App
+
+1. **Browse** — Use the built-in ad-free browser to find any video, or search directly in the Movie section.
+2. **Detect** — The app automatically detects media streams, torrent links, and downloadable content.
+3. **Choose** — Pick your quality (up to 4K), subtitle language, or torrent settings.
+4. **Download** — Watch the progress, manage queues, and continue browsing.
+5. **Watch** — Play downloaded content with the powerful built-in player or cast to your TV.
+6. **Secure** — Move sensitive files to the **Private Folder** to hide them from the gallery.
 
 ---
 
-## 🤝 Join the Team (Maintainers Wanted)
+## 🤝 Join the Team
 
-We are looking for **Project Maintainers and Contributors** to help drive the technical future of TubeAIO NextGen. This is a large-scale rewrite with ambitious goals — if you're a developer looking for a clean, modular Kotlin project to contribute to, we'd love to have you.
+We're building something ambitious, and we need helping hands! **TubeAIO NextGen is looking for maintainers, contributors, and open-source enthusiasts** who want to be part of a community-driven project that respects user privacy.
 
-### 🛠 How You Can Help:
+### 🧑‍💻 Open Roles
 
-- **Core Development** — Build and optimize the download engine, torrent module, and background playback system.
-- **Recommendation Engine** — Design and implement the smart recommendation system (algorithms, data pipelines, UI).
-- **Browser Integration** — Help build the ad-free web browser with seamless video detection.
-- **UI/UX Development** — Evolve the custom-themed, performance-first interface for the NextGen experience.
-- **Movie Section** — Implement the movie search and repository integration.
-- **Code Quality** — Review PRs, write tests, and help maintain a stable main branch.
+| Role | What You'll Do |
+|------|----------------|
+| 🏗️ **Core Developer** | Build and optimize the download engine, torrent module, and background playback system. |
+| 🤖 **Recommendation Engineer** | Design and implement the smart recommendation system — algorithms, data pipelines, and UI. |
+| 🌐 **Browser Developer** | Build the ad-free web browser with seamless video detection and smooth UX. |
+| 🎬 **Media Section Developer** | Implement the movie search, repository integration, and streaming playback. |
+| 🎨 **UI/UX Designer** | Craft the NextGen interface — clean, modern, and performance-first. |
+| 🔍 **Code Reviewer** | Help maintain code quality, review PRs, and keep the main branch stable. |
 
-### 📋 Tech Stack:
-- **Language:** 100% Kotlin
-- **Architecture:** Modular MVVM
-- **Engines:** yt-dlp, NewPipe Extractor
+### 💡 How to Contribute
 
-> **Interested?** Please open a [New Issue](https://github.com/shibaFoss/AIO-Video-Downloader/issues) with the tag `[NextGen Contributor]` to introduce yourself and discuss how you'd like to help.
+1. **Fork** the repository and explore the codebase.
+2. Pick an issue tagged with `[NextGen]` or propose a new feature.
+3. Make your changes, write tests if applicable, and submit a pull request.
+4. Join the discussion and help shape the future of the project.
+
+> 💬 **Want to get involved?** Open a [New Issue](https://github.com/shibaFoss/AIO-Video-Downloader/issues) with the tag `[NextGen Contributor]` and tell us how you'd like to help. We also have a [Discussions page](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) where we talk about features, architecture, and the roadmap.
 
 ---
 
 ## 🔧 Technical Specifications
 
-- **Platform:** Android 8.0+ (API 26)
-- **Engine:** yt-dlp / youtubedl-android
-- **Language:** Kotlin
-- **License:** Custom Open Source License
+| Specification | Details |
+|---------------|---------|
+| **Minimum Android** | Android 8.0 (API 26) |
+| **Language** | 100% Kotlin |
+| **Architecture** | Modular MVVM + Clean Architecture |
+| **Extraction Engine** | yt-dlp / youtubedl-android |
+| **Alternative Engine** | NewPipe Extractor |
+| **License** | Custom Open Source License |
+| **Website** | [tubeaio.com](https://tubeaio.com) |
+
+---
+
+## 📜 Multi-Language Support
+
+We're committed to making TubeAIO NextGen accessible to everyone. The README is available in multiple languages:
+
+<div align="center">
+
+English | [简体中文](docs/README_ZH.md) | [हिन्दी](docs/README_HI.md) | [Español](docs/README_ES.md) | [Français](docs/README_FR.md) | [Bahasa Indonesia](docs/README_ID.md) | [Русский](docs/README_RU.md) | [Tiếng Việt](docs/README_VI.md)
+
+</div>
 
 ---
 
 <div align="center">
-  <b>Made with ❤️ in India 🇮🇳</b>
-  <br>
-  <i>Respecting Privacy • Promoting Transparency</i>
+
+### 🌟 If You Like What We're Building — Give Us a Star!
+
+It takes a second and it really helps more people discover the project. Every ⭐ means the world to us.
+
+[![Star on GitHub](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?style=for-the-badge&logo=github)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
+
+<br>
+
+**Made with ❤️ in India 🇮🇳**
+
+*Respecting Privacy • Promoting Transparency • Building the Future*
+
+<br>
+
+[![Website](https://img.shields.io/badge/🌐-Visit-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
+[![Download](https://img.shields.io/badge/📥-Download-APK-blue?style=for-the-badge)](https://tubeaio.com)
+
 </div>
