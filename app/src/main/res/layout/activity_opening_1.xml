@@ -82,29 +82,64 @@
       tools:ignore="VisualLintBounds" />
   </LinearLayout>
 
-  <TextView
-    android:id="@+id/credit_info_text"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/version_info_text"
-    android:layout_centerHorizontal="true"
-    android:fontFamily="@font/font_family_medium"
-    android:text="@string/title_app_splash_credit"
-    android:textColor="@color/color_text_secondary"
-    android:textSize="@dimen/message_text_size"
-    tools:ignore="SpUsage,TextSizeCheck" />
-
-  <TextView
-    android:id="@+id/version_info_text"
+  <com.github.dangiashish.StyledCardView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:layout_marginBottom="@dimen/_50"
-    android:fontFamily="@font/font_family_regular"
-    android:text="@string/title__"
-    android:textColor="@color/color_text_secondary"
-    android:textSize="@dimen/small_text_size"
-    tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="45"
+    app:background_Gradient_Color0="@color/color_background"
+    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:shadow0_Outer_Alpha=".2"
+    app:shadow0_Outer_Angle="-45"
+    app:shadow0_Outer_Blur="@dimen/_10"
+    app:shadow0_Outer_Color="@color/color_primary"
+    app:shadow0_Outer_Distance="@dimen/_5"
+    app:shadow1_Outer_Alpha="0.2"
+    app:shadow1_Outer_Angle="360"
+    app:shadow1_Outer_Blur="@dimen/_50"
+    app:shadow1_Outer_Color="@color/color_background"
+    app:shadow1_Outer_Distance="@dimen/_2"
+    app:shadow_Outer_Area="@dimen/_30"
+    app:stroke_Alpha="1"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_background"
+    app:stroke_Gradient_Color1="@color/color_card_stroke"
+    app:stroke_Width="0.5dp">
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="@dimen/_10">
+
+      <TextView
+        android:id="@+id/credit_info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_family_medium"
+        android:gravity="center_horizontal"
+        android:text="@string/title_app_splash_credit"
+        android:textColor="@color/color_text_secondary"
+        android:textSize="@dimen/message_text_size"
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+      <TextView
+        android:id="@+id/version_info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_family_regular"
+        android:gravity="center_horizontal"
+        android:text="@string/title__"
+        android:textColor="@color/color_text_secondary"
+        android:textSize="@dimen/small_text_size"
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+    </LinearLayout>
+  </com.github.dangiashish.StyledCardView>
 
 </RelativeLayout>

@@ -37,7 +37,7 @@
   <dimen name="extra_large_text_size">23dp</dimen>
   <dimen name="large_text_size">26dp</dimen>
 
-  <dimen name="default_radius">5dp</dimen>
+  <dimen name="default_radius">10dp</dimen>
 
   <item name="tag_download_id" type="id" />
   <item name="tag_download_ui_manager" type="id" />
