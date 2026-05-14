@@ -1,27 +1,26 @@
 <div align="center">
 
-<img src="app/src/main/ic_rounded_publisher.png" width=512 height=512 alt="TubeAIO NextGen Logo">
+![Logo](app/src/main/ic_rounded_publisher.png)
 
-# TubeAIO NextGen
+# 🌟 TubeAIO NextGen
 
 ### *The Next Generation of All-in-One Video — Rewritten from the Ground Up*
 
 [![License](https://img.shields.io/badge/License-Open%20Source-green?style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader)
 [![Platform](https://img.shields.io/badge/Platform-Android%208.0%2B-blue?style=for-the-badge)](https://tubeaio.com)
 [![Website](https://img.shields.io/badge/🌐-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
-<br>
 [![GitHub Stars](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?color=gold&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
 [![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
-<br>
 
-[![Download TubeAIO NextGen](others/graphics/download.png)](https://github.com/shibaFoss/AIO-Video-Downloader/releases/download/v2026.02.06/app-arm64-v8a-release.apk)
-<br>
+[![Download TubeAIO NextGen](others/graphics/download.png)](https://github.com/shibaFoss/AIO-Video-Downloader/releases)
+
 [🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
-<br>
 
-![TubeAIO NextGen Feature Cover](others/graphics/feature_cover.png)
+![Feature Cover](others/graphics/feature_cover.png)
 
 </div>
+
+---
 
 ## 📌 About the Project
 
@@ -33,10 +32,11 @@ community.
 ### Why a rewrite?
 
 The original AIO Video Downloader was an incredible piece of software. Built on the rock-solid *
-*yt-dlp** engine, it delivered a smooth, privacy-respecting experience that people genuinely loved.
-But as the feature requests grew — a recommendation engine, torrent support, a full-featured
-browser, advanced background playback, a movie section — it became clear that bolting these onto the
-existing architecture would eventually compromise performance, stability, and developer happiness.
+*[yt-dlp](https://github.com/yt-dlp/yt-dlp)** engine, it delivered a smooth, privacy-respecting
+experience that people genuinely loved. But as the feature requests grew — a recommendation engine,
+torrent support, a full-featured browser, advanced background playback, a movie section — it became
+clear that bolting these onto the existing architecture would eventually compromise performance,
+stability, and developer happiness.
 
 So we made a bold decision: **start fresh.**
 
@@ -58,7 +58,7 @@ This isn't just an update. It's a statement of intent. Here's what the NextGen p
 deliver:
 
 | Feature                            | Description                                                                                                                          |
-|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+|:-----------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|
 | 🤖 **Smart Recommendation Engine** | Personalized video recommendations based on your watch history, searches, and interactions. Think of it as your own private curator. |
 | 🎵 **Robust Background Audio**     | Keep the music and podcasts playing while you use other apps or lock your screen. No interruptions — just pure audio.                |
 | 🌐 **Built-in Ad-Free Browser**    | Browse the web completely ad-free with a built-in video grabber that's always watching. Find a video anywhere, grab it instantly.    |
@@ -75,16 +75,12 @@ And of course — **everything the original AIO had, and more.** We're not leavi
 
 ## ✨ Key Features
 
-<div align="center">
-
 |                                                      |                                                                  |                                                       |
-|:----------------------------------------------------:|:----------------------------------------------------------------:|:-----------------------------------------------------:|
-|              🎯 **One-Tap Simplicity**               |                   ⚡ **Multi-Connection Speed**                   |               🎬 **4K Video Playback**                |
+|:-----------------------------------------------------|:-----------------------------------------------------------------|:------------------------------------------------------|
+| 🎯 **One-Tap Simplicity**                            | ⚡ **Multi-Connection Speed**                                     | 🎬 **4K Video Playback**                              |
 | Smart content detection makes downloading effortless | Parallel connections and background processing for maximum speed | Hardware acceleration, subtitles, and casting support |
-|                 🔒 **Private Vault**                 |                     🌐 **Universal Support**                     |                🛡️ **Ad-Free Forever**                |
-|    Secure, app-locked storage for sensitive files    |          Works with 1000+ sites and a built-in browser           |           No ads, no trackers, no nonsense            |
-
-</div>
+| 🔒 **Private Vault**                                 | 🌐 **Universal Support**                                         | 🛡️ **Ad-Free Forever**                               |
+| Secure, app-locked storage for sensitive files       | Works with 1000+ sites and a built-in browser                    | No ads, no trackers, no nonsense                      |
 
 ---
 
@@ -93,15 +89,13 @@ And of course — **everything the original AIO had, and more.** We're not leavi
 > 📸 **Screenshots below are from the original AIO Video Downloader (legacy). The TubeAIO NextGen UI
 is being built from scratch with a fresh, modern design. Fresh screenshots coming soon!**
 
-<div align="center">
-  <img src="others/graphics/screenshots/1.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  <img src="others/graphics/screenshots/2.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  <img src="others/graphics/screenshots/3.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  <br>
-  <img src="others/graphics/screenshots/4.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  <img src="others/graphics/screenshots/5.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-  <img src="others/graphics/screenshots/6.0.jpg" width="30%" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-</div>
+![Screenshot 1](others/graphics/screenshots/1.0.jpg)
+![Screenshot 2](others/graphics/screenshots/2.0.jpg)
+![Screenshot 3](others/graphics/screenshots/3.0.jpg)
+
+![Screenshot 4](others/graphics/screenshots/4.0.jpg)
+![Screenshot 5](others/graphics/screenshots/5.0.jpg)
+![Screenshot 6](others/graphics/screenshots/6.0.jpg)
 
 ---
 
@@ -122,10 +116,10 @@ work on independent modules without stepping on each other's toes.
 │  (Use Cases, Business Logic, Interfaces)    │
 ├─────────────────────────────────────────────┤
 │               Data Layer                    │
-│  (Repositories, Data Sources, Caching)     │
+│  (Repositories, Data Sources, Caching)      │
 ├─────────────────────────────────────────────┤
 │             Engine Layer                    │
-│   (yt-dlp, NewPipe, Torrent, Browser)      │
+│   (yt-dlp, NewPipe, Torrent, Browser)       │
 └─────────────────────────────────────────────┘
 ```
 
@@ -178,7 +172,7 @@ project that respects user privacy.
 ### 🧑‍💻 Open Roles
 
 | Role                           | What You'll Do                                                                             |
-|--------------------------------|--------------------------------------------------------------------------------------------|
+|:-------------------------------|:-------------------------------------------------------------------------------------------|
 | 🏗️ **Core Developer**         | Build and optimize the download engine, torrent module, and background playback system.    |
 | 🤖 **Recommendation Engineer** | Design and implement the smart recommendation system — algorithms, data pipelines, and UI. |
 | 🌐 **Browser Developer**       | Build the ad-free web browser with seamless video detection and smooth UX.                 |
@@ -204,7 +198,7 @@ project that respects user privacy.
 ## 🔧 Technical Specifications
 
 | Specification          | Details                            |
-|------------------------|------------------------------------|
+|:-----------------------|:-----------------------------------|
 | **Minimum Android**    | Android 8.0 (API 26)               |
 | **Language**           | 100% Kotlin                        |
 | **Architecture**       | Modular MVVM + Clean Architecture  |
@@ -220,32 +214,20 @@ project that respects user privacy.
 We're committed to making TubeAIO NextGen accessible to everyone. The README is available in
 multiple languages:
 
-<div align="center">
-
 English | [简体中文](docs/README_ZH.md) | [हिन्दी](docs/README_HI.md) | [Español](docs/README_ES.md) | [Français](docs/README_FR.md) | [Bahasa Indonesia](docs/README_ID.md) | [Русский](docs/README_RU.md) | [Tiếng Việt](docs/README_VI.md)
-
-</div>
 
 ---
 
-<div align="center">
-
 ### 🌟 If You Like What We're Building — Give Us a Star!
 
-It takes a second and it really helps more people discover the project. Every ⭐ means the world to
+It takes a second, and it really helps more people discover the project. Every ⭐ means the world to
 us.
 
 [![Star on GitHub](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?style=for-the-badge&logo=github)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
-
-<br>
 
 **Made with ❤️ in India 🇮🇳**
 
 *Respecting Privacy • Promoting Transparency • Building the Future*
 
-<br>
-
 [![Website](https://img.shields.io/badge/🌐-Visit-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
 [![Download](https://img.shields.io/badge/📥-Download-APK-blue?style=for-the-badge)](https://tubeaio.com)
-
-</div>
