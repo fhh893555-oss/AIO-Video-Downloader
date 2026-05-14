@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  tools:ignore="UseCompatTextViewDrawableXml,UseAppTint,
+    SpeakableTextPresentCheck, TouchTargetSizeCheck,HardcodedText,
+    ContentDescription,RtlHardcoded,SmallSp,ImageContrastCheck">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+      android:id="@+id/homepage_search_url_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_5"
+      android:layout_marginTop="@dimen/_5"
+      android:layout_marginRight="@dimen/_5"
+      android:layout_marginBottom="@dimen/_5"
+      android:layout_toStartOf="@+id/homepage_tabs_manager_button"
+      android:background="@drawable/ic_button_surface_selector"
+      android:clickable="true"
+      android:orientation="horizontal"
+      tools:ignore="TouchTargetSizeCheck">
+
+      <ImageView
+        android:id="@+id/homepage_search_favicon_icon"
+        android:layout_width="@dimen/_24"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/_5"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_site_google"
+        tools:ignore="ImageContrastCheck" />
+
+      <TextView
+        android:id="@+id/homepage_search_url_preview_text"
+        style="@style/style_edittext"
+        android:drawableLeft="@null"
+        android:text="@string/title_search_or_enter_url"
+        tools:ignore="UseCompatTextViewDrawableXml,VisualLintSystemUi" />
+    </LinearLayout>
+
+    <RelativeLayout
+      android:id="@+id/homepage_tabs_manager_button"
+      android:layout_width="@dimen/_40"
+      android:layout_height="@dimen/_35"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_0"
+      android:layout_marginRight="@dimen/_5"
+      android:layout_toLeftOf="@+id/homepage_downloads_manager_button"
+      android:background="@drawable/ic_button_negative_selector"
+      android:clickable="true"
+      tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
+
+      <ImageView
+        android:id="@+id/homepage_tabs_manager_icon"
+        android:layout_width="@dimen/_24"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_browser_pointer"
+        android:tint="@color/color_on_surface"
+        tools:ignore="ImageContrastCheck" />
+
+      <TextView
+        android:id="@+id/homepage_active_tabs_count_badge"
+        style="@style/style_textviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/_1"
+        android:background="@drawable/rounded_secondary_color"
+        android:fontFamily="@font/font_family_bold"
+        android:paddingLeft="@dimen/_2"
+        android:paddingTop="@dimen/_0"
+        android:paddingRight="@dimen/_2"
+        android:paddingBottom="@dimen/_0"
+        android:text="5"
+        android:textColor="@color/color_on_secondary"
+        android:textSize="@dimen/smallest_text_size"
+        tools:ignore="TextContrastCheck,VisualLintSystemUi" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/homepage_downloads_manager_button"
+      android:layout_width="@dimen/_40"
+      android:layout_height="@dimen/_35"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_0"
+      android:layout_marginRight="@dimen/_5"
+      android:layout_toLeftOf="@+id/homepage_user_profile_button"
+      android:background="@drawable/ic_button_negative_selector"
+      android:clickable="true"
+      tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
+
+      <ImageView
+        android:id="@+id/homepage_downloads_manager_icon"
+        android:layout_width="@dimen/_26"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_download_pointer"
+        android:tint="@color/color_on_surface"
+        tools:ignore="ImageContrastCheck" />
+
+      <TextView
+        android:id="@+id/homepage_pending_downloads_count_badge"
+        style="@style/style_textviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/_1"
+        android:background="@drawable/rounded_secondary_color"
+        android:fontFamily="@font/font_family_bold"
+        android:paddingLeft="@dimen/_2"
+        android:paddingTop="@dimen/_0"
+        android:paddingRight="@dimen/_2"
+        android:paddingBottom="@dimen/_0"
+        android:text="10"
+        android:textColor="@color/color_on_secondary"
+        android:textSize="@dimen/smallest_text_size"
+        tools:ignore="TextContrastCheck,VisualLintSystemUi" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/homepage_user_profile_button"
+      android:layout_width="@dimen/_40"
+      android:layout_height="@dimen/_35"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_0"
+      android:layout_marginRight="@dimen/_5"
+      android:background="@drawable/ic_button_negative_selector"
+      android:clickable="true"
+      tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
+
+      <ImageView
+        android:id="@+id/homepage_user_profile_avatar"
+        android:layout_width="@dimen/_30"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/image_default_avatar"
+        tools:ignore="ImageContrastCheck" />
+    </RelativeLayout>
+  </RelativeLayout>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_5"
+    android:layout_marginRight="@dimen/_5"
+    android:layout_marginBottom="@dimen/_5">
+
+    <RelativeLayout
+      android:id="@+id/homepage_reels_shortcut_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_0"
+      android:layout_marginRight="@dimen/_5"
+      android:background="@drawable/ic_button_surface_selector"
+      android:clickable="true"
+      tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+      <TextView
+        android:id="@+id/homepage_reels_shortcut_label"
+        style="@style/style_textviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5"
+        android:drawableLeft="@drawable/ic_video_reels_small"
+        android:drawableTint="@color/color_error"
+        android:fontFamily="@font/font_family_medium"
+        android:text="@string/title_shorts_videos"
+        android:textColor="@color/color_text_secondary"
+        tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+    </RelativeLayout>
+
+    <HorizontalScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="@dimen/_0"
+      android:layout_marginRight="@dimen/_5"
+      android:layout_toRightOf="@+id/homepage_reels_shortcut_button"
+      android:scrollbars="none">
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:ignore="VisualLintBounds">
+
+        <RelativeLayout
+          android:id="@+id/homepage_all_videos_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_all_videos_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_home_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_all_videos"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/homepage_music_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_music_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_music_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_musics"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/homepage_playlists_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_playlists_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_playlist_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_playlists"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/homepage_movies_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_movies_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_videos_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_movies"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/homepage_live_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_live_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_live_tv_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_lives"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/homepage_news_filter_chip"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginRight="@dimen/_5"
+          android:background="@drawable/ic_button_surface_selector"
+          android:clickable="true"
+          tools:ignore="TouchTargetSizeCheck,UselessParent">
+
+          <TextView
+            android:id="@+id/homepage_news_filter_label"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5"
+            android:drawableLeft="@drawable/ic_news_small"
+            android:drawableTint="@color/color_text_secondary"
+            android:text="@string/title_news"
+            android:textColor="@color/color_text_secondary"
+            tools:ignore="TouchTargetSizeCheck" />
+        </RelativeLayout>
+      </LinearLayout>
+    </HorizontalScrollView>
+  </RelativeLayout>
+</LinearLayout>

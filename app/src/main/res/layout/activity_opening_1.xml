@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/color_surface"
+  tools:context="userInterface.opening.OpeningActivity">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:orientation="vertical"
+    tools:ignore="UselessParent">
+
+    <ImageView
+      android:id="@+id/splash_icon_image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/_20"
+      android:layout_marginBottom="@dimen/_10"
+      android:adjustViewBounds="true"
+      android:elevation="@dimen/_2"
+      android:importantForAccessibility="no"
+      android:src="@drawable/ic_image_open_splash"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/app_title_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/_5"
+      android:fontFamily="@font/font_family_black"
+      android:gravity="center"
+      android:text="@string/title_app_name_full"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/extra_large_text_size"
+      tools:ignore="SpUsage,VisualLintBounds,TextSizeCheck" />
+
+    <TextView
+      android:id="@+id/app_tagline_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginStart="@dimen/_50"
+      android:layout_marginLeft="@dimen/_50"
+      android:layout_marginTop="@dimen/_0"
+      android:layout_marginEnd="@dimen/_50"
+      android:layout_marginRight="@dimen/_50"
+      android:fontFamily="@font/font_family_medium"
+      android:gravity="center"
+      android:text="@string/title_tubeaio_downloader_tagline"
+      android:textColor="@color/color_text_secondary"
+      android:textSize="@dimen/message_text_size"
+      tools:ignore="SpUsage,TextContrastCheck,VisualLintBounds,TextSizeCheck" />
+
+    <Space
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/_20"
+      tools:ignore="VisualLintBounds" />
+
+    <com.airbnb.lottie.LottieAnimationView
+      android:id="@+id/loading_animation_view"
+      android:layout_width="@dimen/_50"
+      android:layout_height="@dimen/_50"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/_5"
+      android:layout_marginBottom="@dimen/_0"
+      android:importantForAccessibility="no"
+      app:lottie_autoPlay="true"
+      app:lottie_loop="true"
+      app:lottie_rawRes="@raw/animation_circle_loading"
+      tools:ignore="ImageContrastCheck,VisualLintBounds" />
+
+    <Space
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/_50"
+      tools:ignore="VisualLintBounds" />
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/credit_info_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/version_info_text"
+    android:layout_centerHorizontal="true"
+    android:fontFamily="@font/font_family_medium"
+    android:text="@string/title_app_splash_credit"
+    android:textColor="@color/color_text_secondary"
+    android:textSize="@dimen/message_text_size"
+    tools:ignore="SpUsage,TextSizeCheck" />
+
+  <TextView
+    android:id="@+id/version_info_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="@dimen/_50"
+    android:fontFamily="@font/font_family_regular"
+    android:text="@string/title__"
+    android:textColor="@color/color_text_secondary"
+    android:textSize="@dimen/small_text_size"
+    tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+
+</RelativeLayout>

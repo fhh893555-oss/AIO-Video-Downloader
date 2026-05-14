@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="title_app_name" translatable="false">TubeAIO</string>
+  <string name="title_app_name_full" translatable="false">Tube AIO - NextGen</string>
   <string name="title_select_language">Select Language</string>
   <string name="title_skip_language">Skip Language</string>
   <string name="title__">__</string>
+  <string name="title_tubeaio_downloader_tagline">Download, Watch &amp; Share With Friends</string>
+  <string name="title_app_splash_credit">Made With ❤️  In India  🇮🇳</string>
 </resources>
