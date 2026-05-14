@@ -1,6 +1,6 @@
 <div align="center">
 
-![Logo](app/src/main/ic_rounded_publisher.png)
+<img src="app/src/main/ic_rounded_publisher.png" width="130" height="130" alt="TubeAIO NextGen Logo">
 
 # 🌟 TubeAIO NextGen
 
@@ -12,15 +12,13 @@
 [![GitHub Stars](https://img.shields.io/github/stars/shibafoss/AIO-Video-Downloader?color=gold&style=for-the-badge)](https://github.com/shibaFoss/AIO-Video-Downloader/stargazers)
 [![Instagram](https://img.shields.io/badge/Follow-%40shibafoss-ff69b4?logo=instagram&style=for-the-badge)](https://instagram.com/shibafoss)
 
-[![Download TubeAIO NextGen](others/graphics/download.png)](https://github.com/shibaFoss/AIO-Video-Downloader/releases)
+<a href="https://github.com/shibaFoss/AIO-Video-Downloader/releases"><img src="others/graphics/download.png" width="200" alt="Download TubeAIO NextGen"></a>
 
 [🌐 Website](https://tubeaio.com) • [🐛 Report Bug](https://github.com/shibaFoss/AIO-Video-Downloader/issues) • [💬 Discussions](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) • [📖 Documentation](docs)
 
 ![Feature Cover](others/graphics/feature_cover.png)
 
 </div>
-
----
 
 ## 📌 About the Project
 
@@ -50,8 +48,6 @@ and community-driven. But now it's built to scale, evolve, and surprise you.
 > the [legacy AIO repo](https://github.com/shibaFoss/AIO-Video-Downloader). TubeAIO NextGen is a
 > sibling project with an expanded vision and a fully redesigned architecture.
 
----
-
 ## 🎯 Our Vision — What We're Building
 
 This isn't just an update. It's a statement of intent. Here's what the NextGen platform is set to
@@ -71,7 +67,6 @@ deliver:
 
 And of course — **everything the original AIO had, and more.** We're not leaving any feature behind.
 
----
 
 ## ✨ Key Features
 
@@ -82,7 +77,6 @@ And of course — **everything the original AIO had, and more.** We're not leavi
 | 🔒 **Private Vault**                                 | 🌐 **Universal Support**                                         | 🛡️ **Ad-Free Forever**                               |
 | Secure, app-locked storage for sensitive files       | Works with 1000+ sites and a built-in browser                    | No ads, no trackers, no nonsense                      |
 
----
 
 ## 📱 Screenshots
 
@@ -96,8 +90,6 @@ is being built from scratch with a fresh, modern design. Fresh screenshots comin
 ![Screenshot 4](others/graphics/screenshots/4.0.jpg)
 ![Screenshot 5](others/graphics/screenshots/5.0.jpg)
 ![Screenshot 6](others/graphics/screenshots/6.0.jpg)
-
----
 
 ## 💻 Tech Stack & Architecture
 
@@ -137,7 +129,6 @@ work on independent modules without stepping on each other's toes.
     - [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) — alternative extraction
       backend
 
----
 
 ## 🚀 Getting Started
 
@@ -161,7 +152,6 @@ Ready to dive in? Here's how to get started with TubeAIO NextGen:
 5. **Watch** — Play downloaded content with the powerful built-in player or cast to your TV.
 6. **Secure** — Move sensitive files to the **Private Folder** to hide them from the gallery.
 
----
 
 ## 🤝 Join the Team
 
@@ -193,7 +183,6 @@ project that respects user privacy.
 > a [Discussions page](https://github.com/shibaFoss/AIO-Video-Downloader/discussions) where we talk
 > about features, architecture, and the roadmap.
 
----
 
 ## 🔧 Technical Specifications
 
@@ -207,7 +196,6 @@ project that respects user privacy.
 | **License**            | Custom Open Source License         |
 | **Website**            | [tubeaio.com](https://tubeaio.com) |
 
----
 
 ## 📜 Multi-Language Support
 
@@ -216,7 +204,6 @@ multiple languages:
 
 English | [简体中文](docs/README_ZH.md) | [हिन्दी](docs/README_HI.md) | [Español](docs/README_ES.md) | [Français](docs/README_FR.md) | [Bahasa Indonesia](docs/README_ID.md) | [Русский](docs/README_RU.md) | [Tiếng Việt](docs/README_VI.md)
 
----
 
 ### 🌟 If You Like What We're Building — Give Us a Star!
 
@@ -228,6 +215,3 @@ us.
 **Made with ❤️ in India 🇮🇳**
 
 *Respecting Privacy • Promoting Transparency • Building the Future*
-
-[![Website](https://img.shields.io/badge/🌐-Visit-tubeaio.com-orange?style=for-the-badge)](https://tubeaio.com)
-[![Download](https://img.shields.io/badge/📥-Download-APK-blue?style=for-the-badge)](https://tubeaio.com)
