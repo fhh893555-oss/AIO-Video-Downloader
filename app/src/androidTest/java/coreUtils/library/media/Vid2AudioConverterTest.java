@@ -43,7 +43,10 @@ public class Vid2AudioConverterTest {
 		Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
 		copyAssetToFile(testContext, "test_video.mp4", inputFile);
 		
-		File outputFile = new File(context.getCacheDir(), "extracted_audio.mp4");
+		// Save to public Downloads folder so you can see it in your File Manager
+		File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+		File outputFile = new File(downloadsDir, "extracted_audio.mp3");
+
 		if (outputFile.exists()) {
 			outputFile.delete();
 		}

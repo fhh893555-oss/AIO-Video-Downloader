@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 
 import coreUtils.library.process.LoggerUtils;
@@ -44,6 +45,7 @@ public class Vid2AudioConverter {
 	                                 ThreadTask.ProgressCallback<Integer> callback) {
 		MediaExtractor extractor = new MediaExtractor();
 		MediaMuxer muxer = null;
+		FileOutputStream fos = null;
 		
 		try {
 			File sourceFile = new File(inputFile);
@@ -74,19 +76,27 @@ public class Vid2AudioConverter {
 			}
 			
 			String mime = format.getString(MediaFormat.KEY_MIME);
-			int muxerFormat;
+			boolean isMp3 = "audio/mpeg".equals(mime);
+			int newTrackIndex = -1;
 			
-			if ("audio/aac".equals(mime) || "audio/mp4a-latm".equals(mime) || "audio/mpeg".equals(mime)) {
-				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
-			} else if ("audio/opus".equals(mime) || "audio/vorbis".equals(mime)) {
-				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_WEBM;
+			if (isMp3) {
+				logger.debug("Detected MP3. Using raw extraction.");
+				fos = new FileOutputStream(outputFile);
 			} else {
-				throw new RuntimeException("Unsupported audio MIME type for extraction: " + mime);
+				int muxerFormat;
+				if ("audio/aac".equals(mime) || "audio/mp4a-latm".equals(mime)) {
+					muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
+				} else if ("audio/opus".equals(mime) || "audio/vorbis".equals(mime)) {
+					muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_WEBM;
+				} else {
+					throw new RuntimeException("Unsupported audio MIME type for extraction: " + mime);
+				}
+				
+				muxer = new MediaMuxer(outputFile, muxerFormat);
+				newTrackIndex = muxer.addTrack(format);
+				muxer.start();
+				logger.debug("Muxing started. Output format: " + muxerFormat);
 			}
-			
-			muxer = new MediaMuxer(outputFile, muxerFormat);
-			int newTrackIndex = muxer.addTrack(format);
-			muxer.start();
 			
 			ByteBuffer buffer = ByteBuffer.allocate(4 * 1024 * 1024);
 			MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
@@ -94,8 +104,6 @@ public class Vid2AudioConverter {
 			long totalSize = sourceFile.length();
 			long processedSize = 0;
 			int lastReportedProgress = -1;
-			
-			logger.debug("Muxing started. Output format: " + muxerFormat);
 			
 			while (true) {
 				if (conversionTask != null && conversionTask.isCancelled()) {
@@ -110,22 +118,28 @@ public class Vid2AudioConverter {
 					break;
 				}
 				
-				bufferInfo.offset = 0;
-				bufferInfo.size = sampleSize;
-				bufferInfo.presentationTimeUs = extractor.getSampleTime();
-				
-				int sampleFlags = extractor.getSampleFlags();
-				bufferInfo.flags = 0;
-				if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {
-					bufferInfo.flags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;
+				if (isMp3) {
+					byte[] chunk = new byte[sampleSize];
+					buffer.get(chunk);
+					fos.write(chunk);
+				} else {
+					bufferInfo.offset = 0;
+					bufferInfo.size = sampleSize;
+					bufferInfo.presentationTimeUs = extractor.getSampleTime();
+					
+					int sampleFlags = extractor.getSampleFlags();
+					bufferInfo.flags = 0;
+					if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {
+						bufferInfo.flags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;
+					}
+					if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_PARTIAL_FRAME) != 0) {
+						bufferInfo.flags |= MediaCodec.BUFFER_FLAG_PARTIAL_FRAME;
+					}
+					
+					muxer.writeSampleData(newTrackIndex, buffer, bufferInfo);
 				}
-				if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_PARTIAL_FRAME) != 0) {
-					bufferInfo.flags |= MediaCodec.BUFFER_FLAG_PARTIAL_FRAME;
-				}
 				
-				muxer.writeSampleData(newTrackIndex, buffer, bufferInfo);
 				extractor.advance();
-				
 				processedSize += sampleSize;
 				int progress = (int) ((processedSize * 100) / totalSize);
 				
@@ -135,7 +149,10 @@ public class Vid2AudioConverter {
 				}
 			}
 			
-			muxer.stop();
+			if (muxer != null) {
+				muxer.stop();
+			}
+			
 			logger.debug("Extraction successful. File saved: " + outputFile);
 			return outputFile;
 			
@@ -149,6 +166,11 @@ public class Vid2AudioConverter {
 			extractor.release();
 			if (muxer != null) {
 				muxer.release();
+			}
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (Exception ignore) {}
 			}
 		}
 	}
