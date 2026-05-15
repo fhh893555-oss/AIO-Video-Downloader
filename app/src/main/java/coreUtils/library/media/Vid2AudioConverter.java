@@ -76,7 +76,7 @@ public class Vid2AudioConverter {
 			String mime = format.getString(MediaFormat.KEY_MIME);
 			int muxerFormat;
 			
-			if ("audio/aac".equals(mime) || "audio/mp4a-latm".equals(mime)) {
+			if ("audio/aac".equals(mime) || "audio/mp4a-latm".equals(mime) || "audio/mpeg".equals(mime)) {
 				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
 			} else if ("audio/opus".equals(mime) || "audio/vorbis".equals(mime)) {
 				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_WEBM;
