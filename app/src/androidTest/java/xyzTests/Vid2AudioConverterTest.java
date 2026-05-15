@@ -1,4 +1,4 @@
-package coreUtils.library.media;
+package xyzTests;
 
 import static android.os.Environment.*;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import coreUtils.library.media.Vid2AudioConverter;
 
 @RunWith(AndroidJUnit4.class)
 public class Vid2AudioConverterTest {
