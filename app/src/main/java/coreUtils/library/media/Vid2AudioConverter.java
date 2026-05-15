@@ -4,49 +4,89 @@ import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
-import android.os.Handler;
-import android.os.Looper;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.ThreadTask;
 
+/**
+ * Utility class to extract audio tracks from video files (MP4/WebM) and save them as standalone audio files.
+ * Optimized with {@link ThreadTask} for background execution and lifecycle awareness.
+ */
 public class Vid2AudioConverter {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
-	private final AtomicBoolean isProcessCancelledByUser = new AtomicBoolean(false);
-	private final Handler mainHandler = new Handler(Looper.getMainLooper());
-	private boolean isMuxerStarted = false;
+	private ThreadTask<String, Integer> conversionTask;
 	
-	public void extractAudio(String inputFile,
-	                         String outputFile, ConversionListener listener) {
-		MediaExtractor extractor = null;
+	/**
+	 * Extracts audio from the input file and saves it to the output file.
+	 *
+	 * @param owner      LifecycleOwner to bind the task (e.g., Activity or Fragment).
+	 * @param inputFile  Path to the source video file.
+	 * @param outputFile Path where the extracted audio will be saved.
+	 * @param listener   Callback for progress and result notifications.
+	 */
+	public void extractAudio(@Nullable LifecycleOwner owner,
+	                         @NonNull String inputFile,
+	                         @NonNull String outputFile,
+	                         @NonNull ConversionListener listener) {
+		
+		logger.debug("Starting audio extraction. Input: " + inputFile + ", Output: " + outputFile);
+		
+		conversionTask = new ThreadTask.Builder<String, Integer>()
+			.withLifecycle(owner)
+			.withBackgroundTask(callback -> performExtraction(inputFile, outputFile, callback))
+			.withProgressTask(listener::onProgress)
+			.withResultTask(listener::onSuccess)
+			.withErrorTask(error -> {
+				logger.error("Audio extraction failed: " + error.getMessage(), error);
+				listener.onFailure(error.getMessage());
+			})
+			.build();
+		
+		conversionTask.start();
+	}
+	
+	/**
+	 * Core extraction logic running on a background thread.
+	 */
+	private String performExtraction(String inputFile, String outputFile,
+	                                 ThreadTask.ProgressCallback<Integer> callback) {
+		MediaExtractor extractor = new MediaExtractor();
 		MediaMuxer muxer = null;
 		
 		try {
-			extractor = new MediaExtractor();
+			File sourceFile = new File(inputFile);
+			if (!sourceFile.exists()) {
+				throw new RuntimeException("Source file does not exist: " + inputFile);
+			}
+			
 			extractor.setDataSource(inputFile);
 			
 			int audioTrackIndex = -1;
 			MediaFormat format = null;
 			
-			for (int i = 0; i < extractor.getTrackCount(); i++) {
-				format = extractor.getTrackFormat(i);
-				String mime = format.getString(MediaFormat.KEY_MIME);
+			int trackCount = extractor.getTrackCount();
+			for (int i = 0; i < trackCount; i++) {
+				MediaFormat trackFormat = extractor.getTrackFormat(i);
+				String mime = trackFormat.getString(MediaFormat.KEY_MIME);
 				if (mime != null && mime.startsWith("audio/")) {
 					audioTrackIndex = i;
+					format = trackFormat;
 					extractor.selectTrack(i);
+					logger.debug("Selected audio track #" + i + " with MIME: " + mime);
 					break;
 				}
 			}
 			
 			if (audioTrackIndex == -1) {
-				String errorMsg = "No audio track found in video file: " + inputFile;
-				logger.debug(errorMsg);
-				postFailure(listener, errorMsg);
-				return;
+				throw new RuntimeException("No audio track found in: " + inputFile);
 			}
 			
 			String mime = format.getString(MediaFormat.KEY_MIME);
@@ -54,87 +94,90 @@ public class Vid2AudioConverter {
 			
 			if ("audio/aac".equals(mime) || "audio/mp4a-latm".equals(mime)) {
 				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
-				
 			} else if ("audio/opus".equals(mime) || "audio/vorbis".equals(mime)) {
 				muxerFormat = MediaMuxer.OutputFormat.MUXER_OUTPUT_WEBM;
-				
 			} else {
-				String errorMsg = "Unsupported audio MIME type extraction: " + mime;
-				logger.error(errorMsg);
-				postFailure(listener, errorMsg);
-				return;
+				throw new RuntimeException("Unsupported audio MIME type for extraction: " + mime);
 			}
 			
 			muxer = new MediaMuxer(outputFile, muxerFormat);
 			int newTrackIndex = muxer.addTrack(format);
 			muxer.start();
-			isMuxerStarted = true;
 			
-			ByteBuffer buffer = ByteBuffer.allocate(4096);
+			ByteBuffer buffer = ByteBuffer.allocate(4 * 1024 * 1024); // 4MB buffer
 			MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 			
-			float fileSize = new File(inputFile).length();
-			long extractedSize = 0;
+			long totalSize = sourceFile.length();
+			long processedSize = 0;
+			int lastReportedProgress = -1;
 			
-			while (!isProcessCancelledByUser.get()) {
+			logger.debug("Muxing started. Output format: " + muxerFormat);
+			
+			while (true) {
+				if (conversionTask != null && conversionTask.isCancelled()) {
+					logger.warning("Extraction cancelled by user or lifecycle.");
+					throw new RuntimeException("Audio extraction cancelled");
+				}
+				
 				buffer.clear();
 				int sampleSize = extractor.readSampleData(buffer, 0);
-				if (sampleSize < 0) break;
+				if (sampleSize < 0) {
+					logger.debug("Reached end of stream.");
+					break;
+				}
 				
 				bufferInfo.offset = 0;
 				bufferInfo.size = sampleSize;
 				bufferInfo.presentationTimeUs = extractor.getSampleTime();
-				bufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME;
+				
+				// Map MediaExtractor flags to MediaCodec flags
+				int sampleFlags = extractor.getSampleFlags();
+				bufferInfo.flags = 0;
+				if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {
+					bufferInfo.flags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;
+				}
+				if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_PARTIAL_FRAME) != 0) {
+					bufferInfo.flags |= MediaCodec.BUFFER_FLAG_PARTIAL_FRAME;
+				}
 				
 				muxer.writeSampleData(newTrackIndex, buffer, bufferInfo);
 				extractor.advance();
 				
-				extractedSize += sampleSize;
-				int progress = (int) ((extractedSize / fileSize) * 100);
-				postProgress(listener, progress);
-			}
-			
-			if (isProcessCancelledByUser.get()) {
-				postFailure(listener, "Audio extraction cancelled");
-				return;
+				processedSize += sampleSize;
+				int progress = (int) ((processedSize * 100) / totalSize);
+				
+				if (progress != lastReportedProgress) {
+					callback.onProgress(progress);
+					lastReportedProgress = progress;
+				}
 			}
 			
 			muxer.stop();
-			isMuxerStarted = false;
-			postSuccess(listener, outputFile);
+			logger.debug("Extraction successful. File saved: " + outputFile);
+			return outputFile;
 			
-		} catch (Exception error) {
-			String errorMsg = "Audio extraction failed: " + error.getMessage();
-			logger.error(errorMsg + ". Error: " + error);
-			postFailure(listener, errorMsg);
-		} finally {
-			if (isMuxerStarted && muxer != null) {
-				try {
-					muxer.stop();
-				} catch (Exception error) {
-					logger.error("Error stopping MediaMuxer", error);
-				}
+		} catch (Exception e) {
+			File partialFile = new File(outputFile);
+			if (partialFile.exists()) {
+				//noinspection ResultOfMethodCallIgnored
+				partialFile.delete();
 			}
-			if (muxer != null) muxer.release();
-			if (extractor != null) extractor.release();
-			isMuxerStarted = false;
+			throw new RuntimeException(e);
+		} finally {
+			extractor.release();
+			if (muxer != null) {
+				muxer.release();
+			}
 		}
 	}
 	
+	/**
+	 * Cancels the current conversion process.
+	 */
 	public void cancel() {
-		isProcessCancelledByUser.set(true);
-	}
-	
-	private void postProgress(ConversionListener listener, int progress) {
-		mainHandler.post(() -> listener.onProgress(progress));
-	}
-	
-	private void postSuccess(ConversionListener listener, String outputFile) {
-		mainHandler.post(() -> listener.onSuccess(outputFile));
-	}
-	
-	private void postFailure(ConversionListener listener, String error) {
-		mainHandler.post(() -> listener.onFailure(error));
+		if (conversionTask != null) {
+			conversionTask.cancel();
+		}
 	}
 	
 	public interface ConversionListener {

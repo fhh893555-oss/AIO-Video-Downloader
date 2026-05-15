@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
 }
-apply plugin: 'io.objectbox'
 
+apply plugin: 'io.objectbox'
 android {
     namespace 'com.nextgen'
     compileSdkVersion 37
