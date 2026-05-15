@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -20,6 +24,7 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
 	protected VB binding;
+	
 	protected abstract VB inflateBinding(LayoutInflater inflater);
 	protected abstract void onLoadedLayout();
 	protected abstract boolean shouldLockOrientation();
@@ -67,5 +72,31 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 	private void setContentView() {
 		binding = inflateBinding(getLayoutInflater());
 		setContentView(binding.getRoot());
+	}
+	
+	public void buttonVibrate() {
+		vibrate(20);
+	}
+	
+	protected void vibrate(long duration) {
+		try {
+			Vibrator vibrator;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+				Object systemService = getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+				VibratorManager vibratorManager = (VibratorManager) systemService;
+				vibrator = (vibratorManager != null) ? vibratorManager.getDefaultVibrator() :
+					(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			} else {
+				vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			}
+			
+			if (vibrator != null && vibrator.hasVibrator()) {
+				int defaultAmplitude = VibrationEffect.DEFAULT_AMPLITUDE;
+				VibrationEffect oneShot = VibrationEffect.createOneShot(duration, defaultAmplitude);
+				vibrator.vibrate(oneShot);
+			}
+		} catch (Exception error) {
+			logger.error("Failed to vibrate", error);
+		}
 	}
 }

@@ -13,12 +13,13 @@
     android:orientation="vertical">
 
     <ImageView
-      android:layout_width="@dimen/_250"
+      android:layout_width="@dimen/_150"
       android:layout_height="wrap_content"
       android:layout_gravity="right"
+      android:layout_marginTop="@dimen/_50"
       android:adjustViewBounds="true"
       android:src="@drawable/img_feedback_act_corner"
-      tools:ignore="ContentDescription" />
+      tools:ignore="ContentDescription,ImageContrastCheck" />
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -26,18 +27,21 @@
       android:orientation="vertical">
 
       <include
+        android:id="@+id/top_1"
         layout="@layout/activity_feedback_1_top_1" />
 
       <include
+        android:id="@+id/top_2"
         layout="@layout/activity_feedback_1_top_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <include
+        android:id="@+id/top_3"
         layout="@layout/activity_feedback_1_top_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-15dp" />
+        android:layout_marginTop="-5dp" />
 
     </LinearLayout>
   </FrameLayout>

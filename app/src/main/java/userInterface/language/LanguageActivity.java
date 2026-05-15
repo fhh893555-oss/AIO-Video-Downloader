@@ -17,7 +17,7 @@ import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.GridLayoutSpacing;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.opening.OpeningActivity;
+import userInterface.feedback.FeedbackActivity;
 
 public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> implements LanguageCallback {
 	private final LoggerUtils logger = LoggerUtils.from(LanguageViewModel.class);
@@ -98,11 +98,11 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 		AppConfigsRepo.getConfig().isLocaleConfigured = true;
 		AppConfigsRepo.getConfig().save();
 		LocaleHelper.changeLanguage(languageItem.languageCode(), this);
-		// openNextActivity();
+		openNextActivity();
 	}
 	
 	private void openNextActivity() {
-		Intent intent = new Intent(LanguageActivity.this, OpeningActivity.class);
+		Intent intent = new Intent(LanguageActivity.this, FeedbackActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 		ActivityAnimator.animActivityFade(LanguageActivity.this);
