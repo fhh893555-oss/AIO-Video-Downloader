@@ -22,6 +22,7 @@ android {
         versionName "2026.04.28"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk { abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a" }
     }
 
@@ -109,4 +110,6 @@ dependencies {
 
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
     testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
 }

@@ -1,4 +1,4 @@
-package xyzTests;
+package coreUtils.library.media;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
-
-import coreUtils.library.media.MP4FileUtility;
 
 public class MP4FileUtilityTest {
 	
