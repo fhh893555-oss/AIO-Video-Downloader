@@ -5,7 +5,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/ic_bg_activity"
+  android:background="@drawable/img_bg_activity"
   tools:context="userInterface.opening.OpeningActivity">
 
   <LinearLayout
@@ -25,7 +25,7 @@
       android:adjustViewBounds="true"
       android:elevation="@dimen/_2"
       android:importantForAccessibility="no"
-      android:src="@drawable/ic_image_open_splash"
+      android:src="@drawable/img_image_open_splash"
       tools:ignore="ImageContrastCheck" />
 
     <TextView
