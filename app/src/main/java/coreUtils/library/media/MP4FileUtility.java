@@ -1,5 +1,7 @@
 package coreUtils.library.media;
 
+import static java.util.Arrays.*;
+
 import com.coremedia.iso.boxes.Container;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -156,7 +158,7 @@ public final class MP4FileUtility {
 		if (!file.exists() || file.length() < 100) return false;
 		
 		try (FileInputStream fis = new FileInputStream(file)) {
-			byte[] buffer = new byte[1024 * 1024];
+			byte[] buffer = new byte[64 * 1024];
 			int bytesRead = fis.read(buffer);
 			
 			if (bytesRead <= 0) {
@@ -164,8 +166,7 @@ public final class MP4FileUtility {
 				return false;
 			}
 			
-			byte[] content = new byte[bytesRead];
-			System.arraycopy(buffer, 0, content, 0, bytesRead);
+			byte[] content = bytesRead == buffer.length ? buffer : copyOf(buffer, bytesRead);
 			if (!containsMoovAtomAtStart(content)) {
 				logger.debug("'moov' atom not found near start: " + file.getName());
 				return false;

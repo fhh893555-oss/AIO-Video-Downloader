@@ -20,6 +20,7 @@ jsoup = "1.22.2"
 glide = "5.0.7"
 permissionx = "1.8.1"
 recyclerview = "1.4.0"
+junit = "4.13.2"
 
 [libraries]
 desugar-jdk-libs-nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
@@ -57,6 +58,7 @@ lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 permissionx = { module = "com.guolindev.permissionx:permissionx", version.ref = "permissionx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
