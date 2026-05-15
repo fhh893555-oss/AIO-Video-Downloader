@@ -4,7 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/img_bg_activity"
+  android:background="@drawable/img_bg_activity_v2"
   android:fillViewport="true">
 
   <FrameLayout
@@ -14,10 +14,10 @@
     tools:ignore="UselessParent">
 
     <ImageView
-      android:layout_width="@dimen/_150"
+      android:layout_width="@dimen/_190"
       android:layout_height="wrap_content"
       android:layout_gravity="right"
-      android:layout_marginTop="@dimen/_50"
+      android:layout_marginTop="@dimen/_20"
       android:adjustViewBounds="true"
       android:src="@drawable/img_feedback_act_corner"
       tools:ignore="ContentDescription,ImageContrastCheck" />

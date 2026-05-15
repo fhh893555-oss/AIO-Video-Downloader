@@ -44,7 +44,7 @@
     <item name="colorPrimary">@color/color_primary</item>
     <item name="colorPrimaryDark">@color/color_primary_variant</item>
     <item name="colorError">@color/color_error</item>
-    <item name="colorAccent">@color/color_secondary</item>
+    <item name="colorAccent">@color/color_primary_variant</item>
 
     <item name="android:layoutDirection">ltr</item>
 

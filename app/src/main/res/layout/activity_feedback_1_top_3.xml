@@ -182,7 +182,7 @@
             android:layout_gravity="right|bottom"
             android:layout_marginRight="@dimen/_10"
             android:layout_marginBottom="@dimen/_5"
-            android:background="@drawable/ic_rd_card_color"
+            android:background="@drawable/ic_rd_edit_bg_color"
             android:gravity="right|bottom"
             android:paddingLeft="@dimen/_5"
             android:paddingTop="@dimen/_2"
