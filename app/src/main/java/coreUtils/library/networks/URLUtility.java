@@ -28,7 +28,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import coreUtils.base.StaticAppInfo;
 import coreUtils.library.process.LoggerUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -99,7 +98,19 @@ public class URLUtility {
      * message body, in bytes, sent to the recipient.
      */
     public static final String CONTENT_LENGTH = "Content-Length";
-
+    public static final List<String> APP_DEFAULT_MOBILE_AGENTS =
+        List.of("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_5 like Mac OS X) AppleWebKit/601.1.46 (KHTML, " +
+                "like Gecko) Version/9.0 Mobile/13G36 Safari/601.1",
+            "Mozilla/5.0 (Linux; Android 4.4.2; Nexus 5 Build/KOT49H) AppleWebKit/537.36 (KHTML, " +
+                "like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36",
+            "Mozilla/5.0 (Linux; U; Android 2.3.6; en-us; GT-I9000 Build/GINGERBREAD) AppleWebKit/533.1 " +
+                "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+    
+    public static final String APP_ALL_MEDIA_TYPES = "text/html,application/xhtml+xml,application/xml;q=0.9," +
+        "image/webp,image/apng,image/avif,image/jpeg,image/png,image/gif,image/svg+xml,image/*," +
+        "*/*;q=0.8";
+    
+    
     /**
      * Validates whether a given string is a syntactically valid URL.
      * <p>
@@ -1039,7 +1050,7 @@ public class URLUtility {
      */
     public static String fetchMobileWebPageContent(
             String url, boolean allowRetry, int numOfRetry, int timeoutSeconds) {
-        List<String> userAgents = StaticAppInfo.APP_DEFAULT_MOBILE_AGENTS;
+        List<String> userAgents = APP_DEFAULT_MOBILE_AGENTS;
         OkHttpClient client = HttpClientProvider.getOkHttpClient();
 
         int maxAttempts = (allowRetry && numOfRetry > 0) ? numOfRetry : 1;
@@ -1052,7 +1063,7 @@ public class URLUtility {
                 Request request = new Request.Builder()
                         .url(url)
                         .header("User-Agent", userAgent)
-                        .header("Accept", StaticAppInfo.APP_ALL_MEDIA_TYPES)
+                        .header("Accept", APP_ALL_MEDIA_TYPES)
                         .header("Accept-Language", acceptLanguage)
                         .build();
 

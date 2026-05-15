@@ -34,7 +34,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import coreUtils.base.BaseApplication;
-import coreUtils.base.StaticAppInfo;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
 import dataRepo.downloads.DownloadInfo;

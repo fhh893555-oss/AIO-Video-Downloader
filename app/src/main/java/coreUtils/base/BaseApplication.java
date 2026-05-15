@@ -40,7 +40,7 @@ public class BaseApplication extends Application {
 	}
 	
 	private static void configureThemeBySystem() {
-		int modeNightFollowSystem = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+		int modeNightFollowSystem = AppCompatDelegate.MODE_NIGHT_NO;
 		AppCompatDelegate.setDefaultNightMode(modeNightFollowSystem);
 	}
 	

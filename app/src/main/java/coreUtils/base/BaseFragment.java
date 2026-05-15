@@ -13,9 +13,9 @@ import androidx.viewbinding.ViewBinding;
 
 public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 
-    protected VB binding;
     protected BaseApplication application;
     protected Context context;
+    protected VB binding;
 
     protected abstract VB inflateBinding(LayoutInflater inflater, ViewGroup container);
     protected abstract void onLoadedLayout();
@@ -73,6 +73,4 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
     protected BaseApplication getApp() {
         return application;
     }
-
-
 }
