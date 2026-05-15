@@ -40,7 +40,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	private void setupButtonClicks() {
-		binding.top1.btnBack.setOnClickListener(view -> {
+		binding.btnBack.setOnClickListener(view -> {
 			buttonVibrate();
 			finish();
 		});

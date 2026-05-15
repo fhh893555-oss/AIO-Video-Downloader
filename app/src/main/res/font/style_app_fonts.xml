@@ -2,7 +2,7 @@
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
 
   <font
-    android:font="@font/font_family_extralight"
+    android:font="@font/font_family_light"
     android:fontStyle="normal"
     android:fontWeight="200" />
 
@@ -22,7 +22,7 @@
     android:fontWeight="500" />
 
   <font
-    android:font="@font/font_family_semibold"
+    android:font="@font/font_family_medium"
     android:fontStyle="normal"
     android:fontWeight="600" />
 
@@ -37,12 +37,12 @@
     android:fontWeight="800" />
 
   <font
-    android:font="@font/font_family_black"
+    android:font="@font/font_family_bold"
     android:fontStyle="normal"
     android:fontWeight="900" />
 
   <font
-    android:font="@font/font_family_extralightitalic"
+    android:font="@font/font_family_lightitalic"
     android:fontStyle="italic"
     android:fontWeight="200" />
   <font
@@ -61,7 +61,7 @@
     android:fontWeight="500" />
 
   <font
-    android:font="@font/font_family_semibolditalic"
+    android:font="@font/font_family_mediumitalic"
     android:fontStyle="italic"
     android:fontWeight="600" />
 
@@ -76,7 +76,7 @@
     android:fontWeight="800" />
 
   <font
-    android:font="@font/font_family_blackitalic"
+    android:font="@font/font_family_bolditalic"
     android:fontStyle="italic"
     android:fontWeight="900" />
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -10,7 +10,8 @@
   <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="UselessParent">
 
     <ImageView
       android:layout_width="@dimen/_150"
@@ -26,23 +27,45 @@
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
-      <include
-        android:id="@+id/top_1"
-        layout="@layout/activity_feedback_1_top_1" />
-
-      <include
-        android:id="@+id/top_2"
-        layout="@layout/activity_feedback_1_top_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-      <include
-        android:id="@+id/top_3"
-        layout="@layout/activity_feedback_1_top_3"
-        android:layout_width="match_parent"
+      <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/_50"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-5dp" />
+        android:layout_marginLeft="@dimen/_10"
+        android:adjustViewBounds="true"
+        android:background="@drawable/bg_button_negative"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/img_arrow_back"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
+      <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+          <include
+            android:id="@+id/top_1"
+            layout="@layout/activity_feedback_1_top_1" />
+
+          <include
+            android:id="@+id/top_2"
+            layout="@layout/activity_feedback_1_top_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+          <include
+            android:id="@+id/top_3"
+            layout="@layout/activity_feedback_1_top_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp" />
+        </LinearLayout>
+      </ScrollView>
     </LinearLayout>
   </FrameLayout>
-</ScrollView>
+</LinearLayout>
