@@ -2,28 +2,28 @@
 <resources>
   <string name="title_select_language">భాషను ఎంచుకోండి</string>
   <string name="title_skip_for_now">ప్రస్తుతానికి వదిలేయండి</string>
-  <string name="title_tubeaio_downloader_tagline">డౌన్‌లోడ్ చేయండి, చూడండి &amp; స్నేహితులతో పంచుకోండి</string>
-  <string name="title_app_splash_credit">భారతదేశంలో ❤️ తో తయారు చేయబడింది 🇮🇳</string>
+  <string name="subtext_tubeaio_downloader_tagline">డౌన్‌లోడ్ చేయండి, చూడండి &amp; స్నేహితులతో పంచుకోండి</string>
+  <string name="subtext_app_splash_credit">భారతదేశంలో ❤️ తో తయారు చేయబడింది 🇮🇳</string>
   <string name="text_send_feedback_msg_at_homepage"><b>ఈ రోజుకు ఇంతే.</b> సూచనలు లేదా అభిప్రాయాలు ఉన్నాయా? మేము మీ నుండి వినాలనుకుంటున్నాము. <a>సందేశం పంపడానికి ఇక్కడ క్లిక్ చేయండి.</a></string>
 
-  <string name="title_unlock_requires">అన్‌లాక్ చేయడానికి అవసరం</string>
-  <string name="title_setup_device_password">ముందుగా పరికర లాక్ సెటప్ చేయండి</string>
-  <string name="title_authentication_failed">ధృవీకరణ విఫలమైంది లేదా రద్దు చేయబడింది</string>
-  <string name="title_cancel">రద్దు చేయి</string>
+  <string name="label_unlock_requires">అన్‌లాక్ చేయడానికి అవసరం</string>
+  <string name="label_setup_device_password">ముందుగా పరికర లాక్ సెటప్ చేయండి</string>
+  <string name="hint_authentication_failed">ధృవీకరణ విఫలమైంది లేదా రద్దు చేయబడింది</string>
+  <string name="label_cancel">రద్దు చేయి</string>
 
-  <string name="title_no">కాదు</string>
-  <string name="title_performed">పూర్తయింది</string>
-  <string name="title_not_performed">పూర్తి కాలేదు</string>
-  <string name="title_click_here_to_open">తెరవడానికి ఇక్కడ క్లిక్ చేయండి</string>
-  <string name="title_sounds">శబ్దాలు</string>
-  <string name="title_archives">ఆర్కైవ్స్</string>
-  <string name="title_programs">ప్రోగ్రామ్‌లు</string>
-  <string name="title_videos">వీడియోలు</string>
-  <string name="title_documents">పత్రాలు</string>
-  <string name="title_images">చిత్రాలు</string>
-  <string name="title_others">ఇతరాలు</string>
+  <string name="label_no">కాదు</string>
+  <string name="label_performed">పూర్తయింది</string>
+  <string name="label_not_performed">పూర్తి కాలేదు</string>
+  <string name="label_click_here_to_open">తెరవడానికి ఇక్కడ క్లిక్ చేయండి</string>
+  <string name="label_sounds">శబ్దాలు</string>
+  <string name="label_archives">ఆర్కైవ్స్</string>
+  <string name="label_programs">ప్రోగ్రామ్‌లు</string>
+  <string name="label_videos">వీడియోలు</string>
+  <string name="label_documents">పత్రాలు</string>
+  <string name="label_images">చిత్రాలు</string>
+  <string name="label_others">ఇతరాలు</string>
 
-  <string name="title_mobile_user_agent">మొబైల్ యూజర్ ఏజెంట్</string>
-  <string name="title_unknown">తెలియదు</string>
-  <string name="title_sharing_media_file">మీడియా ఫైల్‌ను షేర్ చేస్తోంది…</string>
+  <string name="label_mobile_user_agent">మొబైల్ యూజర్ ఏజెంట్</string>
+  <string name="label_unknown">తెలియదు</string>
+  <string name="label_sharing_media_file">మీడియా ఫైల్‌ను షేర్ చేస్తోంది…</string>
 </resources>

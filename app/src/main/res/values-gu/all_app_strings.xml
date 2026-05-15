@@ -2,28 +2,28 @@
 <resources>
   <string name="title_select_language">ભાષા પસંદ કરો</string>
   <string name="title_skip_for_now">અત્યારે છોડી દો</string>
-  <string name="title_tubeaio_downloader_tagline">ડાઉનલોડ કરો, જુઓ અને મિત્રો સાથે શેર કરો</string>
-  <string name="title_app_splash_credit">ભારતમાં ❤️ સાથે બનાવેલ 🇮🇳</string>
+  <string name="subtext_tubeaio_downloader_tagline">ડાઉનલોડ કરો, જુઓ અને મિત્રો સાથે શેર કરો</string>
+  <string name="subtext_app_splash_credit">ભારતમાં ❤️ સાથે બનાવેલ 🇮🇳</string>
   <string name="text_send_feedback_msg_at_homepage"><b>આજ માટે આટલું જ.</b> કોઈ સૂચનો કે પ્રતિસાદ છે? અમને તમારી પાસેથી સાંભળવું ગમશે. <a>સંદેશ મોકલવા માટે અહીં ક્લિક કરો.</a></string>
 
-  <string name="title_unlock_requires">અનલોક કરવા માટે જરૂરી છે</string>
-  <string name="title_setup_device_password">પહેલા ડિવાઇસ લોક સેટ કરો</string>
-  <string name="title_authentication_failed">પ્રમાણીકરણ નિષ્ફળ અથવા રદ થયું</string>
-  <string name="title_cancel">રદ કરો</string>
+  <string name="label_unlock_requires">અનલોક કરવા માટે જરૂરી છે</string>
+  <string name="label_setup_device_password">પહેલા ડિવાઇસ લોક સેટ કરો</string>
+  <string name="hint_authentication_failed">પ્રમાણીકરણ નિષ્ફળ અથવા રદ થયું</string>
+  <string name="label_cancel">રદ કરો</string>
 
-  <string name="title_no">ના</string>
-  <string name="title_performed">કરવામાં આવ્યું</string>
-  <string name="title_not_performed">કરવામાં આવ્યું નથી</string>
-  <string name="title_click_here_to_open">ખોલવા માટે અહીં ક્લિક કરો</string>
-  <string name="title_sounds">ધ્વનિ</string>
-  <string name="title_archives">આર્કાઇવ્સ</string>
-  <string name="title_programs">પ્રોગ્રામ્સ</string>
-  <string name="title_videos">વીડિયો</string>
-  <string name="title_documents">દસ્તાવેજો</string>
-  <string name="title_images">છબીઓ</string>
-  <string name="title_others">અન્ય</string>
+  <string name="label_no">ના</string>
+  <string name="label_performed">કરવામાં આવ્યું</string>
+  <string name="label_not_performed">કરવામાં આવ્યું નથી</string>
+  <string name="label_click_here_to_open">ખોલવા માટે અહીં ક્લિક કરો</string>
+  <string name="label_sounds">ધ્વનિ</string>
+  <string name="label_archives">આર્કાઇવ્સ</string>
+  <string name="label_programs">પ્રોગ્રામ્સ</string>
+  <string name="label_videos">વીડિયો</string>
+  <string name="label_documents">દસ્તાવેજો</string>
+  <string name="label_images">છબીઓ</string>
+  <string name="label_others">અન્ય</string>
 
-  <string name="title_mobile_user_agent">મોબાઇલ યુઝર એજન્ટ</string>
-  <string name="title_unknown">અજ્ઞાત</string>
-  <string name="title_sharing_media_file">મીડિયા ફાઇલ શેર થઈ રહી છે…</string>
+  <string name="label_mobile_user_agent">મોબાઇલ યુઝર એજન્ટ</string>
+  <string name="label_unknown">અજ્ઞાત</string>
+  <string name="label_sharing_media_file">મીડિયા ફાઇલ શેર થઈ રહી છે…</string>
 </resources>

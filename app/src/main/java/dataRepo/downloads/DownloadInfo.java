@@ -188,17 +188,17 @@ public class DownloadInfo implements Serializable {
     public String getFileCategoryName(boolean omitBranding) {
         if (omitBranding) {
             if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.IMAGE_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_images);
+                return StringHelper.getText(R.string.label_images);
             } else if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.VIDEO_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_videos);
+                return StringHelper.getText(R.string.label_videos);
             } else if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.MUSIC_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_sounds);
+                return StringHelper.getText(R.string.label_sounds);
             } else if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.DOCUMENT_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_documents);
+                return StringHelper.getText(R.string.label_documents);
             } else if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.PROGRAM_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_programs);
+                return StringHelper.getText(R.string.label_programs);
             } else if (FileStorageUtility.endsWithExtension(fileName, FileExtensions.ARCHIVE_EXTENSIONS)) {
-                return StringHelper.getText(R.string.title_archives);
+                return StringHelper.getText(R.string.label_archives);
             } else {
                 return StringHelper.getText(R.string.title_tubeaio_others);
             }

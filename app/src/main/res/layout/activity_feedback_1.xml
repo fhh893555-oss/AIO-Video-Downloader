@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_20">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/_40"
+                android:layout_height="@dimen/_40"
+                android:padding="@dimen/_10"
+                android:background="@drawable/ic_negative_selector"
+                android:clickable="true"
+                android:focusable="true"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:layout_width="@dimen/_150"
+                android:layout_height="@dimen/_150"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="-30dp"
+                android:layout_marginEnd="-30dp"
+                android:adjustViewBounds="true"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnBack"
+                android:layout_marginTop="@dimen/_20"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFeedbackTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_family_black"
+                    android:text="@string/title_feedback"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="@dimen/large_text_size"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvFeedbackSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_family_medium"
+                    android:text="@string/subtitle_feedback"
+                    android:textColor="@color/color_text_secondary"
+                    android:textSize="@dimen/message_text_size"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.github.dangiashish.StyledCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30"
+            app:cornerRadius="@dimen/_20"
+            app:stroke_Width="0.5dp"
+            app:stroke_Alpha="1"
+            app:stroke_ColorType="solid"
+            app:stroke_Color="@color/color_card_stroke"
+            app:background_Type="fill">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_family_semibold"
+                    android:text="@string/label_experience"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="@dimen/message_text_size"
+                    tools:ignore="SpUsage" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:weightSum="5">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            tools:ignore="ContentDescription" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5"
+                            android:text="@string/label_excellent"
+                            android:textSize="@dimen/smaller_text_size"
+                            android:textColor="@color/color_primary"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            tools:ignore="ContentDescription" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5"
+                            android:text="@string/label_good"
+                            android:textSize="@dimen/smaller_text_size"
+                            android:textColor="@color/color_text_secondary"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            tools:ignore="ContentDescription" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5"
+                            android:text="@string/label_average"
+                            android:textSize="@dimen/smaller_text_size"
+                            android:textColor="@color/color_text_secondary"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            tools:ignore="ContentDescription" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5"
+                            android:text="@string/label_poor"
+                            android:textSize="@dimen/smaller_text_size"
+                            android:textColor="@color/color_text_secondary"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            tools:ignore="ContentDescription" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5"
+                            android:text="@string/label_amazing"
+                            android:textSize="@dimen/smaller_text_size"
+                            android:textColor="@color/color_text_secondary"
+                            tools:ignore="SpUsage" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20"
+            android:fontFamily="@font/font_family_semibold"
+            android:text="@string/label_subject"
+            android:textColor="@color/color_text_primary"
+            android:textSize="@dimen/message_text_size"
+            tools:ignore="SpUsage" />
+
+        <com.github.dangiashish.StyledCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            app:cornerRadius="@dimen/_10"
+            app:stroke_Width="0.5dp"
+            app:stroke_Alpha="1"
+            app:stroke_Color="@color/color_card_stroke"
+            app:background_Type="fill">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10">
+
+                <EditText
+                    android:id="@+id/etSubject"
+                    style="@style/style_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/ivSubjectIcon"
+                    android:hint="@string/hint_subject"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:drawableLeft="@null"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:id="@+id/ivSubjectIcon"
+                    android:layout_width="@dimen/_20"
+                    android:layout_height="@dimen/_20"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20"
+            android:fontFamily="@font/font_family_semibold"
+            android:text="@string/label_describe_feedback"
+            android:textColor="@color/color_text_primary"
+            android:textSize="@dimen/message_text_size"
+            tools:ignore="SpUsage" />
+
+        <com.github.dangiashish.StyledCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            app:cornerRadius="@dimen/_10"
+            app:stroke_Width="0.5dp"
+            app:stroke_Alpha="1"
+            app:stroke_Color="@color/color_card_stroke"
+            app:background_Type="fill">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/_10">
+
+                <EditText
+                    android:id="@+id/etFeedback"
+                    style="@style/style_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="@string/hint_describe_feedback"
+                    android:minLines="5"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:drawableLeft="@null"
+                    tools:ignore="SpUsage" />
+
+                <TextView
+                    android:id="@+id/tvCharCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/title_zero_slash_five_hundred"
+                    android:textColor="@color/color_text_secondary"
+                    android:textSize="@dimen/small_text_size"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20"
+            android:fontFamily="@font/font_family_semibold"
+            android:text="@string/label_attach_screenshot"
+            android:textColor="@color/color_text_primary"
+            android:textSize="@dimen/message_text_size"
+            tools:ignore="SpUsage" />
+
+        <com.github.dangiashish.StyledCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            app:cornerRadius="@dimen/_10"
+            app:stroke_Width="0.5dp"
+            app:stroke_Alpha="1"
+            app:stroke_Color="@color/color_card_stroke"
+            app:background_Type="fill">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/_20">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/_24"
+                        android:layout_height="@dimen/_24"
+                        tools:ignore="ContentDescription" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10"
+                        android:fontFamily="@font/font_family_semibold"
+                        android:text="@string/label_upload_image"
+                        android:textColor="@color/color_primary"
+                        android:textSize="@dimen/message_text_size"
+                        tools:ignore="SpUsage" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5"
+                    android:text="@string/label_upload_image_hint"
+                    android:textColor="@color/color_text_secondary"
+                    android:textSize="@dimen/smaller_text_size"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20"
+            android:fontFamily="@font/font_family_semibold"
+            android:text="@string/label_email"
+            android:textColor="@color/color_text_primary"
+            android:textSize="@dimen/message_text_size"
+            tools:ignore="SpUsage" />
+
+        <com.github.dangiashish.StyledCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            app:cornerRadius="@dimen/_10"
+            app:stroke_Width="0.5dp"
+            app:stroke_Alpha="1"
+            app:stroke_Color="@color/color_card_stroke"
+            app:background_Type="fill">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10">
+
+                <ImageView
+                    android:layout_width="@dimen/_20"
+                    android:layout_height="@dimen/_20"
+                    tools:ignore="ContentDescription" />
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    style="@style/style_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10"
+                    android:hint="@string/hint_email"
+                    android:importantForAutofill="no"
+                    android:inputType="textEmailAddress"
+                    android:drawableLeft="@null"
+                    tools:ignore="SpUsage" />
+            </LinearLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5"
+            android:text="@string/subtext_email"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+
+        <com.github.dangiashish.StyledCardView
+            android:id="@+id/btnSendFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30"
+            android:clickable="true"
+            android:focusable="true"
+            app:background_ColorType="gradient_linear"
+            app:background_Gradient_Angle="180"
+            app:background_Gradient_Color0="@color/color_primary"
+            app:background_Gradient_Color1="@color/color_secondary"
+            app:cornerRadius="@dimen/_25"
+            app:shadow0_Outer_Alpha=".2"
+            app:shadow0_Outer_Blur="@dimen/_10"
+            app:shadow0_Outer_Color="@color/color_primary"
+            app:shadow0_Outer_Distance="@dimen/_5">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/font_family_bold"
+                    android:text="@string/btn_send_feedback"
+                    android:textColor="@color/color_surface"
+                    android:textSize="@dimen/normal_text_size"
+                    tools:ignore="SpUsage" />
+
+                <ImageView
+                    android:layout_width="@dimen/_30"
+                    android:layout_height="@dimen/_30"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_10"
+                    android:padding="@dimen/_5"
+                    android:background="@drawable/ic_negative_selector"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+        </com.github.dangiashish.StyledCardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_20"
+            android:layout_marginBottom="@dimen/_20"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/_16"
+                android:layout_height="@dimen/_16"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5"
+                android:text="@string/footer_feedback_safe"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/smaller_text_size"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

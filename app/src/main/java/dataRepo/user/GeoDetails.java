@@ -38,7 +38,7 @@ public final class GeoDetails {
                                 "regionName,city,zip,isp,query";
 
                         Request request = new Request.Builder().url(url)
-                                .header("User-Agent", StringHelper.getText(R.string.title_mobile_user_agent))
+                                .header("User-Agent", StringHelper.getText(R.string.label_mobile_user_agent))
                                 .build();
 
                         try (Response response = client.newCall(request).execute()) {

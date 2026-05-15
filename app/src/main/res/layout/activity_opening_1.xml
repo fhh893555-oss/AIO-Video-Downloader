@@ -57,7 +57,7 @@
       android:layout_marginRight="@dimen/_50"
       android:fontFamily="@font/font_family_medium"
       android:gravity="center"
-      android:text="@string/title_tubeaio_downloader_tagline"
+      android:text="@string/subtext_tubeaio_downloader_tagline"
       android:textColor="@color/color_text_secondary"
       android:textSize="@dimen/message_text_size"
       tools:ignore="SpUsage,TextContrastCheck,VisualLintBounds,TextSizeCheck" />
@@ -129,7 +129,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/font_family_medium"
         android:gravity="center_horizontal"
-        android:text="@string/title_app_splash_credit"
+        android:text="@string/subtext_app_splash_credit"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/message_text_size"
         tools:ignore="SpUsage,TextSizeCheck" />
@@ -140,7 +140,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/font_family_regular"
         android:gravity="center_horizontal"
-        android:text="@string/title__"
+        android:text="@string/label__"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/small_text_size"
         tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />

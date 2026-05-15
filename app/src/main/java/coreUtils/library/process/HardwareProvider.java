@@ -143,7 +143,7 @@ public final class HardwareProvider {
             }
         }
 
-        return StringHelper.getText(R.string.title_unknown);
+        return StringHelper.getText(R.string.label_unknown);
     }
 
     /**

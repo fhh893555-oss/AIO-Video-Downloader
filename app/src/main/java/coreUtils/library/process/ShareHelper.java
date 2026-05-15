@@ -165,7 +165,7 @@ public final class ShareHelper {
 
             String chooserTitle = title != null
                     ? title
-                    : StringHelper.getText(R.string.title_sharing_media_file);
+                    : StringHelper.getText(R.string.label_sharing_media_file);
 
             context.startActivity(Intent.createChooser(intent, chooserTitle));
 

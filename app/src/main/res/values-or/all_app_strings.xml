@@ -2,28 +2,28 @@
 <resources>
   <string name="title_select_language">ଭାଷା ଚୟନ କରନ୍ତୁ</string>
   <string name="title_skip_for_now">ବର୍ତ୍ତମାନ ପାଇଁ ଛାଡନ୍ତୁ</string>
-  <string name="title_tubeaio_downloader_tagline">ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ଦେଖନ୍ତୁ ଏବଂ ସାଙ୍ଗମାନଙ୍କ ସହିତ ସେୟାର କରନ୍ତୁ</string>
-  <string name="title_app_splash_credit">ଭାରତରେ ❤️ ସହିତ ନିର୍ମିତ 🇮🇳</string>
+  <string name="subtext_tubeaio_downloader_tagline">ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ଦେଖନ୍ତୁ ଏବଂ ସାଙ୍ଗମାନଙ୍କ ସହିତ ସେୟାର କରନ୍ତୁ</string>
+  <string name="subtext_app_splash_credit">ଭାରତରେ ❤️ ସହିତ ନିର୍ମିତ 🇮🇳</string>
   <string name="text_send_feedback_msg_at_homepage"><b>ଆଜି ପାଇଁ ଏତିକି ।</b> କିଛି ପରାମର୍ଶ କିମ୍ବା ମତାମତ ଅଛି କି? ଆମେ ଆପଣଙ୍କଠାରୁ ଶୁଣିବାକୁ ଚାହୁଁ । <a>ମେସେଜ୍ ପଠାଇବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ ।</a></string>
 
-  <string name="title_unlock_requires">ଅନଲକ୍ ପାଇଁ ଆବଶ୍ୟକ</string>
-  <string name="title_setup_device_password">ପ୍ରଥମେ ଡିଭାଇସ୍ ଲକ୍ ସେଟ୍ ଅପ୍ କରନ୍ତୁ</string>
-  <string name="title_authentication_failed">ପ୍ରାମାଣିକିକରଣ ବିଫଳ କିମ୍ବା ବାତିଲ ହେଲା</string>
-  <string name="title_cancel">ବାତିଲ୍ କରନ୍ତୁ</string>
+  <string name="label_unlock_requires">ଅନଲକ୍ ପାଇଁ ଆବଶ୍ୟକ</string>
+  <string name="label_setup_device_password">ପ୍ରଥମେ ଡିଭାଇସ୍ ଲକ୍ ସେଟ୍ ଅପ୍ କରନ୍ତୁ</string>
+  <string name="hint_authentication_failed">ପ୍ରାମାଣିକିକରଣ ବିଫଳ କିମ୍ବା ବାତିଲ ହେଲା</string>
+  <string name="label_cancel">ବାତିଲ୍ କରନ୍ତୁ</string>
 
-  <string name="title_no">ନା</string>
-  <string name="title_performed">ସମ୍ପାଦିତ</string>
-  <string name="title_not_performed">ସମ୍ପାଦିତ ହୋଇନାହିଁ</string>
-  <string name="title_click_here_to_open">ଖୋଲିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
-  <string name="title_sounds">ଶବ୍ଦ</string>
-  <string name="title_archives">ଆର୍କାଇଭ୍</string>
-  <string name="title_programs">ପ୍ରୋଗ୍ରାମ</string>
-  <string name="title_videos">ଭିଡିଓ</string>
-  <string name="title_documents">ଦଲିଲ</string>
-  <string name="title_images">ଛବି</string>
-  <string name="title_others">ଅନ୍ୟାନ୍ୟ</string>
+  <string name="label_no">ନା</string>
+  <string name="label_performed">ସମ୍ପାଦିତ</string>
+  <string name="label_not_performed">ସମ୍ପାଦିତ ହୋଇନାହିଁ</string>
+  <string name="label_click_here_to_open">ଖୋଲିବା ପାଇଁ ଏଠାରେ କ୍ଲିକ୍ କରନ୍ତୁ</string>
+  <string name="label_sounds">ଶବ୍ଦ</string>
+  <string name="label_archives">ଆର୍କାଇଭ୍</string>
+  <string name="label_programs">ପ୍ରୋଗ୍ରାମ</string>
+  <string name="label_videos">ଭିଡିଓ</string>
+  <string name="label_documents">ଦଲିଲ</string>
+  <string name="label_images">ଛବି</string>
+  <string name="label_others">ଅନ୍ୟାନ୍ୟ</string>
 
-  <string name="title_mobile_user_agent">ମୋବାଇଲ୍ ୟୁଜର୍ ଏଜେଣ୍ଟ</string>
-  <string name="title_unknown">ଅଜ୍ଞାତ</string>
-  <string name="title_sharing_media_file">ମିଡିଆ ଫାଇଲ୍ ସେୟାର୍ ହେଉଛି…</string>
+  <string name="label_mobile_user_agent">ମୋବାଇଲ୍ ୟୁଜର୍ ଏଜେଣ୍ଟ</string>
+  <string name="label_unknown">ଅଜ୍ଞାତ</string>
+  <string name="label_sharing_media_file">ମିଡିଆ ଫାଇଲ୍ ସେୟାର୍ ହେଉଛି…</string>
 </resources>

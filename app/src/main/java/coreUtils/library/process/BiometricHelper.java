@@ -97,11 +97,11 @@ public final class BiometricHelper {
         Executor executor = ContextCompat.getMainExecutor(activity);
         BiometricPrompt.PromptInfo.Builder builder =
                 new BiometricPrompt.PromptInfo.Builder()
-                        .setTitle(getText(R.string.title_unlock_requires))
+                        .setTitle(getText(R.string.label_unlock_requires))
                         .setAllowedAuthenticators(authenticators);
 
         if ((authenticators & DEVICE_CREDENTIAL) == 0) {
-            builder.setNegativeButtonText(getText(R.string.title_cancel));
+            builder.setNegativeButtonText(getText(R.string.label_cancel));
         }
 
         BiometricPrompt.PromptInfo promptInfo = builder.build();

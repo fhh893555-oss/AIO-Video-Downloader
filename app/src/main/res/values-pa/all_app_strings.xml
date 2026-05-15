@@ -2,28 +2,28 @@
 <resources>
   <string name="title_select_language">ਭਾਸ਼ਾ ਚੁਣੋ</string>
   <string name="title_skip_for_now">ਹੁਣੇ ਛੱਡੋ</string>
-  <string name="title_tubeaio_downloader_tagline">ਡਾਊਨਲੋਡ ਕਰੋ, ਦੇਖੋ ਅਤੇ ਦੋਸਤਾਂ ਨਾਲ ਸਾਂਝਾ ਕਰੋ</string>
-  <string name="title_app_splash_credit">ਭਾਰਤ ਵਿੱਚ ❤️ ਨਾਲ ਬਣਾਇਆ ਗਿਆ 🇮🇳</string>
+  <string name="subtext_tubeaio_downloader_tagline">ਡਾਊਨਲੋਡ ਕਰੋ, ਦੇਖੋ ਅਤੇ ਦੋਸਤਾਂ ਨਾਲ ਸਾਂਝਾ ਕਰੋ</string>
+  <string name="subtext_app_splash_credit">ਭਾਰਤ ਵਿੱਚ ❤️ ਨਾਲ ਬਣਾਇਆ ਗਿਆ 🇮🇳</string>
   <string name="text_send_feedback_msg_at_homepage"><b>ਅੱਜ ਲਈ ਬੱਸ ਇੰਨਾ ਹੀ।</b> ਕੋਈ ਸੁਝਾਅ ਜਾਂ ਫੀਡਬੈਕ ਹੈ? ਅਸੀਂ ਤੁਹਾਡੇ ਤੋਂ ਸੁਣਨਾ ਚਾਹੁੰਦੇ ਹਾਂ। <a>ਸੁਨੇਹਾ ਭੇਜਣ ਲਈ ਇੱਥੇ ਕਲਿੱਕ ਕਰੋ।</a></string>
 
-  <string name="title_unlock_requires">ਅਨਲੌਕ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ ਹੈ</string>
-  <string name="title_setup_device_password">ਪਹਿਲਾਂ ਡਿਵਾਈਸ ਲੌਕ ਸੈੱਟਅੱਪ ਕਰੋ</string>
-  <string name="title_authentication_failed">ਪ੍ਰਮਾਣਿਕਤਾ ਅਸਫਲ ਰਹੀ ਜਾਂ ਰੱਦ ਕੀਤੀ ਗਈ</string>
-  <string name="title_cancel">ਰੱਦ ਕਰੋ</string>
+  <string name="label_unlock_requires">ਅਨਲੌਕ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ ਹੈ</string>
+  <string name="label_setup_device_password">ਪਹਿਲਾਂ ਡਿਵਾਈਸ ਲੌਕ ਸੈੱਟਅੱਪ ਕਰੋ</string>
+  <string name="hint_authentication_failed">ਪ੍ਰਮਾਣਿਕਤਾ ਅਸਫਲ ਰਹੀ ਜਾਂ ਰੱਦ ਕੀਤੀ ਗਈ</string>
+  <string name="label_cancel">ਰੱਦ ਕਰੋ</string>
 
-  <string name="title_no">ਨਹੀਂ</string>
-  <string name="title_performed">ਕੀਤਾ ਗਿਆ</string>
-  <string name="title_not_performed">ਨਹੀਂ ਕੀਤਾ ਗਿਆ</string>
-  <string name="title_click_here_to_open">ਖੋਲ੍ਹਣ ਲਈ ਇੱਥੇ ਕਲਿੱਕ ਕਰੋ</string>
-  <string name="title_sounds">ਆਵਾਜ਼ਾਂ</string>
-  <string name="title_archives">ਆਰਕਾਈਵਜ਼</string>
-  <string name="title_programs">ਪ੍ਰੋਗਰਾਮ</string>
-  <string name="title_videos">ਵੀਡੀਓ</string>
-  <string name="title_documents">ਦਸਤਾਵੇਜ਼</string>
-  <string name="title_images">ਚਿੱਤਰ</string>
-  <string name="title_others">ਹੋਰ</string>
+  <string name="label_no">ਨਹੀਂ</string>
+  <string name="label_performed">ਕੀਤਾ ਗਿਆ</string>
+  <string name="label_not_performed">ਨਹੀਂ ਕੀਤਾ ਗਿਆ</string>
+  <string name="label_click_here_to_open">ਖੋਲ੍ਹਣ ਲਈ ਇੱਥੇ ਕਲਿੱਕ ਕਰੋ</string>
+  <string name="label_sounds">ਆਵਾਜ਼ਾਂ</string>
+  <string name="label_archives">ਆਰਕਾਈਵਜ਼</string>
+  <string name="label_programs">ਪ੍ਰੋਗਰਾਮ</string>
+  <string name="label_videos">ਵੀਡੀਓ</string>
+  <string name="label_documents">ਦਸਤਾਵੇਜ਼</string>
+  <string name="label_images">ਚਿੱਤਰ</string>
+  <string name="label_others">ਹੋਰ</string>
 
-  <string name="title_mobile_user_agent">ਮੋਬਾਈਲ ਯੂਜ਼ਰ ਏਜੰਟ</string>
-  <string name="title_unknown">ਅਣਜਾਣ</string>
-  <string name="title_sharing_media_file">ਮੀਡੀਆ ਫਾਈਲ ਸਾਂਝੀ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
+  <string name="label_mobile_user_agent">ਮੋਬਾਈਲ ਯੂਜ਼ਰ ਏਜੰਟ</string>
+  <string name="label_unknown">ਅਣਜਾਣ</string>
+  <string name="label_sharing_media_file">ਮੀਡੀਆ ਫਾਈਲ ਸਾਂਝੀ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
 </resources>
