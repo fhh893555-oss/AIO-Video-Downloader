@@ -1,5 +1,6 @@
 package coreUtils.library.media;
 
+import static android.os.Environment.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -43,8 +44,7 @@ public class Vid2AudioConverterTest {
 		Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
 		copyAssetToFile(testContext, "test_video.mp4", inputFile);
 		
-		// Save to public Downloads folder so you can see it in your File Manager
-		File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+		File downloadsDir = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
 		File outputFile = new File(downloadsDir, "extracted_audio.mp3");
 
 		if (outputFile.exists()) {
