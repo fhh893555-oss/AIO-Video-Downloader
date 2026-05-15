@@ -12,6 +12,7 @@ import android.os.Looper;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,16 @@ public class Vid2AudioConverterTest {
 	public void setUp() {
 		context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 		converter = new Vid2AudioConverter();
+	}
+
+	@After
+	public void tearDown() {
+		File downloadsDir = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
+		File outputFile = new File(downloadsDir, "extracted_audio.mp3");
+		if (outputFile.exists()) {
+			outputFile.delete();
+			System.out.println("Cleaned up: " + outputFile.getAbsolutePath());
+		}
 	}
 	
 	@Test
