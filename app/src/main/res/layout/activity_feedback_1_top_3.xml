@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.github.dangiashish.StyledCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="45"
+    app:background_Gradient_Color0="@color/color_background"
+    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:shadow0_Outer_Alpha=".2"
+    app:shadow0_Outer_Angle="-45"
+    app:shadow0_Outer_Blur="@dimen/_10"
+    app:shadow0_Outer_Color="@color/color_primary"
+    app:shadow0_Outer_Distance="@dimen/_5"
+    app:shadow1_Outer_Alpha="0.2"
+    app:shadow1_Outer_Angle="360"
+    app:shadow1_Outer_Blur="@dimen/_5"
+    app:shadow1_Outer_Color="@color/color_background"
+    app:shadow1_Outer_Distance="@dimen/_2"
+    app:shadow_Outer_Area="@dimen/_15"
+    app:stroke_Alpha="1"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_background"
+    app:stroke_Gradient_Color1="@color/color_card_stroke"
+    app:stroke_Width="0.5dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="@dimen/_15">
+
+      <TextView
+        style="@style/style_textviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_0"
+        android:fontFamily="@font/font_family_medium"
+        android:text="@string/label_subject"
+        android:textColor="@color/color_text_primary"
+        android:textSize="@dimen/message_text_size"
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+      <com.github.dangiashish.StyledCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10"
+        app:background_Type="fill"
+        app:cornerRadius="@dimen/_10"
+        app:stroke_Alpha="1"
+        app:stroke_Color="@color/color_card_stroke"
+        app:stroke_Width="0.5dp">
+
+        <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <EditText
+            android:id="@+id/editSubject"
+            style="@style/style_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btnPasteIcon"
+            android:drawableLeft="@null"
+            android:hint="@string/hint_subject"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            tools:ignore="SpUsage" />
+
+          <RelativeLayout
+            android:id="@+id/btnPasteIcon"
+            android:layout_width="@dimen/_20"
+            android:layout_height="@dimen/_20"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:layout_marginBottom="@dimen/_5"
+            android:background="@drawable/ic_negative_selector"
+            android:clickable="true">
+
+            <ImageView
+              android:layout_width="@dimen/_18"
+              android:layout_height="@dimen/_18"
+              android:layout_centerInParent="true"
+              android:adjustViewBounds="true"
+              android:alpha=".7"
+              android:src="@drawable/ic_paste_text"
+              android:tint="@color/color_text_hint"
+              tools:ignore="ContentDescription,UseAppTint" />
+          </RelativeLayout>
+        </RelativeLayout>
+
+      </com.github.dangiashish.StyledCardView>
+
+    </LinearLayout>
+  </com.github.dangiashish.StyledCardView>
+</LinearLayout>

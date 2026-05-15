@@ -27,56 +27,19 @@
       android:orientation="vertical">
 
       <include
-        layout="@layout/activity_feedback_1_top_1" />
+        layout="@layout/activity_feedback_1_top_1"/>
 
-      <include layout="@layout/activity_feedback_1_top_2" />
+      <include
+        layout="@layout/activity_feedback_1_top_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20"
-        android:fontFamily="@font/font_family_semibold"
-        android:text="@string/label_subject"
-        android:textColor="@color/color_text_primary"
-        android:textSize="@dimen/message_text_size"
-        tools:ignore="SpUsage" />
-
-      <com.github.dangiashish.StyledCardView
+      <include
+        layout="@layout/activity_feedback_1_top_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10"
-        app:background_Type="fill"
-        app:cornerRadius="@dimen/_10"
-        app:stroke_Alpha="1"
-        app:stroke_Color="@color/color_card_stroke"
-        app:stroke_Width="0.5dp">
+        android:layout_marginTop="-15dp" />
 
-        <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:padding="@dimen/_10">
-
-          <EditText
-            android:id="@+id/etSubject"
-            style="@style/style_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/ivSubjectIcon"
-            android:drawableLeft="@null"
-            android:hint="@string/hint_subject"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            tools:ignore="SpUsage" />
-
-          <ImageView
-            android:id="@+id/ivSubjectIcon"
-            android:layout_width="@dimen/_20"
-            android:layout_height="@dimen/_20"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            tools:ignore="ContentDescription" />
-        </RelativeLayout>
-      </com.github.dangiashish.StyledCardView>
 
       <TextView
         android:layout_width="wrap_content"
