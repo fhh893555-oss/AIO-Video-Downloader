@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="color_primary">#4DA3FF</color>
-  <color name="color_primary_variant">#1F6BFF</color>
-  <color name="color_secondary">#3CE7FF</color>
-  <color name="color_secondary_variant">#18C8F2</color>
+  <color name="color_primary">#1F6BFF</color>
+  <color name="color_primary_variant">#0B49D1</color>
+  <color name="color_secondary">#25D9FF</color>
+  <color name="color_secondary_variant">#14B8E6</color>
 
-  <color name="color_accent">#FF9D4D</color>
-  <color name="color_accent_variant">#FF6B63</color>
+  <color name="color_accent">#FF8A34</color>
+  <color name="color_accent_variant">#FF5E57</color>
+  <color name="color_background">#F5F9FF</color>
+  <color name="color_surface">#FFFFFF</color>
 
-  <color name="color_background">#081120</color>
-  <color name="color_surface">#101C32</color>
+  <color name="color_text_primary">#091B3D</color>
+  <color name="color_text_secondary">#5E6B85</color>
+  <color name="color_icon">#356DFF</color>
 
-  <color name="color_text_primary">#F3F7FF</color>
-  <color name="color_text_secondary">#9EB0CC</color>
+  <color name="color_success">#2ECC71</color>
+  <color name="color_warning">#FFB020</color>
+  <color name="color_error">#FF4D67</color>
+  <color name="color_divider">#DDE7F5</color>
 
-  <color name="color_icon">#5EB6FF</color>
+  <color name="color_card">#FFFFFF</color>
+  <color name="color_card_stroke">#E2EBFF</color>
 
-  <color name="color_success">#36E08F</color>
-  <color name="color_warning">#FFC247</color>
-  <color name="color_error">#FF6B81</color>
-
-  <color name="color_divider">#1E2A42</color>
-
-  <color name="color_card">#111D33</color>
-  <color name="color_card_stroke">#243552</color>
-
-  <color name="gradient_start">#1F6BFF</color>
+  <color name="gradient_start">#1E90FF</color>
   <color name="gradient_middle">#26D9FF</color>
   <color name="gradient_end">#FF8A34</color>
 
-  <style name="style.application" parent="Theme.AppCompat.DayNight.NoActionBar">
+  <style name="style.application" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:statusBarColor">@color/color_surface</item>
     <item name="android:navigationBarColor">@color/color_surface</item>
     <item name="android:windowLightStatusBar">true</item>
@@ -75,7 +72,7 @@
     <item name="android:fitsSystemWindows">false</item>
   </style>
 
-  <style name="style.transparent_activity" parent="Theme.AppCompat.DayNight.NoActionBar">
+  <style name="style.transparent_activity" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:statusBarColor">@color/color_surface</item>
     <item name="android:navigationBarColor">@color/color_surface</item>
     <item name="android:windowLightStatusBar">true</item>
