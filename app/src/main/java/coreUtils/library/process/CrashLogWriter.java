@@ -10,7 +10,8 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 
-import coreUtils.base.StaticAppInfo;
+import com.nextgen.R;
+
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
 
@@ -31,7 +32,7 @@ public final class CrashLogWriter {
                     return null;
                 }
 
-                String subfolderName = StaticAppInfo.APP_DOWNLOAD_FOLDER_NAME;
+                String subfolderName = StringHelper.getText(R.string.title_default_app_folder);
                 String configPath = storageRoot + "/" + subfolderName + "/.configs";
                 configPath = StringHelper.removeDuplicateSlashes(configPath);
 

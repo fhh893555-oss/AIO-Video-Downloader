@@ -54,18 +54,18 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	
 	public static class LanguageViewHolder extends RecyclerView.ViewHolder {
 		
-		private final TextView txtLanguageName;
-		private final ImageView imgLanguageIllustration;
+		private final TextView tvLangName;
+		private final ImageView ivFlag;
 		
 		public LanguageViewHolder(@NonNull View itemView) {
 			super(itemView);
-			txtLanguageName = itemView.findViewById(R.id.language_name_text);
-			imgLanguageIllustration = itemView.findViewById(R.id.language_flag_image);
+			tvLangName = itemView.findViewById(R.id.tvLangName);
+			ivFlag = itemView.findViewById(R.id.ivFlag);
 		}
 		
 		public void bind(LanguageItem languageItem, LanguageCallback languageCallback) {
-			txtLanguageName.setText(languageItem.getLanguageName());
-			imgLanguageIllustration.setImageResource(languageItem.getIllustrationResId());
+			tvLangName.setText(languageItem.languageName());
+			ivFlag.setImageResource(languageItem.illustrationResId());
 			itemView.setOnClickListener(v -> {
 				if (languageCallback != null) {
 					languageCallback.onLanguageSelected(languageItem);

@@ -32,7 +32,7 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	
 	@Override
 	protected void onLoadedLayout() {
-		LottieAnimationView animationView = binding.loadingAnimationView;
+		LottieAnimationView animationView = binding.lavLoading;
 		animationView.enableMergePathsForKitKatAndAbove(true);
 		
 		applyGradientToTitle();
@@ -41,12 +41,12 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	private void applyGradientToTitle() {
-		String fullText = binding.appTitleText.getText().toString();
+		String fullText = binding.tvTitle.getText().toString();
 		int nextGenStart = fullText.indexOf("NextGen");
 		if (nextGenStart != -1) {
 			TextViewsUtils.applyGradientSpan(
-				binding.appTitleText,
-				getColor(R.color.color_primary),
+				binding.tvTitle,
+				getColor(R.color.color_secondary),
 				getColor(R.color.color_primary_variant),
 				nextGenStart,
 				nextGenStart + 7
@@ -60,7 +60,7 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		String versionName = String.valueOf(VersionInfo.getVersionName(app));
 		String versionInfo = versionName + " (" + versionCode + ")";
 		logger.debug("Version result: " + versionInfo);
-		binding.versionInfoText.setText(versionInfo);
+		binding.tvVersion.setText(versionInfo);
 	}
 	
 	private void startNextActivity() {

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
-import coreUtils.base.StaticAppInfo;
 import coreUtils.library.process.DownloaderUtils;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.storage.FileExtensions;
@@ -177,7 +176,7 @@ public class DownloadInfo implements Serializable {
         } else if (appConfig.defaultDownloadLocationType == AppConfig.SYSTEM_GALLERY) {
             File publicDownloadFolder = FileStorageUtility.getPublicDownloadFolder();
             String publicDownloadFolderPath = publicDownloadFolder.getAbsolutePath();
-            String fullDownloadPath = publicDownloadFolderPath + "/" + StaticAppInfo.APP_DOWNLOAD_FOLDER_NAME;
+            String fullDownloadPath = publicDownloadFolderPath + "/" + StringHelper.getText(R.string.title_default_app_folder);
             fileDirectory = StringHelper.removeDuplicateSlashes(fullDownloadPath);
         }
     }

@@ -5,15 +5,6 @@ import java.util.List;
 public final class StaticAppInfo {
     private StaticAppInfo() {}
 
-    public static final String APP_DOWNLOAD_FOLDER_NAME = "TubeAIO Downloads";
-    public static final String APP_DOWNLOAD_ARCHIVE_FOLDER = "Archives";
-    public static final String APP_DOWNLOAD_SOUND_FOLDER = "Audios";
-    public static final String APP_DOWNLOAD_VIDEO_FOLDER = "Videos";
-    public static final String APP_DOWNLOAD_IMAGES_FOLDER = "Images";
-    public static final String APP_DOWNLOAD_PROGRAM_FOLDER = "Programs";
-    public static final String APP_DOWNLOAD_DOCUMENTS_FOLDER = "Documents";
-    public static final String APP_DOWNLOAD_OTHERS_FOLDER = "Others";
-
     public static final String APP_OFFICIAL_SITE = "https://tubeaio.com/";
     public static final String APP_WHATSAPP_STATUS_DOWNLOADS_PATH = "/storage/emulated/0/Android/media/com.whatsapp" +
             "/WhatsApp/Media/.Statuses/";
@@ -22,16 +13,7 @@ public final class StaticAppInfo {
             "image/webp,image/apng,image/avif,image/jpeg,image/png,image/gif,image/svg+xml,image/*," +
             "*/*;q=0.8";
 
-    public static final String APP_DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String APP_DEFAULT_TIMESTAMP_PATTERN = "%02d:%02d:%02d";
-    public static final String APP_DEFAULT_DURATION_PATTERN = "%d:%02d:%02d";
-    public static final String APP_DEFAULT_TIME_PATTERN = "%02d:%02d";
-
-    public static final String APP_TIME_FORMAT_12_HOUR = "hh:mm a";
-    public static final String APP_TIME_FORMAT_24_HOUR = "HH:mm";
-    public static final String APP_TIME_FORMAT_DAY = "d";
-    public static final String APP_TIME_FORMAT_MONTH = "MMM";
-    public static final String APP_TIME_EMPTY = "00:00";
+   
 
     public static final String APP_GITHUB_RAW_URL = "https://github.com/shibaFoss/AIO-Video-Downloader/raw/refs/" +
             "heads/master/others/adblock_host.txt";

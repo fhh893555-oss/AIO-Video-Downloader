@@ -8,7 +8,7 @@
   android:background="@drawable/img_bg_activity">
 
   <ImageView
-    android:id="@+id/language_selection_logo"
+    android:id="@+id/ivLogo"
     android:layout_width="@dimen/_80"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
@@ -18,10 +18,10 @@
     android:src="@drawable/img_app_logo" />
 
   <TextView
-    android:id="@+id/language_selection_title"
+    android:id="@+id/tvTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/language_selection_logo"
+    android:layout_below="@+id/ivLogo"
     android:layout_marginTop="@dimen/_10"
     android:fontFamily="@font/font_family_black"
     android:gravity="center"
@@ -35,10 +35,10 @@
     tools:ignore="SpUsage,TextSizeCheck" />
 
   <ImageView
-    android:id="@+id/language_selection_color_border"
+    android:id="@+id/ivBorder"
     android:layout_width="@dimen/_50"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/language_selection_title"
+    android:layout_below="@+id/tvTitle"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/_5"
     android:adjustViewBounds="true"
@@ -46,10 +46,10 @@
     android:src="@drawable/img_color_border" />
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/languages_recycler_view"
+    android:id="@+id/rvLangs"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/language_selection_color_border"
+    android:layout_below="@+id/ivBorder"
     android:layout_centerHorizontal="true"
     android:layout_marginLeft="@dimen/_15"
     android:layout_marginTop="@dimen/_25"
@@ -60,10 +60,10 @@
     tools:listitem="@layout/activity_language_1_it_1" />
 
   <LinearLayout
-    android:id="@+id/skip_language_button"
+    android:id="@+id/btnSkip"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/languages_recycler_view"
+    android:layout_below="@+id/rvLangs"
     android:layout_alignParentRight="true"
     android:layout_marginLeft="@dimen/_10"
     android:layout_marginRight="@dimen/_10"

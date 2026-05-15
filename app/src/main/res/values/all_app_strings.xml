@@ -2,7 +2,7 @@
 <resources>
   <string name="title_app_name" translatable="false">TubeAIO</string>
   <string name="title_app_name_full" translatable="false">Tube AIO - NextGen</string>
-  <string name="title_default_application_folder" translatable="false">TubeAIO Downloads</string>
+  <string name="title_default_app_folder" translatable="false">TubeAIO Downloads</string>
   <string name="title_tubeaio_images" translatable="false">TubeAIO Images</string>
   <string name="title_tubeaio_videos" translatable="false">TubeAIO Videos</string>
   <string name="title_tubeaio_sounds" translatable="false">TubeAIO Sounds</string>

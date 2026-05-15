@@ -1,13 +1,5 @@
 package coreUtils.library.process;
 
-import static coreUtils.base.StaticAppInfo.APP_DEFAULT_DATE_TIME_FORMAT;
-import static coreUtils.base.StaticAppInfo.APP_DEFAULT_TIMESTAMP_PATTERN;
-import static coreUtils.base.StaticAppInfo.APP_DEFAULT_TIME_PATTERN;
-import static coreUtils.base.StaticAppInfo.APP_TIME_EMPTY;
-import static coreUtils.base.StaticAppInfo.APP_TIME_FORMAT_12_HOUR;
-import static coreUtils.base.StaticAppInfo.APP_TIME_FORMAT_24_HOUR;
-import static coreUtils.base.StaticAppInfo.APP_TIME_FORMAT_MONTH;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,6 +34,16 @@ public final class TimeFormats {
      * regarding date-time parsing and formatting operations.
      */
     private static final LoggerUtils logger = LoggerUtils.from(TimeFormats.class);
+    public static final String APP_DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String APP_DEFAULT_TIMESTAMP_PATTERN = "%02d:%02d:%02d";
+    public static final String APP_DEFAULT_DURATION_PATTERN = "%d:%02d:%02d";
+    public static final String APP_DEFAULT_TIME_PATTERN = "%02d:%02d";
+    
+    public static final String APP_TIME_FORMAT_12_HOUR = "hh:mm a";
+    public static final String APP_TIME_FORMAT_24_HOUR = "HH:mm";
+    public static final String APP_TIME_FORMAT_DAY = "d";
+    public static final String APP_TIME_FORMAT_MONTH = "MMM";
+    public static final String APP_TIME_EMPTY = "00:00";
 
     /**
      * A thread-safe cache for {@link DateTimeFormatter} instances to avoid the overhead

@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/language_item_card"
+  android:id="@+id/cardLang"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   app:background_Type="stroke"
@@ -31,19 +31,18 @@
     android:layout_height="wrap_content">
 
     <ImageView
-      android:id="@+id/language_flag_image"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:id="@+id/ivFlag"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
       android:layout_alignParentBottom="true"
       android:adjustViewBounds="true"
       android:importantForAccessibility="no"
       android:scaleType="centerCrop"
-      android:src="@color/lang_hindi_bg_color"
       tools:ignore="ImageContrastCheck" />
 
     <TextView
-      android:id="@+id/language_name_text"
+      android:id="@+id/tvLangName"
       style="@style/style_textviews"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

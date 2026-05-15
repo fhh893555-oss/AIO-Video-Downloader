@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
 
+import com.nextgen.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +36,7 @@ import java.util.regex.Pattern;
 import coreUtils.base.BaseApplication;
 import coreUtils.base.StaticAppInfo;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.strings.StringHelper;
 import dataRepo.downloads.DownloadInfo;
 import io.objectbox.query.LazyList;
 import sysModules.downloadSys.DownloadSysInf;
@@ -803,13 +806,13 @@ public final class FileStorageUtility {
      * @return A string representing the folder category path defined in {@link StaticAppInfo}.
      */
     public static String getFileType(@Nullable String fileName) {
-        if (isAudioByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_SOUND_FOLDER;
-        if (isArchiveByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_ARCHIVE_FOLDER;
-        if (isProgramByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_PROGRAM_FOLDER;
-        if (isVideoByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_VIDEO_FOLDER;
-        if (isDocumentByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_DOCUMENTS_FOLDER;
-        if (isImageByName(fileName)) return StaticAppInfo.APP_DOWNLOAD_IMAGES_FOLDER;
-        return StaticAppInfo.APP_DOWNLOAD_OTHERS_FOLDER;
+        if (isAudioByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_sounds);
+        if (isArchiveByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_archives);
+        if (isProgramByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_programs);
+        if (isVideoByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_videos);
+        if (isDocumentByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_documents);
+        if (isImageByName(fileName)) return StringHelper.getText(R.string.title_tubeaio_images);
+        return StringHelper.getText(R.string.title_tubeaio_others);
     }
 
     /**

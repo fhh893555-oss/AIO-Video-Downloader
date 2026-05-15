@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +18,8 @@ import coreUtils.library.process.LoggerUtils;
 
 public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActivity {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
-	public static final @LayoutRes int NO_LAYOUT_PROVIDED = -1;
 	
 	protected VB binding;
-	
 	protected abstract VB inflateBinding(LayoutInflater inflater);
 	protected abstract void onLoadedLayout();
 	protected abstract boolean shouldLockOrientation();
@@ -30,7 +27,6 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 	@Override
 	protected void attachBaseContext(Context newBase) {
 		Context localizedContext = LocaleHelper.applySavedLanguage(newBase);
-		Configuration configuration = localizedContext.getResources().getConfiguration();
 		super.attachBaseContext(getDelegate().attachBaseContext2(localizedContext));
 	}
 	

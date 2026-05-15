@@ -52,11 +52,11 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 	
 	private void setupRecyclerView() {
 		languageAdapter = new LanguageAdapter(this);
-		binding.languagesRecyclerView.setAdapter(languageAdapter);
+		binding.rvLangs.setAdapter(languageAdapter);
 		GridLayoutManager manager = new GridLayoutManager(binding.getRoot().getContext(), 3);
-		binding.languagesRecyclerView.setLayoutManager(manager);
+		binding.rvLangs.setLayoutManager(manager);
 		int spacingInPx = getResources().getDimensionPixelSize(R.dimen._2);
-		binding.languagesRecyclerView.addItemDecoration(new GridLayoutSpacing(spacingInPx, true));
+		binding.rvLangs.addItemDecoration(new GridLayoutSpacing(spacingInPx, true));
 	}
 	
 	private void bindLanguageData(LanguageViewModel viewModel) {
@@ -68,7 +68,7 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 	}
 	
 	private void initializeButtons() {
-		binding.skipLanguageButton.setOnClickListener(view -> {
+		binding.btnSkip.setOnClickListener(view -> {
 			AppConfigsRepo.getConfig().isLocaleConfigured = true;
 			AppConfigsRepo.getConfig().save();
 			openHomepageActivity();
@@ -76,12 +76,12 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 	}
 	
 	private void applyGradientToTitle() {
-		String fullText = binding.languageSelectionTitle.getText().toString();
+		String fullText = binding.tvTitle.getText().toString();
 		int nextGenStart = fullText.indexOf("Language");
 		if (nextGenStart != -1) {
 			TextViewsUtils.applyGradientSpan(
-				binding.languageSelectionTitle,
-				getColor(R.color.color_primary),
+				binding.tvTitle,
+				getColor(R.color.color_secondary),
 				getColor(R.color.color_primary_variant),
 				nextGenStart,
 				nextGenStart + 8
@@ -91,13 +91,13 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 	
 	@Override
 	public void onLanguageSelected(LanguageItem languageItem) {
-		String message = "Language selected: " + languageItem.getLanguageName() +
-			" (" + languageItem.getLanguageCode() + ")";
+		String message = "Language selected: " + languageItem.languageName() +
+			" (" + languageItem.languageCode() + ")";
 		logger.info(message);
-		AppConfigsRepo.getConfig().selectedLanguageCode = languageItem.getLanguageCode();
+		AppConfigsRepo.getConfig().selectedLanguageCode = languageItem.languageCode();
 		AppConfigsRepo.getConfig().isLocaleConfigured = true;
 		AppConfigsRepo.getConfig().save();
-		LocaleHelper.changeLanguage(languageItem.getLanguageCode(), this);
+		LocaleHelper.changeLanguage(languageItem.languageCode(), this);
 		openHomepageActivity();
 	}
 	

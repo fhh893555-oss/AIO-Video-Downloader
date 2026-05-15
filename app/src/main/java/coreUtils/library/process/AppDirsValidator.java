@@ -2,10 +2,12 @@ package coreUtils.library.process;
 
 import static coreUtils.library.strings.StringHelper.removeDuplicateSlashes;
 
+import com.nextgen.R;
+
 import java.io.File;
 
-import coreUtils.base.StaticAppInfo;
 import coreUtils.library.storage.FileStorageUtility;
+import coreUtils.library.strings.StringHelper;
 
 public final class AppDirsValidator {
     private static final LoggerUtils logger = LoggerUtils.from(AppDirsValidator.class);
@@ -26,7 +28,7 @@ public final class AppDirsValidator {
                 return false;
             }
 
-            String subfolderName = StaticAppInfo.APP_DOWNLOAD_FOLDER_NAME;
+            String subfolderName = StringHelper.getText(R.string.title_default_app_folder);
             String rootAppDirPath = removeDuplicateSlashes(storageRoot + "/" + subfolderName);
 
             File rootAppDir = new File(rootAppDirPath);
@@ -47,13 +49,13 @@ public final class AppDirsValidator {
             }
 
             String[] subFolders = {
-                    StaticAppInfo.APP_DOWNLOAD_ARCHIVE_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_SOUND_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_VIDEO_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_IMAGES_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_PROGRAM_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_DOCUMENTS_FOLDER,
-                    StaticAppInfo.APP_DOWNLOAD_OTHERS_FOLDER
+                    StringHelper.getText(R.string.title_tubeaio_archives),
+                    StringHelper.getText(R.string.title_tubeaio_sounds),
+                    StringHelper.getText(R.string.title_tubeaio_videos),
+                    StringHelper.getText(R.string.title_tubeaio_images),
+                    StringHelper.getText(R.string.title_tubeaio_programs),
+                    StringHelper.getText(R.string.title_tubeaio_documents),
+                    StringHelper.getText(R.string.title_tubeaio_others)
             };
 
             boolean allSubFoldersValid = true;

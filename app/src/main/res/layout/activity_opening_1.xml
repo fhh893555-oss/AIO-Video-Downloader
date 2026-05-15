@@ -16,7 +16,7 @@
     tools:ignore="UselessParent">
 
     <ImageView
-      android:id="@+id/splash_icon_image"
+      android:id="@+id/ivLogo"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -29,7 +29,7 @@
       tools:ignore="ImageContrastCheck" />
 
     <TextView
-      android:id="@+id/app_title_text"
+      android:id="@+id/tvTitle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -46,7 +46,7 @@
       tools:ignore="SpUsage,VisualLintBounds,TextSizeCheck" />
 
     <TextView
-      android:id="@+id/app_tagline_text"
+      android:id="@+id/tvTagline"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -68,7 +68,7 @@
       tools:ignore="VisualLintBounds" />
 
     <com.airbnb.lottie.LottieAnimationView
-      android:id="@+id/loading_animation_view"
+      android:id="@+id/lavLoading"
       android:layout_width="@dimen/_50"
       android:layout_height="@dimen/_50"
       android:layout_gravity="center_horizontal"
@@ -124,7 +124,7 @@
       android:padding="@dimen/_10">
 
       <TextView
-        android:id="@+id/credit_info_text"
+        android:id="@+id/tvCredit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/font_family_medium"
@@ -135,7 +135,7 @@
         tools:ignore="SpUsage,TextSizeCheck" />
 
       <TextView
-        android:id="@+id/version_info_text"
+        android:id="@+id/tvVersion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/font_family_regular"
