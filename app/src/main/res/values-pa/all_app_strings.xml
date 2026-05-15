@@ -26,4 +26,26 @@
   <string name="label_mobile_user_agent">ਮੋਬਾਈਲ ਯੂਜ਼ਰ ਏਜੰਟ</string>
   <string name="label_unknown">ਅਣਜਾਣ</string>
   <string name="label_sharing_media_file">ਮੀਡੀਆ ਫਾਈਲ ਸਾਂਝੀ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
+
+  <string name="title_feedback">ਫੀਡਬੈਕ</string>
+  <string name="subtitle_feedback">Tube AIO ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰੋ 💙</string>
+  <string name="label_experience">ਤੁਹਾਡਾ ਅਨੁਭਵ ਕਿਹੋ ਜਿਹਾ ਰਿਹਾ?</string>
+  <string name="label_excellent">ਬਹੁਤ ਵਧੀਆ</string>
+  <string name="label_good">ਵਧੀਆ</string>
+  <string name="label_average">ਔਸਤ</string>
+  <string name="label_poor">ਮਾੜਾ</string>
+  <string name="label_amazing">ਸ਼ਾਨਦਾਰ</string>
+  <string name="label_subject">ਵਿਸ਼ਾ</string>
+  <string name="hint_subject">ਸਾਨੂੰ ਸੰਖੇਪ ਵਿੱਚ ਦੱਸੋ ਕਿ ਇਹ ਕਿਸ ਬਾਰੇ ਹੈ</string>
+  <string name="label_describe_feedback">ਆਪਣੇ ਫੀਡਬੈਕ ਦਾ ਵਰਣਨ ਕਰੋ</string>
+  <string name="hint_describe_feedback">ਸਾਨੂੰ ਸਮਝਣ ਅਤੇ ਸੁਧਾਰਨ ਲਈ ਵਿਸਥਾਰ ਵਿੱਚ ਦੱਸੋ…</string>
+  <string name="label_attach_screenshot">ਸਕ੍ਰੀਨਸ਼ੌਟ ਨੱਥੀ ਕਰੋ (ਵਿਕਲਪਿਕ)</string>
+  <string name="label_upload_image">ਚਿੱਤਰ ਅੱਪਲੋਡ ਕਰੋ</string>
+  <string name="label_upload_image_hint">PNG, JPG 5MB ਤੱਕ</string>
+  <string name="label_email">ਈਮੇਲ (ਵਿਕਲਪਿਕ)</string>
+  <string name="hint_email">ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ</string>
+  <string name="subtext_email">ਜੇਕਰ ਲੋੜ ਹੋਵੇ ਤਾਂ ਅਸੀਂ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰਾਂਗੇ</string>
+  <string name="btn_send_feedback">ਫੀਡਬੈਕ ਭੇਜੋ</string>
+  <string name="footer_feedback_safe">ਤੁਹਾਡਾ ਫੀਡਬੈਕ 100% ਸੁਰੱਖਿਅਤ ਅਤੇ ਗੁਪਤ ਹੈ</string>
+  <string name="title_zero_slash_five_hundred">0/500</string>
 </resources>

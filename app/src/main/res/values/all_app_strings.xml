@@ -72,4 +72,5 @@
   <string name="btn_send_feedback">Send Feedback</string>
   <string name="footer_feedback_safe">Your feedback is 100% safe and confidential</string>
   <string name="title_zero_slash_five_hundred">0/500</string>
+  <string name="label_angry">Angry</string>
 </resources>

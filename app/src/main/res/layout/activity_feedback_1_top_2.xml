@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.github.dangiashish.StyledCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="45"
+    app:background_Gradient_Color0="@color/color_background"
+    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:shadow0_Outer_Alpha=".2"
+    app:shadow0_Outer_Angle="-45"
+    app:shadow0_Outer_Blur="@dimen/_10"
+    app:shadow0_Outer_Color="@color/color_primary"
+    app:shadow0_Outer_Distance="@dimen/_5"
+    app:shadow1_Outer_Alpha="0.2"
+    app:shadow1_Outer_Angle="360"
+    app:shadow1_Outer_Blur="@dimen/_5"
+    app:shadow1_Outer_Color="@color/color_background"
+    app:shadow1_Outer_Distance="@dimen/_2"
+    app:shadow_Outer_Area="@dimen/_15"
+    app:stroke_Alpha="1"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_background"
+    app:stroke_Gradient_Color1="@color/color_card_stroke"
+    app:stroke_Width="0.5dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="@dimen/_15">
+
+      <TextView
+        style="@style/style_textviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_0"
+        android:fontFamily="@font/font_family_medium"
+        android:text="@string/label_experience"
+        android:textColor="@color/color_text_primary"
+        android:textSize="@dimen/message_text_size"
+        tools:ignore="SpUsage" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <LinearLayout
+          android:id="@+id/btnHappy"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:orientation="vertical"
+          tools:ignore="UseCompoundDrawables">
+
+          <ImageView
+            android:id="@+id/imgHappy"
+            android:layout_width="@dimen/_50"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_feedback_emoji"
+            android:src="@drawable/img_happy_face"
+            tools:ignore="ContentDescription" />
+
+          <TextView
+            android:id="@+id/txtHappy"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_0"
+            android:layout_marginBottom="@dimen/_0"
+            android:text="@string/label_excellent"
+            android:textColor="@color/color_primary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/btnGood"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:orientation="vertical"
+          tools:ignore="UseCompoundDrawables">
+
+          <ImageView
+            android:id="@+id/imgGood"
+            android:layout_width="@dimen/_50"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_feedback_emoji"
+            android:src="@drawable/img_good_face"
+            tools:ignore="ContentDescription" />
+
+          <TextView
+            android:id="@+id/txtGood"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_0"
+            android:layout_marginBottom="@dimen/_0"
+            android:text="@string/label_good"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/btnAverage"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:orientation="vertical"
+          tools:ignore="UseCompoundDrawables">
+
+          <ImageView
+            android:id="@+id/imgAverage"
+            android:layout_width="@dimen/_50"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_feedback_emoji"
+            android:src="@drawable/img_natural_face"
+            tools:ignore="ContentDescription" />
+
+          <TextView
+            android:id="@+id/txtAverage"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_0"
+            android:layout_marginBottom="@dimen/_0"
+            android:text="@string/label_average"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/btnPoor"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:orientation="vertical"
+          tools:ignore="UseCompoundDrawables">
+
+          <ImageView
+            android:id="@+id/imgPoor"
+            android:layout_width="@dimen/_50"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_feedback_emoji"
+            android:src="@drawable/img_not_happy_face"
+            tools:ignore="ContentDescription" />
+
+          <TextView
+            android:id="@+id/txtPoor"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_0"
+            android:layout_marginBottom="@dimen/_0"
+            android:text="@string/label_poor"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/btnAngry"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:orientation="vertical"
+          tools:ignore="UseCompoundDrawables">
+
+          <ImageView
+            android:id="@+id/imgAngry"
+            android:layout_width="@dimen/_50"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_feedback_emoji"
+            android:src="@drawable/img_angry_face"
+            tools:ignore="ContentDescription" />
+
+          <TextView
+            android:id="@+id/txtAngry"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_0"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_0"
+            android:layout_marginBottom="@dimen/_0"
+            android:text="@string/label_angry"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+      </LinearLayout>
+    </LinearLayout>
+  </com.github.dangiashish.StyledCardView>
+
+</LinearLayout>

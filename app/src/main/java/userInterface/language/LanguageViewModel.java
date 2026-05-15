@@ -26,8 +26,8 @@ public class LanguageViewModel extends ViewModel {
 
     private void loadLanguages() {
         List<LanguageItem> list = new ArrayList<>();
-        list.add(new LanguageItem("हिन्दी", "hi", R.drawable.img_hindi_lang_bg, R.color.lang_hindi_bg_color));
         list.add(new LanguageItem("English", "en", R.drawable.img_english_lang_bg, R.color.lang_english_bg_color));
+        list.add(new LanguageItem("हिन्दी", "hi", R.drawable.img_hindi_lang_bg, R.color.lang_hindi_bg_color));
         list.add(new LanguageItem("தமிழ்", "ta", R.drawable.img_tamil_lang_bg, R.color.lang_tamil_bg_color));
         list.add(new LanguageItem("తెలుగు", "te", R.drawable.img_telugu_lang_bg, R.color.lang_telugu_bg_color));
         list.add(new LanguageItem("ਪੰਜਾਬੀ", "pa", R.drawable.img_punjabi_lang_bg, R.color.lang_punjabi_bg_color));
