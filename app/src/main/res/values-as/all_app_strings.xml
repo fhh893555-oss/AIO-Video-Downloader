@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_select_language">ভাষা নিৰ্বাচন কৰক</string>
+  <string name="title_skip_for_now">আপাতত বাদ দিয়ক</string>
+  <string name="title_tubeaio_downloader_tagline">ডাউনলোড কৰক, চাওক আৰু বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</string>
+  <string name="title_app_splash_credit">ভাৰতত ❤️ ৰে নিৰ্মিত 🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>আজিৰ বাবে ইমানেই।</b> কিবা পৰামৰ্শ বা মতামত আছে নেকি? আমি আপোনাৰ পৰা শুনিবলৈ ভাল পাম। <a>বাৰ্তা পঠিয়াবলৈ ইয়াত ক্লিক কৰক।</a></string>
+
+  <string name="title_unlock_requires">আনলক কৰিবলৈ প্ৰয়োজন</string>
+  <string name="title_setup_device_password">প্ৰথমে ডিভাইচ লক ছেটআপ কৰক</string>
+  <string name="title_authentication_failed">প্ৰমাণীকৰণ বিফল হ’ল বা বাতিল কৰা হ’ল</string>
+  <string name="title_cancel">বাতিল কৰক</string>
+
+  <string name="title_no">নহয়</string>
+  <string name="title_performed">সম্পাদিত</string>
+  <string name="title_not_performed">সম্পাদিত নহয়</string>
+  <string name="title_click_here_to_open">খুলিবলৈ ইয়াত ক্লিক কৰক</string>
+  <string name="title_sounds">শব্দ</string>
+  <string name="title_archives">আৰ্কাইভ</string>
+  <string name="title_programs">প্ৰগ্ৰেম</string>
+  <string name="title_videos">ভিডিঅ’</string>
+  <string name="title_documents">দস্তাবেজ</string>
+  <string name="title_images">ছবি</string>
+  <string name="title_others">অন্যান্য</string>
+
+  <string name="title_mobile_user_agent">ম’বাইল ইউজাৰ এজেণ্ট</string>
+  <string name="title_unknown">অজ্ঞাত</string>
+  <string name="title_sharing_media_file">মিডিয়া ফাইল শ্বেয়াৰ কৰা হৈছে…</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_select_language">ভাষা নির্বাচন করুন</string>
+  <string name="title_skip_for_now">আপাতত থাক</string>
+  <string name="title_tubeaio_downloader_tagline">ডাউনলোড করুন, দেখুন এবং বন্ধুদের সাথে শেয়ার করুন</string>
+  <string name="title_app_splash_credit">ভারতে ❤️ সাথে তৈরি 🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>আজকের জন্য এটুকুই।</b> কোনো পরামর্শ বা প্রতিক্রিয়া আছে? আমরা আপনার কাছ থেকে শুনতে চাই। <a>বার্তা পাঠাতে এখানে ক্লিক করুন।</a></string>
+
+  <string name="title_unlock_requires">আনলক করার জন্য প্রয়োজন</string>
+  <string name="title_setup_device_password">প্রথমে ডিভাইস লক সেট আপ করুন</string>
+  <string name="title_authentication_failed">প্রমাণীকরণ ব্যর্থ হয়েছে বা বাতিল করা হয়েছে</string>
+  <string name="title_cancel">বাতিল করুন</string>
+
+  <string name="title_no">না</string>
+  <string name="title_performed">সম্পাদিত</string>
+  <string name="title_not_performed">সম্পাদিত হয়নি</string>
+  <string name="title_click_here_to_open">খোলার জন্য এখানে ক্লিক করুন</string>
+  <string name="title_sounds">শব্দ</string>
+  <string name="title_archives">আর্কাইভ</string>
+  <string name="title_programs">প্রোগ্রাম</string>
+  <string name="title_videos">ভিডিও</string>
+  <string name="title_documents">নথি</string>
+  <string name="title_images">ছবি</string>
+  <string name="title_others">অন্যান্য</string>
+
+  <string name="title_mobile_user_agent">মোবাইল ইউজার এজেন্ট</string>
+  <string name="title_unknown">অজানা</string>
+  <string name="title_sharing_media_file">মিডিয়া ফাইল শেয়ার করা হচ্ছে…</string>
+</resources>

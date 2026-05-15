@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_select_language">ഭാഷ തിരഞ്ഞെടുക്കുക</string>
+  <string name="title_skip_for_now">ഇപ്പോൾ ഒഴിവാക്കുക</string>
+  <string name="title_tubeaio_downloader_tagline">ഡൗൺലോഡ് ചെയ്യുക, കാണുക, സുഹൃത്തുക്കളുമായി പങ്കിടുക</string>
+  <string name="title_app_splash_credit">ഇന്ത്യയിൽ ❤️ ലൂടെ നിർമ്മിച്ചത് 🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>ഇന്നത്തേക്ക് ഇത്രമാത്രം.</b> നിർദ്ദേശങ്ങളോ ഫീഡ്‌ബാക്കോ ഉണ്ടോ? നിങ്ങളിൽ നിന്ന് കേൾക്കാൻ ഞങ്ങൾ ആഗ്രഹിക്കുന്നു. <a>സന്ദേശം അയക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുക.</a></string>
+
+  <string name="title_unlock_requires">അൺലോക്ക് ചെയ്യാൻ ആവശ്യമാണ്</string>
+  <string name="title_setup_device_password">ആദ്യം ഉപകരണം ലോക്ക് ചെയ്യുക</string>
+  <string name="title_authentication_failed">അംഗീകാരം പരാജയപ്പെട്ടു അല്ലെങ്കിൽ റദ്ദാക്കി</string>
+  <string name="title_cancel">റദ്ദാക്കുക</string>
+
+  <string name="title_no">അല്ല</string>
+  <string name="title_performed">ചെയ്തു</string>
+  <string name="title_not_performed">ചെയ്തില്ല</string>
+  <string name="title_click_here_to_open">തുറക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുക</string>
+  <string name="title_sounds">ശബ്ദങ്ങൾ</string>
+  <string name="title_archives">ആർക്കൈവുകൾ</string>
+  <string name="title_programs">പ്രോഗ്രാമുകൾ</string>
+  <string name="title_videos">വീഡിയോകൾ</string>
+  <string name="title_documents">പ്രമാണങ്ങൾ</string>
+  <string name="title_images">ചിത്രങ്ങൾ</string>
+  <string name="title_others">മറ്റുള്ളവ</string>
+
+  <string name="title_mobile_user_agent">മൊബൈൽ യൂസർ ഏജന്റ്</string>
+  <string name="title_unknown">അജ്ഞാതം</string>
+  <string name="title_sharing_media_file">മീഡിയ ഫയൽ പങ്കിടുന്നു…</string>
+</resources>

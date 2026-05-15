@@ -71,7 +71,7 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 		binding.btnSkip.setOnClickListener(view -> {
 			AppConfigsRepo.getConfig().isLocaleConfigured = true;
 			AppConfigsRepo.getConfig().save();
-			openHomepageActivity();
+			openNextActivity();
 		});
 	}
 	
@@ -98,10 +98,10 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 		AppConfigsRepo.getConfig().isLocaleConfigured = true;
 		AppConfigsRepo.getConfig().save();
 		LocaleHelper.changeLanguage(languageItem.languageCode(), this);
-		openHomepageActivity();
+		// openNextActivity();
 	}
 	
-	private void openHomepageActivity() {
+	private void openNextActivity() {
 		Intent intent = new Intent(LanguageActivity.this, OpeningActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);

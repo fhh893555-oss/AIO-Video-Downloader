@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_select_language">மொழியைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="title_skip_for_now">இப்போதைக்குத் தவிர்க்கவும்</string>
+  <string name="title_tubeaio_downloader_tagline">பதிவிறக்கவும், பார்க்கவும் மற்றும் நண்பர்களுடன் பகிரவும்</string>
+  <string name="title_app_splash_credit">இந்தியாவில் ❤️ உடன் உருவாக்கப்பட்டது 🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>இன்றைக்கு அவ்வளவுதான்.</b> ஆலோசனைகள் அல்லது கருத்துகள் உள்ளதா? நாங்கள் உங்களிடமிருந்து கேட்க விரும்புகிறோம். <a>செய்தி அனுப்ப இங்கே கிளிக் செய்யவும்.</a></string>
+
+  <string name="title_unlock_requires">திறக்கத் தேவைப்படுகிறது</string>
+  <string name="title_setup_device_password">முதலில் சாதனப் பூட்டை அமைக்கவும்</string>
+  <string name="title_authentication_failed">அங்கீகாரம் தோல்வியடைந்தது அல்லது ரத்து செய்யப்பட்டது</string>
+  <string name="title_cancel">ரத்துசெய்</string>
+
+  <string name="title_no">இல்லை</string>
+  <string name="title_performed">செய்யப்பட்டது</string>
+  <string name="title_not_performed">செய்யப்படவில்லை</string>
+  <string name="title_click_here_to_open">திறக்க இங்கே கிளிக் செய்யவும்</string>
+  <string name="title_sounds">ஒலிகள்</string>
+  <string name="title_archives">காப்பகங்கள்</string>
+  <string name="title_programs">நிரல்கள்</string>
+  <string name="title_videos">வீடியோக்கள்</string>
+  <string name="title_documents">ஆவணங்கள்</string>
+  <string name="title_images">படங்கள்</string>
+  <string name="title_others">மற்றவை</string>
+
+  <string name="title_mobile_user_agent">மொபைல் பயனர் முகவர்</string>
+  <string name="title_unknown">தெரியாதது</string>
+  <string name="title_sharing_media_file">ஊடகக் கோப்பு பகிரப்படுகிறது…</string>
+</resources>

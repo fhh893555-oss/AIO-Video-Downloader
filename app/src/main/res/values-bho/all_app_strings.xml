@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="title_select_language">भाषा चुनीं</string>
+  <string name="title_skip_for_now">अभी छोड़ दीं</string>
+  <string name="title_tubeaio_downloader_tagline">डाउनलोड करीं, देखीं अउर दोस्तन के साथ साझा करीं</string>
+  <string name="title_app_splash_credit">भारत में ❤️ के साथ बनावल गइल बा 🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>आज खातिर बस एतने।</b> सुझाव या प्रतिक्रिया बा? हमनी के रउआ से सुनल अच्छा लागी। <a>संदेश भेजे खातिर इहाँ क्लिक करीं।</a></string>
+
+  <string name="title_unlock_requires">अनलॉक खातिर जरूरी बा</string>
+  <string name="title_setup_device_password">पहिले डिवाइस लॉक सेट करीं</string>
+  <string name="title_authentication_failed">प्रमाणीकरण विफल भा रद्द क दिहल गइल</string>
+  <string name="title_cancel">रद्द करीं</string>
+
+  <string name="title_no">नाहीं</string>
+  <string name="title_performed">कइल गइल</string>
+  <string name="title_not_performed">नाहीं कइल गइल</string>
+  <string name="title_click_here_to_open">खोले खातिर इहाँ क्लिक करीं</string>
+  <string name="title_sounds">आवाज</string>
+  <string name="title_archives">अभिलेखागार</string>
+  <string name="title_programs">प्रोग्राम</string>
+  <string name="title_videos">वीडियो</string>
+  <string name="title_documents">दस्तावेज</string>
+  <string name="title_images">फोटो</string>
+  <string name="title_others">अउर सब</string>
+
+  <string name="title_mobile_user_agent">मोबाइल यूजर एजेंट</string>
+  <string name="title_unknown">अंजान</string>
+  <string name="title_sharing_media_file">मीडिया फाइल साझा कइल जा रहल बा…</string>
+</resources>
