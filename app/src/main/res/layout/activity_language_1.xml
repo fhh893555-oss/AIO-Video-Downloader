@@ -67,7 +67,7 @@
     android:layout_alignParentRight="true"
     android:layout_marginLeft="@dimen/_10"
     android:layout_marginRight="@dimen/_10"
-    android:background="@drawable/ic_negative_selector"
+    android:background="@drawable/bg_button_negative"
     android:clickable="true"
     android:orientation="horizontal"
     tools:ignore="UseCompoundDrawables">

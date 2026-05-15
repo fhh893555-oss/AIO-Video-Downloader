@@ -5,6 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginLeft="@dimen/_15"
+  android:layout_marginTop="@dimen/_5"
   android:layout_marginRight="@dimen/_15"
   android:orientation="vertical">
 
@@ -13,7 +14,7 @@
     android:layout_width="@dimen/_50"
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
-    android:background="@drawable/ic_negative_selector"
+    android:background="@drawable/bg_button_negative"
     android:clickable="true"
     android:focusable="true"
     android:src="@drawable/img_arrow_back"

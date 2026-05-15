@@ -47,6 +47,6 @@
     <item name="android:layout_height">@dimen/_32</item>
     <item name="android:padding">@dimen/_5</item>
     <item name="android:clickable">true</item>
-    <item name="android:background">@drawable/ic_negative_selector</item>
+    <item name="android:background">@drawable/bg_button_negative</item>
   </style>
 </resources>
