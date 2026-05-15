@@ -15,30 +15,17 @@ import java.nio.ByteBuffer;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 
-/**
- * Utility class to extract audio tracks from video files (MP4/WebM) and save them as standalone audio files.
- * Optimized with {@link ThreadTask} for background execution and lifecycle awareness.
- */
 public class Vid2AudioConverter {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private ThreadTask<String, Integer> conversionTask;
 	
-	/**
-	 * Extracts audio from the input file and saves it to the output file.
-	 *
-	 * @param owner      LifecycleOwner to bind the task (e.g., Activity or Fragment).
-	 * @param inputFile  Path to the source video file.
-	 * @param outputFile Path where the extracted audio will be saved.
-	 * @param listener   Callback for progress and result notifications.
-	 */
 	public void extractAudio(@Nullable LifecycleOwner owner,
 	                         @NonNull String inputFile,
 	                         @NonNull String outputFile,
 	                         @NonNull ConversionListener listener) {
 		
 		logger.debug("Starting audio extraction. Input: " + inputFile + ", Output: " + outputFile);
-		
 		conversionTask = new ThreadTask.Builder<String, Integer>()
 			.withLifecycle(owner)
 			.withBackgroundTask(callback -> performExtraction(inputFile, outputFile, callback))
@@ -53,9 +40,6 @@ public class Vid2AudioConverter {
 		conversionTask.start();
 	}
 	
-	/**
-	 * Core extraction logic running on a background thread.
-	 */
 	private String performExtraction(String inputFile, String outputFile,
 	                                 ThreadTask.ProgressCallback<Integer> callback) {
 		MediaExtractor extractor = new MediaExtractor();
@@ -104,7 +88,7 @@ public class Vid2AudioConverter {
 			int newTrackIndex = muxer.addTrack(format);
 			muxer.start();
 			
-			ByteBuffer buffer = ByteBuffer.allocate(4 * 1024 * 1024); // 4MB buffer
+			ByteBuffer buffer = ByteBuffer.allocate(4 * 1024 * 1024);
 			MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 			
 			long totalSize = sourceFile.length();
@@ -130,7 +114,6 @@ public class Vid2AudioConverter {
 				bufferInfo.size = sampleSize;
 				bufferInfo.presentationTimeUs = extractor.getSampleTime();
 				
-				// Map MediaExtractor flags to MediaCodec flags
 				int sampleFlags = extractor.getSampleFlags();
 				bufferInfo.flags = 0;
 				if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {
@@ -156,13 +139,12 @@ public class Vid2AudioConverter {
 			logger.debug("Extraction successful. File saved: " + outputFile);
 			return outputFile;
 			
-		} catch (Exception e) {
+		} catch (Exception error) {
 			File partialFile = new File(outputFile);
 			if (partialFile.exists()) {
-				//noinspection ResultOfMethodCallIgnored
 				partialFile.delete();
 			}
-			throw new RuntimeException(e);
+			throw new RuntimeException(error);
 		} finally {
 			extractor.release();
 			if (muxer != null) {
@@ -171,9 +153,6 @@ public class Vid2AudioConverter {
 		}
 	}
 	
-	/**
-	 * Cancels the current conversion process.
-	 */
 	public void cancel() {
 		if (conversionTask != null) {
 			conversionTask.cancel();
