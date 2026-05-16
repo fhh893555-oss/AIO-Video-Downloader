@@ -75,7 +75,7 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 	}
 	
 	public void buttonVibrate() {
-		vibrate(20);
+		vibrate(30);
 	}
 	
 	protected void vibrate(long duration) {

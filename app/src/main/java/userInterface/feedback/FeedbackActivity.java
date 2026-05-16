@@ -1,13 +1,10 @@
 package userInterface.feedback;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,7 +18,10 @@ import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.strings.ClipboardHelper;
+import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
+import coreUtils.library.views.listeners.EditTextListener;
 
 public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(FeedbackActivity.class);
@@ -55,7 +55,8 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 			uri -> {
 				if (uri != null) {
 					viewModel.setSelectedScreenshot(DocumentFile.fromSingleUri(this, uri));
-					Toast.makeText(this, "Image attached successfully", Toast.LENGTH_SHORT).show();
+					StylizedToastView.showToast(FeedbackActivity.this,
+						R.string.hint_image_attached_successfully);
 				}
 			}
 		);
@@ -81,11 +82,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 			finish();
 		});
 		
-		binding.top2.btnHappy.setOnClickListener(v -> selectReaction("Excellent", binding.top2.imgHappy));
-		binding.top2.btnGood.setOnClickListener(v -> selectReaction("Good", binding.top2.imgGood));
-		binding.top2.btnAverage.setOnClickListener(v -> selectReaction("Average", binding.top2.imgAverage));
-		binding.top2.btnPoor.setOnClickListener(v -> selectReaction("Poor", binding.top2.imgPoor));
-		binding.top2.btnAngry.setOnClickListener(v -> selectReaction("Angry", binding.top2.imgAngry));
+		String excellent = FeedbackReactions.Excellent.name();
+		String good = FeedbackReactions.Good.name();
+		String average = FeedbackReactions.Average.name();
+		String poor = FeedbackReactions.Poor.name();
+		String angry = FeedbackReactions.Angry.name();
+		
+		binding.top2.btnHappy.setOnClickListener(v -> selectReaction(excellent, binding.top2.imgHappy));
+		binding.top2.btnGood.setOnClickListener(v -> selectReaction(good, binding.top2.imgGood));
+		binding.top2.btnAverage.setOnClickListener(v -> selectReaction(average, binding.top2.imgAverage));
+		binding.top2.btnPoor.setOnClickListener(v -> selectReaction(poor, binding.top2.imgPoor));
+		binding.top2.btnAngry.setOnClickListener(v -> selectReaction(angry, binding.top2.imgAngry));
 		
 		binding.top3.btnUploadPic.setOnClickListener(v -> {
 			buttonVibrate();
@@ -104,20 +111,14 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	private void setupTextWatchers() {
-		binding.top3.editFeedback.addTextChangedListener(new TextWatcher() {
-			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-			
-			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			
-			@Override public void afterTextChanged(Editable s) {
-				int length = s.length();
+		binding.top3.editFeedback.addTextChangedListener(new EditTextListener() {
+			@Override public void afterTextChanged(Editable editable) {
+				int length = editable.length();
 				String countText = length + "/500";
-				binding.top3.tvCharCount.setText(countText);
-				if (length > 500) {
-					binding.top3.tvCharCount.setTextColor(getColor(R.color.color_error));
-				} else {
-					binding.top3.tvCharCount.setTextColor(getColor(R.color.color_text_secondary));
-				}
+				TextView tvCharCount = binding.top3.tvCharCount;
+				tvCharCount.setText(countText);
+				if (length > 500) tvCharCount.setTextColor(getColor(R.color.color_error));
+				else tvCharCount.setTextColor(getColor(R.color.color_text_secondary));
 			}
 		});
 	}
@@ -130,14 +131,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		
 		viewModel.getSubmissionSuccess().observe(this, success -> {
 			if (success != null && success) {
-				Toast.makeText(this, "Feedback sent! Thank you.", Toast.LENGTH_LONG).show();
+				vibrate(50);
+				int sentThankYou = R.string.hint_feedback_sent_thank_you;
+				StylizedToastView.showToast(FeedbackActivity.this, sentThankYou);
 				finish();
 			}
 		});
 		
 		viewModel.getSubmissionError().observe(this, error -> {
 			if (error != null) {
-				Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+				vibrate(50);
+				StylizedToastView.showToast(FeedbackActivity.this, error);
 			}
 		});
 	}
@@ -146,27 +150,20 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		buttonVibrate();
 		viewModel.setSelectedReaction(reaction);
 		
-		// Reset all
 		binding.top2.imgHappy.setSelected(false);
 		binding.top2.imgGood.setSelected(false);
 		binding.top2.imgAverage.setSelected(false);
 		binding.top2.imgPoor.setSelected(false);
 		binding.top2.imgAngry.setSelected(false);
 		
-		// Set selected
 		selectedImage.setSelected(true);
 	}
 	
 	private void pasteFromClipboard() {
-		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		if (clipboard != null && clipboard.hasPrimaryClip()) {
-			ClipData clip = clipboard.getPrimaryClip();
-			if (clip != null && clip.getItemCount() > 0) {
-				CharSequence text = clip.getItemAt(0).getText();
-				if (text != null) {
-					binding.top3.editSubject.setText(text);
-				}
-			}
+		Context context = getBaseContext();
+		CharSequence text = ClipboardHelper.getTextFromClipboard(context);
+		if (text.length() > 0) {
+			binding.top3.editSubject.setText(text);
 		}
 	}
 	
@@ -176,12 +173,12 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		String email = Objects.requireNonNull(binding.top3.editEmail.getText()).toString().trim();
 		
 		if (message.isEmpty()) {
-			Toast.makeText(this, "Please describe your feedback", Toast.LENGTH_SHORT).show();
+			StylizedToastView.showToast(this, R.string.hint_please_describe_your_feedback);
 			return;
 		}
 		
 		if (message.length() > 500) {
-			Toast.makeText(this, "Feedback is too long", Toast.LENGTH_SHORT).show();
+			StylizedToastView.showToast(this, R.string.hint_feedback_is_too_long);
 			return;
 		}
 		

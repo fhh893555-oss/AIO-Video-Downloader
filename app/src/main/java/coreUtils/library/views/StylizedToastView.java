@@ -31,14 +31,9 @@ public class StylizedToastView extends Toast {
 		}
 	}
 	
-	public static void showToast(final BaseActivity activity,
-	                             final String msg, final int msgId) {
+	public static void showToast(final BaseActivity activity, final String msg) {
 		if (activity == null) return;
-		if (msgId != -1) {
-			showResourceToast(activity, msgId);
-		} else if (msg != null) {
-			showTextToast(activity, msg);
-		}
+		showTextToast(activity, msg);
 	}
 	
 	public static void showToast(final BaseActivity activity, final int msgId) {

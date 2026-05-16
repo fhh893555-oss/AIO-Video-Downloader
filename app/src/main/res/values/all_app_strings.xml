@@ -74,4 +74,9 @@
   <string name="title_zero_slash_five_hundred">0/500</string>
   <string name="label_angry">Angry</string>
   <string name="label_sample_text_message">This is a sample test message for UI</string>
+  <string name="hint_image_attached_successfully">Image attached successfully</string>
+  <string name="hint_feedback_sent_thank_you">Feedback sent! Thank you.</string>
+  <string name="hint_feedback_sent_failed">Failed sending feedback, try again later.</string>
+  <string name="hint_please_describe_your_feedback">Please describe your feedback</string>
+  <string name="hint_feedback_is_too_long">Feedback is too long</string>
 </resources>
