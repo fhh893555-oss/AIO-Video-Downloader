@@ -34,4 +34,8 @@ public class FeedbackViewModel extends ViewModel {
 		void onSuccessful();
 		void onFailed(Exception error);
 	}
+	
+	private boolean sendMessageToSever() {
+	
+	}
 }
