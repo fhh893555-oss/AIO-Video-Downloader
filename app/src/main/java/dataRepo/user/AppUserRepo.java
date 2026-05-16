@@ -190,6 +190,7 @@ public final class AppUserRepo {
             }
             return "success";
         });
+        syncJob.setErrorTask(error -> isSyncInProgress = false);
         syncJob.start();
     }
 
