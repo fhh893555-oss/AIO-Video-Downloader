@@ -72,15 +72,21 @@ public class StylizedToastView extends Toast {
 	
 	private static StylizedToastView configureToastView(
 		BaseActivity activity, CharSequence toastMessage, int duration) {
+		if (toastMessage == null || toastMessage.toString().trim().isEmpty()) return null;
+		
 		int styleApplication = R.style.style_application;
 		ContextThemeWrapper themedCtx = new ContextThemeWrapper(activity, styleApplication);
 		LayoutInflater inflater = LayoutInflater.from(themedCtx);
 		
-		StylizedToastView toast = new StylizedToastView(activity.getApplicationContext());
 		View toastView = inflater.inflate(R.layout.layout_stylized_toast, null);
+		if (toastView == null) return null;
+		
 		TextView textView = toastView.findViewById(R.id.txLabel);
+		if (textView == null) return null;
 		
 		textView.setText(toastMessage);
+		
+		StylizedToastView toast = new StylizedToastView(activity.getApplicationContext());
 		toast.setView(toastView);
 		toast.setDuration(duration);
 		return toast;
