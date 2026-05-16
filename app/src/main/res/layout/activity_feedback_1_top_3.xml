@@ -210,6 +210,7 @@
         tools:ignore="SpUsage,TextSizeCheck" />
 
       <com.github.dangiashish.StyledCardView
+        android:id="@+id/contUploadPic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10"
@@ -270,6 +271,94 @@
             android:layout_marginTop="@dimen/_5"
             android:text="@string/label_upload_image_hint"
             android:textColor="@color/color_text_hint"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+        </LinearLayout>
+      </com.github.dangiashish.StyledCardView>
+
+      <com.github.dangiashish.StyledCardView
+        android:id="@+id/contAttachmentSelected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10"
+        android:clickable="true"
+        android:visibility="visible"
+        app:background_Color="@color/color_accent_variant_2"
+        app:background_ColorType="solid"
+        app:background_Type="fill_stroke"
+        app:cornerRadius="@dimen/default_radius"
+        app:stroke_Alpha=".7"
+        app:stroke_CapType="round"
+        app:stroke_Color="@color/color_accent_variant"
+        app:stroke_DashSize="@dimen/_5"
+        app:stroke_GapSize="@dimen/_3"
+        app:stroke_Type="dash"
+        app:stroke_Width=".5dp"
+        tools:ignore="DuplicateClickableBoundsCheck">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/bg_button_negative"
+          android:clickable="true"
+          android:gravity="center"
+          android:orientation="vertical"
+          android:padding="@dimen/_20">
+
+          <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+              android:layout_width="@dimen/_18"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:layout_marginRight="@dimen/_5"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_file_present"
+              android:tint="@color/color_accent_variant"
+              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
+
+            <TextView
+              android:id="@+id/txtFileAttch"
+              style="@style/style_textviews"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:layout_margin="@dimen/_0"
+              android:fontFamily="@font/font_family_bold"
+              android:text="@string/label_file_sample_name"
+              android:textColor="@color/color_accent_variant"
+              android:textSize="@dimen/message_text_size"
+              tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5"
+            android:fontFamily="@font/font_family_medium"
+            android:text="@string/label_sample_file_size"
+            android:textColor="@color/color_text_hint"
+            android:textSize="@dimen/smaller_text_size"
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+
+          <TextView
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/_5"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:layout_marginBottom="@dimen/_0"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/hint_click_again_for_changing_attachment"
+            android:textColor="@color/color_text_primary"
             android:textSize="@dimen/smaller_text_size"
             tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>

@@ -7,6 +7,7 @@
 
   <color name="color_accent">#FF8A34</color>
   <color name="color_accent_variant">#FF5E57</color>
+  <color name="color_accent_variant_2">#15F4D1A0</color>
   <color name="color_background">#F5F9FF</color>
   <color name="color_edit_background">#FBFBFB</color>
   <color name="color_surface">#FFFFFF</color>

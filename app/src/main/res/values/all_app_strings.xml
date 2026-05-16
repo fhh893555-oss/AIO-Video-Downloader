@@ -79,4 +79,9 @@
   <string name="hint_feedback_sent_failed">Failed sending feedback, try again later.</string>
   <string name="hint_please_describe_your_feedback">Please describe your feedback</string>
   <string name="hint_feedback_is_too_long">Feedback is too long</string>
+  <string name="label_sample_file_size">"File size: 2343 KB"</string>
+  <string name="label_file_sample_name">Medical dr. narayan supriya report.pdf</string>
+  <string name="hint_click_again_for_changing_attachment">Click here again for changing the attachment</string>
+  <string name="label_file_size">File size : </string>
+  <string name="hint_file_size_exceed_5mb">File size exceeds 5MB</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.ClipboardHelper;
 import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
@@ -57,12 +59,33 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 			new ActivityResultContracts.GetContent(),
 			uri -> {
 				if (uri != null) {
-					viewModel.setSelectedScreenshot(DocumentFile.fromSingleUri(this, uri));
-					StylizedToastView.showToast(FeedbackActivity.this,
-						R.string.hint_image_attached_successfully);
+					DocumentFile file = DocumentFile.fromSingleUri(this, uri);
+					if (file.length() < 5 * 1024 * 1024) {
+						viewModel.setSelectedScreenshot(file);
+					} else {
+						vibrate(50);
+						StylizedToastView.showToast(FeedbackActivity.this,
+							R.string.hint_file_size_exceed_5mb);
+					}
 				}
 			}
 		);
+		
+		binding.top3.contAttachmentSelected.setVisibility(View.GONE);
+		binding.top3.contUploadPic.setVisibility(View.VISIBLE);
+		
+		viewModel.getSelectedScreenshot().observe(this, documentFile -> {
+			String fileName = documentFile.getName();
+			if (fileName != null && fileName.length() > 0) {
+				binding.top3.contAttachmentSelected.setVisibility(View.VISIBLE);
+				binding.top3.contUploadPic.setVisibility(View.GONE);
+				
+				binding.top3.txtFileAttch.setText(fileName);
+				String fileSize = FileStorageUtility.humanReadableSizeOf(documentFile.length());
+				CharSequence text = getText(R.string.label_file_size) + " " + fileSize;
+				binding.top3.txtFileSize.setText(text);
+			}
+		});
 	}
 	
 	private void applyGradientToTitle() {
