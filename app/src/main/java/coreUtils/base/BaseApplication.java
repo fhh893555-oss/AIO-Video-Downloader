@@ -48,6 +48,7 @@ public class BaseApplication extends Application {
 	public void onTerminate() {
 		YtDlpLibraryManager.shutdown();
 		CrashLogWriter.shutdown();
+		AppUserRepo.release();
 		super.onTerminate();
 	}
 	
