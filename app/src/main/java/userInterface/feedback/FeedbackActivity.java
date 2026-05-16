@@ -1,13 +1,16 @@
 package userInterface.feedback;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,8 +48,8 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		setupTextWatchers();
 		observeViewModel();
 		
-		// Set default selection
-		selectReaction(FeedbackReactions.Excellent.name(), binding.top2.imgHappy);
+		selectReaction(FeedbackReactions.Excellent.name(),
+			binding.top2.imgHappy, binding.top2.txtHappy);
 	}
 	
 	private void initImagePicker() {
@@ -88,11 +91,28 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		String poor = FeedbackReactions.Poor.name();
 		String angry = FeedbackReactions.Angry.name();
 		
-		binding.top2.btnHappy.setOnClickListener(v -> selectReaction(excellent, binding.top2.imgHappy));
-		binding.top2.btnGood.setOnClickListener(v -> selectReaction(good, binding.top2.imgGood));
-		binding.top2.btnAverage.setOnClickListener(v -> selectReaction(average, binding.top2.imgAverage));
-		binding.top2.btnPoor.setOnClickListener(v -> selectReaction(poor, binding.top2.imgPoor));
-		binding.top2.btnAngry.setOnClickListener(v -> selectReaction(angry, binding.top2.imgAngry));
+		ImageView imgHappy = binding.top2.imgHappy;
+		TextView txtHappy = binding.top2.txtHappy;
+		ImageView imgGood = binding.top2.imgGood;
+		TextView txtGood = binding.top2.txtGood;
+		ImageView imgAverage = binding.top2.imgAverage;
+		TextView txtAverage = binding.top2.txtAverage;
+		ImageView imgPoor = binding.top2.imgPoor;
+		TextView txtPoor = binding.top2.txtPoor;
+		ImageView imgAngry = binding.top2.imgAngry;
+		TextView txtAngry = binding.top2.txtAngry;
+		
+		LinearLayout btnHappy = binding.top2.btnHappy;
+		LinearLayout btnGood = binding.top2.btnGood;
+		LinearLayout btnAverage = binding.top2.btnAverage;
+		LinearLayout btnPoor = binding.top2.btnPoor;
+		LinearLayout btnAngry = binding.top2.btnAngry;
+		
+		btnHappy.setOnClickListener(v -> selectReaction(excellent, imgHappy, txtHappy));
+		btnGood.setOnClickListener(v -> selectReaction(good, imgGood, txtGood));
+		btnAverage.setOnClickListener(v -> selectReaction(average, imgAverage, txtAverage));
+		btnPoor.setOnClickListener(v -> selectReaction(poor, imgPoor, txtPoor));
+		btnAngry.setOnClickListener(v -> selectReaction(angry, imgAngry, txtAngry));
 		
 		binding.top3.btnUploadPic.setOnClickListener(v -> {
 			buttonVibrate();
@@ -146,9 +166,13 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		});
 	}
 	
-	private void selectReaction(String reaction, ImageView selectedImage) {
+	private void selectReaction(String reaction,
+	                            ImageView selectedImage, TextView selectedTextView) {
 		buttonVibrate();
 		viewModel.setSelectedReaction(reaction);
+		
+		Typeface regular = ResourcesCompat.getFont(this, R.font.font_family_regular);
+		Typeface bold = ResourcesCompat.getFont(this, R.font.font_family_bold);
 		
 		binding.top2.imgHappy.setSelected(false);
 		binding.top2.imgGood.setSelected(false);
@@ -156,7 +180,21 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		binding.top2.imgPoor.setSelected(false);
 		binding.top2.imgAngry.setSelected(false);
 		
+		binding.top2.txtHappy.setTypeface(regular);
+		binding.top2.txtGood.setTypeface(regular);
+		binding.top2.txtAverage.setTypeface(regular);
+		binding.top2.txtPoor.setTypeface(regular);
+		binding.top2.txtAngry.setTypeface(regular);
+		
+		binding.top2.txtHappy.setTextColor(getColor(R.color.color_text_secondary));
+		binding.top2.txtGood.setTextColor(getColor(R.color.color_text_secondary));
+		binding.top2.txtAverage.setTextColor(getColor(R.color.color_text_secondary));
+		binding.top2.txtPoor.setTextColor(getColor(R.color.color_text_secondary));
+		binding.top2.txtAngry.setTextColor(getColor(R.color.color_text_secondary));
+		
 		selectedImage.setSelected(true);
+		selectedTextView.setTextColor(getColor(R.color.color_primary));
+		selectedTextView.setTypeface(bold);
 	}
 	
 	private void pasteFromClipboard() {
