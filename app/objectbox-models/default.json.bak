@@ -284,9 +284,15 @@
     },
     {
       "id": "2:2577609755931157676",
-      "lastPropertyId": "21:4661386330009597774",
+      "lastPropertyId": "20:6150915091175235775",
       "name": "AppUser",
       "properties": [
+        {
+          "id": "1:6018552313637165568",
+          "name": "entityId",
+          "type": 6,
+          "flags": 129
+        },
         {
           "id": "2:7739163948310460486",
           "name": "userServerId",
@@ -393,12 +399,6 @@
           "id": "20:6150915091175235775",
           "name": "lastSeenTimestamp",
           "type": 6
-        },
-        {
-          "id": "21:4661386330009597774",
-          "name": "id",
-          "type": 6,
-          "flags": 129
         }
       ],
       "relations": []
@@ -1056,9 +1056,7 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [
-    6018552313637165568
-  ],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

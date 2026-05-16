@@ -102,7 +102,6 @@ public class AppUserCloud extends PocketBaseClient {
 				String fileName = json.getString(profilePicField);
 				return buildFileUrl(serverId, fileName);
 			}
-			
 		} catch (Exception error) {
 			logger.error("Photo upload failed", error);
 			return null;

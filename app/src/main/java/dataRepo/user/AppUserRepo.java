@@ -22,7 +22,7 @@ public final class AppUserRepo {
 	
 	private static final long DEFAULT_USER_ID = 1L;
 	private static final AppUserCloud cloudClient = new AppUserCloud();
-	private static final ThreadTask<String, String> syncJob = new ThreadTask<>();
+	private static final ThreadTask<String, String> serverSyncJob = new ThreadTask<>();
 	private static volatile AppUser activeUser;
 	private static Box<AppUser> userBox;
 	private static DataSubscription subscription;
@@ -35,10 +35,12 @@ public final class AppUserRepo {
 		AppUser user = userBox.get(DEFAULT_USER_ID);
 		if (user == null) {
 			user = new AppUser();
-			user.entityId = DEFAULT_USER_ID;
-			user.userDeviceId = DeviceSignature
-				.getInstance(BaseApplication.AppContext)
-				.generate();
+			user.id = DEFAULT_USER_ID;
+			
+			BaseApplication appContext = BaseApplication.AppContext;
+			DeviceSignature deviceSignature = DeviceSignature.getInstance(appContext);
+			user.userDeviceId = deviceSignature.generate();
+			
 			userBox.put(user);
 		} else {
 			user.lastSeenTimestamp = System.currentTimeMillis();
@@ -49,6 +51,42 @@ public final class AppUserRepo {
 		observeChanges();
 		syncWithServer();
 		syncUserGeoData();
+	}
+	
+	public static AppUser getUser() {
+		return activeUser;
+	}
+	
+	public static void save(AppUser user) {
+		save(user, true);
+	}
+	
+	public static void save(AppUser user, boolean syncToPocketBase) {
+		if (userBox == null) {
+			String message = "AppUserRepo not initialized";
+			throw new IllegalStateException(message);
+		}
+		
+		user.id = DEFAULT_USER_ID;
+		activeUser = user;
+		userBox.put(user);
+		
+		if (syncToPocketBase && user.userServerId != null && !user.userServerId.isEmpty()) {
+			ThreadTask.executeInBackground(() -> {
+				try {
+					JSONObject pocketBasePayload = toPocketBasePayload(user);
+					cloudClient.updateUser(user.userServerId, pocketBasePayload);
+				} catch (Exception error) {
+					logger.error("Sync to PocketBase failed", error);
+				}
+			});
+		}
+	}
+	
+	public static void updateUser(UpdateBlock block) {
+		if (activeUser == null) return;
+		block.apply(activeUser);
+		save(activeUser);
 	}
 	
 	private static void syncUserGeoData() {
@@ -74,45 +112,11 @@ public final class AppUserRepo {
 		}, AppConfigsRepo.getConfig());
 	}
 	
-	public static AppUser getUser() {
-		return activeUser;
-	}
-	
-	public static void save(AppUser user) {
-		save(user, true);
-	}
-	
-	public static void save(AppUser user, boolean syncToPocketBase) {
-		if (userBox == null) {
-			String message = "AppUserRepo not initialized";
-			throw new IllegalStateException(message);
-		}
-		user.entityId = DEFAULT_USER_ID;
-		activeUser = user;
-		userBox.put(user);
-		
-		if (syncToPocketBase && user.userServerId != null && !user.userServerId.isEmpty()) {
-			ThreadTask.executeInBackground(() -> {
-				try {
-					cloudClient.updateUser(user.userServerId, toPocketBasePayload(user));
-				} catch (Exception error) {
-					logger.error("Sync to PocketBase failed", error);
-				}
-			});
-		}
-	}
-	
-	public static void updateUser(UpdateBlock block) {
-		if (activeUser == null) return;
-		block.apply(activeUser);
-		save(activeUser);
-	}
-	
 	private static void observeChanges() {
 		try {
 			if (userBox == null) return;
 			try (Query<AppUser> query = userBox.query()
-				.equal(AppUser_.entityId, DEFAULT_USER_ID)
+				.equal(AppUser_.id, DEFAULT_USER_ID)
 				.build()) {
 				
 				subscription = query.subscribe().observer(data -> {
@@ -158,9 +162,9 @@ public final class AppUserRepo {
 		if (isSyncInProgress) return;
 		isSyncInProgress = true;
 		
-		syncJob.cancel();
-		syncJob.setMaxExecutionTimeMs(10_000);
-		syncJob.setBackgroundTask(progressCallback -> {
+		serverSyncJob.cancel();
+		serverSyncJob.setMaxExecutionTimeMs(20_000);
+		serverSyncJob.setBackgroundTask(progressCallback -> {
 			try {
 				AppUser localUser = getUser();
 				if (localUser == null) return "Local user not found";
@@ -184,8 +188,9 @@ public final class AppUserRepo {
 			}
 			return "success";
 		});
-		syncJob.setErrorTask(error -> isSyncInProgress = false);
-		syncJob.start();
+		serverSyncJob.setResultTask(result -> isSyncInProgress = false);
+		serverSyncJob.setErrorTask(error -> isSyncInProgress = false);
+		serverSyncJob.start();
 	}
 	
 	private static void createServerUser(AppUser user) {
