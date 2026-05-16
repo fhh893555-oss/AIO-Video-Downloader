@@ -94,24 +94,18 @@ public abstract class PocketBaseClient {
 	
 	@Nullable
 	protected JSONObject post(@NonNull JSONObject data) {
-		RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
-		return post(requestBody);
-	}
-
-	@Nullable
-	protected JSONObject post(@NonNull RequestBody requestBody) {
 		try {
+			RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
 			Request request = new Request.Builder()
 				.url(recordsUrl()).post(requestBody).build();
-
+			
 			try (Response response = httpClient.newCall(request).execute()) {
 				if (!response.isSuccessful()) {
 					logger.debug("Post failed code=" + response.code());
 					return null;
 				}
-
-				String bodyString = response.body().string();
-				return new JSONObject(bodyString);
+				
+				return new JSONObject(response.body().string());
 			}
 		} catch (Exception error) {
 			logger.error("Post failed.", error);
