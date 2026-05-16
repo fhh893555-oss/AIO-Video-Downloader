@@ -21,13 +21,11 @@ public final class AppUserRepo {
 	private static final Set<UserObserver> observers = new HashSet<>();
 	
 	private static final long DEFAULT_USER_ID = 1L;
-	
+	private static final AppUserCloud cloudClient = new AppUserCloud();
+	private static final ThreadTask<String, String> syncJob = new ThreadTask<>();
 	private static volatile AppUser activeUser;
 	private static Box<AppUser> userBox;
 	private static DataSubscription subscription;
-	
-	private static final AppUserCloud cloudClient = new AppUserCloud();
-	private static final ThreadTask<String, String> syncJob = new ThreadTask<>();
 	private static volatile boolean isSyncInProgress = false;
 	
 	private AppUserRepo() {}
