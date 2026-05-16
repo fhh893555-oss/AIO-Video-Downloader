@@ -170,13 +170,8 @@ public final class AppUserRepo {
                 String userDeviceId = localUser.userDeviceId;
                 logger.debug("Checking PocketBase user for device: " + userDeviceId);
                 JSONObject serverUser = cloudClient.getUserByDeviceId(userDeviceId);
-
-                if (serverUser == null) {
-                    return "failed";
-                }
-
-                boolean isUserFound = serverUser.has("id");
-                if (!isUserFound) {
+                
+                if (serverUser == null || !serverUser.has("id")) {
                     createServerUser(localUser);
                 } else {
                     mergeServerUser(serverUser);
@@ -190,13 +185,18 @@ public final class AppUserRepo {
             }
             return "success";
         });
+        syncJob.setResultTask(result -> {
+            if (result.equals("failed")){
+                logger.error("Checking PocketBase user is failed.");
+            }
+        });
+        
         syncJob.setErrorTask(error -> isSyncInProgress = false);
         syncJob.start();
     }
 
     private static void createServerUser(AppUser user) {
         try {
-            if (user.userServerId != null && !user.userServerId.isEmpty()) return;
             logger.debug("Creating PocketBase user");
             JSONObject response = cloudClient.createUser(toPocketBasePayload(user));
             if (response != null) {
