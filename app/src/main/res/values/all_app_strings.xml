@@ -73,4 +73,5 @@
   <string name="footer_feedback_safe">Your feedback is 100% safe and confidential</string>
   <string name="title_zero_slash_five_hundred">0/500</string>
   <string name="label_angry">Angry</string>
+  <string name="label_sample_text_message">This is a sample test message for UI</string>
 </resources>
