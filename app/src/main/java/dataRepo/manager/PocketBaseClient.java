@@ -137,4 +137,9 @@ public abstract class PocketBaseClient {
 		this.httpClient = httpClient;
 	}
 	
+	@NonNull
+	public OkHttpClient getHttpClient() {
+		return this.httpClient;
+	}
+	
 }

@@ -15,14 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import coreUtils.base.BaseApplication;
-import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.DeviceSignature;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
 import dataRepo.manager.PocketBaseClient;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -239,14 +237,13 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	private JSONObject postMultipart(RequestBody requestBody) {
 		Response response = null;
 		try {
-			OkHttpClient client = HttpClientProvider.getOkHttpClient(20, 20);
 			Request request = new Request.Builder()
 				.url(getRecordsUrl())
 				.post(requestBody)
 				.addHeader("Accept", "application/json")
 				.build();
 			
-			response = client.newCall(request).execute();
+			response = getHttpClient().newCall(request).execute();
 			if (response.body() == null) {
 				logger.error("Multipart response body is null");
 				return null;
