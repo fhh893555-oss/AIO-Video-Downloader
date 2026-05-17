@@ -197,27 +197,39 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	 */
 	private byte[] compressImage(byte[] inputBytes) {
 		try {
-			Bitmap bitmap = BitmapFactory.decodeByteArray(inputBytes, 0, inputBytes.length);
-			if (bitmap == null) return inputBytes;
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeByteArray(inputBytes, 0, inputBytes.length, options);
 			
-			int width = bitmap.getWidth();
-			int height = bitmap.getHeight();
-			float maxSide = 1280f;
+			int srcWidth = options.outWidth;
+			int srcHeight = options.outHeight;
+			int maxSide = 1280;
 			
-			if (width > maxSide || height > maxSide) {
-				float scale = maxSide / Math.max(width, height);
-				width = Math.round(width * scale);
-				height = Math.round(height * scale);
-				bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+			int inSampleSize = 1;
+			if (srcWidth > maxSide || srcHeight > maxSide) {
+				int halfWidth = srcWidth / 2;
+				int halfHeight = srcHeight / 2;
+				while ((halfWidth / inSampleSize) >=
+					maxSide && (halfHeight / inSampleSize) >= maxSide) {
+					inSampleSize *= 2;
+				}
 			}
 			
+			options.inJustDecodeBounds = false;
+			options.inSampleSize = inSampleSize;
+			Bitmap scaledBitmap = BitmapFactory.decodeByteArray(
+				inputBytes, 0, inputBytes.length, options);
+			
+			if (scaledBitmap == null) return inputBytes;
+			
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+			scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
 			byte[] result = outputStream.toByteArray();
-			bitmap.recycle();
+			
+			scaledBitmap.recycle();
 			return result;
 		} catch (Exception error) {
-			logger.error("Failed to compress image", error);
+			logger.error("Failed to safely compress image streams cleanly", error);
 			return inputBytes;
 		}
 	}

@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.nextgen.R;
 
+import java.lang.ref.WeakReference;
+
 import javax.annotation.Nullable;
 
 import coreUtils.library.networks.HttpClientProvider;
@@ -17,9 +19,13 @@ import coreUtils.library.strings.StringHelper;
 
 public class FeedbackViewModel extends ViewModel {
 	private final LoggerUtils logger = LoggerUtils.from(FeedbackViewModel.class);
-	private final ThreadTask<Boolean, Boolean> sender = new ThreadTask<>();
+	private final MutableLiveData<String> selectedReaction;
 	
-	private final MutableLiveData<String> selectedReaction = new MutableLiveData<>(FeedbackReactions.Excellent.name());
+	{
+		String defaultReaction = FeedbackReactions.Excellent.name();
+		selectedReaction = new MutableLiveData<>(defaultReaction);
+	}
+	
 	private final MutableLiveData<DocumentFile> selectedScreenshot = new MutableLiveData<>();
 	private final MutableLiveData<Boolean> isSubmitting = new MutableLiveData<>(false);
 	private final MutableLiveData<Boolean> submissionSuccess = new MutableLiveData<>();
@@ -53,40 +59,46 @@ public class FeedbackViewModel extends ViewModel {
 		return submissionError;
 	}
 	
-	public void sendFeedback(LifecycleOwner lifecycleOwner,
-	                         String subject, String email, String message) {
+	public void sendFeedback(LifecycleOwner lifecycleOwner, String reaction,
+	                         String subject, String email, String message, DocumentFile screenshot) {
 		if (isSubmitting.getValue() != null && isSubmitting.getValue()) return;
-		
 		isSubmitting.setValue(true);
+		
+		WeakReference<FeedbackViewModel> weakViewModel = new WeakReference<>(this);
+		ThreadTask<Void, Void> sender = new ThreadTask<>();
 		sender.observeLifecycle(lifecycleOwner);
+		
 		sender.setBackgroundTask(callback -> {
 			try {
 				FeedbackPocketbase server = new FeedbackPocketbase();
 				server.setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(5, 10));
-				return server.sendFeedbackToServer(
-					selectedReaction.getValue(), subject, email,
-					message, selectedScreenshot.getValue()
-				);
+				
+				boolean isSuccessful = server.sendFeedbackToServer(
+					reaction, subject, email, message, screenshot);
+				
+				logger.debug("Feedback submit report received, result: " +
+					(isSuccessful ? "Successful" : "Failed"));
+				ThreadTask.executeOnMainThread(() -> {
+					FeedbackViewModel vm = weakViewModel.get();
+					if (vm != null) {
+						vm.isSubmitting.setValue(false);
+						vm.submissionSuccess.setValue(isSuccessful);
+						if (!isSuccessful) {
+							vm.handleSubmissionError();
+						}
+					}
+				});
+				
 			} catch (Exception error) {
-				logger.error("Failed sending feedback to server: ", error);
-				return false;
+				ThreadTask.executeOnMainThread(() -> {
+					FeedbackViewModel vm = weakViewModel.get();
+					if (vm != null) {
+						vm.isSubmitting.setValue(false);
+						vm.handleSubmissionError();
+					}
+				});
 			}
-		});
-		
-		sender.setResultTask(submissionReport -> {
-			logger.debug("Feedback submit report received, result: " +
-				(submissionReport ? "Successful" : "Failed"));
-			isSubmitting.setValue(false);
-			submissionSuccess.setValue(submissionReport);
-			if (!submissionReport) {
-				handleSubmissionError();
-			}
-		});
-		
-		sender.setErrorTask(error -> {
-			logger.error("Error in sending message to server: ", error);
-			isSubmitting.setValue(false);
-			handleSubmissionError();
+			return null;
 		});
 		
 		sender.start();

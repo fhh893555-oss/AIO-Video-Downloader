@@ -584,7 +584,8 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 			return;
 		}
 		
-		viewModel.sendFeedback(this, subject, email, message);
+		getViewModel().sendFeedback(this, getViewModel().getSelectedReaction().getValue(),
+			subject, email, message, getViewModel().getSelectedScreenshot().getValue());
 	}
 	
 	/**
