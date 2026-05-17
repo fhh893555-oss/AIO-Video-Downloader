@@ -16,9 +16,6 @@ import coreUtils.library.process.DeviceSignature;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
 import dataRepo.manager.PocketBaseClient;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 @SuppressWarnings("ALL")
 public final class FeedbackPocketbase extends PocketBaseClient {
@@ -31,7 +28,6 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	private final String FIELD_SCREENSHOT = "screenshot";
 	private final String FIELD_DEVICE_ID = "deviceId";
 	private final String FIELD_APP_VERSION = "appVersion";
-	private final String FIELD_PLATFORM = "platform";
 	
 	@NonNull @Override protected String getCollectionName() {
 		return COLLECTION_NAME;
@@ -47,56 +43,25 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 			String deviceId = DeviceSignature.getInstance(appContext).generate();
 			String appVersion = VersionInfo.getVersionName(appContext);
 			
-			MultipartBody.Builder builder = new MultipartBody.Builder()
-				.setType(MultipartBody.FORM)
-				.addFormDataPart(FIELD_REACTION, reaction != null ? reaction : "Excellent")
-				.addFormDataPart(FIELD_SUBJECT, subject != null ? subject : "")
-				.addFormDataPart(FIELD_MESSAGE, message)
-				.addFormDataPart(FIELD_EMAIL, email != null ? email : "")
-				.addFormDataPart(FIELD_DEVICE_ID, deviceId)
-				.addFormDataPart(FIELD_APP_VERSION, appVersion != null ? appVersion : "unknown")
-				.addFormDataPart(FIELD_PLATFORM, "Android");
+			JSONObject json = new JSONObject();
+			json.put(FIELD_REACTION, reaction);
+			json.put(FIELD_SUBJECT, subject);
+			json.put(FIELD_MESSAGE, message);
+			json.put(FIELD_EMAIL, email);
+			json.put(FIELD_DEVICE_ID, deviceId);
+			json.put(FIELD_APP_VERSION, appVersion);
+			JSONObject response = post(json);
 			
-			logger.debug("Added device info - device_id: " + deviceId + ", app_version: " + appVersion);
-			if (screenshot != null && screenshot.exists()) {
-				logger.debug("Attaching screenshot: " + screenshot.getName());
-				byte[] bytes = readDocumentFile(screenshot);
-				if (bytes != null) {
-					logger.debug("Screenshot size: " + bytes.length + " bytes");
-					String mimeType = screenshot.getType();
-					
-					if (mimeType == null || mimeType.isEmpty()) {
-						String fileName = screenshot.getName();
-						
-						if (fileName != null && fileName.toLowerCase().endsWith(".png")) {
-							mimeType = "image/png";
-							
-						} else if (fileName != null &&
-							(fileName.toLowerCase().endsWith(".jpg") ||
-								fileName.toLowerCase().endsWith(".jpeg"))) {
-							mimeType = "image/jpeg";
-							
-						} else {
-							mimeType = "image/jpeg";
-						}
-					}
-					
-					MediaType contentType = MediaType.parse(mimeType);
-					RequestBody fileBody = RequestBody.create(bytes, contentType);
-					builder.addFormDataPart(FIELD_SCREENSHOT, screenshot.getName(), fileBody);
+			if (response != null) {
+				String serverId = response.optString("id");
+				if (!serverId.isEmpty()) {
+					logger.debug("Feedback created succesfully: " + serverId);
+					return true;
+				} else {
+					logger.debug("Failed to send feedback to server.");
+					return false;
 				}
-			}
-			
-			MultipartBody requestBody = builder.build();
-			logger.debug("Request content-type: " + requestBody.contentType());
-			
-			JSONObject result = post(requestBody);
-			if (result != null) {
-				logger.debug("Feedback sent successfully, response: " + result.toString());
-				return true;
-				
 			} else {
-				logger.debug("Feedback submission returned null response");
 				return false;
 			}
 		} catch (Exception error) {

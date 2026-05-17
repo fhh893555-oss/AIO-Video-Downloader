@@ -62,7 +62,7 @@ public class FeedbackViewModel extends ViewModel {
 		sender.setBackgroundTask(callback -> {
 			try {
 				FeedbackPocketbase server = new FeedbackPocketbase();
-				server.setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(30, 30));
+				server.setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(5, 10));
 				return server.sendFeedbackToServer(
 					selectedReaction.getValue(), subject, email,
 					message, selectedScreenshot.getValue()
