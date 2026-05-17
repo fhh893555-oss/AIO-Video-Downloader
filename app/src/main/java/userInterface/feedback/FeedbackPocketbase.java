@@ -23,6 +23,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * A client class responsible for handling the submission of user feedback to a PocketBase backend.
+ * This class extends {@link PocketBaseClient} and facilitates the creation of feedback records
+ * including metadata such as device identifiers, application version, user comments, and optional
+ * screenshot attachments via multipart/form-data requests.
+ *
+ * @see PocketBaseClient
+ */
 @SuppressWarnings("ALL")
 public final class FeedbackPocketbase extends PocketBaseClient {
 	
@@ -36,10 +44,33 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	private final String FIELD_DEVICE_ID = "deviceId";
 	private final String FIELD_APP_VERSION = "appVersion";
 	
+	/**
+	 * Returns the name of the PocketBase collection associated with feedback entries.
+	 *
+	 * @return A non-null string representing the "feedbacks" collection name.
+	 */
 	@NonNull @Override protected String getCollectionName() {
 		return COLLECTION_NAME;
 	}
 	
+	/**
+	 * Sends user feedback to the server as a multipart form request.
+	 * <p>
+	 * This method collects the user's reaction, subject, email, and message,
+	 * along with hardware-specific metadata (Device ID and App Version).
+	 * If an optional screenshot is provided, it is converted to a byte array
+	 * and attached to the request.
+	 * </p>
+	 *
+	 * @param reaction   The user's sentiment or reaction type.
+	 * @param subject    The category or subject of the feedback.
+	 * @param email      The contact email address provided by the user.
+	 * @param message    The detailed feedback message content.
+	 * @param screenshot An optional {@link DocumentFile} representing an image attachment.
+	 *                   Can be null.
+	 * @return {@code true} if the feedback was successfully received and acknowledged
+	 * by the server with a valid ID; {@code false} otherwise.
+	 */
 	public boolean sendFeedbackToServer(String reaction, String subject,
 	                                    String email, String message,
 	                                    @Nullable DocumentFile screenshot) {
@@ -115,6 +146,13 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 		}
 	}
 	
+	/**
+	 * Reads all bytes from the provided {@link InputStream} and returns them as a byte array.
+	 *
+	 * @param inputStream The source stream to read data from.
+	 * @return A byte array containing the complete content of the stream.
+	 * @throws IOException If an I/O error occurs while reading from the stream.
+	 */
 	private byte[] readBytes(InputStream inputStream) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		byte[] data = new byte[4096];
@@ -128,6 +166,18 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 		return buffer.toByteArray();
 	}
 	
+	/**
+	 * Executes a synchronous HTTP POST request with a multipart request body to
+	 * the PocketBase records endpoint.
+	 *
+	 * @param requestBody The multipart/form-data body containing feedback fields
+	 *                    and optional attachments.
+	 * @return A {@link JSONObject} containing the server response if the request
+	 * was successful;
+	 * <p>
+	 * {@code null} if the request failed, the response body was empty, or an
+	 * exception occurred.
+	 */
 	private JSONObject postMultipart(RequestBody requestBody) {
 		Response response = null;
 		try {
