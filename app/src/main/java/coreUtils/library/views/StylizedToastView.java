@@ -127,6 +127,26 @@ public class StylizedToastView extends Toast {
 		}
 		return this;
 	}
+
+	/**
+	 * Sets the text message to be displayed in the toast using a string resource ID.
+	 *
+	 * @param resId The resource ID of the string resource to use as the message.
+	 */
+	@Override
+	public void setText(int resId) {
+		setMessage(rootView.getContext().getText(resId));
+	}
+
+	/**
+	 * Sets the text to be displayed in the toast using a string resource.
+	 *
+	 * @param resId The resource id of the string resource to use.
+	 */
+	@Override
+	public void setText(CharSequence charSequence) {
+		setMessage(charSequence);
+	}
 	
 	/**
 	 * Sets the text color of the toast message.
@@ -234,7 +254,7 @@ public class StylizedToastView extends Toast {
 		
 		Context applicationContext = activity.getApplicationContext();
 		StylizedToastView toast = new StylizedToastView(applicationContext, view);
-		toast.setText(message);
+		toast.setMessage(message);
 		toast.setDuration(LENGTH_LONG);
 		
 		return toast;

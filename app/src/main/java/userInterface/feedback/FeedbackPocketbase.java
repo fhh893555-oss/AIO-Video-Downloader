@@ -1,5 +1,9 @@
 package userInterface.feedback;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
@@ -99,27 +103,38 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 			multipartBuilder.addFormDataPart(FIELD_APP_VERSION, appVersion);
 			
 			if (screenshot != null && screenshot.exists()) {
-				inputStream = appContext
-					.getContentResolver()
+				ContentResolver contentResolver = appContext.getContentResolver();
+				inputStream = contentResolver
 					.openInputStream(screenshot.getUri());
 				
 				if (inputStream != null) {
 					byte[] fileBytes = readBytes(inputStream);
-					String mimeType =
-						appContext.getContentResolver()
-							.getType(screenshot.getUri());
+					String mimeType;
+					String fileName = screenshot.getName() != null ?
+						screenshot.getName() : "screenshot.png";
 					
-					if (mimeType == null || mimeType.trim().isEmpty()) {
-						mimeType = "image/*";
+					if (fileBytes.length > 1024 * 1024) {
+						logger.debug("Compressing large screenshot: " +
+							fileBytes.length + " bytes");
+						fileBytes = compressImage(fileBytes);
+						
+						logger.debug("Compressed screenshot size: " +
+							fileBytes.length + " bytes");
+						mimeType = "image/jpeg";
+						
+						fileName = "screenshot_compressed.jpg";
+					} else {
+						mimeType = contentResolver.getType(screenshot.getUri());
+						if (mimeType == null || mimeType.trim().isEmpty()) {
+							mimeType = "image/png";
+						}
 					}
 					
 					RequestBody fileBody = RequestBody.create(
-						fileBytes, MediaType.parse(mimeType)
-					);
+						fileBytes, MediaType.parse(mimeType));
 					
 					multipartBuilder.addFormDataPart(
-						"screenshot", screenshot.getName(), fileBody
-					);
+						FIELD_SCREENSHOT, fileName, fileBody);
 				}
 			}
 			
@@ -167,6 +182,46 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 		
 		buffer.flush();
 		return buffer.toByteArray();
+	}
+	
+	/**
+	 * Compresses an image byte array to reduce its file size and dimensions.
+	 * <p>
+	 * This method decodes the byte array into a {@link Bitmap}, scales it down if its
+	 * largest dimension exceeds 1280 pixels while maintaining aspect ratio, and
+	 * compresses the result into a JPEG format with 80% quality. This is primarily
+	 * used to prevent "413 Request Entity Too Large" errors during upload.
+	 * </p>
+	 *
+	 * @param inputBytes The raw image data as a byte array.
+	 * @return A compressed JPEG image byte array, or the original {@code inputBytes}
+	 * if decoding fails or an error occurs during processing.
+	 */
+	private byte[] compressImage(byte[] inputBytes) {
+		try {
+			Bitmap bitmap = BitmapFactory.decodeByteArray(inputBytes, 0, inputBytes.length);
+			if (bitmap == null) return inputBytes;
+			
+			int width = bitmap.getWidth();
+			int height = bitmap.getHeight();
+			float maxSide = 1280f;
+			
+			if (width > maxSide || height > maxSide) {
+				float scale = maxSide / Math.max(width, height);
+				width = Math.round(width * scale);
+				height = Math.round(height * scale);
+				bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+			}
+			
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+			byte[] result = outputStream.toByteArray();
+			bitmap.recycle();
+			return result;
+		} catch (Exception error) {
+			logger.error("Failed to compress image", error);
+			return inputBytes;
+		}
 	}
 	
 	/**
