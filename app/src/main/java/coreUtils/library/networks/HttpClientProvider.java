@@ -17,7 +17,7 @@ public final class HttpClientProvider {
 	
 	private static volatile OkHttpClient okHttpClient;
 	
-	public static OkHttpClient getOkHttpClient(int collectionTimeout, int readTimeout) {
+	public static OkHttpClient getOkHttpClient(int connectTimeout, int readTimeout) {
 		if (okHttpClient == null) {
 			synchronized (HttpClientProvider.class) {
 				if (okHttpClient == null) {
@@ -25,14 +25,26 @@ public final class HttpClientProvider {
 						.followRedirects(true)
 						.followSslRedirects(true)
 						.protocols(defaultProtocols())
-						.connectTimeout(Math.max(collectionTimeout, 5), TimeUnit.SECONDS)
-						.readTimeout(Math.max(readTimeout, 10), TimeUnit.SECONDS)
+						.connectTimeout(5, TimeUnit.SECONDS)
+						.readTimeout(10, TimeUnit.SECONDS)
 						.connectionPool(getConnectionPool())
 						.dispatcher(getDispatcher())
 						.build();
 				}
 			}
 		}
+		
+		int finalConnectTimeout = Math.max(connectTimeout, 5);
+		int finalReadTimeout = Math.max(readTimeout, 10);
+		
+		if (okHttpClient.connectTimeoutMillis() != (long) finalConnectTimeout * 1000 ||
+			okHttpClient.readTimeoutMillis() != (long) finalReadTimeout * 1000) {
+			return okHttpClient.newBuilder()
+				.connectTimeout(finalConnectTimeout, TimeUnit.SECONDS)
+				.readTimeout(finalReadTimeout, TimeUnit.SECONDS)
+				.build();
+		}
+
 		return okHttpClient;
 	}
 	

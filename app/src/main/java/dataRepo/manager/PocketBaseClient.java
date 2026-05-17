@@ -19,7 +19,7 @@ import okhttp3.Response;
 
 public abstract class PocketBaseClient {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
-	protected OkHttpClient httpClient = HttpClientProvider.getOkHttpClient(5, 10);
+	protected OkHttpClient httpClient = HttpClientProvider.getOkHttpClient(10, 20);
 	protected final MediaType jsonMedia = MediaType.parse("application/json");
 	
 	public static final String API_ENDPOINT = "https://cloud.tubeaio.com";
