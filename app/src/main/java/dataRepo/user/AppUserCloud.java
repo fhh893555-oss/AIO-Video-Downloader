@@ -86,7 +86,7 @@ public class AppUserCloud extends PocketBaseClient {
 					.build();
 			
 			Request request = new Request.Builder()
-				.url(recordsUrl() + "/" + serverId)
+				.url(getRecordsUrl() + "/" + serverId)
 				.patch(multipart)
 				.build();
 			

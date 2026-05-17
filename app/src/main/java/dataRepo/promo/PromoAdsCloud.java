@@ -34,7 +34,7 @@ public class PromoAdsCloud extends PocketBaseClient {
                     PromoAdInfo.POCKETBASE_REMOTE_IS_ACTIVE_FIELD + "=true",
                     StandardCharsets.UTF_8);
 
-            String url = recordsUrl() + "?filter=" + filter;
+            String url = getRecordsUrl() + "?filter=" + filter;
             Request request = new Request.Builder().url(url)
                     .addHeader("X-Device-Id", deviceId)
                     .get().build();

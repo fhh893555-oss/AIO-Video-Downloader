@@ -25,7 +25,7 @@ public abstract class PocketBaseClient {
 	public static final String API_ENDPOINT = "https://cloud.tubeaio.com";
 	
 	@NonNull
-	protected String recordsUrl() {
+	protected String getRecordsUrl() {
 		return API_ENDPOINT + "/api/collections/" + getCollectionName() + "/records";
 	}
 	
@@ -37,7 +37,7 @@ public abstract class PocketBaseClient {
 	                           @Nullable String fields, @NonNull String deviceId) {
 		try {
 			String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8);
-			StringBuilder url = new StringBuilder(recordsUrl())
+			StringBuilder url = new StringBuilder(getRecordsUrl())
 				.append("?filter=")
 				.append(encodedFilter);
 			
@@ -75,7 +75,7 @@ public abstract class PocketBaseClient {
 		try {
 			RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
 			Request request = new Request.Builder()
-				.url(recordsUrl() + "/" + recordId)
+				.url(getRecordsUrl() + "/" + recordId)
 				.patch(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
@@ -97,7 +97,7 @@ public abstract class PocketBaseClient {
 		try {
 			RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
 			Request request = new Request.Builder()
-				.url(recordsUrl()).post(requestBody).build();
+				.url(getRecordsUrl()).post(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
 				if (!response.isSuccessful()) {
@@ -117,7 +117,7 @@ public abstract class PocketBaseClient {
 	protected JSONObject post(@NonNull RequestBody requestBody) {
 		try {
 			Request request = new Request.Builder()
-				.url(recordsUrl()).post(requestBody).build();
+				.url(getRecordsUrl()).post(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
 				if (!response.isSuccessful()) {

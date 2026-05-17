@@ -38,14 +38,14 @@
 
     <ImageView
       android:id="@+id/imgIcon"
-      android:layout_width="@dimen/_30"
+      android:layout_width="@dimen/_26"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:layout_marginLeft="@dimen/_15"
       android:adjustViewBounds="true"
       android:importantForAccessibility="no"
       android:scaleType="fitXY"
-      android:src="@drawable/img_information"
+      android:src="@drawable/ic_information"
       tools:ignore="ImageContrastCheck" />
 
     <TextView
