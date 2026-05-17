@@ -2,6 +2,7 @@ package userInterface.feedback;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,50 +43,66 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	@Override protected void onLoadedLayout() {
-		viewModel = new ViewModelProvider(this).get(FeedbackViewModel.class);
-		
+		initViewModel();
 		initImagePicker();
 		applyGradientToTitle();
 		setupButtonClicks();
 		setupTextWatchers();
 		observeViewModel();
-		
-		selectReaction(FeedbackReactions.Excellent.name(),
-			binding.top2.imgHappy, binding.top2.txtHappy);
+		selectExcellentReactionByDefault();
+	}
+	
+	public FeedbackViewModel getViewModel() {
+		return viewModel;
+	}
+	
+	private void initViewModel() {
+		viewModel = new ViewModelProvider(this)
+			.get(FeedbackViewModel.class);
 	}
 	
 	private void initImagePicker() {
+		resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
 		imagePickerLauncher = registerForActivityResult(
 			new ActivityResultContracts.GetContent(),
-			uri -> {
-				if (uri != null) {
-					DocumentFile file = DocumentFile.fromSingleUri(this, uri);
-					if (file.length() < 5 * 1024 * 1024) {
-						viewModel.setSelectedScreenshot(file);
-					} else {
-						vibrate(50);
-						StylizedToastView.showToast(FeedbackActivity.this,
-							R.string.hint_file_size_exceed_5mb);
-					}
-				}
-			}
+			this::validateAttachmentFile
 		);
 		
-		binding.top3.contAttachmentSelected.setVisibility(View.GONE);
-		binding.top3.contUploadPic.setVisibility(View.VISIBLE);
+		getViewModel().getSelectedScreenshot().observe(this,
+			this::observeSelectedAttachmentFile);
+	}
+	
+	private void observeSelectedAttachmentFile(DocumentFile documentFile) {
+		if (documentFile == null) return;
 		
-		viewModel.getSelectedScreenshot().observe(this, documentFile -> {
-			String fileName = documentFile.getName();
-			if (fileName != null && fileName.length() > 0) {
-				binding.top3.contAttachmentSelected.setVisibility(View.VISIBLE);
-				binding.top3.contUploadPic.setVisibility(View.GONE);
-				
-				binding.top3.txtFileAttch.setText(fileName);
-				String fileSize = FileStorageUtility.humanReadableSizeOf(documentFile.length());
-				CharSequence text = getText(R.string.label_file_size) + " " + fileSize;
-				binding.top3.txtFileSize.setText(text);
+		String fileName = documentFile.getName();
+		if (fileName != null && fileName.length() > 0) {
+			resetUploadAttachmentContainer(View.VISIBLE, View.GONE);
+			
+			binding.top3.txtFileAttch.setText(fileName);
+			String fileSize = FileStorageUtility.humanReadableSizeOf(documentFile.length());
+			CharSequence text = getText(R.string.label_file_size) + " " + fileSize;
+			binding.top3.txtFileSize.setText(text);
+		}
+	}
+	
+	private void validateAttachmentFile(Uri fileUri) {
+		if (fileUri != null) {
+			DocumentFile file = DocumentFile.fromSingleUri(this, fileUri);
+			if (file.length() < 5 * 1024 * 1024) {
+				getViewModel().setSelectedScreenshot(file);
+			} else {
+				vibrate(50);
+				StylizedToastView.showToast(FeedbackActivity.this,
+					R.string.hint_file_size_exceed_5mb);
 			}
-		});
+		}
+	}
+	
+	private void resetUploadAttachmentContainer(int attachmentVisibility,
+	                                            int uploadPicVisibility) {
+		binding.top3.contAttachmentSelected.setVisibility(attachmentVisibility);
+		binding.top3.contUploadPic.setVisibility(uploadPicVisibility);
 	}
 	
 	private void applyGradientToTitle() {
@@ -142,6 +159,11 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 			imagePickerLauncher.launch("image/*");
 		});
 		
+		binding.top3.btnCancelUpload.setOnClickListener(v -> {
+			getViewModel().setSelectedScreenshot(null);
+			resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
+		});
+		
 		binding.top3.btnPasteIcon.setOnClickListener(v -> {
 			buttonVibrate();
 			pasteFromClipboard();
@@ -170,6 +192,9 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		viewModel.getIsSubmitting().observe(this, isSubmitting -> {
 			binding.top3.btnSendFeedback.setEnabled(!isSubmitting);
 			binding.top3.btnSendFeedback.setAlpha(isSubmitting ? 0.5f : 1.0f);
+			
+			binding.top3.txtSendFeedback.setText(isSubmitting ?
+				R.string.hint_sending_feedback : R.string.btn_send_feedback);
 		});
 		
 		viewModel.getSubmissionSuccess().observe(this, success -> {
@@ -177,7 +202,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 				vibrate(50);
 				int sentThankYou = R.string.hint_feedback_sent_thank_you;
 				StylizedToastView.showToast(FeedbackActivity.this, sentThankYou);
-				finish();
+				resetFeedbackSubmission();
 			}
 		});
 		
@@ -187,6 +212,14 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 				StylizedToastView.showToast(FeedbackActivity.this, error);
 			}
 		});
+	}
+	
+	private void resetFeedbackSubmission() {
+		binding.top3.editSubject.setText("");
+		binding.top3.editEmail.setText("");
+		binding.top3.editFeedback.setText("");
+		resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
+		getViewModel().setSelectedScreenshot(null);
 	}
 	
 	private void selectReaction(String reaction,
@@ -219,6 +252,11 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		selectedTextView.setTypeface(bold);
 	}
 	
+	private void selectExcellentReactionByDefault() {
+		selectReaction(FeedbackReactions.Excellent.name(),
+			binding.top2.imgHappy, binding.top2.txtHappy);
+	}
+	
 	private void pasteFromClipboard() {
 		Context context = getBaseContext();
 		CharSequence text = ClipboardHelper.getTextFromClipboard(context);
@@ -232,13 +270,21 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		String message = Objects.requireNonNull(binding.top3.editFeedback.getText()).toString().trim();
 		String email = Objects.requireNonNull(binding.top3.editEmail.getText()).toString().trim();
 		
+		if (subject.isEmpty()) {
+			StylizedToastView.showToast(this, R.string.hint_please_give_subject);
+			vibrate();
+			return;
+		}
+		
 		if (message.isEmpty()) {
 			StylizedToastView.showToast(this, R.string.hint_please_describe_your_feedback);
+			vibrate();
 			return;
 		}
 		
 		if (message.length() > 500) {
 			StylizedToastView.showToast(this, R.string.hint_feedback_is_too_long);
+			vibrate();
 			return;
 		}
 		

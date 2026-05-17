@@ -84,4 +84,7 @@
   <string name="hint_click_again_for_changing_attachment">Click here again for changing the attachment</string>
   <string name="label_file_size">File size : </string>
   <string name="hint_file_size_exceed_5mb">File size exceeds 5MB</string>
+  <string name="hint_sending_feedback">Sending Feedback</string>
+  <string name="hint_please_give_subject">Please give your feedback a subject</string>
+  <string name="hint_failed_to_submit_feedback">Failed to submit feedback</string>
 </resources>

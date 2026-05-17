@@ -78,6 +78,10 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
 		vibrate(30);
 	}
 	
+	protected void vibrate() {
+		vibrate(20);
+	}
+	
 	protected void vibrate(long duration) {
 		try {
 			Vibrator vibrator;

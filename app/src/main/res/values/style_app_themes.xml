@@ -51,6 +51,11 @@
 
     <item name="android:layoutDirection">ltr</item>
 
+    <item name="android:scrollbars">none</item>
+    <item name="android:fadeScrollbars">true</item>
+    <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
+    <item name="android:scrollbarThumbHorizontal">@android:color/transparent</item>
+
     <item name="android:textColorPrimary">@color/color_text_primary</item>
     <item name="android:textColorSecondary">@color/color_text_secondary</item>
     <item name="android:textColorHint">@color/color_secondary_variant</item>
@@ -105,6 +110,11 @@
 
     <item name="android:layoutDirection">ltr</item>
 
+    <item name="android:scrollbars">none</item>
+    <item name="android:fadeScrollbars">true</item>
+    <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
+    <item name="android:scrollbarThumbHorizontal">@android:color/transparent</item>
+
     <item name="android:textColorPrimary">@color/color_text_primary</item>
     <item name="android:textColorSecondary">@color/color_text_secondary</item>
     <item name="android:textColorHint">@color/color_secondary_variant</item>
@@ -127,4 +137,5 @@
     <item name="android:includeFontPadding">false</item>
     <item name="android:lineSpacingMultiplier">0.9</item>
   </style>
+
 </resources>
