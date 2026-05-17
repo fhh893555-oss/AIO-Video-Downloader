@@ -1051,7 +1051,7 @@ public class URLUtility {
     public static String fetchMobileWebPageContent(
             String url, boolean allowRetry, int numOfRetry, int timeoutSeconds) {
         List<String> userAgents = APP_DEFAULT_MOBILE_AGENTS;
-        OkHttpClient client = HttpClientProvider.getOkHttpClient();
+        OkHttpClient client = HttpClientProvider.getOkHttpClient(timeoutSeconds, timeoutSeconds);
 
         int maxAttempts = (allowRetry && numOfRetry > 0) ? numOfRetry : 1;
         for (int attempt = 0; attempt < maxAttempts; attempt++) {

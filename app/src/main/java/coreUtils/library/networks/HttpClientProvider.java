@@ -17,7 +17,7 @@ public final class HttpClientProvider {
 	
 	private static volatile OkHttpClient okHttpClient;
 	
-	public static OkHttpClient getOkHttpClient() {
+	public static OkHttpClient getOkHttpClient(int collectionTimeout, int readTimeout) {
 		if (okHttpClient == null) {
 			synchronized (HttpClientProvider.class) {
 				if (okHttpClient == null) {
@@ -25,8 +25,8 @@ public final class HttpClientProvider {
 						.followRedirects(true)
 						.followSslRedirects(true)
 						.protocols(defaultProtocols())
-						.connectTimeout(5, TimeUnit.SECONDS)
-						.readTimeout(10, TimeUnit.SECONDS)
+						.connectTimeout(Math.max(collectionTimeout, 5), TimeUnit.SECONDS)
+						.readTimeout(Math.max(readTimeout, 10), TimeUnit.SECONDS)
 						.connectionPool(getConnectionPool())
 						.dispatcher(getDispatcher())
 						.build();

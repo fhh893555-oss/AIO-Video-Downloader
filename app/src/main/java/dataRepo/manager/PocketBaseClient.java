@@ -19,7 +19,7 @@ import okhttp3.Response;
 
 public abstract class PocketBaseClient {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
-	protected final OkHttpClient httpClient = HttpClientProvider.getOkHttpClient();
+	protected OkHttpClient httpClient = HttpClientProvider.getOkHttpClient(5, 10);
 	protected final MediaType jsonMedia = MediaType.parse("application/json");
 	
 	public static final String API_ENDPOINT = "https://cloud.tubeaio.com";
@@ -112,4 +112,29 @@ public abstract class PocketBaseClient {
 			return null;
 		}
 	}
+	
+	@Nullable
+	protected JSONObject post(@NonNull RequestBody requestBody) {
+		try {
+			Request request = new Request.Builder()
+				.url(recordsUrl()).post(requestBody).build();
+			
+			try (Response response = httpClient.newCall(request).execute()) {
+				if (!response.isSuccessful()) {
+					logger.debug("Post failed code=" + response.code());
+					return null;
+				}
+				
+				return new JSONObject(response.body().string());
+			}
+		} catch (Exception error) {
+			logger.error("Post failed.", error);
+			return null;
+		}
+	}
+	
+	public void setCustomOKHttpClient(@NonNull OkHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+	
 }

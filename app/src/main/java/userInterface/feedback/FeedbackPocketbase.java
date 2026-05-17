@@ -90,7 +90,7 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 			MultipartBody requestBody = builder.build();
 			logger.debug("Request content-type: " + requestBody.contentType());
 			
-			JSONObject result = post(new JSONObject());
+			JSONObject result = post(requestBody);
 			if (result != null) {
 				logger.debug("Feedback sent successfully, response: " + result.toString());
 				return true;

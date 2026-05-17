@@ -10,6 +10,7 @@ import com.nextgen.R;
 
 import javax.annotation.Nullable;
 
+import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 import coreUtils.library.strings.StringHelper;
@@ -61,6 +62,7 @@ public class FeedbackViewModel extends ViewModel {
 		sender.setBackgroundTask(callback -> {
 			try {
 				FeedbackPocketbase server = new FeedbackPocketbase();
+				server.setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(30, 30));
 				return server.sendFeedbackToServer(
 					selectedReaction.getValue(), subject, email,
 					message, selectedScreenshot.getValue()
