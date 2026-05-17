@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_0"
-        android:fontFamily="@font/font_family_bold"
+        android:fontFamily="@font/font_family_medium"
         android:text="@string/label_experience"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/message_text_size"

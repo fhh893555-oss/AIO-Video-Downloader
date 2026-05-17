@@ -191,7 +191,6 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	
 	private void selectReaction(String reaction,
 	                            ImageView selectedImage, TextView selectedTextView) {
-		buttonVibrate();
 		viewModel.setSelectedReaction(reaction);
 		
 		Typeface regular = ResourcesCompat.getFont(this, R.font.font_family_regular);
