@@ -74,17 +74,18 @@ public class FeedbackViewModel extends ViewModel {
 		});
 		
 		sender.setResultTask(submissionReport -> {
+			logger.debug("Feedback submit report received, result: " +
+				(submissionReport ? "Successful" : "Failed"));
 			isSubmitting.setValue(false);
+			submissionSuccess.setValue(submissionReport);
 			if (!submissionReport) {
 				handleSubmissionError();
-			} else {
-				submissionSuccess.setValue(true);
 			}
 		});
 		
 		sender.setErrorTask(error -> {
-			isSubmitting.setValue(false);
 			logger.error("Error in sending message to server: ", error);
+			isSubmitting.setValue(false);
 			handleSubmissionError();
 		});
 		

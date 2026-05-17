@@ -395,9 +395,20 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	private void initViewModelObservers() {
 		handleFeedbackSubmission();
 		observeSubmissionResult();
-		
+		observeSubmissionErrors();
+	}
+	
+	/**
+	 * Configures an observer for the feedback submission error LiveData.
+	 * <p>
+	 * This method monitors the {@link FeedbackViewModel} for any error messages
+	 * generated during the submission process. When an error occurs, it displays
+	 * a stylized error toast to the user and triggers a haptic vibration
+	 * to provide immediate feedback.
+	 */
+	private void observeSubmissionErrors() {
 		getViewModel().getSubmissionError().observe(this, errorMessage -> {
-			if (errorMessage != null) {
+			if (errorMessage != null && !errorMessage.isEmpty()) {
 				StylizedToastView.showError(FeedbackActivity.this, errorMessage);
 				vibrate();
 			}
@@ -446,9 +457,11 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		getViewModel().getIsSubmitting().observe(this, isSubmitting -> {
 			binding.top3.btnSendFeedback.setEnabled(!isSubmitting);
 			binding.top3.btnSendFeedback.setAlpha(isSubmitting ? 0.8f : 1.0f);
-			
 			binding.top3.txtSendFeedback.setText(isSubmitting ?
 				R.string.hint_sending_feedback : R.string.btn_send_feedback);
+			binding.top3.txtSendFeedback.setTextColor(
+				isSubmitting ? getColor(R.color.color_primary) : getColor(R.color.color_surface)
+			);
 		});
 	}
 	

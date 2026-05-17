@@ -54,22 +54,25 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	}
 	
 	/**
-	 * Sends user feedback to the server as a multipart form request.
+	 * Sends user feedback data to the backend server using a multipart form request.
 	 * <p>
-	 * This method collects the user's reaction, subject, email, and message,
-	 * along with hardware-specific metadata (Device ID and App Version).
-	 * If an optional screenshot is provided, it is converted to a byte array
-	 * and attached to the request.
+	 * The request contains textual feedback fields such as reaction, subject,
+	 * email, and message, along with device metadata for diagnostics and tracking.
+	 * If a screenshot is provided, the image is read from the supplied
+	 * {@link DocumentFile} and attached as a multipart file upload.
+	 * </p>
+	 * <p>
+	 * This method performs validation indirectly through request construction
+	 * and safely handles stream cleanup to avoid resource leaks.
 	 * </p>
 	 *
-	 * @param reaction   The user's sentiment or reaction type.
-	 * @param subject    The category or subject of the feedback.
-	 * @param email      The contact email address provided by the user.
-	 * @param message    The detailed feedback message content.
-	 * @param screenshot An optional {@link DocumentFile} representing an image attachment.
-	 *                   Can be null.
-	 * @return {@code true} if the feedback was successfully received and acknowledged
-	 * by the server with a valid ID; {@code false} otherwise.
+	 * @param reaction   The selected feedback reaction type.
+	 * @param subject    The subject or category of the feedback.
+	 * @param email      The optional user email address.
+	 * @param message    The detailed feedback message body.
+	 * @param screenshot Optional screenshot attachment. Can be null.
+	 * @return {@code true} if the server successfully accepted the feedback
+	 * and returned a valid record ID, otherwise {@code false}.
 	 */
 	public boolean sendFeedbackToServer(String reaction, String subject,
 	                                    String email, String message,
