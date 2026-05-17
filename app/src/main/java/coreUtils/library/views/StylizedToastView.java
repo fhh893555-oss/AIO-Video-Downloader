@@ -49,14 +49,12 @@ public class StylizedToastView extends Toast {
 		
 		StylizedToastView toast = makeText(activity, message, LENGTH_LONG);
 		if (toast != null) toast.show();
-		
 	}
 	
 	private static void showTextToast(BaseActivity activity, String msg) {
 		if (URLUtility.isValidURL(msg)) return;
 		StylizedToastView toast = makeText(activity, msg, LENGTH_LONG);
 		if (toast != null) toast.show();
-		
 	}
 	
 	private static StylizedToastView makeText(
