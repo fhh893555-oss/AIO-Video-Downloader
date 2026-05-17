@@ -1,0 +1,1062 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2619012508564781816",
+      "lastPropertyId": "54:4659384282973381080",
+      "name": "AppConfig",
+      "properties": [
+        {
+          "id": "1:4539055353728528141",
+          "name": "entityId",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:2382175297760126908",
+          "name": "isLocaleConfigured",
+          "type": 1
+        },
+        {
+          "id": "3:6678380591184570366",
+          "name": "isAppReviewCompleted",
+          "type": 1
+        },
+        {
+          "id": "4:1029260235366651527",
+          "name": "hasSkippedBatteryOptimization",
+          "type": 1
+        },
+        {
+          "id": "5:3129950187633085217",
+          "name": "hasAppCrashedRecently",
+          "type": 1
+        },
+        {
+          "id": "6:3307794838912809613",
+          "name": "lastProcessedClipboardText",
+          "type": 9
+        },
+        {
+          "id": "7:1190126443937952654",
+          "name": "defaultDownloadLocationType",
+          "type": 5
+        },
+        {
+          "id": "8:6020553166009476997",
+          "name": "selectedDownloadDirectoryPath",
+          "type": 9
+        },
+        {
+          "id": "9:8391992720595770672",
+          "name": "selectedLanguageCode",
+          "type": 9
+        },
+        {
+          "id": "10:3113994359141068040",
+          "name": "selectedRegionCode",
+          "type": 9
+        },
+        {
+          "id": "11:8579809399971234561",
+          "name": "completedDownloadsSortOrder",
+          "type": 5
+        },
+        {
+          "id": "12:8146062288055967789",
+          "name": "activeDownloadsSortOrder",
+          "type": 5
+        },
+        {
+          "id": "13:4924346014033670737",
+          "name": "isDailySuggestionsEnabled",
+          "type": 1
+        },
+        {
+          "id": "14:122948846788612897",
+          "name": "totalSuccessfulDownloadCount",
+          "type": 5
+        },
+        {
+          "id": "15:7507669648112565285",
+          "name": "totalAppUsageDurationMs",
+          "type": 7
+        },
+        {
+          "id": "16:4789143081985701690",
+          "name": "formattedTotalUsageDuration",
+          "type": 9
+        },
+        {
+          "id": "17:3779467835537902948",
+          "name": "foregroundAppUsageDurationMs",
+          "type": 7
+        },
+        {
+          "id": "18:2646449702445079484",
+          "name": "formattedForegroundUsageDuration",
+          "type": 9
+        },
+        {
+          "id": "19:757677660728793240",
+          "name": "pushNotificationClickCount",
+          "type": 5
+        },
+        {
+          "id": "20:2254041411349868250",
+          "name": "pushNotificationReceivedCount",
+          "type": 5
+        },
+        {
+          "id": "21:8182169021053679194",
+          "name": "languageChangeButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "22:750791369768947496",
+          "name": "mediaPlaybackButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "23:1352078520895319872",
+          "name": "howToGuideButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "24:1693110539932090084",
+          "name": "videoUrlEditorButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "25:2746763962014774053",
+          "name": "homeHistoryMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "26:7009353589023381346",
+          "name": "homeBookmarksMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "27:3080862021889942115",
+          "name": "recentDownloadsMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "28:8764438121488672998",
+          "name": "homeFaviconMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "29:4160244085771173450",
+          "name": "versionCheckMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "30:3424625257953233093",
+          "name": "interstitialAdClickCount",
+          "type": 5
+        },
+        {
+          "id": "31:8745375366635909319",
+          "name": "interstitialAdImpressionCount",
+          "type": 5
+        },
+        {
+          "id": "32:7864257026002592302",
+          "name": "rewardedAdClickCount",
+          "type": 5
+        },
+        {
+          "id": "33:4501936731211788439",
+          "name": "rewardedAdImpressionCount",
+          "type": 5
+        },
+        {
+          "id": "34:5740863688830911941",
+          "name": "userInitiatedDownloadCount",
+          "type": 5
+        },
+        {
+          "id": "35:7435931356513469151",
+          "name": "isDownloadThumbnailHidden",
+          "type": 1
+        },
+        {
+          "id": "36:7141044859599515479",
+          "name": "isDownloadCompletionSoundEnabled",
+          "type": 1
+        },
+        {
+          "id": "37:1504876215809399036",
+          "name": "isDownloadNotificationHidden",
+          "type": 1
+        },
+        {
+          "id": "38:5223208764251680960",
+          "name": "isDownloadOpenedOnSingleClick",
+          "type": 1
+        },
+        {
+          "id": "39:4985974320932559639",
+          "name": "isDownloadAutoResumeEnabled",
+          "type": 1
+        },
+        {
+          "id": "40:4858209467200629645",
+          "name": "maxDownloadAutoResumeLimit",
+          "type": 5
+        },
+        {
+          "id": "41:8876090180226877780",
+          "name": "maxDownloadSpeedLimit",
+          "type": 6
+        },
+        {
+          "id": "42:1647547191693918841",
+          "name": "wifiOnlyDownloadEnabled",
+          "type": 1
+        },
+        {
+          "id": "43:1478740352956568337",
+          "name": "httpUserAgentForDownloads",
+          "type": 9
+        },
+        {
+          "id": "44:6010679649095026214",
+          "name": "httpProxyServerForDownloads",
+          "type": 9
+        },
+        {
+          "id": "45:2090303289841347512",
+          "name": "downloadConcurrencyLimit",
+          "type": 5
+        },
+        {
+          "id": "46:406516034838708438",
+          "name": "browserDefaultHomepageUrl",
+          "type": 9
+        },
+        {
+          "id": "47:3733373203812545433",
+          "name": "isDesktopBrowsingEnabled",
+          "type": 1
+        },
+        {
+          "id": "48:7982039074290995690",
+          "name": "isPrivateBrowsingEnabled",
+          "type": 1
+        },
+        {
+          "id": "49:7735387547021688129",
+          "name": "isAdBlockerEnabled",
+          "type": 1
+        },
+        {
+          "id": "50:7280773203274461752",
+          "name": "isJavaScriptEnabled",
+          "type": 1
+        },
+        {
+          "id": "51:8006104544786468029",
+          "name": "isImageLoadingEnabled",
+          "type": 1
+        },
+        {
+          "id": "52:7660024757037903273",
+          "name": "isPopupBlockerEnabled",
+          "type": 1
+        },
+        {
+          "id": "53:7759760333118582128",
+          "name": "isVideoGrabberEnabled",
+          "type": 1
+        },
+        {
+          "id": "54:4659384282973381080",
+          "name": "httpUserAgentForBrowser",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2577609755931157676",
+      "lastPropertyId": "20:6150915091175235775",
+      "name": "AppUser",
+      "properties": [
+        {
+          "id": "1:6018552313637165568",
+          "name": "entityId",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:7739163948310460486",
+          "name": "userServerId",
+          "indexId": "8:2849477216381004232",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "3:4822501798461213818",
+          "name": "userDeviceId",
+          "indexId": "9:8916783621310432920",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "4:5530646432567281585",
+          "name": "name",
+          "indexId": "10:5394991972637932079",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "5:3304643708220745107",
+          "name": "email",
+          "indexId": "11:7955881746071860864",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "6:6009928188570482477",
+          "name": "isPremiumUser",
+          "indexId": "12:2802170441569120749",
+          "type": 1,
+          "flags": 8
+        },
+        {
+          "id": "7:8736268613404777725",
+          "name": "hasReferralBonus",
+          "type": 1
+        },
+        {
+          "id": "8:6135595168231078232",
+          "name": "totalReferralsCount",
+          "type": 5
+        },
+        {
+          "id": "9:191138635367900508",
+          "name": "isBanned",
+          "indexId": "13:7167463063313784109",
+          "type": 1,
+          "flags": 8
+        },
+        {
+          "id": "10:2225153311918467457",
+          "name": "countryCode",
+          "type": 9
+        },
+        {
+          "id": "11:2303365731629905513",
+          "name": "languageCode",
+          "type": 9
+        },
+        {
+          "id": "12:8134009070819172847",
+          "name": "locationCity",
+          "type": 9
+        },
+        {
+          "id": "13:5096083033902286258",
+          "name": "locationRegion",
+          "type": 9
+        },
+        {
+          "id": "14:4526512200633459042",
+          "name": "networkIsp",
+          "type": 9
+        },
+        {
+          "id": "15:6261252650148549011",
+          "name": "userIpAddress",
+          "type": 9
+        },
+        {
+          "id": "16:6635576473753778975",
+          "name": "continent",
+          "type": 9
+        },
+        {
+          "id": "17:3061832098340082947",
+          "name": "continentCode",
+          "type": 9
+        },
+        {
+          "id": "18:162258498795154225",
+          "name": "zipCode",
+          "type": 9
+        },
+        {
+          "id": "19:5381872026461612998",
+          "name": "preferredCategories",
+          "type": 9
+        },
+        {
+          "id": "20:6150915091175235775",
+          "name": "lastSeenTimestamp",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:5647205193248083432",
+      "lastPropertyId": "88:4734559184888913199",
+      "name": "DownloadInfo",
+      "properties": [
+        {
+          "id": "1:2436696116954241107",
+          "name": "downloadId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:391059659472855720",
+          "name": "downloadStatus",
+          "type": 5
+        },
+        {
+          "id": "3:7427456075641814537",
+          "name": "downloadStatusInfo",
+          "type": 9
+        },
+        {
+          "id": "4:7898310117193481432",
+          "name": "userAlertMessage",
+          "type": 9
+        },
+        {
+          "id": "5:8743162532501214714",
+          "name": "isRunning",
+          "type": 1
+        },
+        {
+          "id": "6:8361340307449204816",
+          "name": "isComplete",
+          "type": 1
+        },
+        {
+          "id": "7:8189308379135033232",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "8:4099990669584972554",
+          "name": "isRemoved",
+          "type": 1
+        },
+        {
+          "id": "9:4580443706946096149",
+          "name": "hasUserOpenedTheFile",
+          "type": 1
+        },
+        {
+          "id": "10:7424568856272526462",
+          "name": "isWaitingForNetwork",
+          "type": 1
+        },
+        {
+          "id": "11:8701910696288857866",
+          "name": "isResumeSupported",
+          "type": 1
+        },
+        {
+          "id": "12:799415868010804025",
+          "name": "isMultiThreadSupported",
+          "type": 1
+        },
+        {
+          "id": "13:4886958359164771048",
+          "name": "isFileSizeUnknown",
+          "type": 1
+        },
+        {
+          "id": "14:215690189683882077",
+          "name": "isDownloadFromBrowser",
+          "type": 1
+        },
+        {
+          "id": "15:4316783451687723586",
+          "name": "isFileUrlExpired",
+          "type": 1
+        },
+        {
+          "id": "16:3916888915784836284",
+          "name": "expiredUrlDialogShown",
+          "type": 1
+        },
+        {
+          "id": "17:8069057670759040814",
+          "name": "isDestinationFileMissing",
+          "type": 1
+        },
+        {
+          "id": "18:9036898739127294848",
+          "name": "isChecksumInvalid",
+          "type": 1
+        },
+        {
+          "id": "19:946853752616430334",
+          "name": "isFileCorrupted",
+          "type": 1
+        },
+        {
+          "id": "20:2789452129745641845",
+          "name": "isSmartDirInitialized",
+          "type": 1
+        },
+        {
+          "id": "21:2432943047386801084",
+          "name": "isSmartDirEnabled",
+          "type": 1
+        },
+        {
+          "id": "22:1702745415831761206",
+          "name": "isThumbnailDisabled",
+          "type": 1
+        },
+        {
+          "id": "23:6617707126491621045",
+          "name": "isCompletionAudioEnabled",
+          "type": 1
+        },
+        {
+          "id": "24:1162433900355504872",
+          "name": "isNotificationDisabled",
+          "type": 1
+        },
+        {
+          "id": "25:4259025112063778819",
+          "name": "isAutoResumeEnabled",
+          "type": 1
+        },
+        {
+          "id": "26:3874693758630651341",
+          "name": "autoResumeRetryLimit",
+          "type": 5
+        },
+        {
+          "id": "27:5934128203634509674",
+          "name": "downloadSpeedCap",
+          "type": 6
+        },
+        {
+          "id": "28:7675082317951233925",
+          "name": "isWifiRequired",
+          "type": 1
+        },
+        {
+          "id": "29:8329151893730233081",
+          "name": "customUserAgent",
+          "type": 9
+        },
+        {
+          "id": "30:816276450979825926",
+          "name": "proxyServer",
+          "type": 9
+        },
+        {
+          "id": "31:2057386452557686351",
+          "name": "ytdlpExecutionCommand",
+          "type": 9
+        },
+        {
+          "id": "32:3185608190545873882",
+          "name": "isYtdlpInitialized",
+          "type": 1
+        },
+        {
+          "id": "33:6372189864176890775",
+          "name": "isYtdlpErrorFound",
+          "type": 1
+        },
+        {
+          "id": "34:6028072176244800008",
+          "name": "ytdlpErrorMessage",
+          "type": 9
+        },
+        {
+          "id": "35:5017365207382030401",
+          "name": "ytdlpTempOutputPath",
+          "type": 9
+        },
+        {
+          "id": "36:4434004582657057375",
+          "name": "ytdlpStatusInfo",
+          "type": 9
+        },
+        {
+          "id": "37:1651104697315675948",
+          "name": "fileName",
+          "type": 9
+        },
+        {
+          "id": "38:8416498802551556028",
+          "name": "fileMimeType",
+          "type": 9
+        },
+        {
+          "id": "39:2521718209618028530",
+          "name": "fileCategoryName",
+          "type": 9
+        },
+        {
+          "id": "40:4037917230533678274",
+          "name": "fileDirectory",
+          "type": 9
+        },
+        {
+          "id": "41:4313802042656376366",
+          "name": "fileDirectoryURI",
+          "type": 9
+        },
+        {
+          "id": "42:903680418898592872",
+          "name": "fileContentDisposition",
+          "type": 9
+        },
+        {
+          "id": "43:39204496198919115",
+          "name": "fileChecksum",
+          "type": 9
+        },
+        {
+          "id": "44:7531399176295202937",
+          "name": "fileSiteReferrer",
+          "type": 9
+        },
+        {
+          "id": "45:6966270558516042093",
+          "name": "fileExtension",
+          "type": 9
+        },
+        {
+          "id": "46:5713664380563599394",
+          "name": "fileUrl",
+          "type": 9
+        },
+        {
+          "id": "47:3848281531785627634",
+          "name": "finalFilePath",
+          "type": 9
+        },
+        {
+          "id": "48:2921313097944835303",
+          "name": "fileSize",
+          "type": 6
+        },
+        {
+          "id": "49:4441617926311676109",
+          "name": "fileSizeInFormat",
+          "type": 9
+        },
+        {
+          "id": "50:4759296739723686642",
+          "name": "downloadedByte",
+          "type": 6
+        },
+        {
+          "id": "51:935108238513551993",
+          "name": "downloadedByteInFormat",
+          "type": 9
+        },
+        {
+          "id": "52:448823333395676567",
+          "name": "remainingBytes",
+          "type": 6
+        },
+        {
+          "id": "53:7480175080492509996",
+          "name": "progressPercentage",
+          "type": 6
+        },
+        {
+          "id": "54:7915755288534368418",
+          "name": "progressPercentageInFormat",
+          "type": 9
+        },
+        {
+          "id": "55:1084351572440842141",
+          "name": "thumbPath",
+          "type": 9
+        },
+        {
+          "id": "56:432124457244785425",
+          "name": "thumbnailUrl",
+          "type": 9
+        },
+        {
+          "id": "57:5146043409985747688",
+          "name": "siteCookieString",
+          "type": 9
+        },
+        {
+          "id": "58:6126291562242089289",
+          "name": "extraWebHeaders",
+          "type": 13
+        },
+        {
+          "id": "59:328245459396169859",
+          "name": "startTimeDate",
+          "type": 6
+        },
+        {
+          "id": "60:2068114821421486041",
+          "name": "startTimeDateInFormat",
+          "type": 9
+        },
+        {
+          "id": "61:196091108684741158",
+          "name": "lastModifiedTimeDate",
+          "type": 6
+        },
+        {
+          "id": "62:1456517624989360338",
+          "name": "lastModifiedTimeDateInFormat",
+          "type": 9
+        },
+        {
+          "id": "63:9062023977663462130",
+          "name": "completedTimeDate",
+          "type": 6
+        },
+        {
+          "id": "64:2368016483976380202",
+          "name": "completedTimeDateInFormat",
+          "type": 9
+        },
+        {
+          "id": "65:2969947987522784630",
+          "name": "averageSpeed",
+          "type": 6
+        },
+        {
+          "id": "66:7601413751252457626",
+          "name": "averageSpeedInFormat",
+          "type": 9
+        },
+        {
+          "id": "67:8793907342923610231",
+          "name": "maxSpeed",
+          "type": 6
+        },
+        {
+          "id": "68:5748814820719073836",
+          "name": "maxSpeedInFormat",
+          "type": 9
+        },
+        {
+          "id": "69:5667299556379380613",
+          "name": "realtimeSpeed",
+          "type": 6
+        },
+        {
+          "id": "70:1538091620031747400",
+          "name": "realtimeSpeedInFormat",
+          "type": 9
+        },
+        {
+          "id": "71:3747200104691787658",
+          "name": "timeSpentInMilliSec",
+          "type": 6
+        },
+        {
+          "id": "72:673992207267168077",
+          "name": "timeSpentInFormat",
+          "type": 9
+        },
+        {
+          "id": "73:4607814485977772118",
+          "name": "remainingTimeInSec",
+          "type": 6
+        },
+        {
+          "id": "74:949937994283971072",
+          "name": "remainingTimeInFormat",
+          "type": 9
+        },
+        {
+          "id": "75:4892190412989791965",
+          "name": "resumeSessionRetryCount",
+          "type": 5
+        },
+        {
+          "id": "76:1230870434817777382",
+          "name": "totalTrackedConnectionRetries",
+          "type": 5
+        },
+        {
+          "id": "77:4416337499687560615",
+          "name": "failedChunkCount",
+          "type": 5
+        },
+        {
+          "id": "78:3507544769960091021",
+          "name": "activeThreadCount",
+          "type": 5
+        },
+        {
+          "id": "79:5528413803624420261",
+          "name": "partStartingPoint",
+          "type": 27
+        },
+        {
+          "id": "80:7229209462720975043",
+          "name": "partEndingPoint",
+          "type": 27
+        },
+        {
+          "id": "81:446999533952441826",
+          "name": "partChunkSizes",
+          "type": 27
+        },
+        {
+          "id": "82:45900587087305717",
+          "name": "partsDownloadedByte",
+          "type": 27
+        },
+        {
+          "id": "83:6078511847122668720",
+          "name": "partProgressPercentage",
+          "type": 26
+        },
+        {
+          "id": "84:6834564522475648759",
+          "name": "videoInfoId",
+          "type": 6
+        },
+        {
+          "id": "85:5392916501990435155",
+          "name": "videoFormatId",
+          "type": 6
+        },
+        {
+          "id": "86:3495211932435834743",
+          "name": "remoteFileInfoId",
+          "type": 6
+        },
+        {
+          "id": "87:8471296958828561706",
+          "name": "mediaPlaybackDuration",
+          "type": 6
+        },
+        {
+          "id": "88:4734559184888913199",
+          "name": "mediaPlaybackDurationInFormat",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:7802075742155144115",
+      "lastPropertyId": "1:1456215816235464469",
+      "name": "RemoteFileInfo",
+      "properties": [
+        {
+          "id": "1:1456215816235464469",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:8550683549536578530",
+      "lastPropertyId": "1:4629091434396196209",
+      "name": "VideoFormateInfo",
+      "properties": [
+        {
+          "id": "1:4629091434396196209",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:1630290638357082299",
+      "lastPropertyId": "1:1203831282820663591",
+      "name": "VideoMetaInfo",
+      "properties": [
+        {
+          "id": "1:1203831282820663591",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:2067232067978310556",
+      "lastPropertyId": "26:3954759489083777879",
+      "name": "YtStreamInfo",
+      "properties": [
+        {
+          "id": "1:3135239233213231770",
+          "name": "objectBoxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4428776287727468882",
+          "name": "url",
+          "indexId": "1:4269765371286111025",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "3:2515198174730537989",
+          "name": "streamId",
+          "indexId": "2:3243419141301681065",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "4:2686337317232560176",
+          "name": "customCategory",
+          "indexId": "3:203013612970370682",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "5:649183919924333876",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "6:1587560297923145452",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "7:7247257610821442976",
+          "name": "uploadDate",
+          "type": 6
+        },
+        {
+          "id": "8:5665062589365798422",
+          "name": "duration",
+          "type": 6
+        },
+        {
+          "id": "9:6833138423908530962",
+          "name": "viewCounts",
+          "type": 6
+        },
+        {
+          "id": "10:7013352567435194958",
+          "name": "cacheCreatedAt",
+          "type": 6
+        },
+        {
+          "id": "11:7677769189099304447",
+          "name": "cacheExpiryTime",
+          "type": 6
+        },
+        {
+          "id": "12:3791164692004892254",
+          "name": "uploaderName",
+          "type": 9
+        },
+        {
+          "id": "13:602449566547986138",
+          "name": "uploaderUrl",
+          "type": 9
+        },
+        {
+          "id": "14:5656070160281334350",
+          "name": "uploaderAvatarUrl",
+          "type": 9
+        },
+        {
+          "id": "15:5740469083945147175",
+          "name": "thumbnailUrl",
+          "type": 9
+        },
+        {
+          "id": "16:6329018751961328342",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "17:4554886169093230371",
+          "name": "tags",
+          "type": 9
+        },
+        {
+          "id": "18:1165794258728030860",
+          "name": "streamType",
+          "indexId": "4:4026174502236938969",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "19:3091190821976854588",
+          "name": "serviceId",
+          "type": 5
+        },
+        {
+          "id": "20:6170878897189357708",
+          "name": "ageLimit",
+          "type": 5
+        },
+        {
+          "id": "21:5929877252380916739",
+          "name": "isShortFormContent",
+          "indexId": "5:606646482835894710",
+          "type": 1,
+          "flags": 8
+        },
+        {
+          "id": "22:8547128529422129695",
+          "name": "hasSubtitles",
+          "indexId": "6:611117628860466619",
+          "type": 1,
+          "flags": 8
+        },
+        {
+          "id": "23:2432947605771868380",
+          "name": "lastWatchedAt",
+          "indexId": "7:8122724298086313294",
+          "type": 6,
+          "flags": 8
+        },
+        {
+          "id": "24:8690910862497201980",
+          "name": "watchCount",
+          "type": 5
+        },
+        {
+          "id": "25:6135843603705050905",
+          "name": "recommendationReasonOrdinal",
+          "type": 5
+        },
+        {
+          "id": "26:3954759489083777879",
+          "name": "contentSourceOrdinal",
+          "type": 5
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "7:2067232067978310556",
+  "lastIndexId": "13:7167463063313784109",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

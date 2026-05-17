@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="style_edittext">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/message_text_size</item>
+    <item name="android:textColor">@color/color_text_primary</item>
+    <item name="android:textColorLink">@color/color_secondary_variant</item>
+    <item name="android:textColorHint">@color/color_text_hint</item>
+    <item name="android:textCursorDrawable">@drawable/bg_cursor</item>
+    <item name="android:fontFamily">@font/font_family_regular</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:textAlignment">textStart</item>
+    <item name="android:layout_margin">@dimen/_5</item>
+    <item name="android:drawableTint">@color/color_primary</item>
+    <item name="android:drawableLeft">@drawable/ic_edit_note</item>
+    <item name="android:drawablePadding">@dimen/_5</item>
+    <item name="android:background">@color/transparent</item>
+    <item name="android:gravity">center_vertical</item>
+  </style>
+
+  <style name="style_textviews">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:layout_marginTop">@dimen/_5</item>
+    <item name="android:layout_marginBottom">@dimen/_5</item>
+    <item name="android:layout_marginLeft">@dimen/_5</item>
+    <item name="android:layout_marginRight">@dimen/_5</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:letterSpacing">0.025</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:textSize">@dimen/message_text_size</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:textColor">@color/color_text_primary</item>
+    <item name="android:textColorHint">@color/color_secondary_variant</item>
+    <item name="android:drawableTint">@color/color_text_primary</item>
+    <item name="android:drawablePadding">@dimen/_5</item>
+    <item name="android:fontFamily">@font/font_family_regular</item>
+  </style>
+
+  <style name="style_textviews.button" parent="style_textviews">
+    <item name="android:layout_height">@dimen/_32</item>
+    <item name="android:padding">@dimen/_5</item>
+    <item name="android:clickable">true</item>
+    <item name="android:background">@drawable/bg_button_negative</item>
+  </style>
+</resources>

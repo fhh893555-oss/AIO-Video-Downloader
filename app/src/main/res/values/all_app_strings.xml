@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="label__" translatable="false">__</string>
+  <string name="title_app_name" translatable="false">TubeAIO</string>
+  <string name="title_app_name_full" translatable="false">Tube AIO - NextGen</string>
+  <string name="title_default_app_folder" translatable="false">TubeAIO Downloads</string>
+  <string name="title_tubeaio_images" translatable="false">TubeAIO Images</string>
+  <string name="title_tubeaio_videos" translatable="false">TubeAIO Videos</string>
+  <string name="title_tubeaio_sounds" translatable="false">TubeAIO Sounds</string>
+  <string name="title_tubeaio_documents" translatable="false">TubeAIO Documents</string>
+  <string name="title_tubeaio_programs" translatable="false">TubeAIO Programs</string>
+  <string name="title_tubeaio_archives" translatable="false">TubeAIO Archives</string>
+  <string name="title_tubeaio_others" translatable="false">TubeAIO Others</string>
+
+  <string name="http_tubeaio_official_page_url" translatable="false">https://tubeaio.com/</string>
+  <string name="http_tubeaio_official_privacy_url" translatable="false">https://tubeaio.com/privacy_policy/</string>
+  <string name="http_tubeaio_official_terms_url" translatable="false">https://tubeaio.com/terms_conditions/</string>
+  <string name="https_google_com" translatable="false">https://google.com/</string>
+  <string name="https_youtube_com" translatable="false">https://youtube.com/</string>
+  <string name="code_whatsapp_status_file_dir" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
+
+  <string name="code_downloads_default_http_user_agent" translatable="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36</string>
+  <string name="code_browser_default_mobile_http_user_agent" translatable="false">Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Mobile Safari/537.36</string>
+  <string name="code_browser_default_desktop_http_user_agent" translatable="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</string>
+  <string name="code_whatsapp_status_folder_path" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
+
+  <string name="title_select_language">Select Language</string>
+  <string name="title_skip_for_now">Skip For Now</string>
+  <string name="subtext_tubeaio_downloader_tagline">Download, Watch &amp; Share With Friends</string>
+  <string name="subtext_app_splash_credit">Made With ❤️  In India  🇮🇳</string>
+  <string name="text_send_feedback_msg_at_homepage"><b>That’s all for today.</b> Have suggestions or feedback? We\'d love to hear from you. <a>Click here to send a message.</a></string>
+
+  <string name="label_unlock_requires">Unlock requires</string>
+  <string name="label_setup_device_password">Setup device lock first</string>
+  <string name="hint_authentication_failed">Authentication failed or cancelled</string>
+  <string name="label_cancel">Cancel</string>
+
+  <string name="label_no">No</string>
+  <string name="label_performed">Performed</string>
+  <string name="label_not_performed">Not Performed</string>
+  <string name="label_click_here_to_open">Click Here To Open</string>
+  <string name="label_sounds">Sounds</string>
+  <string name="label_archives">Archives</string>
+  <string name="label_programs">Programs</string>
+  <string name="label_videos">Videos</string>
+  <string name="label_documents">Documents</string>
+  <string name="label_images">Images</string>
+  <string name="label_others">Others</string>
+
+  <string name="label_mobile_user_agent">Mobile User Agent</string>
+  <string name="label_unknown">Unknown</string>
+  <string name="label_sharing_media_file">Sharing media file…</string>
+
+  <string name="title_feedback">Send Feedback</string>
+  <string name="subtitle_feedback">Help us improve Tube AIO 💙</string>
+  <string name="label_experience">How was your experience?</string>
+  <string name="label_excellent">Excellent</string>
+  <string name="label_good">Good</string>
+  <string name="label_average">Average</string>
+  <string name="label_poor">Poor</string>
+  <string name="label_amazing">Amazing</string>
+  <string name="label_subject">Subject</string>
+  <string name="hint_subject">Briefly tell us what this is about</string>
+  <string name="label_describe_feedback">Describe your feedback</string>
+  <string name="hint_describe_feedback">Tell us in detail so we can understand and improve…</string>
+  <string name="label_attach_screenshot">Attach screenshot (optional)</string>
+  <string name="label_upload_image">Upload Image</string>
+  <string name="label_upload_image_hint">PNG, JPG up to 5MB</string>
+  <string name="label_email">Email (optional)</string>
+  <string name="hint_email">Enter your email address</string>
+  <string name="subtext_email">We will contact you if needed</string>
+  <string name="btn_send_feedback">Send Feedback</string>
+  <string name="footer_feedback_safe">Your feedback is 100% safe and confidential</string>
+  <string name="title_zero_slash_five_hundred">0/500</string>
+  <string name="label_angry">Angry</string>
+  <string name="label_sample_text_message">This is a sample test message for UI</string>
+  <string name="hint_image_attached_successfully">Image attached successfully</string>
+  <string name="hint_feedback_sent_thank_you">Feedback sent! Thank you.</string>
+  <string name="hint_feedback_sent_failed">Failed sending feedback, try again later.</string>
+  <string name="hint_please_describe_your_feedback">Please describe your feedback</string>
+  <string name="hint_feedback_is_too_long">Feedback is too long</string>
+  <string name="label_sample_file_size">"File size: 2343 KB"</string>
+  <string name="label_file_sample_name">Medical dr. narayan supriya report.pdf</string>
+  <string name="hint_click_again_for_changing_attachment">Click here again for changing the attachment</string>
+  <string name="label_file_size">File size : </string>
+  <string name="hint_file_size_exceed_5mb">File size exceeds 5MB</string>
+</resources>

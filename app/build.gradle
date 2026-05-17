@@ -1,0 +1,116 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+apply plugin: 'io.objectbox'
+android {
+    namespace 'com.nextgen'
+    compileSdkVersion 37
+    ndkVersion "28.0.12916984 rc3"
+    buildTypes.release.ndk.debugSymbolLevel = "FULL"
+
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+
+    defaultConfig {
+        applicationId "com.nextgen"
+        minSdk 30
+        targetSdk 37
+        versionCode 26
+        versionName "2026.04.28"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        ndk { abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a" }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            buildConfigField "boolean", "IS_DEBUG_MODE_ON", "true"
+        }
+
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+            buildConfigField "boolean", "IS_DEBUG_MODE_ON", "false"
+        }
+    }
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging = true
+        resources {
+            excludes += ['META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/*.kotlin_module']
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
+            universalApk true
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    dependenciesInfo {
+        includeInBundle false
+        includeInApk false
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.styled.cardview
+    implementation libs.androidx.recyclerview
+
+    implementation libs.lifecycle.viewmodel
+    implementation libs.androidx.lifecycle.livedata
+    implementation libs.androidx.biometric
+
+    implementation libs.retrofit
+    implementation libs.retrofit2.converter.gson
+    implementation libs.okhttp.sse
+
+    implementation libs.ytdlp
+    implementation libs.ffmpeg
+    implementation libs.aria2c
+    implementation libs.newpipe.extractor
+
+    implementation libs.media3.exoplayer
+    implementation libs.media3.exoplayer.hls
+    implementation libs.media3.exoplayer.dash
+    implementation libs.media3.datasource
+    implementation libs.media3.ui
+    implementation libs.media3.session
+    implementation libs.mp4.iso.parser
+
+    implementation libs.lottie
+    implementation libs.jsoup
+    implementation libs.glide
+    implementation libs.permissionx
+
+    implementation libs.objectbox.android
+    implementation libs.androidx.documentfile
+
+    coreLibraryDesugaring libs.desugar.jdk.libs.nio
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
+}
