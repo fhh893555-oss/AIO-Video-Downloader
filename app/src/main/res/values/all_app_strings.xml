@@ -89,5 +89,27 @@
   <string name="hint_failed_to_submit_feedback">Failed to submit feedback</string>
   <string name="title_terms_conditions"><![CDATA[Terms & Conditions]]></string>
   <string name="subtitle_terms_conditions">Please read these terms carefully</string>
+  <string name="label_last_updated">Last updated: </string>
+  <string name="text_last_updated_date">April 28, 2026</string>
+  <string name="text_terms_intro">Welcome to Tube AIO - NextGen. By using our app, you agree to comply with and be bound by the following terms.</string>
+  <string name="title_acceptance_terms">Acceptance of Terms</string>
+  <string name="desc_acceptance_terms">By accessing or using Tube AIO - NextGen, you agree to be bound by these Terms &amp; Conditions and our Privacy Policy.</string>
+  <string name="extra_acceptance_terms">This includes all future updates and versions of the application. If you do not agree, please do not use the service.</string>
+  <string name="title_use_of_app">Use of the App</string>
+  <string name="desc_use_of_app">You agree to use the app only for lawful purposes and in accordance with these terms. You shall not misuse the app in any way.</string>
+  <string name="extra_use_of_app">Lawful purposes include personal, non-commercial use of the features provided by the application.</string>
+  <string name="title_intellectual_property">Intellectual Property</string>
+  <string name="desc_intellectual_property">All content, features, and materials in the app are owned by Tube AIO - NextGen and protected by copyright laws.</string>
+  <string name="extra_intellectual_property">The source code, UI design, and logos are property of TubeAIO Team.</string>
+  <string name="title_prohibited_activities">Prohibited Activities</string>
+  <string name="desc_prohibited_activities">You agree not to copy, modify, distribute, or reverse engineer any part of the app or its services.</string>
+  <string name="extra_prohibited_activities">This includes attempting to circumvent any technical limitations or security features.</string>
+  <string name="title_limitation_liability">Limitation of Liability</string>
+  <string name="desc_limitation_liability">We are not responsible for any direct or indirect damages resulting from the use or inability to use the app.</string>
+  <string name="extra_limitation_liability">We provide the service as-is without any warranties of any kind.</string>
+  <string name="title_changes_to_terms">Changes to Terms</string>
+  <string name="desc_changes_to_terms">We may update these terms from time to time. Continued use of the app constitutes acceptance of the updated terms.</string>
+  <string name="extra_changes_to_terms">We will notify users of major changes via app updates or notifications.</string>
+  <string name="label_agree_terms">I have read and agree to the Terms &amp; Conditions</string>
   <string name="btn_agree_continue"><![CDATA[Agree & Continue]]></string>
 </resources>

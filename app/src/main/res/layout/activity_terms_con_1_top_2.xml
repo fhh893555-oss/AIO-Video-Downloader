@@ -4,7 +4,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:orientation="vertical">
 
   <com.github.dangiashish.StyledCardView
@@ -38,48 +38,580 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:paddingLeft="@dimen/_15"
-      android:paddingTop="@dimen/_15"
-      android:paddingRight="@dimen/_15"
-      android:paddingBottom="@dimen/_15">
-
-      <TextView
-        style="@style/style_textviews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_0"
-        android:fontFamily="@font/font_family_medium"
-        android:text="@string/label_experience"
-        android:textColor="@color/color_text_primary"
-        android:textSize="@dimen/message_text_size"
-        tools:ignore="SpUsage,TextSizeCheck" />
+      android:padding="@dimen/_15">
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10"
-        android:baselineAligned="false"
+        android:background="@drawable/ic_rd_background"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:padding="@dimen/_10">
 
+        <ImageView
+          android:layout_width="@dimen/_30"
+          android:layout_height="@dimen/_30"
+          android:layout_marginEnd="@dimen/_10"
+          android:src="@drawable/ic_calender"
+          android:tint="@color/color_primary"
+          tools:ignore="ContentDescription" />
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/font_family_medium"
+          android:text="@string/label_last_updated"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage" />
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/font_family_bold"
+          android:text="@string/text_last_updated_date"
+          android:textColor="@color/color_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage" />
       </LinearLayout>
 
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_5"
-        android:layout_marginTop="@dimen/_5"
-        android:text="@string/subtext_email"
-        android:textColor="@color/color_text_hint"
+        android:layout_marginTop="@dimen/_15"
+        android:fontFamily="@font/font_family_medium"
+        android:text="@string/text_terms_intro"
+        android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/small_text_size"
-        tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+        tools:ignore="SpUsage" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_15"
+        android:background="@color/color_divider" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+          android:id="@+id/itemAcceptance"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_agree_terms"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_acceptance_terms"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_acceptance_terms"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraAcceptance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_acceptance_terms"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/itemUseOfApp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_user_shield"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_use_of_app"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_use_of_app"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraUseOfApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_use_of_app"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/itemIntellectual"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_intellectual"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_intellectual_property"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_intellectual_property"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraIntellectual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_intellectual_property"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/itemProhibited"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_prohibited"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_prohibited_activities"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_prohibited_activities"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraProhibited"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_prohibited_activities"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/itemLimitation"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_warranty"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_limitation_liability"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_limitation_liability"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraLimitation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_limitation_liability"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/itemChanges"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="true"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/_10">
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_background"
+              android:padding="@dimen/_5"
+              android:src="@drawable/img_law_terms"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/title_changes_to_terms"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/desc_changes_to_terms"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage" />
+            </LinearLayout>
+
+            <ImageView
+              android:layout_width="@dimen/_20"
+              android:layout_height="@dimen/_20"
+              android:layout_marginLeft="@dimen/_10"
+              android:adjustViewBounds="true"
+              android:src="@drawable/ic_arrow_down"
+              android:tint="@color/color_text_secondary"
+              tools:ignore="ContentDescription" />
+          </LinearLayout>
+
+          <TextView
+            android:id="@+id/extraChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_52"
+            android:layout_marginTop="@dimen/_5"
+            android:layout_marginRight="@dimen/_5"
+            android:fontFamily="@font/font_family_regular"
+            android:text="@string/extra_changes_to_terms"
+            android:textColor="@color/color_text_secondary"
+            android:textSize="@dimen/small_text_size"
+            android:visibility="visible"
+            tools:ignore="SpUsage" />
+        </LinearLayout>
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_10"
+        android:background="@color/color_divider" />
+
+      <LinearLayout
+        android:id="@+id/btnAcceptTermsCheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+          android:id="@+id/cbAgreeTerms"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginRight="@dimen/_5"
+          android:button="@drawable/bg_button_radio"
+          android:buttonTint="@color/color_primary"
+          android:clickable="false" />
+
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/_0"
+          android:fontFamily="@font/font_family_medium"
+          android:text="@string/label_agree_terms"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage" />
+      </LinearLayout>
 
       <RelativeLayout
-        android:id="@+id/btnTermsAgreement"
+        android:id="@+id/btnAgreeContinue"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40"
         android:layout_marginLeft="@dimen/_20"
-        android:layout_marginTop="@dimen/_20"
+        android:layout_marginTop="@dimen/_15"
         android:layout_marginRight="@dimen/_20"
         android:layout_marginBottom="@dimen/_5"
         android:background="@drawable/bg_button_gradient"
@@ -89,7 +621,7 @@
         tools:ignore="TouchTargetSizeCheck">
 
         <TextView
-          android:id="@+id/tvTermsAgreement"
+          android:id="@+id/tvAgreeContinue"
           style="@style/style_textviews"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -108,5 +640,4 @@
       </RelativeLayout>
     </LinearLayout>
   </com.github.dangiashish.StyledCardView>
-
 </LinearLayout>
