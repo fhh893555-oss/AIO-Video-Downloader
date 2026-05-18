@@ -52,7 +52,8 @@ public class FeedbackViewModel extends ViewModel {
 	/**
 	 * Sets the currently selected feedback reaction.
 	 *
-	 * @param reaction The name of the reaction to be selected.
+	 * @param reaction The name of the reaction to be selected, typically one of the
+	 *                 values from {@link FeedbackReactions}.
 	 */
 	public void setSelectedReaction(String reaction) {
 		selectedReaction.setValue(reaction);
