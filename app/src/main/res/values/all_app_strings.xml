@@ -87,4 +87,7 @@
   <string name="hint_sending_feedback">Sending Feedback</string>
   <string name="hint_please_give_subject">Please give your feedback a subject</string>
   <string name="hint_failed_to_submit_feedback">Failed to submit feedback</string>
+  <string name="title_terms_conditions"><![CDATA[Terms & Conditions]]></string>
+  <string name="subtitle_terms_conditions">Please read these terms carefully</string>
+  <string name="btn_agree_continue"><![CDATA[Agree & Continue]]></string>
 </resources>
