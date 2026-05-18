@@ -20,27 +20,33 @@ import dataRepo.configs.AppConfigsRepo;
 import userInterface.termsPolicy.TermsPolicyActivity;
 
 /**
- * Activity responsible for displaying and managing language selection for the user.
+ * Core activity component responsible for rendering and managing the language selection screen.
  * <p>
- * This class provides a grid interface for users to select their preferred language,
- * handles locale updates, and manages navigation flow to subsequent screens
- * like the Terms and Policy activity. It implements {@link LanguageCallback} to
- * respond to selection events from the {@link LanguageAdapter}.
+ * This class inherits structural window layout operations from {@link BaseActivity} utilizing
+ * Android architecture ViewBinding. By implementing {@link LanguageCallback}, it directly intercepts
+ * item interaction events from the underlying list layout to update the global device session locale
+ * settings when a target language choice is confirmed.
  * </p>
  *
  * @see BaseActivity
+ * @see LanguageCallback
  * @see LanguageViewModel
  * @see LanguageAdapter
  */
-public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> implements LanguageCallback {
+public class LanguageActivity extends
+	BaseActivity<ActivityLanguage1Binding> implements LanguageCallback {
 	
 	private final LoggerUtils logger = LoggerUtils.from(LanguageViewModel.class);
 	private LanguageAdapter languageAdapter;
 	
 	/**
-	 * Indicates whether the screen orientation should be locked for this activity.
+	 * Determines whether the screen layout configuration should freeze its physical
+	 * position state. Overriding this to return {@code true} signals the core engine
+	 * layer to lock down screen configurations, blocking user device movements from
+	 * forcing runtime rotation changes.
 	 *
-	 * @return {@code true} if the orientation should be locked; {@code false} otherwise.
+	 * @return {@code true} to explicitly lock the orientation environment; {@code false} to
+	 * allow rotational changes.
 	 */
 	@Override
 	protected boolean shouldLockOrientation() {
@@ -48,21 +54,28 @@ public class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> imp
 	}
 	
 	/**
-	 * Inflates the {@link ActivityLanguage1Binding} instance for this activity.
+	 * Inflates the {@link ActivityLanguage1Binding} for this activity.
+	 * This method provides the binding instance used to interact with the UI components
+	 * in a type-safe manner.
 	 *
-	 * @param inflater The {@link LayoutInflater} used to inflate the binding layout.
-	 * @return A new instance of {@link ActivityLanguage1Binding} linked to the activity's layout.
+	 * @param inflater The {@link LayoutInflater} used to inflate the binding.
+	 * @return A new instance of {@link ActivityLanguage1Binding}.
 	 */
-	@Override protected ActivityLanguage1Binding inflateBinding(LayoutInflater inflater) {
+	@Override
+	protected ActivityLanguage1Binding inflateBinding(LayoutInflater inflater) {
 		return ActivityLanguage1Binding.inflate(inflater);
 	}
 	
 	/**
-	 * Initializes the activity's user interface and logic once the layout has been loaded.
-	 * This method sets up the ViewModel, initializes the language list RecyclerView,
-	 * configures button click listeners, and applies visual styling to the title.
+	 * Executes supplementary setup routines immediately after the layout system completes
+	 * initialization.This hook coordinates UI styling configurations and adapter links.
+	 * <p>
+	 * It loads data variants into components, establishes operational interaction buttons,
+	 * and applies dynamic runtime graphics to header title elements.
+	 * </p>
 	 */
-	@Override protected void onLoadedLayout() {
+	@Override
+	protected void onLoadedLayout() {
 		initViews(getLanguageViewModel());
 		initializeButtons();
 		applyGradientToTitle();
