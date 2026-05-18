@@ -104,12 +104,12 @@ dependencies {
     implementation libs.lottie
     implementation libs.jsoup
     implementation libs.glide
-    implementation libs.permissionx
 
     implementation libs.objectbox.android
     implementation libs.androidx.documentfile
 
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
+
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.espresso.core
