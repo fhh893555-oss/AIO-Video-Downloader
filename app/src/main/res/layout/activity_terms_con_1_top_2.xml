@@ -54,16 +54,17 @@
           android:layout_marginEnd="@dimen/_10"
           android:src="@drawable/ic_calender"
           android:tint="@color/color_primary"
-          tools:ignore="ContentDescription" />
+          tools:ignore="ContentDescription,UseAppTint" />
 
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginRight="@dimen/_5"
           android:fontFamily="@font/font_family_medium"
           android:text="@string/label_last_updated"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/small_text_size"
-          tools:ignore="SpUsage" />
+          tools:ignore="SpUsage,TextSizeCheck" />
 
         <TextView
           android:layout_width="wrap_content"
@@ -72,7 +73,7 @@
           android:text="@string/text_last_updated_date"
           android:textColor="@color/color_primary"
           android:textSize="@dimen/small_text_size"
-          tools:ignore="SpUsage" />
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
       <TextView
@@ -83,7 +84,7 @@
         android:text="@string/text_terms_intro"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/small_text_size"
-        tools:ignore="SpUsage" />
+        tools:ignore="SpUsage,TextSizeCheck" />
 
       <View
         android:layout_width="match_parent"
@@ -125,7 +126,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_agree_terms"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -163,7 +164,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -178,7 +179,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,VisualLintLongText" />
           </LinearLayout>
 
           <LinearLayout
@@ -204,7 +205,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_user_shield"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -232,7 +233,7 @@
                   android:text="@string/desc_use_of_app"
                   android:textColor="@color/color_text_secondary"
                   android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck" />
               </LinearLayout>
 
               <ImageView
@@ -242,7 +243,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -257,7 +258,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck" />
           </LinearLayout>
 
           <LinearLayout
@@ -283,7 +284,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_intellectual"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -302,7 +303,7 @@
                   android:text="@string/title_intellectual_property"
                   android:textColor="@color/color_primary"
                   android:textSize="@dimen/message_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
 
                 <TextView
                   android:layout_width="wrap_content"
@@ -311,7 +312,7 @@
                   android:text="@string/desc_intellectual_property"
                   android:textColor="@color/color_text_secondary"
                   android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
               </LinearLayout>
 
               <ImageView
@@ -321,7 +322,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -336,7 +337,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText" />
           </LinearLayout>
 
           <LinearLayout
@@ -362,7 +363,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_prohibited"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -381,7 +382,7 @@
                   android:text="@string/title_prohibited_activities"
                   android:textColor="@color/color_primary"
                   android:textSize="@dimen/message_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
 
                 <TextView
                   android:layout_width="wrap_content"
@@ -390,7 +391,7 @@
                   android:text="@string/desc_prohibited_activities"
                   android:textColor="@color/color_text_secondary"
                   android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
               </LinearLayout>
 
               <ImageView
@@ -400,7 +401,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -415,7 +416,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText" />
           </LinearLayout>
 
           <LinearLayout
@@ -441,7 +442,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_warranty"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -460,7 +461,7 @@
                   android:text="@string/title_limitation_liability"
                   android:textColor="@color/color_primary"
                   android:textSize="@dimen/message_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
 
                 <TextView
                   android:layout_width="wrap_content"
@@ -469,7 +470,7 @@
                   android:text="@string/desc_limitation_liability"
                   android:textColor="@color/color_text_secondary"
                   android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
               </LinearLayout>
 
               <ImageView
@@ -479,7 +480,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -494,7 +495,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText" />
           </LinearLayout>
 
           <LinearLayout
@@ -520,7 +521,7 @@
                 android:padding="@dimen/_5"
                 android:src="@drawable/img_law_terms"
                 android:tint="@color/color_primary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
 
               <LinearLayout
                 android:layout_width="0dp"
@@ -539,7 +540,7 @@
                   android:text="@string/title_changes_to_terms"
                   android:textColor="@color/color_primary"
                   android:textSize="@dimen/message_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
 
                 <TextView
                   android:layout_width="wrap_content"
@@ -548,7 +549,7 @@
                   android:text="@string/desc_changes_to_terms"
                   android:textColor="@color/color_text_secondary"
                   android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage" />
+                  tools:ignore="SpUsage,TextSizeCheck" />
               </LinearLayout>
 
               <ImageView
@@ -558,7 +559,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_down"
                 android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,UseAppTint" />
             </LinearLayout>
 
             <TextView
@@ -573,7 +574,7 @@
               android:textColor="@color/color_text_secondary"
               android:textSize="@dimen/smaller_text_size"
               android:visibility="visible"
-              tools:ignore="SpUsage" />
+              tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText" />
           </LinearLayout>
         </LinearLayout>
       </ScrollView>
@@ -586,7 +587,6 @@
         <View
           android:layout_width="match_parent"
           android:layout_height="1dp"
-          android:layout_marginTop="@dimen/_10"
           android:background="@color/color_divider" />
 
         <LinearLayout
@@ -615,7 +615,7 @@
             android:text="@string/label_agree_terms"
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/small_text_size"
-            tools:ignore="SpUsage" />
+            tools:ignore="SpUsage,TextSizeCheck" />
         </LinearLayout>
 
         <RelativeLayout

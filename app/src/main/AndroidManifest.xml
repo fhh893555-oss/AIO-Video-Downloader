@@ -53,6 +53,7 @@
     <activity
       android:name="userInterface.opening.OpeningActivity" />
     <activity android:name="userInterface.language.LanguageActivity" />
+    <activity android:name="userInterface.termsPolicy.TermsPolicyActivity" />
     <activity android:name="userInterface.feedback.FeedbackActivity" />
 
   </application>
