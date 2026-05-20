@@ -36,7 +36,7 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 				getColor(R.color.color_secondary),
 				getColor(R.color.color_primary_variant),
 				nextGenStart,
-				nextGenStart + 7
+				nextGenStart + 10
 			);
 		}
 	}
