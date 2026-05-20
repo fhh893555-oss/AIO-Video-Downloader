@@ -594,8 +594,12 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/_15"
+          android:background="@drawable/bg_button_negative"
+          android:clickable="true"
           android:gravity="center_vertical"
-          android:orientation="horizontal">
+          android:orientation="horizontal"
+          android:paddingLeft="@dimen/_5"
+          android:paddingRight="@dimen/_5">
 
           <CheckBox
             android:id="@+id/cbAgreeTerms"

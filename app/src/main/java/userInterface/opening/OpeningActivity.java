@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 
+import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -120,14 +121,10 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	 */
 	private void startNextActivity() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			Intent destinationIntent;
-			boolean isLocaleConfigured = AppConfigsRepo.getConfig().isLocaleConfigured;
-			Class<? extends BaseActivity<? extends ViewBinding>> nextActivityToOpen =
-				isLocaleConfigured ? TermsPolicyActivity.class : LanguageActivity.class;
-			
-			destinationIntent = new Intent(this, nextActivityToOpen);
-			destinationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-				Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			Intent destinationIntent = getDestinationIntent();
+			destinationIntent.addFlags(
+				Intent.FLAG_ACTIVITY_NEW_TASK |
+					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			
 			if (AppConfigsRepo.getConfig().isLocaleConfigured)
 				logger.debug("Locale is already configured, opening main activity");
@@ -137,5 +134,41 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 			startActivity(destinationIntent);
 			finish();
 		}, 1000);
+	}
+	
+	/**
+	 * Determines the appropriate destination activity by evaluating the current
+	 * application configuration state.
+	 * <p>
+	 * This method inspects whether the user has successfully configured their
+	 * regional locale and accepted the Terms &amp; Conditions. Based on these
+	 * status flags, it selects the necessary onboarding activity to launch next.
+	 * </p>
+	 *
+	 * @return A {@link Intent} configured to launch the next logical activity
+	 * in the application's startup or onboarding flow.
+	 */
+	@NonNull
+	private Intent getDestinationIntent() {
+		Intent destinationIntent;
+		boolean isLocaleConfigured = AppConfigsRepo.getConfig().isLocaleConfigured;
+		
+		Class<? extends BaseActivity<? extends ViewBinding>> nextActivityToOpen =
+			isLocaleConfigured ? TermsPolicyActivity.class : LanguageActivity.class;
+		
+		boolean isTermsActivitySelected = false;
+		if (!AppConfigsRepo.getConfig().isTermsConditionsAgreed) {
+			nextActivityToOpen = TermsPolicyActivity.class;
+			isTermsActivitySelected = true;
+		}
+		
+		destinationIntent = new Intent(this, nextActivityToOpen);
+		if (isTermsActivitySelected) {
+			destinationIntent.getShortExtra(
+				TermsPolicyActivity.LAUNCHED_LOCATION_OF_ACTIVITY,
+				TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);
+		}
+		
+		return destinationIntent;
 	}
 }
