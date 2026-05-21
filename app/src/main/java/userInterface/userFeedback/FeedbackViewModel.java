@@ -1,4 +1,4 @@
-package userInterface.feedback;
+package userInterface.userFeedback;
 
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.LifecycleOwner;

@@ -1,4 +1,4 @@
-package userInterface.feedback;
+package userInterface.userFeedback;
 
 import android.content.Context;
 import android.graphics.Typeface;

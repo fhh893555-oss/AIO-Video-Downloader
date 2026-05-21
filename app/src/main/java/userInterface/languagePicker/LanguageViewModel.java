@@ -1,4 +1,4 @@
-package userInterface.language;
+package userInterface.languagePicker;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

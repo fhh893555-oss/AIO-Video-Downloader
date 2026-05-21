@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import userInterface.feedback.FeedbackReactions;
+import userInterface.userFeedback.FeedbackReactions;
 
 public class FeedbackPocketbaseTest {
 	

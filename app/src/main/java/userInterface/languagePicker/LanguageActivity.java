@@ -1,4 +1,4 @@
-package userInterface.language;
+package userInterface.languagePicker;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.GridLayoutSpacing;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.termsPolicy.TermsPolicyActivity;
+import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 /**
  * Core activity component responsible for rendering and managing the language selection screen.

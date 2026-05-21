@@ -1,4 +1,4 @@
-package userInterface.language;
+package userInterface.languagePicker;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;

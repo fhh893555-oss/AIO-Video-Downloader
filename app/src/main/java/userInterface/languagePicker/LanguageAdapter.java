@@ -1,4 +1,4 @@
-package userInterface.language;
+package userInterface.languagePicker;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;

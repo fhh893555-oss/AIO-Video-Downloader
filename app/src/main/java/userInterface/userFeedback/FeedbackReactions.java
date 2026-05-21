@@ -1,4 +1,4 @@
-package userInterface.feedback;
+package userInterface.userFeedback;
 
 /**
  * Represents the various levels of user satisfaction or emotional reactions

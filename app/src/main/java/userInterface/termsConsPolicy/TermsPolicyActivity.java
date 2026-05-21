@@ -1,4 +1,4 @@
-package userInterface.termsPolicy;
+package userInterface.termsConsPolicy;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfig;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.opening.OpeningActivity;
+import userInterface.openingSplash.OpeningActivity;
 
 /**
  * Activity responsible for displaying and managing the Terms and Conditions and Privacy Policy.

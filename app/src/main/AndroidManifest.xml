@@ -42,7 +42,7 @@
     tools:targetApi="33">
 
     <activity
-      android:name="userInterface.opening.LauncherActivity"
+      android:name="userInterface.openingSplash.LauncherActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -51,10 +51,10 @@
     </activity>
 
     <activity
-      android:name="userInterface.opening.OpeningActivity" />
-    <activity android:name="userInterface.language.LanguageActivity" />
-    <activity android:name="userInterface.termsPolicy.TermsPolicyActivity" />
-    <activity android:name="userInterface.feedback.FeedbackActivity" />
+      android:name="userInterface.openingSplash.OpeningActivity" />
+    <activity android:name="userInterface.languagePicker.LanguageActivity" />
+    <activity android:name="userInterface.termsConsPolicy.TermsPolicyActivity" />
+    <activity android:name="userInterface.userFeedback.FeedbackActivity" />
 
   </application>
 

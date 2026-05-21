@@ -1,4 +1,4 @@
-package userInterface.opening;
+package userInterface.openingSplash;
 
 import android.content.Intent;
 import android.os.Bundle;

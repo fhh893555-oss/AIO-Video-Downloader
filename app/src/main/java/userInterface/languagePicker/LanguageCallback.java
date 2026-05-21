@@ -1,4 +1,4 @@
-package userInterface.language;
+package userInterface.languagePicker;
 
 /**
  * Listener interface used to capture and handle language selection events

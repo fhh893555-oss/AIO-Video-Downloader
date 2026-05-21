@@ -1,4 +1,4 @@
-package userInterface.feedback;
+package userInterface.userFeedback;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;

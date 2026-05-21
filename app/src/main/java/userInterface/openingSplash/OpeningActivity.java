@@ -1,4 +1,4 @@
-package userInterface.opening;
+package userInterface.openingSplash;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -19,8 +19,8 @@ import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfigsRepo;
-import userInterface.language.LanguageActivity;
-import userInterface.termsPolicy.TermsPolicyActivity;
+import userInterface.languagePicker.LanguageActivity;
+import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 /**
  * OpeningActivity serves as the splash screen for the application.
