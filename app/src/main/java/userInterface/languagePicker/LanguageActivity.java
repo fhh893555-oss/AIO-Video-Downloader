@@ -36,7 +36,7 @@ import userInterface.termsConsPolicy.TermsPolicyActivity;
 public class LanguageActivity extends
 	BaseActivity<ActivityLanguage1Binding> implements LanguageCallback {
 	
-	private final LoggerUtils logger = LoggerUtils.from(LanguageViewModel.class);
+	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private LanguageAdapter languageAdapter;
 	
 	/**

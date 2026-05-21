@@ -26,7 +26,7 @@ import coreUtils.library.process.LoggerUtils;
  */
 public class LanguageViewModel extends ViewModel {
 	
-	private final LoggerUtils logger = LoggerUtils.from(LanguageViewModel.class);
+	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private final MutableLiveData<List<LanguageItem>> languages = new MutableLiveData<>();
 	
 	/**

@@ -49,7 +49,7 @@ import coreUtils.library.views.listeners.EditTextListener;
  */
 public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	
-	private final LoggerUtils logger = LoggerUtils.from(FeedbackActivity.class);
+	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private FeedbackViewModel viewModel;
 	private ActivityResultLauncher<String> imagePickerLauncher;
 	
