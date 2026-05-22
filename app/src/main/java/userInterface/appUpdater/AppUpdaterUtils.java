@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.nextgen.BuildConfig;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -189,17 +187,18 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	 * int currentVersion = BuildConfig.VERSION_CODE;
 	 * UpdateInfo latest = updater.fetchLatestUpdateInfo(deviceId);
 	 *
-	 * if (updater.isUpdateAvailable(currentVersion, latest)) {
+	 * if (AppUpdaterUtils.isUpdateAvailable(context, latest)) {
 	 *     // Prompt user to download version " + latest.getVersionName()
 	 *     startUpdateDownload(latest.getApkFileUrl());
 	 * }
 	 * </pre>
 	 * </p>
 	 *
-	 * @param info the {@link UpdateInfo} object fetched from the server,
-	 *             or {@code null} if no update data is available.
+	 * @param context the application context used to retrieve the current installed app's version code
+	 * @param info    the {@link UpdateInfo} object fetched from the server,
+	 *                or {@code null} if no update data is available
 	 * @return {@code true} if the server has a newer version available (info.versionCode > currentVersionCode);
-	 * {@code false} otherwise or if info is null.
+	 * {@code false} otherwise or if info is null
 	 */
 	public static boolean isUpdateAvailable(@NotNull Context context, @Nullable UpdateInfo info) {
 		long currentVersionCode = VersionInfo.getVersionCode(context);
