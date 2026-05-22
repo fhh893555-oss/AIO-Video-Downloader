@@ -118,56 +118,62 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Transitions to the next activity after a short delay.
+	 * Initiates the transition to the next activity after checking for app updates.
 	 * <p>
-	 * This method waits for a predefined interval (1000ms) before navigating
-	 * to either the {@link LanguageActivity} or the main application screen,
-	 * depending on whether the user has already configured their locale settings.
-	 * It clears the current activity stack to ensure the user cannot navigate back
+	 * Executes in background thread to fetch update info from server. If a newer version
+	 * is available, navigates to AppUpdaterActivity with the update details. Otherwise,
+	 * delays for 1 second then proceeds to the appropriate onboarding or main activity
+	 * based on user configuration. Clears the activity stack to prevent back navigation.
+	 * </p>
 	 */
 	private void startNextActivity() {
-		ThreadTask.executeInBackground(() -> {
-			UpdateInfo latestUpdateInfo = getLatestUpdateInfo();
-			Context context = getApplicationContext();
-			
-			if (AppUpdaterUtils.isUpdateAvailable(context, latestUpdateInfo)) {
-				ThreadTask.executeOnMainThread(() -> {
-					Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
-					intent.putExtra(AppUpdaterActivity.KEY_INTENT_RECEIVED_KEY, latestUpdateInfo);
-					vibrate();
-					startActivity(intent);
-					ActivityAnimator.animActivityFade(OpeningActivity.this);
-				});
-			} else {
-				new Handler(Looper.getMainLooper()).postDelayed(() -> {
-					Intent destinationIntent = getDestinationIntent();
-					destinationIntent.addFlags(
-						Intent.FLAG_ACTIVITY_NEW_TASK |
-							Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					
-					if (AppConfigsRepo.getConfig().isLocaleConfigured)
-						logger.debug("Locale is already configured, opening main activity");
-					else logger.debug("Locale is not configured, opening language activity.");
-					
-					ActivityAnimator.animActivityFade(OpeningActivity.this);
-					startActivity(destinationIntent);
-					finish();
-				}, 1000);
-			}
+		new Handler(Looper.getMainLooper()).postDelayed(() -> {
+			ThreadTask.executeInBackground(() -> {
+				UpdateInfo latestUpdateInfo = getLatestUpdateInfo();
+				Context context = getApplicationContext();
+				if (AppUpdaterUtils.isUpdateAvailable(context, latestUpdateInfo)) {
+					launchAppUpdater(latestUpdateInfo);
+				} else {
+					proceedToNextScreen();
+				}
+			});
+		}, 1000);
+	}
+	
+	private void launchAppUpdater(UpdateInfo latestUpdateInfo) {
+		ThreadTask.executeOnMainThread(() -> {
+			Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
+			intent.putExtra(AppUpdaterActivity.KEY_INTENT_RECEIVED_KEY, latestUpdateInfo);
+			vibrate();
+			startActivity(intent);
+			ActivityAnimator.animActivityFade(OpeningActivity.this);
 		});
 	}
 	
+	private void proceedToNextScreen() {
+		Intent destinationIntent = getDestinationIntent();
+		destinationIntent.addFlags(
+			Intent.FLAG_ACTIVITY_NEW_TASK |
+				Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		
+		if (AppConfigsRepo.getConfig().isLocaleConfigured)
+			logger.debug("Locale is already configured, opening main activity");
+		else logger.debug("Locale is not configured, opening language activity.");
+		
+		ActivityAnimator.animActivityFade(OpeningActivity.this);
+		startActivity(destinationIntent);
+		finish();
+	}
+	
 	/**
-	 * Determines the appropriate destination activity by evaluating the current
-	 * application configuration state.
+	 * Determines the next activity to launch based on user configuration state.
 	 * <p>
-	 * This method inspects whether the user has successfully configured their
-	 * regional locale and accepted the Terms &amp; Conditions. Based on these
-	 * status flags, it selects the necessary onboarding activity to launch next.
+	 * Checks two configuration flags: locale setup and terms agreement. If terms are not agreed,
+	 * always navigates to TermsPolicyActivity. Otherwise, navigates to LanguageActivity if locale
+	 * is not configured, or TermsPolicyActivity if locale is configured but terms may need review.
 	 * </p>
 	 *
-	 * @return A {@link Intent} configured to launch the next logical activity
-	 * in the application's startup or onboarding flow.
+	 * @return Intent configured to launch the appropriate onboarding or terms activity
 	 */
 	@NonNull
 	private Intent getDestinationIntent() {
@@ -193,6 +199,16 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		return destinationIntent;
 	}
 	
+	/**
+	 * Fetches the latest application update information from the PocketBase server.
+	 * <p>
+	 * Creates an instance of AppUpdaterUtils, generates a unique device signature as an identifier,
+	 * and queries the server for the most recent update record. Returns null if no update is
+	 * available or if the request fails.
+	 * </p>
+	 *
+	 * @return UpdateInfo object containing version details and download URL, or null if none found
+	 */
 	private UpdateInfo getLatestUpdateInfo() {
 		AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils();
 		Context context = getApplicationContext();
