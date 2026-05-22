@@ -173,7 +173,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	@Nullable
 	public UpdateInfo fetchLatestUpdateInfo(@NonNull String deviceId) {
 		logger.debug("Fetching latest update info for device: " + deviceId);
-		setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(2, 2));
+		setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(5, 5));
 		
 		boolean is64Bit = is64BitDevice();
 		String apkField = is64Bit ? FIELD_APK_FILE_64BIT : FIELD_APK_FILE_32BIT;
