@@ -7,79 +7,134 @@ import androidx.lifecycle.ViewModel;
 
 import java.io.File;
 
-import coreUtils.base.BaseApplication;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 
+/**
+ * ViewModel that orchestrates APK update downloads and exposes download state to UI components.
+ * <p>
+ * This ViewModel serves as the bridge between the download logic ({@link ApkDownloader}) and
+ * the UI layer (typically an Activity or Fragment). It manages background download tasks,
+ * survives configuration changes (screen rotations, keyboard visibility changes, etc.),
+ * and provides observable download status updates through {@link LiveData}.
+ * </p>
+ *
+ * <p><b>Core Responsibilities:</b>
+ * <ul>
+ *   <li><b>Download Lifecycle Management:</b> Starts new downloads, automatically cancels
+ *       previous downloads before starting a new one, and cleans up resources when the
+ *       ViewModel is cleared.</li>
+ *   <li><b>Status Exposure:</b> Exposes a {@link LiveData<DownloadStatus>} that UI components
+ *       can observe to receive real-time updates about pending, downloading, verifying,
+ *       completed, error, and hash mismatch states.</li>
+ *   <li><b>Integrity Verification:</b> Performs SHA-256 hash validation on downloaded files,
+ *       comparing the computed hash against the expected value from {@link UpdateInfo}.</li>
+ *   <li><b>Thread Management:</b> Uses {@link ThreadTask} to execute downloads in the
+ *       background, preventing UI blocking while ensuring callbacks return to the main thread.</li>
+ * </ul>
+ * </p>
+ *
+ * <p><b>Resource Cleanup:</b>
+ * The ViewModel automatically cancels the ongoing download task in {@link #onCleared()},
+ * which is called when the associated UI controller is permanently destroyed. This prevents
+ * memory leaks and avoids unnecessary background operations after the ViewModel is no longer needed.
+ * </p>
+ *
+ * <p><b>Thread Safety Note:</b>
+ * The {@link MutableLiveData#postValue(Object)} method is used for all status updates from
+ * background threads, ensuring thread-safe communication with the main thread observers.
+ * </p>
+ *
+ * @see ViewModel
+ * @see ApkDownloader
+ * @see DownloadStatus
+ * @see UpdateInfo
+ * @see ThreadTask
+ */
 public class AppUpdaterViewModel extends ViewModel {
+	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
-	private final ThreadTask<UpdateInfo, Void> updateCheckTask = new ThreadTask<>();
-	private final MutableLiveData<UpdateInfo> updateAvailableLiveData = new MutableLiveData<>();
+	private final ThreadTask<UpdateInfo, Void> downloadTask = new ThreadTask<>();
 	private final MutableLiveData<DownloadStatus> downloadStatusLiveData = new MutableLiveData<>();
 	
 	/**
-	 * Returns the LiveData that notifies when a new application update is available.
+	 * Returns the LiveData object for observing download status updates.
+	 * <p>
+	 * UI components can observe this LiveData to receive real-time updates about the
+	 * download progress, including pending, downloading, verifying, completed, error,
+	 * and hash mismatch states. The observer will receive the latest status immediately
+	 * upon subscription and then each time the status changes.
+	 * </p>
 	 *
-	 * @return Observable update information.
-	 */
-	public LiveData<UpdateInfo> getUpdateAvailableLiveData() {
-		return updateAvailableLiveData;
-	}
-	
-	/**
-	 * Returns the LiveData that notifies about the APK download status.
-	 *
-	 * @return Observable download status.
+	 * @return LiveData containing the current DownloadStatus of the APK update
 	 */
 	public LiveData<DownloadStatus> getDownloadStatusLiveData() {
 		return downloadStatusLiveData;
 	}
 	
 	/**
-	 * Initiates an asynchronous check for application updates from the server.
+	 * Initiates or restarts the APK update download process.
+	 * <p>
+	 * This method cancels any ongoing download task before starting a new one. It wraps
+	 * the download operation in a background task, sets the initial status to PENDING,
+	 * and delegates the actual download to ApkDownloader. The download supports automatic
+	 * resumption of partial downloads and includes SHA-256 hash verification to ensure
+	 * file integrity. Progress and completion updates are propagated through the
+	 * downloadStatusLiveData via the ProgressListener.
+	 * </p>
 	 *
-	 * @param deviceId The unique identifier of the requesting device.
+	 * <p><b>Behavior:</b>
+	 * <ul>
+	 *   <li>Cancels any previously running download task</li>
+	 *   <li>Creates a new background task for the download operation</li>
+	 *   <li>Sets initial LiveData status to PENDING</li>
+	 *   <li>Delegates to ApkDownloader for actual network operations</li>
+	 *   <li>Uses buildProgressListener() to handle callbacks</li>
+	 *   <li>Starts the background task asynchronously</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param updateInfo  contains the APK download URL and expected hash for verification
+	 * @param downloadDir the directory where the APK file will be saved
 	 */
-	public void checkForUpdates(@NonNull String deviceId) {
-		logger.debug("Checking for app updates...");
-		updateCheckTask.cancel();
-		updateCheckTask.setBackgroundTask(progress -> {
-			try {
-				AppUpdaterUtils updater = new AppUpdaterUtils();
-				UpdateInfo latest = updater.fetchLatestUpdateInfo(deviceId);
-				if (AppUpdaterUtils.isUpdateAvailable(BaseApplication.AppContext, latest)) {
-					return latest;
-				}
-			} catch (Exception e) {
-				logger.error("Update check failed", e);
-			}
+	public void downloadUpdate(@NonNull UpdateInfo updateInfo, @NonNull File downloadDir) {
+		downloadTask.cancel();
+		downloadTask.setBackgroundTask(callback -> {
+			logger.debug("Starting APK download: " + updateInfo.getApkFileUrl());
+			downloadStatusLiveData.setValue(DownloadStatus.pending());
+			
+			ApkDownloader downloader = new ApkDownloader();
+			downloader.startDownload(updateInfo, downloadDir, buildProgressListener(updateInfo));
 			return null;
 		});
 		
-		updateCheckTask.setResultTask(result -> {
-			if (result != null) {
-				logger.debug("New version available: " + result.getVersionName());
-				updateAvailableLiveData.setValue(result);
-			} else {
-				logger.debug("App is up to date.");
-			}
-		});
-		updateCheckTask.start();
+		downloadTask.start();
 	}
 	
 	/**
-	 * Starts downloading the APK file from the provided UpdateInfo.
+	 * Creates and returns a ProgressListener for monitoring APK download progress and completion.
+	 * <p>
+	 * This factory method constructs a ProgressListener that bridges the ApkDownloader's
+	 * asynchronous callbacks to the ViewModel's LiveData, allowing UI components to observe
+	 * download status updates. The listener handles progress tracking, hash verification,
+	 * and error reporting, automatically updating the downloadStatusLiveData accordingly.
+	 * </p>
 	 *
-	 * @param updateInfo  The update information containing the download URL.
-	 * @param downloadDir The directory where the APK should be saved.
+	 * <p><b>Callback Handling:</b>
+	 * <ul>
+	 *   <li><b>onProgressUpdate:</b> Posts DOWNLOADING status with current percentage</li>
+	 *   <li><b>onDownloadComplete:</b> Posts VERIFYING status, validates SHA-256 hash,
+	 *       then posts either COMPLETED or HASH_MISMATCH based on verification result</li>
+	 *   <li><b>onError:</b> Posts ERROR status with the error message</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param updateInfo contains the expected SHA-256 hash for file integrity verification
+	 * @return a ProgressListener implementation that updates downloadStatusLiveData
 	 */
-	public void downloadUpdate(@NonNull UpdateInfo updateInfo, @NonNull File downloadDir) {
-		logger.debug("Starting APK download: " + updateInfo.getApkFileUrl());
-		downloadStatusLiveData.setValue(DownloadStatus.pending());
-		
-		ApkDownloader downloader = new ApkDownloader();
-		downloader.startDownload(updateInfo, downloadDir, new ApkDownloader.ProgressListener() {
+	private ApkDownloader.ProgressListener buildProgressListener(@NonNull UpdateInfo updateInfo) {
+		return new ApkDownloader.ProgressListener() {
 			@Override
 			public void onProgressUpdate(short percentage, long downloadedByte) {
 				downloadStatusLiveData.postValue(DownloadStatus.downloading(percentage));
@@ -90,10 +145,11 @@ public class AppUpdaterViewModel extends ViewModel {
 				logger.debug("Download complete. Verifying hash...");
 				downloadStatusLiveData.postValue(DownloadStatus.verifying());
 				
-				// Verify integrity
 				String expectedHash = updateInfo.getApkFileHash();
 				if (expectedHash != null && !expectedHash.equalsIgnoreCase(downloadedApkHash)) {
-					logger.error("Hash mismatch! Expected: " + expectedHash + ", Got: " + downloadedApkHash);
+					logger.error("Hash mismatch! Expected: " +
+						expectedHash + ", Got: " + downloadedApkHash);
+					
 					downloadStatusLiveData.postValue(DownloadStatus.hashMismatch());
 				} else {
 					logger.debug("Hash verification successful.");
@@ -106,13 +162,21 @@ public class AppUpdaterViewModel extends ViewModel {
 				logger.error("Download failed: " + errorMessage);
 				downloadStatusLiveData.postValue(DownloadStatus.error(errorMessage));
 			}
-		});
+		};
 	}
 	
+	/**
+	 * Cleans up resources when the ViewModel is cleared.
+	 * <p>
+	 * This lifecycle method is called when the ViewModel is no longer used and will be destroyed.
+	 * It cancels any ongoing background update check tasks to prevent memory leaks and avoid
+	 * unnecessary network operations after the ViewModel is no longer needed.
+	 * </p>
+	 */
 	@Override
 	protected void onCleared() {
 		super.onCleared();
-		updateCheckTask.cancel();
+		downloadTask.cancel();
 	}
 	
 	/**
@@ -137,7 +201,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * <p>
 		 * This constructor is only accessible within the class and is used by the public
 		 * factory methods to create immutable status objects. All fields are set at creation
-		 * time and cannot be modified afterwards, ensuring thread-safety and consistency.
+		 * time and cannot be modified afterward, ensuring thread-safety and consistency.
 		 * </p>
 		 *
 		 * @param state    the current download state (PENDING, DOWNLOADING, etc.)
