@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 
 import com.nextgen.databinding.ActivityUpdater1Binding;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 import javax.annotation.Nullable;
@@ -46,8 +48,8 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	 * </p>
 	 *
 	 * @return the UpdateInfo object extracted from the intent, or {@code null} if
-	 *         the intent contains no serializable extra under the expected key,
-	 *         or if the extra is not an instance of UpdateInfo
+	 * the intent contains no serializable extra under the expected key,
+	 * or if the extra is not an instance of UpdateInfo
 	 */
 	private @Nullable UpdateInfo getUpdateInfoPackageFromIntent() {
 		Intent intent = getIntent();
@@ -60,5 +62,21 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Retrieves the JSON changelog string from the provided UpdateInfo object.
+	 * <p>
+	 * This convenience method simply delegates to {@link UpdateInfo#getWhatsNewJSON()}
+	 * to obtain the structured "What's New" content. The returned JSON typically contains
+	 * information about new features, bug fixes, and improvements in the update.
+	 * </p>
+	 *
+	 * @param updateInfo the UpdateInfo object containing version and changelog details
+	 * @return a JSON formatted string describing the update's changes, or null/empty if
+	 * not provided
+	 */
+	private String getWhatsNewJSON(@NotNull UpdateInfo updateInfo) {
+		return updateInfo.getWhatsNewJSON();
 	}
 }
