@@ -38,7 +38,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	
 	@Override protected void onLoadedLayout() {
 		initializeViewModel();
-		// startDownloadLatestApk();
+		startDownloadLatestApk();
 	}
 	
 	private void initializeViewModel() {
@@ -56,7 +56,11 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		if (updateInfo == null) return;
 		AppDirsValidator.performValidation();
 		File applicationDirectory = AppDirsValidator.getApplicationDirectory();
-		getViewModel().downloadUpdate(updateInfo, Objects.requireNonNull(applicationDirectory));
+		if (applicationDirectory == null) return;
+		
+		String subDirName = StringHelper.getText(R.string.title_tubeaio_programs);
+		File appProgramsFolder = new File(applicationDirectory, subDirName);
+		getViewModel().downloadUpdate(updateInfo, Objects.requireNonNull(appProgramsFolder));
 	}
 	
 	/**

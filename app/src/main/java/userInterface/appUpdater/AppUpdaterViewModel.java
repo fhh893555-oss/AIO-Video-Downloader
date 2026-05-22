@@ -102,7 +102,8 @@ public class AppUpdaterViewModel extends ViewModel {
 		downloadTask.cancel();
 		downloadTask.setBackgroundTask(callback -> {
 			logger.debug("Starting APK download: " + updateInfo.getApkFileUrl());
-			downloadStatusLiveData.setValue(DownloadStatus.pending());
+			ThreadTask.executeOnMainThread(() ->
+				downloadStatusLiveData.setValue(DownloadStatus.pending()));
 			
 			ApkDownloader downloader = new ApkDownloader();
 			downloader.startDownload(updateInfo, downloadDir, buildProgressListener(updateInfo));
@@ -137,30 +138,38 @@ public class AppUpdaterViewModel extends ViewModel {
 		return new ApkDownloader.ProgressListener() {
 			@Override
 			public void onProgressUpdate(short percentage, long downloadedByte) {
-				downloadStatusLiveData.postValue(DownloadStatus.downloading(percentage));
+				ThreadTask.executeOnMainThread(() -> {
+					logger.debug("Download progress info: percentage:" + percentage +
+						" download byte:" + downloadedByte);
+					downloadStatusLiveData.postValue(DownloadStatus.downloading(percentage));
+				});
 			}
 			
 			@Override
 			public void onDownloadComplete(File apkFile, String downloadedApkHash) {
-				logger.debug("Download complete. Verifying hash...");
-				downloadStatusLiveData.postValue(DownloadStatus.verifying());
-				
-				String expectedHash = updateInfo.getApkFileHash();
-				if (expectedHash != null && !expectedHash.equalsIgnoreCase(downloadedApkHash)) {
-					logger.error("Hash mismatch! Expected: " +
-						expectedHash + ", Got: " + downloadedApkHash);
+				ThreadTask.executeOnMainThread(() -> {
+					logger.debug("Download complete. Verifying hash...");
+					downloadStatusLiveData.postValue(DownloadStatus.verifying());
 					
-					downloadStatusLiveData.postValue(DownloadStatus.hashMismatch());
-				} else {
-					logger.debug("Hash verification successful.");
-					downloadStatusLiveData.postValue(DownloadStatus.completed(apkFile));
-				}
+					String expectedHash = updateInfo.getApkFileHash();
+					if (expectedHash != null && !expectedHash.equalsIgnoreCase(downloadedApkHash)) {
+						logger.error("Hash mismatch! Expected: " +
+							expectedHash + ", Got: " + downloadedApkHash);
+						
+						downloadStatusLiveData.postValue(DownloadStatus.hashMismatch());
+					} else {
+						logger.debug("Hash verification successful.");
+						downloadStatusLiveData.postValue(DownloadStatus.completed(apkFile));
+					}
+				});
 			}
 			
 			@Override
 			public void onError(String errorMessage) {
-				logger.error("Download failed: " + errorMessage);
-				downloadStatusLiveData.postValue(DownloadStatus.error(errorMessage));
+				ThreadTask.executeOnMainThread(() -> {
+					logger.error("Download failed: " + errorMessage);
+					downloadStatusLiveData.postValue(DownloadStatus.error(errorMessage));
+				});
 			}
 		};
 	}
