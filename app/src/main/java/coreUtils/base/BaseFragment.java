@@ -71,17 +71,17 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 	}
 	
 	/**
-	 * Called to have the fragment instantiate its user interface view. This implementation
-	 * initializes the {@link ViewBinding} by calling {@link #inflateBinding}  and returns
-	 * the root view of the binding.
+	 * Creates and inflates the fragment's view hierarchy.
+	 * <p>
+	 * This lifecycle method inflates the layout using ViewBinding, creating the
+	 * fragment's UI. The binding instance is stored for later access to UI components.
+	 * Returns the root view of the inflated layout to be displayed by the fragment.
+	 * </p>
 	 *
-	 * @param inflater           The LayoutInflater object that can be used to inflate any
-	 *                           views in the fragment.
-	 * @param container          If non-null, this is the parent view that the fragment's
-	 *                           UI should be attached to.
-	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a
-	 *                           previous saved state.
-	 * @return The {@link View} for the fragment's UI, or {@code null}.
+	 * @param inflater           LayoutInflater used to inflate the layout
+	 * @param container          parent view that the fragment's UI will be attached to
+	 * @param savedInstanceState previously saved state data, or null if none exists
+	 * @return the root View of the inflated layout, or null if the fragment doesn't have a UI
 	 */
 	@Nullable
 	@Override
@@ -93,14 +93,16 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 	}
 	
 	/**
-	 * Called immediately after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has returned,
-	 * but before any saved state has been restored in to the view.
-	 * This implementation calls {@link #onLoadedLayout()} to allow subclasses to perform
-	 * view initialization.
+	 * Called immediately after onCreateView() when the view hierarchy has been created.
+	 * <p>
+	 * This lifecycle method is invoked after the view has been inflated and all
+	 * UI components are ready. It delegates to onLoadedLayout() where subclasses
+	 * can perform view initialization, set up click listeners, load data, or
+	 * start animations.
+	 * </p>
 	 *
-	 * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-	 * @param savedInstanceState If non-null, this fragment is being re-constructed
-	 *                           from a previous saved state as given here.
+	 * @param view               the root view of the fragment
+	 * @param savedInstanceState previously saved state data, or null if none exists
 	 */
 	@Override
 	public void onViewCreated(@NonNull View view,
@@ -110,9 +112,11 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 	}
 	
 	/**
-	 * Called when the fragment is no longer attached to its activity.
-	 * This implementation clears the references to the {@code context} and {@code binding}
-	 * to prevent potential memory leaks.
+	 * Called when the fragment is detached from its activity.
+	 * <p>
+	 * This lifecycle method clears references to the activity context and view binding
+	 * to prevent memory leaks after the fragment is no longer attached to the UI.
+	 * </p>
 	 */
 	@Override
 	public void onDetach() {
@@ -122,25 +126,27 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 	}
 	
 	/**
-	 * Retrieves the {@link ViewBinding} instance associated with this fragment's layout.
+	 * Returns the view binding instance for this fragment.
 	 * <p>
-	 * This instance is initialized in {@link #onCreateView} and cleared in {@link #onDetach}
-	 * to prevent memory leaks.
+	 * This method provides access to the inflated ViewBinding object, allowing
+	 * UI components to be accessed safely after the view has been created.
+	 * </p>
 	 *
-	 * @return The {@link ViewBinding} instance, or {@code null} if the view has not been
-	 * created or has already been destroyed.
+	 * @return the ViewBinding instance associated with this fragment
 	 */
 	public VB getBinding() {
 		return binding;
 	}
 	
 	/**
-	 * Retrieves the arguments bundle passed to this fragment, if any. This method provides
-	 * a null-safe way to access fragment arguments, returning {@code null} if no arguments
-	 * were supplied.
+	 * Safely retrieves the fragment's arguments bundle.
+	 * <p>
+	 * This method returns the arguments bundle that was set via {@link #setArguments(Bundle)},
+	 * or null if no arguments were provided. It provides a nullable-safe wrapper for
+	 * the standard getArguments() method.
+	 * </p>
 	 *
-	 * @return The {@link Bundle} of arguments provided to this fragment, or {@code null}
-	 * if none exist.
+	 * @return the arguments Bundle, or null if no arguments were set
 	 */
 	@Nullable
 	protected Bundle getArgumentsSafe() {
@@ -148,35 +154,43 @@ public abstract class BaseFragment<VB extends ViewBinding> extends Fragment {
 	}
 	
 	/**
-	 * Checks whether the fragment is currently attached to an activity and in a valid state.
-	 * Use this method before performing UI updates or context-dependent operations,
-	 * especially after asynchronous callbacks, to prevent crashes.
+	 * Checks whether the fragment is currently alive and attached to an activity.
+	 * <p>
+	 * This method verifies that the fragment has been added to an activity, the activity
+	 * is not null, and the fragment has not been detached. Useful before performing
+	 * UI operations or context-dependent tasks.
+	 * </p>
 	 *
-	 * @return {@code true} if the fragment is added, has a valid activity, and is not detached;
-	 * {@code false} otherwise.
+	 * @return true if the fragment is alive and attached, false otherwise
 	 */
 	protected boolean isFragmentAlive() {
 		return isAdded() && getActivity() != null && !isDetached();
 	}
 	
 	/**
-	 * Returns the non-null {@link Context} this fragment is currently associated with.
+	 * Returns the context associated with this fragment, throwing an exception if not available.
 	 * <p>
-	 * This method is a wrapper around {@link #requireContext()} to ensure a valid context is
-	 * available, throwing an exception if the fragment is not currently attached.
+	 * This method provides a guaranteed non-null context reference, throwing an
+	 * IllegalStateException if the fragment is not currently attached to an activity.
+	 * Use when a context is absolutely required for an operation.
+	 * </p>
 	 *
-	 * @return The {@link Context} to which this fragment is attached.
-	 * @throws IllegalStateException If the fragment is not currently attached to a context.
+	 * @return the non-null Context of the attached activity
+	 * @throws IllegalStateException if the fragment is not attached to an activity
 	 */
 	protected Context requireSafeContext() {
 		return requireContext();
 	}
 	
 	/**
-	 * Retrieves the custom {@link BaseApplication} instance associated with this fragment.
+	 * Returns the global BaseApplication instance.
+	 * <p>
+	 * This method provides convenient access to the application context from within
+	 * the fragment, useful for accessing app-wide resources, repositories, or
+	 * application-level services.
+	 * </p>
 	 *
-	 * @return the {@link BaseApplication} instance, or {@code null} if the application
-	 * context does not inherit from BaseApplication.
+	 * @return the BaseApplication singleton instance
 	 */
 	protected BaseApplication getApp() {
 		return application;
