@@ -1,6 +1,7 @@
 package userInterface.appUpdater;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,14 +81,24 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	public static final String FIELD_VERSION_CODE = "currentVersionCode";
 	
 	/**
-	 * Field name for the APK file attachment in the PocketBase collection.
+	 * Field name for the 32-bit APK file attachment in the PocketBase collection.
 	 * <p>
-	 * This field stores the actual application package file as a PocketBase file attachment.
-	 * The field type should be "File" in the PocketBase collection schema. The file name
-	 * is used to construct the downloadable URL via the PocketBase file API.
+	 * This field stores the 32-bit architecture application package file as a PocketBase
+	 * file attachment. The field type should be "File" in the PocketBase collection schema.
+	 * Used for devices that do not support 64-bit binaries or require compatibility mode.
 	 * </p>
 	 */
-	public static final String FIELD_APK_FILE = "currentApkFile";
+	public static final String FIELD_APK_FILE_32BIT = "currentApkFile32Bit";
+	
+	/**
+	 * Field name for the 64-bit APK file attachment in the PocketBase collection.
+	 * <p>
+	 * This field stores the 64-bit architecture application package file as a PocketBase
+	 * file attachment. The field type should be "File" in the PocketBase collection schema.
+	 * Preferred for modern devices to leverage improved performance and memory addressing.
+	 * </p>
+	 */
+	public static final String FIELD_APK_FILE_64BIT = "currentApkFile64Bit";
 	
 	/**
 	 * Field name for the JSON changelog data in the PocketBase collection.
@@ -98,6 +109,26 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	 * </p>
 	 */
 	public static final String FIELD_WHATS_NEW_JSON = "whatsNewJSON";
+	
+	/**
+	 * Field name for the 32-bit APK file hash code in the PocketBase collection.
+	 * <p>
+	 * This field stores a cryptographic hash (e.g., SHA-256) of the 32-bit APK file
+	 * for integrity verification. Used to validate that the downloaded file matches
+	 * the server version and has not been corrupted or tampered with during transfer.
+	 * </p>
+	 */
+	public static final String FIELD_APK_FILE_HASH_CODE_32BIT = "apkFileHashFor32Bit";
+	
+	/**
+	 * Field name for the 64-bit APK file hash code in the PocketBase collection.
+	 * <p>
+	 * This field stores a cryptographic hash (e.g., SHA-256) of the 64-bit APK file
+	 * for integrity verification. Used to validate that the downloaded file matches
+	 * the server version and has not been corrupted or tampered with during transfer.
+	 * </p>
+	 */
+	public static final String FIELD_APK_FILE_HASH_CODE_64BIT = "apkFileHashFor64Bit";
 	
 	/**
 	 * Returns the name of the PocketBase collection used for update records.
@@ -142,9 +173,14 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	public UpdateInfo fetchLatestUpdateInfo(@NonNull String deviceId) {
 		logger.debug("Fetching latest update info for device: " + deviceId);
 		
-		String fields = "id," + FIELD_VERSION_CODE + "," + FIELD_VERSION_NAME + "," +
-			FIELD_APK_FILE + "," + FIELD_WHATS_NEW_JSON;
+		boolean is64Bit = is64BitDevice();
+		String apkField = is64Bit ? FIELD_APK_FILE_64BIT : FIELD_APK_FILE_32BIT;
+		String hashField = is64Bit ? FIELD_APK_FILE_HASH_CODE_64BIT : FIELD_APK_FILE_HASH_CODE_32BIT;
 		
+		String fields = "id," + FIELD_VERSION_CODE + "," + FIELD_VERSION_NAME + "," +
+			apkField + "," + hashField + "," + FIELD_WHATS_NEW_JSON;
+		
+		logger.debug("Detected architecture: " + (is64Bit ? "64-bit" : "32-bit"));
 		logger.debug("Query fields: " + fields);
 		JSONObject record = query("id != ''", fields, deviceId);
 		
@@ -159,7 +195,8 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 			String id = record.getString("id");
 			int versionCode = record.getInt(FIELD_VERSION_CODE);
 			String versionName = record.getString(FIELD_VERSION_NAME);
-			String apkFileName = record.getString(FIELD_APK_FILE);
+			String apkFileName = record.getString(apkField);
+			String apkHash = record.getString(hashField);
 			String whatsNewJSON = record.optString(FIELD_WHATS_NEW_JSON);
 			
 			logger.debug("Parsed update - ID: " + id + ", Version: " + versionName +
@@ -170,11 +207,33 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 			
 			logger.debug("Constructed APK URL: " + apkFileUrl);
 			
-			return new UpdateInfo(versionCode, versionName, apkFileUrl, whatsNewJSON);
+			return new UpdateInfo(versionCode, versionName, apkFileUrl, apkHash, whatsNewJSON);
 		} catch (Exception error) {
 			logger.error("Failed to parse update info", error);
 			return null;
 		}
+	}
+	
+	/**
+	 * Determines whether the current device supports 64-bit architecture.
+	 * <p>
+	 * This method checks the system's supported 64-bit ABIs (Application Binary Interfaces)
+	 * to detect if the device is capable of running 64-bit native code. The presence of
+	 * any 64-bit ABI in the list indicates the device supports 64-bit execution.
+	 * </p>
+	 *
+	 * <p><b>Usage Context:</b>
+	 * This is used to select the appropriate APK variant (32-bit vs 64-bit) when downloading
+	 * app updates. 64-bit devices should receive the 64-bit APK for optimal performance,
+	 * while 32-bit devices fall back to the 32-bit version.
+	 * </p>
+	 *
+	 * @return {@code true} if the device supports at least one 64-bit ABI (e.g., arm64-v8a,
+	 * x86_64), {@code false} if the device is 32-bit only or the check fails
+	 */
+	private boolean is64BitDevice() {
+		return Build.SUPPORTED_64_BIT_ABIS != null &&
+			Build.SUPPORTED_64_BIT_ABIS.length > 0;
 	}
 	
 	/**
@@ -242,6 +301,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 		private int versionCode;
 		private String versionName;
 		private String apkFileUrl;
+		private String apkFileHash;
 		private String whatsNewJSON;
 		
 		/**
@@ -256,14 +316,16 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 		 * @param versionCode  the numeric version identifier (e.g., 42). Higher values indicate newer releases.
 		 * @param versionName  the human-readable version string (e.g., "2.1.0" or "2.1.0-beta").
 		 * @param apkFileUrl   the complete HTTPS URL where the APK file can be downloaded.
+		 * @param apkFileHash  the cryptographic hash of the APK file for integrity verification.
 		 * @param whatsNewJSON a JSON formatted string containing changelog or feature description.
 		 *                     May follow format: {"features":[...], "bugfixes":[...]}
 		 */
 		public UpdateInfo(int versionCode, String versionName,
-		                  String apkFileUrl, String whatsNewJSON) {
+		                  String apkFileUrl, String apkFileHash, String whatsNewJSON) {
 			this.versionCode = versionCode;
 			this.versionName = versionName;
 			this.apkFileUrl = apkFileUrl;
+			this.apkFileHash = apkFileHash;
 			this.whatsNewJSON = whatsNewJSON;
 		}
 		
@@ -357,6 +419,34 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 		 */
 		public void setApkFileUrl(String apkFileUrl) {
 			this.apkFileUrl = apkFileUrl;
+		}
+		
+		/**
+		 * Retrieves the cryptographic hash of the APK file for integrity verification.
+		 * <p>
+		 * The hash value (typically SHA-256) is used to validate that the downloaded APK
+		 * matches the server version and has not been corrupted or tampered with during
+		 * transmission. This provides an additional layer of security for the update process.
+		 * </p>
+		 *
+		 * @return the hash string of the APK file (e.g., "a1b2c3d4e5f6...")
+		 */
+		public String getApkFileHash() {
+			return apkFileHash;
+		}
+		
+		/**
+		 * Sets the cryptographic hash value for the APK file integrity check.
+		 * <p>
+		 * The hash should be generated using a strong algorithm like SHA-256 from the
+		 * original APK file. During download, the client can compute the hash of the
+		 * received file and compare it against this value to ensure file integrity.
+		 * </p>
+		 *
+		 * @param apkFileHash the cryptographic hash string to assign for integrity verification
+		 */
+		public void setApkFileHash(String apkFileHash) {
+			this.apkFileHash = apkFileHash;
 		}
 		
 		/**
