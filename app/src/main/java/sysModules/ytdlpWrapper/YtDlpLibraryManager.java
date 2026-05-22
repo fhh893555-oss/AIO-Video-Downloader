@@ -1,4 +1,4 @@
-package sysModules.ytdlpWrapper.libs;
+package sysModules.ytdlpWrapper;
 
 import com.yausername.ffmpeg.FFmpeg;
 import com.yausername.youtubedl_android.YoutubeDL;

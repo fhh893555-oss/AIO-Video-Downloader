@@ -1,4 +1,4 @@
-package sysModules.ytdlpWrapper.libs;
+package sysModules.ytdlpWrapper;
 
 import androidx.annotation.Nullable;
 

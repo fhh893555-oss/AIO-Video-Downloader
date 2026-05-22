@@ -14,7 +14,7 @@ import dataRepo.user.AppUserRepo;
 import sysModules.interCaches.AppRawFiles;
 import sysModules.newPipeLib.cache.YtStreamInfoRepo;
 import sysModules.newPipeLib.libs.NewPipeLibraryManager;
-import sysModules.ytdlpWrapper.libs.YtDlpLibraryManager;
+import sysModules.ytdlpWrapper.YtDlpLibraryManager;
 
 public class BaseApplication extends Application {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
@@ -46,7 +46,6 @@ public class BaseApplication extends Application {
 	
 	@Override
 	public void onTerminate() {
-		YtDlpLibraryManager.shutdown();
 		CrashLogWriter.shutdown();
 		AppUserRepo.release();
 		super.onTerminate();
