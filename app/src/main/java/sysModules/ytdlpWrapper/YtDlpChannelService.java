@@ -2,6 +2,7 @@ package sysModules.ytdlpWrapper;
 
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,10 +34,11 @@ public class YtDlpChannelService {
 	 * the response is empty, or an error occurs during parsing.
 	 */
 	@Nullable
-	public static String getActiveYtDlpChannel() {
+	public static String getActiveYtDlpChannel(@NotNull String deviceId) {
 		String path = "/api/collections/ytdlpChannel/records?fields=activeChannel";
 		Request request = new Request.Builder()
 			.url(PocketBaseClient.API_ENDPOINT + path)
+			.addHeader("X-Device-Id", deviceId)
 			.get()
 			.build();
 		
