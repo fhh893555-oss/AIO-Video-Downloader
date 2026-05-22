@@ -1,10 +1,13 @@
 package userInterface.appUpdater;
 
+import androidx.annotation.NonNull;
+
 import com.nextgen.R;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,15 +48,99 @@ public class ApkDownloader {
 		
 		File outputFile = new File(downloadDir, fileName);
 		
-		Request request = new Request.Builder()
+		Request headRequest = new Request.Builder()
 			.url(updateInfo.getApkFileUrl())
+			.head()
 			.build();
 		
-		client.newCall(request).enqueue(new Callback() {
+		client.newCall(headRequest).enqueue(new Callback() {
 			@Override
-			public void onFailure(@NotNull Call call, @NotNull IOException e) {
-				logger.error("Network request failed: " + e.getMessage());
-				listener.onError(e.getMessage());
+			public void onFailure(@NotNull Call call, @NotNull IOException error) {
+				handleHeadRequestFailure(error, outputFile, updateInfo, listener);
+			}
+			
+			@Override
+			public void onResponse(@NotNull Call call, @NotNull Response response) {
+				startOrResumeDownload(response, outputFile, updateInfo, listener);
+			}
+		});
+	}
+	
+	private void startOrResumeDownload(@NonNull Response response,
+	                                   @NotNull File outputFile,
+	                                   @NonNull UpdateInfo updateInfo,
+	                                   @NonNull ProgressListener listener) {
+		String apkFileUrl = updateInfo.getApkFileUrl();
+		long totalServerSize = response.body().contentLength();
+		response.close();
+		
+		if (totalServerSize <= 0) {
+			if (outputFile.exists()) outputFile.delete();
+			executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
+			return;
+		}
+		
+		if (outputFile.exists()) {
+			long localSize = outputFile.length();
+			if (localSize == totalServerSize) {
+				handleAlreadyDownloaded(outputFile, listener);
+			} else if (localSize < totalServerSize) {
+				executeResumedDownload(outputFile, updateInfo, listener, localSize);
+			} else {
+				reinitializeDownload(outputFile, updateInfo, listener);
+			}
+		} else {
+			executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
+		}
+	}
+	
+	private void reinitializeDownload(@NonNull File outputFile,
+	                                  @NonNull UpdateInfo updateInfo,
+	                                  @NonNull ProgressListener listener) {
+		logger.warning("Local file is larger than server file. Restarting download.");
+		outputFile.delete();
+		executeDownloadRequest(updateInfo.getApkFileUrl(), outputFile, listener, 0);
+	}
+	
+	private void executeResumedDownload(@NonNull File outputFile,
+	                                    @NonNull UpdateInfo updateInfo,
+	                                    @NonNull ProgressListener listener,
+	                                    long localSize) {
+		logger.debug("Partial download found. Resuming from byte: " + localSize);
+		executeDownloadRequest(updateInfo.getApkFileUrl(), outputFile, listener, localSize);
+	}
+	
+	private void handleAlreadyDownloaded(@NonNull File outputFile,
+	                                     @NonNull ProgressListener listener) {
+		logger.debug("File already fully downloaded. Triggering completion.");
+		handleFullyDownloaded(outputFile, listener);
+	}
+	
+	private void handleHeadRequestFailure(@NonNull IOException error,
+	                                      @NotNull File outputFile,
+	                                      @NonNull UpdateInfo updateInfo,
+	                                      @NonNull ProgressListener listener) {
+		logger.error("HEAD request failed, falling back to full download: ", error);
+		if (outputFile.exists()) outputFile.delete();
+		executeDownloadRequest(updateInfo.getApkFileUrl(), outputFile, listener, 0);
+	}
+	
+	private void executeDownloadRequest(@NotNull String url,
+	                                    @NonNull File outputFile,
+	                                    @NotNull ProgressListener listener,
+	                                    long downloadedBytes) {
+		boolean isResume = downloadedBytes > 0;
+		Request.Builder requestBuilder = new Request.Builder().url(url);
+		
+		if (isResume) {
+			requestBuilder.addHeader("Range", "bytes=" + downloadedBytes + "-");
+		}
+		
+		client.newCall(requestBuilder.build()).enqueue(new Callback() {
+			@Override
+			public void onFailure(@NotNull Call call, @NotNull IOException error) {
+				logger.error("Network request failed: " + error.getMessage());
+				listener.onError(error.getMessage());
 			}
 			
 			@Override
@@ -66,18 +153,23 @@ public class ApkDownloader {
 				}
 				
 				ResponseBody body = response.body();
-				if (body == null) {
-					String errorMsg = "Response body is null.";
-					logger.error(errorMsg);
-					if (listener != null) listener.onError(errorMsg);
-					return;
+				
+				boolean serverSupportsResume = isResume && response.code() == 206;
+				long startingBytes = serverSupportsResume ? downloadedBytes : 0;
+				
+				if (isResume && !serverSupportsResume) {
+					logger.warning("Server does not support resuming. Restarting download.");
+					if (outputFile.exists()) {
+						outputFile.delete();
+					}
 				}
 				
 				try {
-					processDownloadStream(body, outputFile, listener);
-				} catch (Exception e) {
-					logger.error("Error writing file or hashing: " + e.getMessage());
-					listener.onError(e.getMessage());
+					processDownloadStream(body, outputFile, listener,
+						startingBytes, serverSupportsResume);
+				} catch (Exception error) {
+					logger.error("Error writing file or hashing: " + error.getMessage());
+					listener.onError(error.getMessage());
 				} finally {
 					body.close();
 				}
@@ -85,29 +177,40 @@ public class ApkDownloader {
 		});
 	}
 	
-	private void processDownloadStream(ResponseBody body, File outputFile, ProgressListener listener)
+	private void processDownloadStream(ResponseBody body, File outputFile, ProgressListener listener,
+	                                   long alreadyDownloadedBytes, boolean appendToFile)
 		throws IOException, NoSuchAlgorithmException {
 		
-		long totalBytes = body.contentLength();
-		long downloadedBytes = 0;
+		long remainingBytes = body.contentLength();
+		long totalBytes = remainingBytes + alreadyDownloadedBytes;
+		long currentDownloadedBytes = alreadyDownloadedBytes;
 		
-		// We calculate the hash (SHA-256) on the fly as we read the file
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		
+		if (appendToFile && outputFile.exists()) {
+			try (InputStream existingFileInputStream = new FileInputStream(outputFile)) {
+				byte[] buffer = new byte[8192];
+				int bytesRead;
+				while ((bytesRead = existingFileInputStream.read(buffer)) != -1) {
+					digest.update(buffer, 0, bytesRead);
+				}
+			}
+		}
+		
 		try (InputStream inputStream = body.byteStream();
-		     FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+		     FileOutputStream outputStream = new FileOutputStream(outputFile, appendToFile)) {
 			
-			byte[] buffer = new byte[8192]; // 8KB buffer
+			byte[] buffer = new byte[8192];
 			int bytesRead;
 			
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, bytesRead);
 				digest.update(buffer, 0, bytesRead);
-				downloadedBytes += bytesRead;
+				currentDownloadedBytes += bytesRead;
 				
 				if (listener != null && totalBytes > 0) {
-					short percentage = (short) ((downloadedBytes * 100L) / totalBytes);
-					listener.onProgressUpdate(percentage, downloadedBytes);
+					short percentage = (short) ((currentDownloadedBytes * 100L) / totalBytes);
+					listener.onProgressUpdate(percentage, currentDownloadedBytes);
 				}
 			}
 			outputStream.flush();
@@ -119,9 +222,26 @@ public class ApkDownloader {
 		}
 	}
 	
-	/**
-	 * Converts a byte array to a hexadecimal string.
-	 */
+	private void handleFullyDownloaded(File outputFile, ProgressListener listener) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			try (InputStream inputStream = new FileInputStream(outputFile)) {
+				byte[] buffer = new byte[8192];
+				int bytesRead;
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					digest.update(buffer, 0, bytesRead);
+				}
+			}
+			if (listener != null) {
+				listener.onProgressUpdate((short) 100, outputFile.length());
+				listener.onDownloadComplete(outputFile, bytesToHex(digest.digest()));
+			}
+		} catch (Exception e) {
+			logger.error("Failed to hash existing file: " + e.getMessage());
+			if (listener != null) listener.onError("Failed to verify existing file.");
+		}
+	}
+	
 	private String bytesToHex(byte[] bytes) {
 		StringBuilder hexString = new StringBuilder(2 * bytes.length);
 		for (byte b : bytes) {
