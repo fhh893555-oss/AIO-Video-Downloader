@@ -2,12 +2,20 @@ package sysModules.ytdlpWrapper;
 
 import androidx.annotation.Nullable;
 
+import com.nextgen.R;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.strings.StringHelper;
 import dataRepo.manager.PocketBaseClient;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,9 +44,11 @@ public class YtDlpChannelService {
 	@Nullable
 	public static String getActiveYtDlpChannel(@NotNull String deviceId) {
 		String path = "/api/collections/ytdlpChannel/records?fields=activeChannel";
+		int desktopHttpUserAgent = R.string.code_browser_default_desktop_http_user_agent;
 		Request request = new Request.Builder()
 			.url(PocketBaseClient.API_ENDPOINT + path)
 			.addHeader("X-Device-Id", deviceId)
+			.addHeader("User-Agent", StringHelper.getText(desktopHttpUserAgent))
 			.get()
 			.build();
 		
@@ -57,6 +67,80 @@ public class YtDlpChannelService {
 		} catch (Exception error) {
 			logger.error("Get active ytdlp channel failed.", error);
 			return null;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Retrieves the active yt-dlp channel identifier for a given device from the PocketBase server.
+	 * <p>
+	 * This method performs a direct HTTP GET request using HttpURLConnection to fetch the
+	 * active channel configuration from the ytdlpChannel collection. It includes a device
+	 * identifier header for analytics or authorization purposes and parses the JSON response
+	 * to extract the active channel value.
+	 * </p>
+	 *
+	 * <p><b>Request Details:</b>
+	 * <ul>
+	 *   <li>Endpoint: /api/collections/ytdlpChannel/records?fields=activeChannel</li>
+	 *   <li>Method: GET</li>
+	 *   <li>Timeouts: 15 seconds for both connect and read</li>
+	 *   <li>Headers: X-Device-Id, User-Agent (mobile), Accept (application/json)</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param deviceId a unique identifier for the requesting device, passed in the X-Device-Id header
+	 * @return the active channel string if found, or null if no record exists, the request fails,
+	 * or the response cannot be parsed
+	 */
+	@Nullable
+	public static String getActiveYtDlpChannelNonOkHttp(@NotNull String deviceId) {
+		String path = "/api/collections/ytdlpChannel/records?fields=activeChannel";
+		HttpURLConnection connection = null;
+		BufferedReader reader = null;
+		
+		try {
+			URL url = new URL(PocketBaseClient.API_ENDPOINT + path);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
+			
+			connection.setRequestProperty("X-Device-Id", deviceId);
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 10; Mobile)");
+			connection.setRequestProperty("Accept", "application/json");
+			
+			int responseCode = connection.getResponseCode();
+			
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				StringBuilder responseOutput = new StringBuilder();
+				String line;
+				
+				while ((line = reader.readLine()) != null) {
+					responseOutput.append(line);
+				}
+				
+				JSONObject json = new JSONObject(responseOutput.toString());
+				JSONArray items = json.getJSONArray("items");
+				if (items.length() > 0) {
+					return items.getJSONObject(0).getString("activeChannel");
+				}
+			} else {
+				logger.error("Server returned non-200 status code: " + responseCode);
+			}
+			
+		} catch (Exception error) {
+			logger.error("Get active ytdlp channel failed using HttpURLConnection.", error);
+			return null;
+		} finally {
+			if (reader != null) {
+				try {reader.close();} catch (Exception ignored) {}
+			}
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
 		
 		return null;
