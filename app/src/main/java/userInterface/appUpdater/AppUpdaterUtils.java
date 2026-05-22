@@ -140,14 +140,20 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	 */
 	@Nullable
 	public UpdateInfo fetchLatestUpdateInfo(@NonNull String deviceId) {
+		logger.debug("Fetching latest update info for device: " + deviceId);
+		
 		String fields = "id," + FIELD_VERSION_CODE + "," + FIELD_VERSION_NAME + "," +
 			FIELD_APK_FILE + "," + FIELD_WHATS_NEW_JSON;
 		
+		logger.debug("Query fields: " + fields);
 		JSONObject record = query("id != ''", fields, deviceId);
+		
 		if (record == null) {
 			logger.debug("No update record found or query failed.");
 			return null;
 		}
+		
+		logger.debug("Update record retrieved successfully");
 		
 		try {
 			String id = record.getString("id");
@@ -156,8 +162,13 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 			String apkFileName = record.getString(FIELD_APK_FILE);
 			String whatsNewJSON = record.optString(FIELD_WHATS_NEW_JSON);
 			
+			logger.debug("Parsed update - ID: " + id + ", Version: " + versionName +
+				" (" + versionCode + "), APK: " + apkFileName);
+			
 			String apkFileUrl = API_ENDPOINT + "/api/files/" + COLLECTION_NAME +
 				"/" + id + "/" + apkFileName;
+			
+			logger.debug("Constructed APK URL: " + apkFileUrl);
 			
 			return new UpdateInfo(versionCode, versionName, apkFileUrl, whatsNewJSON);
 		} catch (Exception error) {

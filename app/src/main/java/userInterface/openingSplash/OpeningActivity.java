@@ -1,5 +1,7 @@
 package userInterface.openingSplash;
 
+import static userInterface.appUpdater.AppUpdaterUtils.isUpdateAvailable;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -170,11 +172,15 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 			ThreadTask.executeInBackground(() -> {
 				UpdateInfo latestUpdateInfo = getLatestUpdateInfo();
 				Context context = getApplicationContext();
-				if (AppUpdaterUtils.isUpdateAvailable(context, latestUpdateInfo)) {
-					launchAppUpdater(latestUpdateInfo);
-				} else {
-					proceedToNextScreen();
-				}
+				ThreadTask.executeOnMainThread(() -> {
+					if (isUpdateAvailable(context, latestUpdateInfo)) {
+						logger.debug("Update available, launching app updater");
+						launchAppUpdater(latestUpdateInfo);
+					} else {
+						logger.debug("No update available, proceeding to next screen");
+						proceedToNextScreen();
+					}
+				});
 			}), 1000);
 	}
 	
@@ -189,13 +195,11 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	 * @param latestUpdateInfo The update details containing version info and APK download URL
 	 */
 	private void launchAppUpdater(UpdateInfo latestUpdateInfo) {
-		ThreadTask.executeOnMainThread(() -> {
-			Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
-			intent.putExtra(AppUpdaterActivity.KEY_INTENT_RECEIVED_KEY, latestUpdateInfo);
-			vibrate();
-			startActivity(intent);
-			ActivityAnimator.animActivityFade(OpeningActivity.this);
-		});
+		Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
+		intent.putExtra(AppUpdaterActivity.KEY_INTENT_RECEIVED_KEY, latestUpdateInfo);
+		vibrate();
+		startActivity(intent);
+		ActivityAnimator.animActivityFade(OpeningActivity.this);
 	}
 	
 	/**

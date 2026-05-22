@@ -55,6 +55,7 @@
     <activity android:name="userInterface.languagePicker.LanguageActivity" />
     <activity android:name="userInterface.termsConsPolicy.TermsPolicyActivity" />
     <activity android:name="userInterface.userFeedback.FeedbackActivity" />
+    <activity android:name="userInterface.appUpdater.AppUpdaterActivity" />
 
   </application>
 

@@ -12,7 +12,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	
 	@Override protected boolean shouldLockOrientation() {
-		return false;
+		return true;
 	}
 	
 	@Override protected ActivityUpdater1Binding inflateBinding(LayoutInflater inflater) {
