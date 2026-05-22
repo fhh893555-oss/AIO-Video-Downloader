@@ -1,5 +1,6 @@
 package userInterface.openingSplash;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,11 +15,16 @@ import com.nextgen.databinding.ActivityOpening1Binding;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseApplication;
+import coreUtils.library.process.DeviceSignature;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.ThreadTask;
 import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfigsRepo;
+import userInterface.appUpdater.AppUpdaterActivity;
+import userInterface.appUpdater.AppUpdaterUtils;
+import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.languagePicker.LanguageActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
 
@@ -120,20 +126,35 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	 * It clears the current activity stack to ensure the user cannot navigate back
 	 */
 	private void startNextActivity() {
-		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			Intent destinationIntent = getDestinationIntent();
-			destinationIntent.addFlags(
-				Intent.FLAG_ACTIVITY_NEW_TASK |
-					Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		ThreadTask.executeInBackground(() -> {
+			UpdateInfo latestUpdateInfo = getLatestUpdateInfo();
+			Context context = getApplicationContext();
 			
-			if (AppConfigsRepo.getConfig().isLocaleConfigured)
-				logger.debug("Locale is already configured, opening main activity");
-			else logger.debug("Locale is not configured, opening language activity.");
-			
-			ActivityAnimator.animActivityFade(OpeningActivity.this);
-			startActivity(destinationIntent);
-			finish();
-		}, 1000);
+			if (AppUpdaterUtils.isUpdateAvailable(context, latestUpdateInfo)) {
+				ThreadTask.executeOnMainThread(() -> {
+					Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
+					intent.putExtra(AppUpdaterActivity.KEY_INTENT_RECEIVED_KEY, latestUpdateInfo);
+					vibrate();
+					startActivity(intent);
+					ActivityAnimator.animActivityFade(OpeningActivity.this);
+				});
+			} else {
+				new Handler(Looper.getMainLooper()).postDelayed(() -> {
+					Intent destinationIntent = getDestinationIntent();
+					destinationIntent.addFlags(
+						Intent.FLAG_ACTIVITY_NEW_TASK |
+							Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					
+					if (AppConfigsRepo.getConfig().isLocaleConfigured)
+						logger.debug("Locale is already configured, opening main activity");
+					else logger.debug("Locale is not configured, opening language activity.");
+					
+					ActivityAnimator.animActivityFade(OpeningActivity.this);
+					startActivity(destinationIntent);
+					finish();
+				}, 1000);
+			}
+		});
 	}
 	
 	/**
@@ -170,5 +191,12 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		}
 		
 		return destinationIntent;
+	}
+	
+	private UpdateInfo getLatestUpdateInfo() {
+		AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils();
+		Context context = getApplicationContext();
+		String deviceId = DeviceSignature.getInstance(context).generate();
+		return appUpdaterUtils.fetchLatestUpdateInfo(deviceId);
 	}
 }

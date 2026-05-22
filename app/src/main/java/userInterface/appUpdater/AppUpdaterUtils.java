@@ -1,11 +1,19 @@
 package userInterface.appUpdater;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.nextgen.BuildConfig;
+
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.VersionInfo;
 import dataRepo.manager.PocketBaseClient;
 
 /**
@@ -188,14 +196,13 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	 * </pre>
 	 * </p>
 	 *
-	 * @param currentVersionCode the version code of the currently installed application.
-	 *                           Typically obtained from {@code BuildConfig.VERSION_CODE}.
-	 * @param info               the {@link UpdateInfo} object fetched from the server,
-	 *                           or {@code null} if no update data is available.
+	 * @param info the {@link UpdateInfo} object fetched from the server,
+	 *             or {@code null} if no update data is available.
 	 * @return {@code true} if the server has a newer version available (info.versionCode > currentVersionCode);
 	 * {@code false} otherwise or if info is null.
 	 */
-	public boolean isUpdateAvailable(int currentVersionCode, @Nullable UpdateInfo info) {
+	public static boolean isUpdateAvailable(@NotNull Context context, @Nullable UpdateInfo info) {
+		long currentVersionCode = VersionInfo.getVersionCode(context);
 		return info != null && info.getVersionCode() > currentVersionCode;
 	}
 	
@@ -221,7 +228,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	 * </pre>
 	 * </p>
 	 */
-	public static class UpdateInfo {
+	public static class UpdateInfo implements Serializable {
 		private int versionCode;
 		private String versionName;
 		private String apkFileUrl;

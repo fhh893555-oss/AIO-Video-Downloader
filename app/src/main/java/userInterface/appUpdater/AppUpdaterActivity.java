@@ -9,6 +9,7 @@ import coreUtils.library.process.LoggerUtils;
 
 public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
+	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	
 	@Override protected boolean shouldLockOrientation() {
 		return false;
