@@ -102,10 +102,11 @@ public final class HttpClientProvider {
 					okHttpClient = new OkHttpClient.Builder()
 						.followRedirects(true)
 						.followSslRedirects(true)
+						.retryOnConnectionFailure(true)
 						.protocols(defaultProtocols())
-						.connectTimeout(5, TimeUnit.SECONDS)
-						.readTimeout(10, TimeUnit.SECONDS)
-						.writeTimeout(10, TimeUnit.SECONDS)
+						.connectTimeout(15, TimeUnit.SECONDS)
+						.readTimeout(20, TimeUnit.SECONDS)
+						.writeTimeout(20, TimeUnit.SECONDS)
 						.connectionPool(getConnectionPool())
 						.dispatcher(getDispatcher())
 						.build();
@@ -113,8 +114,8 @@ public final class HttpClientProvider {
 			}
 		}
 		
-		int finalConnectTimeout = Math.max(connectTimeout, 5);
-		int finalReadTimeout = Math.max(readTimeout, 5);
+		int finalConnectTimeout = Math.max(connectTimeout, 1);
+		int finalReadTimeout = Math.max(readTimeout, 1);
 		
 		if (okHttpClient.connectTimeoutMillis() != (long) finalConnectTimeout * 1000 ||
 			okHttpClient.readTimeoutMillis() != (long) finalReadTimeout * 1000) {
