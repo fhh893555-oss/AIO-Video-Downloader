@@ -12,12 +12,29 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Service class responsible for retrieving the active yt-dlp release channel configuration
+ * from the remote PocketBase backend.
+ * <p>
+ * This service determines which update track (e.g., stable, nightly) should be used
+ * when performing yt-dlp binary updates or version checks.
+ */
 public class YtDlpChannelService {
+	
 	private static final LoggerUtils logger = LoggerUtils.from(YtDlpChannelService.class);
 	
+	/**
+	 * Retrieves the currently active yt-dlp release channel from the backend database.
+	 * <p>
+	 * This method performs a synchronous network request to the PocketBase API to fetch
+	 * the configured update channel (e.g., "stable", "nightly").
+	 *
+	 * @return The name of the active channel if found; {@code null} if the request fails,
+	 * the response is empty, or an error occurs during parsing.
+	 */
 	@Nullable
 	public static String getActiveYtDlpChannel() {
-		String path = "/api/collections/ytdlp_channel/records?fields=active_ytdlp_channel";
+		String path = "/api/collections/ytdlpChannel/records?fields=activeChannel";
 		Request request = new Request.Builder()
 			.url(PocketBaseClient.API_ENDPOINT + path)
 			.get()
@@ -32,7 +49,7 @@ public class YtDlpChannelService {
 				JSONArray items = json.getJSONArray("items");
 				if (items.length() > 0) {
 					return items.getJSONObject(0)
-						.getString("active_ytdlp_channel");
+						.getString("activeChannel");
 				}
 			}
 		} catch (Exception error) {
