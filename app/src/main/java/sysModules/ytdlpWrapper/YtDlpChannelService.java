@@ -42,7 +42,7 @@ public class YtDlpChannelService {
 			.get()
 			.build();
 		
-		OkHttpClient okHttpClient = HttpClientProvider.getOkHttpClient(10, 10);
+		OkHttpClient okHttpClient = HttpClientProvider.getOkHttpClient(3, 3);
 		try (Response response = okHttpClient.newCall(request).execute()) {
 			if (response.isSuccessful()) {
 				String body = response.body().string();

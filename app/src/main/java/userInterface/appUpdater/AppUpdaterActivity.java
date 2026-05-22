@@ -3,22 +3,30 @@ package userInterface.appUpdater;
 import android.content.Intent;
 import android.view.LayoutInflater;
 
+import androidx.lifecycle.ViewModelProvider;
+
+import com.nextgen.R;
 import com.nextgen.databinding.ActivityUpdater1Binding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
 import coreUtils.base.BaseActivity;
+import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.strings.StringHelper;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.openingSplash.OpeningActivity;
 
 public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
+	private AppUpdaterViewModel viewModel;
 	
 	@Override protected boolean shouldLockOrientation() {
 		return true;
@@ -29,7 +37,26 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	@Override protected void onLoadedLayout() {
+		initializeViewModel();
+		// startDownloadLatestApk();
+	}
 	
+	private void initializeViewModel() {
+		ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+		viewModel = viewModelProvider.get(AppUpdaterViewModel.class);
+	}
+	
+	private AppUpdaterViewModel getViewModel() {
+		if (viewModel == null) initializeViewModel();
+		return viewModel;
+	}
+	
+	private void startDownloadLatestApk() {
+		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
+		if (updateInfo == null) return;
+		AppDirsValidator.performValidation();
+		File applicationDirectory = AppDirsValidator.getApplicationDirectory();
+		getViewModel().downloadUpdate(updateInfo, Objects.requireNonNull(applicationDirectory));
 	}
 	
 	/**
