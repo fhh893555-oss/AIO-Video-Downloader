@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
 import dataRepo.manager.PocketBaseClient;
@@ -172,6 +173,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 	@Nullable
 	public UpdateInfo fetchLatestUpdateInfo(@NonNull String deviceId) {
 		logger.debug("Fetching latest update info for device: " + deviceId);
+		setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(2, 2));
 		
 		boolean is64Bit = is64BitDevice();
 		String apkField = is64Bit ? FIELD_APK_FILE_64BIT : FIELD_APK_FILE_32BIT;
