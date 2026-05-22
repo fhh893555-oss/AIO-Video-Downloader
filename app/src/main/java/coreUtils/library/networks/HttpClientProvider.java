@@ -34,8 +34,8 @@ public final class HttpClientProvider {
 			}
 		}
 		
-		int finalConnectTimeout = Math.max(connectTimeout, 5);
-		int finalReadTimeout = Math.max(readTimeout, 10);
+		int finalConnectTimeout = Math.max(connectTimeout, 2);
+		int finalReadTimeout = Math.max(readTimeout, 2);
 		
 		if (okHttpClient.connectTimeoutMillis() != (long) finalConnectTimeout * 1000 ||
 			okHttpClient.readTimeoutMillis() != (long) finalReadTimeout * 1000) {
