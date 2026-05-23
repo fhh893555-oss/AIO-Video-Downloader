@@ -374,7 +374,7 @@
             android:layout_height="@dimen/_15"
             android:layout_gravity="top|right"
             android:layout_margin="@dimen/_5"
-            android:background="@drawable/ic_rd_accent_var_color"
+            android:background="@drawable/ic_rd_accent_color_variant"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_cancel_circle"
             android:tint="@color/color_surface"

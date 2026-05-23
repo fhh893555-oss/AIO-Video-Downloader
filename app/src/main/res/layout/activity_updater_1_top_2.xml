@@ -43,7 +43,7 @@
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_rd_background"
+        android:background="@drawable/ic_rd_background_color"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/_10">
@@ -117,7 +117,7 @@
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
               android:layout_marginEnd="@dimen/_12"
-              android:background="@drawable/ic_rd_background"
+              android:background="@drawable/ic_rd_background_color"
               android:padding="@dimen/_5"
               android:src="@drawable/ic_star_shine"
               android:tint="@color/color_primary"
