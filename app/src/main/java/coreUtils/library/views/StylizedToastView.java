@@ -250,7 +250,7 @@ public class StylizedToastView extends Toast {
 			new ContextThemeWrapper(activity, R.style.style_application);
 		
 		LayoutInflater inflater = LayoutInflater.from(themedContext);
-		View view = inflater.inflate(R.layout.layout_stylized_toast, null, false);
+		View view = inflater.inflate(R.layout.layout_stylized_toast_1, null, false);
 		
 		Context applicationContext = activity.getApplicationContext();
 		StylizedToastView toast = new StylizedToastView(applicationContext, view);

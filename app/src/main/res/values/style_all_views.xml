@@ -50,4 +50,28 @@
     <item name="android:clickable">true</item>
     <item name="android:background">@drawable/bg_button_negative</item>
   </style>
+
+  <style name="style_dialog_window" parent="Theme.AppCompat.DayNight.Dialog.MinWidth">
+    <item name="android:windowBackground">@color/transparent</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowMinWidthMajor">100%</item>
+    <item name="android:windowMinWidthMinor">100%</item>
+  </style>
+
+  <style name="style_dialog_window.title">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">@dimen/sub_heading_text_size</item>
+    <item name="android:textColor">@color/color_text_primary</item>
+    <item name="android:fontFamily">@font/font_family_bold</item>
+    <item name="android:gravity">center_horizontal|center_vertical</item>
+    <item name="android:layout_gravity">center_horizontal|center_vertical</item>
+  </style>
+
+  <style name="style_dialog_window.animation">
+    <item name="android:windowEnterAnimation">@anim/anim_slide_up_enter</item>
+    <item name="android:windowExitAnimation">@anim/anim_slide_down_exit</item>
+  </style>
 </resources>
