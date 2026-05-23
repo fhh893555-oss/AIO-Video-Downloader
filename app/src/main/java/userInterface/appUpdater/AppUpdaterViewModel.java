@@ -1,9 +1,12 @@
 package userInterface.appUpdater;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -95,11 +98,16 @@ public class AppUpdaterViewModel extends ViewModel {
 	 * </ul>
 	 * </p>
 	 *
-	 * @param updateInfo  contains the APK download URL and expected hash for verification
-	 * @param downloadDir the directory where the APK file will be saved
+	 * @param updateInfo     contains the APK download URL and expected hash for verification
+	 * @param downloadDir    the directory where the APK file will be saved
+	 * @param lifecycleOwner the LifecycleOwner to bind the download task to, ensuring
+	 *                       automatic cancellation when the associated Activity or Fragment
+	 *                       is destroyed to prevent memory leaks
 	 */
-	public void downloadUpdate(@NonNull UpdateInfo updateInfo, @NonNull File downloadDir) {
+	public void downloadUpdatedAPK(@NonNull UpdateInfo updateInfo, @NonNull File downloadDir,
+	                               @NotNull LifecycleOwner lifecycleOwner) {
 		downloadTask.cancel();
+		downloadTask.observeLifecycle(lifecycleOwner);
 		downloadTask.setBackgroundTask(callback -> {
 			logger.debug("Starting APK download: " + updateInfo.getApkFileUrl());
 			ThreadTask.executeOnMainThread(() ->

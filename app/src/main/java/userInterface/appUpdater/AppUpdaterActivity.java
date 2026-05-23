@@ -60,7 +60,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		
 		String subDirName = StringHelper.getText(R.string.title_tubeaio_programs);
 		File appProgramsFolder = new File(applicationDirectory, subDirName);
-		getViewModel().downloadUpdate(updateInfo, Objects.requireNonNull(appProgramsFolder));
+		getViewModel().downloadUpdatedAPK(updateInfo, Objects.requireNonNull(appProgramsFolder), this);
 	}
 	
 	/**
