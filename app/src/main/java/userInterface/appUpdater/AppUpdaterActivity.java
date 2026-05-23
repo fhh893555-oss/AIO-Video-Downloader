@@ -1,7 +1,9 @@
 package userInterface.appUpdater;
 
 import android.content.Intent;
+import android.text.Html;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,6 +20,7 @@ import javax.annotation.Nullable;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.AppDirsValidator;
+import coreUtils.library.process.IntentHelpUtils;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.TextViewsUtils;
@@ -40,6 +43,10 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	@Override protected void onLoadedLayout() {
 		applyGradientToTitle();
 		initializeViewModel();
+		showLatestUpdateVersion();
+		showWhatsNewChangelog();
+		setupButtonClickEvents();
+		
 		// startDownloadLatestApk();
 	}
 	
@@ -77,6 +84,34 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		String subDirName = StringHelper.getText(R.string.title_tubeaio_programs);
 		File appProgramsFolder = new File(applicationDirectory, subDirName);
 		getViewModel().downloadUpdatedAPK(updateInfo, Objects.requireNonNull(appProgramsFolder), this);
+	}
+	
+	private void showWhatsNewChangelog() {
+		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
+		if (updateInfo == null) return;
+		String changeLogHtmlString = updateInfo.getWhatsNewJSON();
+		TextView tvChangelog = binding.top2.tvChangelog;
+		tvChangelog.setText(Html.fromHtml(changeLogHtmlString, Html.FROM_HTML_MODE_LEGACY));
+	}
+	
+	private void setupButtonClickEvents() {
+		binding.btnBack.setOnClickListener(view -> finish());
+		binding.top2.btnInstallUpdate.setOnClickListener(view -> startDownloadLatestApk());
+		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
+	}
+	
+	private void openOfficialWebsite() {
+	
+	}
+	
+	private void showLatestUpdateVersion() {
+		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
+		if (updateInfo == null) return;
+		
+		String versionName = updateInfo.getVersionName();
+		int versionCode = updateInfo.getVersionCode();
+		String versionInfo = versionName + " (" + versionCode + ")";
+		binding.top2.tvAppVersionInfo.setText(versionInfo);
 	}
 	
 	/**

@@ -117,4 +117,10 @@
   <string name="subtitle_update_available">We\'ve made TubeAIO even better.</string>
   <string name="hint_sample_version_info">2026.05.18</string>
   <string name="label_latest_version">Latest Version :</string>
+  <string name="title_whats_new">What\'s New</string>
+  <string name="title_download_from_official_site">Download APK From Official Site</string>
+  <string name="btn_install_the_update">Install The Update</string>
+  <string name="text_updater_info"><b>A new update is available.</b> It will download securely via our global CDN. Once complete, you can install the APK directly or use the link below to download manually from our official site.</string>
+  <string name="desc_whats_new"><![CDATA[Bug Fixes & System Enhancements]]></string>
+  <string name="extra_whats_new_html">This update includes stability fixes, performance improvements, and minor optimizations under the hood. Keeping your app updated helps us ensure maximum compatibility and makes the downloading features much more reliable.</string>
 </resources>
