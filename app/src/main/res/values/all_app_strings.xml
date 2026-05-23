@@ -113,4 +113,8 @@
   <string name="label_agree_terms">I have read and agree to the Terms &amp; Conditions</string>
   <string name="btn_agree_continue"><![CDATA[Agree & Continue]]></string>
   <string name="hint_you_must_accept_the_terms">You must accept the terms before continue</string>
+  <string name="title_update_available">Update Available</string>
+  <string name="subtitle_update_available">We\'ve made TubeAIO even better.</string>
+  <string name="hint_sample_version_info">2026.05.18</string>
+  <string name="label_latest_version">Latest Version :</string>
 </resources>

@@ -20,6 +20,7 @@ import coreUtils.base.BaseActivity;
 import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
+import coreUtils.library.views.TextViewsUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.openingSplash.OpeningActivity;
 
@@ -37,8 +38,23 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	@Override protected void onLoadedLayout() {
+		applyGradientToTitle();
 		initializeViewModel();
-		startDownloadLatestApk();
+		// startDownloadLatestApk();
+	}
+	
+	private void applyGradientToTitle() {
+		String fullText = binding.top1.tvUpdaterTitle.getText().toString();
+		int nextGenStart = fullText.indexOf("Available");
+		if (nextGenStart != -1) {
+			TextViewsUtils.applyGradientSpan(
+				binding.top1.tvUpdaterTitle,
+				getColor(R.color.color_secondary),
+				getColor(R.color.color_primary_variant),
+				nextGenStart,
+				nextGenStart + 9
+			);
+		}
 	}
 	
 	private void initializeViewModel() {
