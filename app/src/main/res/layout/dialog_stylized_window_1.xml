@@ -34,6 +34,7 @@
     app:stroke_Gradient_Color0="@color/color_primary"
     app:stroke_Gradient_Color1="@color/color_primary_variant"
     app:stroke_Width="1dp">
+
     <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -59,8 +60,8 @@
         android:layout_height="@dimen/_200"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
         android:src="@drawable/img_updater_act_dialog_top" />
 
       <LinearLayout
@@ -88,7 +89,10 @@
             android:id="@+id/mainContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <include layout="@layout/activity_updater_1_dialog_1" />
+          </LinearLayout>
 
           <RelativeLayout
             android:id="@+id/btnDialogRight"

@@ -3,32 +3,93 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  style="@style/style_dialog_window"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:paddingLeft="@dimen/_10"
+  android:paddingTop="@dimen/_10"
+  android:paddingRight="@dimen/_10"
+  android:paddingBottom="@dimen/_15"
   tools:ignore="UseAppTint,UseCompatTextViewDrawableXml">
+
+  <TextView
+    android:id="@+id/tvTitle"
+    style="@style/style_dialog_window.title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/title_downloading_update"
+    android:textColor="@color/color_text_primary"
+    android:textSize="@dimen/title_text_size"
+    tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
+
+  <TextView
+    android:id="@+id/tvSubtitle"
+    style="@style/style_textviews"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_20"
+    android:layout_marginTop="@dimen/_10"
+    android:layout_marginRight="@dimen/_20"
+    android:gravity="center"
+    android:maxLines="2"
+    android:singleLine="false"
+    android:text="@string/subtitle_downloading_update"
+    android:textColor="@color/color_text_secondary"
+    android:textSize="@dimen/small_text_size"
+    tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_20"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/tvPercentage"
+      style="@style/style_textviews"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/font_family_medium"
+      android:text="@string/_0_percentage"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
+
+    <ProgressBar
+      android:id="@+id/pbDownload"
+      style="?android:attr/progressBarStyleHorizontal"
+      android:layout_width="0dp"
+      android:layout_height="@dimen/_10"
+      android:layout_marginLeft="@dimen/_10"
+      android:layout_marginRight="@dimen/_10"
+      android:layout_weight="1"
+      android:progress="70"
+      android:progressDrawable="@drawable/ic_download_progress" />
+
+    <TextView
+      android:id="@+id/tvProgressSize"
+      style="@style/style_textviews"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/font_family_medium"
+      android:text="@string/label_sample_0_mb_0_mb"
+      android:textColor="@color/color_text_secondary"
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+  </LinearLayout>
 
   <com.github.dangiashish.StyledCardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/_100"
+    android:layout_marginTop="@dimen/_20"
+    app:background_Alpha=".3"
     app:background_ColorType="gradient_linear"
-    app:background_Gradient_Angle="45"
-    app:background_Gradient_Color0="@color/color_card"
-    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Gradient_Angle="90"
+    app:background_Gradient_Color0="@color/color_card_stroke"
+    app:background_Gradient_Color1="@color/color_card"
     app:background_Type="fill_stroke"
     app:cornerRadius="@dimen/default_radius"
-    app:shadow0_Outer_Alpha=".1"
-    app:shadow0_Outer_Angle="-45"
-    app:shadow0_Outer_Blur="@dimen/_5"
-    app:shadow0_Outer_Color="@color/color_primary_variant"
-    app:shadow0_Outer_Distance="@dimen/_5"
-    app:shadow1_Outer_Alpha="0.1"
-    app:shadow1_Outer_Angle="360"
-    app:shadow1_Outer_Blur="@dimen/_5"
-    app:shadow1_Outer_Color="@color/color_secondary"
-    app:shadow1_Outer_Distance="@dimen/_2"
-    app:shadow_Outer_Area="@dimen/_10"
     app:stroke_Alpha=".3"
     app:stroke_ColorType="gradient_sweep"
     app:stroke_Gradient_Angle="-45"
@@ -36,86 +97,219 @@
     app:stroke_Gradient_Color1="@color/color_primary_variant"
     app:stroke_Width="1dp">
 
-    <FrameLayout
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical">
+      android:baselineAligned="false"
+      android:orientation="horizontal"
+      android:paddingVertical="@dimen/_15">
 
-      <ImageView
-        android:id="@+id/btnCloseDialog"
-        android:layout_width="@dimen/_24"
-        android:layout_height="@dimen/_24"
-        android:layout_gravity="right|top"
-        android:layout_margin="@dimen/_10"
-        android:adjustViewBounds="true"
-        android:clickable="true"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_close_cross"
-        android:tint="@color/color_text_hint"
-        tools:ignore="TouchTargetSizeCheck" />
-
-      <ImageView
-        android:layout_width="@dimen/_320"
+      <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:importantForAccessibility="no"
-        android:src="@drawable/img_updater_act_dialog_top" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+          android:id="@+id/ivSpeed"
+          android:layout_width="@dimen/_24"
+          android:layout_height="@dimen/_24"
+          android:contentDescription="@string/label_download_speed"
+          android:src="@drawable/ic_speed_meter"
+          app:tint="@color/color_primary" />
+
+        <TextView
+          android:id="@+id/tvSpeedValue"
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/_5"
+          android:fontFamily="@font/font_family_bold"
+          android:text="@string/label_sample_0_mb_s"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck" />
+
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/_0"
+          android:text="@string/label_download_speed"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/smaller_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+      </LinearLayout>
+
+      <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:alpha="0.1"
+        android:background="@color/color_text_hint" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+          android:id="@+id/ivTime"
+          android:layout_width="@dimen/_24"
+          android:layout_height="@dimen/_24"
+          android:contentDescription="@string/label_time_left"
+          android:src="@drawable/ic_stopwatch_timer"
+          app:tint="@color/color_primary" />
+
+        <TextView
+          android:id="@+id/tvTimeValue"
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/_5"
+          android:fontFamily="@font/font_family_bold"
+          android:text="@string/label_sample_00_00_00"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck" />
+
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/_0"
+          android:text="@string/label_time_left"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/smaller_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+      </LinearLayout>
+
+      <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:alpha="0.1"
+        android:background="@color/color_text_hint" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+          android:id="@+id/ivSize"
+          android:layout_width="@dimen/_24"
+          android:layout_height="@dimen/_24"
+          android:contentDescription="@string/label_total_size"
+          android:src="@drawable/ic_apk_file_install"
+          app:tint="@color/color_primary" />
+
+        <TextView
+          android:id="@+id/tvTotalSize"
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/_5"
+          android:fontFamily="@font/font_family_bold"
+          android:text="@string/label_sample_0_mb"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck" />
+
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/_0"
+          android:text="@string/label_total_size"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/smaller_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+      </LinearLayout>
+    </LinearLayout>
+  </com.github.dangiashish.StyledCardView>
+
+  <com.github.dangiashish.StyledCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_20"
+    app:background_Alpha=".1"
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="90"
+    app:background_Gradient_Color0="@color/color_primary_light"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:stroke_Alpha=".1"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_primary"
+    app:stroke_Gradient_Color1="@color/color_primary_variant"
+    app:stroke_Width="1dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:padding="@dimen/_12">
+
+      <com.github.dangiashish.StyledCardView
+        android:layout_width="@dimen/_40"
+        android:layout_height="@dimen/_40"
+        app:background_ColorType="gradient_linear"
+        app:background_Gradient_Angle="90"
+        app:background_Gradient_Color0="@color/color_error"
+        app:background_Type="fill_stroke"
+        app:cornerRadius="@dimen/default_radius">
+
+        <ImageView
+          android:id="@+id/ivShield"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:contentDescription="@string/label_stay_connected"
+          android:padding="@dimen/_8"
+          android:src="@drawable/ic_shield_lock_fill"
+          android:tint="@color/color_surface" />
+      </com.github.dangiashish.StyledCardView>
 
       <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_150"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12"
         android:orientation="vertical">
 
-        <View
-          android:id="@+id/bgDivider"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/_10"
-          android:background="@drawable/bg_shadow_border" />
-
-        <LinearLayout
-          android:id="@+id/mainContent"
-          android:layout_width="match_parent"
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="@dimen/_10"
-          android:layout_marginRight="@dimen/_10"
-          android:layout_marginBottom="@dimen/_10"
-          android:background="@color/color_card"
-          android:orientation="vertical">
+          android:layout_margin="@dimen/_0"
+          android:fontFamily="@font/font_family_medium"
+          android:text="@string/label_stay_connected"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/normal_text_size"
+          tools:ignore="SpUsage,TextSizeCheck" />
 
-          <RelativeLayout
-            android:id="@+id/btnCancelDownload"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_38"
-            android:layout_marginLeft="@dimen/_10"
-            android:layout_marginRight="@dimen/_10"
-            android:background="@drawable/bg_button_gradient"
-            android:clickable="true"
-            tools:ignore="TouchTargetSizeCheck">
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginTop="@dimen/_5"
+          android:layout_marginRight="@dimen/_0"
+          android:layout_marginBottom="@dimen/_0"
+          android:fontFamily="@font/font_family_regular"
+          android:maxLines="3"
+          android:singleLine="false"
+          android:text="@string/subtext_stay_connected"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
 
-            <TextView
-              android:id="@+id/tvCancelDownload"
-              style="@style/style_textviews"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_centerInParent="true"
-              android:layout_margin="@dimen/_5"
-              android:ellipsize="end"
-              android:fontFamily="@font/font_family_bold"
-              android:gravity="center_vertical|center_horizontal"
-              android:maxLines="1"
-              android:shadowColor="@color/color_primary"
-              android:shadowDx="1"
-              android:shadowDy="1"
-              android:shadowRadius=".1"
-              android:text="@string/label_cancel_installing"
-              android:textColor="@color/color_surface"
-              android:textSize="@dimen/message_text_size"
-              tools:ignore="SpUsage,TextSizeCheck" />
-          </RelativeLayout>
-        </LinearLayout>
       </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
   </com.github.dangiashish.StyledCardView>
+
 </LinearLayout>

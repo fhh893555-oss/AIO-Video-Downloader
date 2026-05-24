@@ -31,12 +31,36 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	private AppUpdaterViewModel viewModel;
+	private StylizedDialogBuilder downloadingDialog;
 	
-	@Override protected boolean shouldLockOrientation() {
+	/**
+	 * Locks the activity orientation to prevent configuration changes during update operations.
+	 * <p>
+	 * Returns true to lock the screen orientation, preventing the system from recreating
+	 * the activity when the device is rotated. This ensures that the APK download process
+	 * continues uninterrupted and the update UI remains stable during downloads.
+	 * </p>
+	 *
+	 * @return true to lock orientation, false to allow rotation
+	 */
+	@Override
+	protected boolean shouldLockOrientation() {
 		return true;
 	}
 	
-	@Override protected ActivityUpdater1Binding inflateBinding(LayoutInflater inflater) {
+	/**
+	 * Inflates the view binding for the app updater activity.
+	 * <p>
+	 * Uses the generated ActivityUpdater1Binding class to inflate the layout XML,
+	 * providing type-safe access to all UI components including version displays,
+	 * download progress indicators, and control buttons for the update process.
+	 * </p>
+	 *
+	 * @param inflater LayoutInflater instance used to inflate the layout
+	 * @return ActivityUpdater1Binding containing references to all UI elements
+	 */
+	@Override
+	protected ActivityUpdater1Binding inflateBinding(LayoutInflater inflater) {
 		return ActivityUpdater1Binding.inflate(inflater);
 	}
 	
@@ -74,7 +98,39 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		return viewModel;
 	}
 	
-	private void startDownloadLatestApk() {
+	private void showWhatsNewChangelog() {
+		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
+		if (updateInfo == null) return;
+		String changeLogHtmlString = updateInfo.getWhatsNewJSON();
+		TextView tvChangelog = binding.top2.tvChangelog;
+		tvChangelog.setText(Html.fromHtml(changeLogHtmlString, Html.FROM_HTML_MODE_LEGACY));
+	}
+	
+	private void setupButtonClickEvents() {
+		binding.btnBack.setOnClickListener(view -> finish());
+		binding.top2.btnInstallUpdate.setOnClickListener(view -> showDownloaderDialog());
+		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
+	}
+	
+	private void openOfficialWebsite() {
+	
+	}
+	
+	private void showDownloaderDialog() {
+		if (downloadingDialog == null) {
+			downloadingDialog = new StylizedDialogBuilder(this)
+				.setCancelable(false)
+				.enableSlideUpAnimation()
+				.setOnCloseClickListener(view -> stopDownloading())
+				.setPositiveButtonText(R.string.label_cancel_installing)
+				.setOnPositiveClickListener(view -> stopDownloading(), true)
+				.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350)
+				.enableBackgroundBlur(60);
+		}
+		downloadingDialog.show();
+	}
+	
+	private void startDownloadingLatestApk() {
 		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
 		if (updateInfo == null) return;
 		AppDirsValidator.performValidation();
@@ -86,33 +142,23 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		getViewModel().downloadUpdatedAPK(updateInfo, Objects.requireNonNull(appProgramsFolder), this);
 	}
 	
-	private void showWhatsNewChangelog() {
-		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
-		if (updateInfo == null) return;
-		String changeLogHtmlString = updateInfo.getWhatsNewJSON();
-		TextView tvChangelog = binding.top2.tvChangelog;
-		tvChangelog.setText(Html.fromHtml(changeLogHtmlString, Html.FROM_HTML_MODE_LEGACY));
-	}
-	
-	private void setupButtonClickEvents() {
-		binding.btnBack.setOnClickListener(view -> finish());
-		binding.top2.btnInstallUpdate.setOnClickListener(view -> showDemiDialog());
-		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
-	}
-	
-	private void openOfficialWebsite() {
+	private void stopDownloading() {
 	
 	}
 	
-	private void showDemiDialog() {
-		new StylizedDialogBuilder(this)
-			.setCancelable(false)
-			.setDialogAnimation(R.style.style_dialog_window_fade_animation)
-			.setPositiveButtonText(R.string.label_cancel)
-			.setCloseOnPositiveButtonClick()
-			.show();
-	}
-	
+	/**
+	 * Displays the latest available update version information in the UI.
+	 * <p>
+	 * This method retrieves the UpdateInfo object from the activity intent, extracts
+	 * the version name and version code, formats them as "versionName (versionCode)",
+	 * and displays the result in the version info TextView located in the top section
+	 * of the layout. If no update information is available, the method returns silently.
+	 * </p>
+	 *
+	 * <p><b>UI Component:</b>
+	 * The version info is displayed in {@code binding.top2.tvAppVersionInfo}.
+	 * </p>
+	 */
 	private void showLatestUpdateVersion() {
 		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
 		if (updateInfo == null) return;

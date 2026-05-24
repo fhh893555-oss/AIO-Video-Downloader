@@ -126,4 +126,18 @@
   <string name="label_okay">Okay</string>
   <string name="label_cancel_download">Cancel Download</string>
   <string name="label_cancel_installing">Cancel Installing</string>
+
+  <string name="title_downloading_update">Downloading Update</string>
+  <string name="subtitle_downloading_update">Please wait while we download and install the latest version.</string>
+  <string name="label_download_speed">Download Speed</string>
+  <string name="label_time_left">Time Left</string>
+  <string name="label_total_size">Total Size</string>
+  <string name="label_stay_connected">Stay connected</string>
+  <string name="subtext_stay_connected">Please keep the app open and your device connected to the internet while installing.</string>
+  <string name="_0_percentage">0%</string>
+  <string name="label_sample_0_mb_0_mb">0 MB / 0 MB</string>
+  <string name="label_sample_0_mb_s">0 MB/s</string>
+  <string name="label_sample_0_mb">0 MB</string>
+  <string name="label_sample_00_00_00">00:00:00</string>
+
 </resources>

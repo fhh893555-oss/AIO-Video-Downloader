@@ -59,6 +59,7 @@ public class AppUpdaterViewModel extends ViewModel {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private final ThreadTask<UpdateInfo, Void> downloadTask = new ThreadTask<>();
+	private final ApkDownloader downloader = new ApkDownloader();
 	private final MutableLiveData<DownloadStatus> downloadStatusLiveData = new MutableLiveData<>();
 	
 	/**
@@ -112,13 +113,15 @@ public class AppUpdaterViewModel extends ViewModel {
 			logger.debug("Starting APK download: " + updateInfo.getApkFileUrl());
 			ThreadTask.executeOnMainThread(() ->
 				downloadStatusLiveData.setValue(DownloadStatus.pending()));
-			
-			ApkDownloader downloader = new ApkDownloader();
 			downloader.startDownload(updateInfo, downloadDir, buildProgressListener(updateInfo));
 			return null;
 		});
 		
 		downloadTask.start();
+	}
+	
+	public void stopUpdatingAPK() {
+		//todo: implement stoping function to the on going download.
 	}
 	
 	/**
