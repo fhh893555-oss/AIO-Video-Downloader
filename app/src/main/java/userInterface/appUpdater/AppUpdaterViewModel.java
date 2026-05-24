@@ -120,8 +120,9 @@ public class AppUpdaterViewModel extends ViewModel {
 		downloadTask.start();
 	}
 	
-	public void stopUpdatingAPK() {
-		//todo: implement stoping function to the on going download.
+	public void stopDownloadingAPK() {
+		downloader.stopDownload();
+		downloadTask.cancel();
 	}
 	
 	/**

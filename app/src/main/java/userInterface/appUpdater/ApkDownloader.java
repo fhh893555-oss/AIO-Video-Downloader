@@ -69,6 +69,7 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 public class ApkDownloader {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private final OkHttpClient client;
+	private Call currentCall;
 	
 	/**
 	 * Constructs a new ApkDownloader instance with a default OkHttpClient configuration.
@@ -132,9 +133,14 @@ public class ApkDownloader {
 			.head()
 			.build();
 		
-		client.newCall(headRequest).enqueue(new Callback() {
+		currentCall = client.newCall(headRequest);
+		currentCall.enqueue(new Callback() {
 			@Override
 			public void onFailure(@NotNull Call call, @NotNull IOException error) {
+				if (call.isCanceled()) {
+					logger.debug("HEAD request canceled.");
+					return;
+				}
 				handleHeadRequestFailure(error, outputFile, updateInfo, listener);
 			}
 			
@@ -309,9 +315,14 @@ public class ApkDownloader {
 			requestBuilder.addHeader("Range", "bytes=" + downloadedBytes + "-");
 		}
 		
-		client.newCall(requestBuilder.build()).enqueue(new Callback() {
+		currentCall = client.newCall(requestBuilder.build());
+		currentCall.enqueue(new Callback() {
 			@Override
 			public void onFailure(@NotNull Call call, @NotNull IOException error) {
+				if (call.isCanceled()) {
+					logger.debug("Download request canceled.");
+					return;
+				}
 				logger.error("Network request failed: " + error.getMessage());
 				listener.onError(error.getMessage());
 			}
@@ -341,8 +352,12 @@ public class ApkDownloader {
 					processDownloadStream(body, outputFile, listener,
 						startingBytes, serverSupportsResume);
 				} catch (Exception error) {
-					logger.error("Error writing file or hashing: " + error.getMessage());
-					listener.onError(error.getMessage());
+					if (currentCall != null && currentCall.isCanceled()) {
+						logger.debug("Download stream interrupted by cancellation.");
+					} else {
+						logger.error("Error writing file or hashing: " + error.getMessage());
+						listener.onError(error.getMessage());
+					}
 				} finally {
 					body.close();
 				}
@@ -474,6 +489,23 @@ public class ApkDownloader {
 			hexString.append(hex);
 		}
 		return hexString.toString();
+	}
+	
+	/**
+	 * Cancels the ongoing download process.
+	 * <p>
+	 * This method immediately terminates any active network request associated with
+	 * this downloader instance, whether it's the initial HEAD request or the
+	 * actual file download. If a download was in progress, the partial file
+	 * will remain on disk for future resume attempts.
+	 * </p>
+	 */
+	public void stopDownload() {
+		if (currentCall != null) {
+			logger.debug("Stopping/Canceling current download call.");
+			currentCall.cancel();
+			currentCall = null;
+		}
 	}
 	
 	/**

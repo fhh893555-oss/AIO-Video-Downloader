@@ -89,10 +89,7 @@
             android:id="@+id/mainContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/activity_updater_1_dialog_1" />
-          </LinearLayout>
+            android:orientation="vertical" />
 
           <RelativeLayout
             android:id="@+id/btnDialogRight"

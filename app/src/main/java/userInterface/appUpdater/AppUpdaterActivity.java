@@ -3,8 +3,11 @@ package userInterface.appUpdater;
 import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.nextgen.R;
@@ -23,6 +26,7 @@ import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.StylizedDialogBuilder;
+import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.openingSplash.OpeningActivity;
@@ -31,7 +35,6 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	private AppUpdaterViewModel viewModel;
-	
 	
 	/**
 	 * Locks the activity orientation to prevent configuration changes during update operations.
@@ -117,16 +120,34 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	private void showDownloaderDialog() {
-		new StylizedDialogBuilder(this)
-			.setCancelable(false)
-			.enableSlideUpAnimation()
-			.setOnCloseClickListener(view -> stopDownloading())
-			.setPositiveButtonText(R.string.label_cancel_installing)
-			.setPositiveButtonIcons(R.drawable.ic_cancel_circle, 0)
-			.setOnPositiveClickListener(view -> stopDownloading(), true)
-			.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350)
-			.enableBackgroundBlur(60).
-			show();
+		StylizedDialogBuilder downloadDialog = getStylizedDialogBuilder();
+		downloadDialog.show();
+		
+		startDownloadingLatestApk();
+		
+		View contentView = downloadDialog.getCustomContentView();
+		TextView tvPercentage = contentView.findViewById(R.id.tvPercentage);
+		ProgressBar pbDownload = contentView.findViewById(R.id.pbDownload);
+		getViewModel().getDownloadStatusLiveData().observe(this, downloadStatus -> {
+			String progress = downloadStatus.getProgress() + "%";
+			tvPercentage.setText(progress);
+			
+			pbDownload.setProgress(downloadStatus.getProgress());
+		});
+	}
+	
+	@NonNull private StylizedDialogBuilder getStylizedDialogBuilder() {
+		StylizedDialogBuilder downloadDialog = new StylizedDialogBuilder(this);
+		downloadDialog.setCustomContentView(R.layout.activity_updater_1_dialog_1);
+		downloadDialog.setCancelable(false);
+		downloadDialog.enableSlideUpAnimation();
+		downloadDialog.setOnCloseClickListener(view -> stopDownloading());
+		downloadDialog.setPositiveButtonText(R.string.label_cancel_installing);
+		downloadDialog.setPositiveButtonIcons(R.drawable.ic_cancel_circle, 0);
+		downloadDialog.setOnPositiveClickListener(view -> stopDownloading(), true);
+		downloadDialog.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350);
+		downloadDialog.enableBackgroundBlur(60);
+		return downloadDialog;
 	}
 	
 	private void startDownloadingLatestApk() {
@@ -142,7 +163,9 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	private void stopDownloading() {
-	
+		vibrate();
+		StylizedToastView.showError(this, getString(R.string.hint_updating_is_canceled));
+		getViewModel().stopDownloadingAPK();
 	}
 	
 	/**
