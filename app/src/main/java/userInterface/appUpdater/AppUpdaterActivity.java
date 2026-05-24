@@ -20,9 +20,9 @@ import javax.annotation.Nullable;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.AppDirsValidator;
-import coreUtils.library.process.IntentHelpUtils;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
+import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.TextViewsUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.openingSplash.OpeningActivity;
@@ -96,12 +96,22 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	
 	private void setupButtonClickEvents() {
 		binding.btnBack.setOnClickListener(view -> finish());
-		binding.top2.btnInstallUpdate.setOnClickListener(view -> startDownloadLatestApk());
+		binding.top2.btnInstallUpdate.setOnClickListener(view -> showDemiDialog());
 		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
 	}
 	
 	private void openOfficialWebsite() {
 	
+	}
+	
+	private void showDemiDialog() {
+		new StylizedDialogBuilder(this)
+			.setCancelable(false)
+			.setDialogAnimation(R.style.style_dialog_window_slide_animation)
+			.setPositiveButtonText(R.string.label_cancel)
+			.setCloseOnPositiveButtonClick()
+			.enableBackgroundBlur(40)
+			.show();
 	}
 	
 	private void showLatestUpdateVersion() {

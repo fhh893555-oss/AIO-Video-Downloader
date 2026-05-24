@@ -5,6 +5,7 @@ import static android.view.LayoutInflater.from;
 import android.app.AlertDialog;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,23 @@ public class StylizedDialogBuilder {
 		return this;
 	}
 	
+	@NonNull
+	public StylizedDialogBuilder enableBackgroundBlur(int blurRadius) {
+		if (alertDialog == null) return this;
+		
+		Window window = alertDialog.getWindow();
+		if (window != null) {
+			window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+				window.getAttributes().setBlurBehindRadius(blurRadius);
+			} else {
+				window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+				window.getAttributes().dimAmount = 0.6f;
+			}
+		}
+		return this;
+	}
+	
 	@NonNull public StylizedDialogBuilder applyBottomPositioning() {
 		enableBottomPosition();
 		enableSlideUpAnimation();
@@ -174,6 +192,19 @@ public class StylizedDialogBuilder {
 					if (shouldCloseAfterExecution) {
 						close();
 					}
+				});
+			}
+		}
+		return this;
+	}
+	
+	@NonNull
+	public StylizedDialogBuilder setCloseOnPositiveButtonClick() {
+		if (dialogRootView != null) {
+			View btnContainer = dialogRootView.findViewById(R.id.btnDialogRight);
+			if (btnContainer != null) {
+				btnContainer.setOnClickListener(v -> {
+					close();
 				});
 			}
 		}
@@ -290,6 +321,6 @@ public class StylizedDialogBuilder {
 	}
 	
 	private void enableSlideUpAnimation() {
-		setDialogAnimation(R.style.style_dialog_window_animation);
+		setDialogAnimation(R.style.style_dialog_window_slide_animation);
 	}
 }
