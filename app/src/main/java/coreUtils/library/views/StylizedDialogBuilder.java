@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -47,7 +48,8 @@ public class StylizedDialogBuilder {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
 		
-		dialogRootView = from(activity).inflate(R.layout.dialog_stylized_window_1, null);
+		ViewGroup root = activity.findViewById(android.R.id.content);
+		dialogRootView = from(activity).inflate(R.layout.dialog_stylized_window_1, root, false);
 		LinearLayout mainContent = dialogRootView.findViewById(R.id.mainContent);
 		this.weakMainContentRef = new WeakReference<>(mainContent);
 		
@@ -154,25 +156,41 @@ public class StylizedDialogBuilder {
 	}
 	
 	@NonNull
-	public StylizedDialogBuilder setDialogImage(@DrawableRes int resId) {
+	public StylizedDialogBuilder setDialogImage(@DrawableRes int resId,  @DimenRes int imageWidthRes) {
 		if (dialogRootView != null) {
 			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
 			if (imgDialog != null) {
 				imgDialog.setImageResource(resId);
 				imgDialog.setVisibility(View.VISIBLE);
+				
+				BaseActivity<?> activity = weakActivityRef.get();
+				if (activity != null) {
+					int width = activity.getResources().getDimensionPixelSize(imageWidthRes);
+					ViewGroup.LayoutParams params = imgDialog.getLayoutParams();
+					params.width = width;
+					imgDialog.setLayoutParams(params);
+				}
 			}
 		}
 		return this;
 	}
 	
 	@NonNull
-	public StylizedDialogBuilder setDialogImage(@Nullable Drawable drawable) {
+	public StylizedDialogBuilder setDialogImage(@Nullable Drawable drawable, @DimenRes int imageWidthRes) {
 		if (dialogRootView != null) {
 			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
 			if (imgDialog != null) {
 				if (drawable != null) {
 					imgDialog.setImageDrawable(drawable);
 					imgDialog.setVisibility(View.VISIBLE);
+					
+					BaseActivity<?> activity = weakActivityRef.get();
+					if (activity != null) {
+						int width = activity.getResources().getDimensionPixelSize(imageWidthRes);
+						ViewGroup.LayoutParams params = imgDialog.getLayoutParams();
+						params.width = width;
+						imgDialog.setLayoutParams(params);
+					}
 				} else {
 					imgDialog.setVisibility(View.GONE);
 				}
@@ -203,9 +221,7 @@ public class StylizedDialogBuilder {
 		if (dialogRootView != null) {
 			View btnContainer = dialogRootView.findViewById(R.id.btnDialogRight);
 			if (btnContainer != null) {
-				btnContainer.setOnClickListener(v -> {
-					close();
-				});
+				btnContainer.setOnClickListener(v -> close());
 			}
 		}
 		return this;

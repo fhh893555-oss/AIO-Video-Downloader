@@ -107,10 +107,9 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private void showDemiDialog() {
 		new StylizedDialogBuilder(this)
 			.setCancelable(false)
-			.setDialogAnimation(R.style.style_dialog_window_slide_animation)
+			.setDialogAnimation(R.style.style_dialog_window_fade_animation)
 			.setPositiveButtonText(R.string.label_cancel)
 			.setCloseOnPositiveButtonClick()
-			.enableBackgroundBlur(40)
 			.show();
 	}
 	
