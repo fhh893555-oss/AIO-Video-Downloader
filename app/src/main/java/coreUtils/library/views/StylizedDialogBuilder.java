@@ -3,16 +3,18 @@ package coreUtils.library.views;
 import static android.view.LayoutInflater.from;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -134,6 +136,34 @@ public class StylizedDialogBuilder {
 	}
 	
 	@NonNull
+	public StylizedDialogBuilder setDialogImage(@DrawableRes int resId) {
+		if (dialogRootView != null) {
+			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
+			if (imgDialog != null) {
+				imgDialog.setImageResource(resId);
+				imgDialog.setVisibility(View.VISIBLE);
+			}
+		}
+		return this;
+	}
+	
+	@NonNull
+	public StylizedDialogBuilder setDialogImage(@Nullable Drawable drawable) {
+		if (dialogRootView != null) {
+			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
+			if (imgDialog != null) {
+				if (drawable != null) {
+					imgDialog.setImageDrawable(drawable);
+					imgDialog.setVisibility(View.VISIBLE);
+				} else {
+					imgDialog.setVisibility(View.GONE);
+				}
+			}
+		}
+		return this;
+	}
+	
+	@NonNull
 	public StylizedDialogBuilder setOnPositiveClickListener(@NonNull View.OnClickListener listener,
 	                                                        boolean shouldCloseAfterExecution) {
 		if (dialogRootView != null) {
@@ -151,6 +181,35 @@ public class StylizedDialogBuilder {
 	}
 	
 	@NonNull
+	public StylizedDialogBuilder setCloseButtonVisible(boolean visible) {
+		if (dialogRootView != null) {
+			View btnClose = dialogRootView.findViewById(R.id.btnCloseDialog);
+			if (btnClose != null) {
+				btnClose.setVisibility(visible ? View.VISIBLE : View.GONE);
+			}
+		}
+		return this;
+	}
+	
+	@NonNull
+	public StylizedDialogBuilder setOnCloseClickListener(@Nullable View.OnClickListener listener) {
+		if (dialogRootView != null) {
+			View btnClose = dialogRootView.findViewById(R.id.btnCloseDialog);
+			if (btnClose != null) {
+				if (listener == null) {
+					btnClose.setOnClickListener(v -> close());
+				} else {
+					btnClose.setOnClickListener(v -> {
+						listener.onClick(v);
+						close();
+					});
+				}
+			}
+		}
+		return this;
+	}
+	
+	@NonNull
 	public View getCustomContentView() throws IllegalStateException {
 		View view = weakCustomChildViewRef != null ? weakCustomChildViewRef.get() : null;
 		if (view == null) {
@@ -158,6 +217,16 @@ public class StylizedDialogBuilder {
 				"Invoke setCustomContentView first.");
 		}
 		return view;
+	}
+	
+	@Nullable
+	public AlertDialog getAlertDialog() {
+		return alertDialog;
+	}
+	
+	@Nullable
+	public BaseActivity<?> getActivity() {
+		return weakActivityRef != null ? weakActivityRef.get() : null;
 	}
 	
 	public void show() {
