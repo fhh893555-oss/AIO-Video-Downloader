@@ -21,6 +21,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 
 import com.nextgen.R;
 
@@ -128,6 +129,10 @@ public class StylizedDialogBuilder {
 		if (btnClose != null) {
 			btnClose.setOnClickListener(v -> close());
 		}
+		
+		setPositiveButtonIcons(null, null);
+		enableSlideUpAnimation();
+		setCancelable(true);
 	}
 	
 	/**
@@ -361,6 +366,59 @@ public class StylizedDialogBuilder {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity != null) {
 			return setPositiveButtonText(activity.getString(resId));
+		}
+		return this;
+	}
+	
+	/**
+	 * Sets drawable icons to appear on the left and right sides of the positive button text.
+	 * <p>
+	 * This method uses compound drawables to place icons inside the button alongside the text.
+	 * The left drawable appears before the button text, and the right drawable appears after it.
+	 * Either parameter can be null to display only one icon or no icons.
+	 * </p>
+	 *
+	 * @param leftDrawable  the drawable to display on the left side of the button text, or null for none
+	 * @param rightDrawable the drawable to display on the right side of the button text, or null for none
+	 * @return this builder instance for method chaining
+	 */
+	@NonNull
+	public StylizedDialogBuilder setPositiveButtonIcons(@Nullable Drawable leftDrawable,
+	                                                    @Nullable Drawable rightDrawable) {
+		if (dialogRootView != null) {
+			TextView tvRightBtn = dialogRootView.findViewById(R.id.tvDialogRightBtn);
+			if (tvRightBtn != null) {
+				tvRightBtn.setCompoundDrawablesWithIntrinsicBounds(
+					leftDrawable, null, rightDrawable, null);
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * Sets drawable icons for the positive button using resource IDs.
+	 * <p>
+	 * This convenience method loads drawables from resource IDs and delegates to
+	 * {@link #setPositiveButtonIcons(Drawable, Drawable)}. Zero (0) can be passed
+	 * for either parameter to omit that icon. The activity context is used to load
+	 * the drawable resources safely.
+	 * </p>
+	 *
+	 * @param leftResId  the drawable resource ID for the left icon, or 0 for none
+	 * @param rightResId the drawable resource ID for the right icon, or 0 for none
+	 * @return this builder instance for method chaining
+	 */
+	@NonNull
+	public StylizedDialogBuilder setPositiveButtonIcons(@DrawableRes int leftResId,
+	                                                    @DrawableRes int rightResId) {
+		BaseActivity<?> activity = weakActivityRef.get();
+		if (activity != null) {
+			Drawable leftDrawable = leftResId != 0
+				? ContextCompat.getDrawable(activity, leftResId) : null;
+			Drawable rightDrawable = rightResId != 0
+				? ContextCompat.getDrawable(activity, rightResId) : null;
+			
+			return setPositiveButtonIcons(leftDrawable, rightDrawable);
 		}
 		return this;
 	}
