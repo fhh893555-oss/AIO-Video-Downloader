@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="@style/style_dialog_window"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:ignore="UseAppTint,UseCompatTextViewDrawableXml">
+
+  <com.github.dangiashish.StyledCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/_100"
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="45"
+    app:background_Gradient_Color0="@color/color_card"
+    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:shadow0_Outer_Alpha=".1"
+    app:shadow0_Outer_Angle="-45"
+    app:shadow0_Outer_Blur="@dimen/_5"
+    app:shadow0_Outer_Color="@color/color_primary_variant"
+    app:shadow0_Outer_Distance="@dimen/_5"
+    app:shadow1_Outer_Alpha="0.1"
+    app:shadow1_Outer_Angle="360"
+    app:shadow1_Outer_Blur="@dimen/_5"
+    app:shadow1_Outer_Color="@color/color_secondary"
+    app:shadow1_Outer_Distance="@dimen/_2"
+    app:shadow_Outer_Area="@dimen/_10"
+    app:stroke_Alpha=".3"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_primary"
+    app:stroke_Gradient_Color1="@color/color_primary_variant"
+    app:stroke_Width="1dp">
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <ImageView
+        android:id="@+id/btnCloseDialog"
+        android:layout_width="@dimen/_24"
+        android:layout_height="@dimen/_24"
+        android:layout_gravity="right|top"
+        android:layout_margin="@dimen/_10"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_close_cross"
+        android:tint="@color/color_text_hint"
+        tools:ignore="TouchTargetSizeCheck" />
+
+      <ImageView
+        android:layout_width="@dimen/_250"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/img_updater_act_corner" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_150"
+        android:orientation="vertical">
+
+        <View
+          android:id="@+id/bgDivider"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/_10"
+          android:background="@drawable/bg_shadow_border" />
+
+        <LinearLayout
+          android:id="@+id/mainContent"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/_10"
+          android:layout_marginRight="@dimen/_10"
+          android:layout_marginBottom="@dimen/_10"
+          android:background="@color/color_card"
+          android:orientation="vertical">
+
+          <RelativeLayout
+            android:id="@+id/btnDialogRight"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38"
+            android:layout_marginLeft="@dimen/_10"
+            android:layout_marginRight="@dimen/_10"
+            android:background="@drawable/bg_button_gradient"
+            android:clickable="true"
+            tools:ignore="TouchTargetSizeCheck">
+
+            <TextView
+              android:id="@+id/tvDialogRightBtn"
+              style="@style/style_textviews"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerInParent="true"
+              android:layout_margin="@dimen/_5"
+              android:drawableStart="@drawable/ic_okay_check"
+              android:drawablePadding="@dimen/_5"
+              android:drawableTint="@color/color_surface"
+              android:ellipsize="end"
+              android:fontFamily="@font/font_family_bold"
+              android:gravity="center_vertical|center_horizontal"
+              android:maxLines="1"
+              android:shadowColor="@color/color_primary"
+              android:shadowDx="1"
+              android:shadowDy="1"
+              android:shadowRadius=".1"
+              android:text="@string/label_okay"
+              android:textColor="@color/color_surface"
+              android:textSize="@dimen/message_text_size"
+              tools:ignore="SpUsage,TextSizeCheck" />
+          </RelativeLayout>
+        </LinearLayout>
+      </LinearLayout>
+    </FrameLayout>
+  </com.github.dangiashish.StyledCardView>
+</LinearLayout>
