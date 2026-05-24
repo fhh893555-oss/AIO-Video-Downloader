@@ -124,4 +124,6 @@
   <string name="desc_whats_new"><![CDATA[Bug Fixes & System Enhancements]]></string>
   <string name="extra_whats_new_html">This update includes stability fixes, performance improvements, and minor optimizations under the hood. Keeping your app updated helps us ensure maximum compatibility and makes the downloading features much more reliable.</string>
   <string name="label_okay">Okay</string>
+  <string name="label_cancel_download">Cancel Download</string>
+  <string name="label_cancel_installing">Cancel Installing</string>
 </resources>

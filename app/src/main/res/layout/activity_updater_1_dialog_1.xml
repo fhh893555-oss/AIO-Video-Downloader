@@ -55,13 +55,12 @@
         tools:ignore="TouchTargetSizeCheck" />
 
       <ImageView
-        android:id="@+id/imgDialog"
-        android:layout_width="@dimen/_250"
+        android:layout_width="@dimen/_320"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:importantForAccessibility="no"
-        android:src="@drawable/img_updater_act_corner" />
+        android:src="@drawable/img_updater_act_dialog_top" />
 
       <LinearLayout
         android:layout_width="match_parent"
@@ -76,6 +75,7 @@
           android:background="@drawable/bg_shadow_border" />
 
         <LinearLayout
+          android:id="@+id/mainContent"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginLeft="@dimen/_10"
@@ -84,14 +84,8 @@
           android:background="@color/color_card"
           android:orientation="vertical">
 
-          <LinearLayout
-            android:id="@+id/mainContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
           <RelativeLayout
-            android:id="@+id/btnDialogRight"
+            android:id="@+id/btnCancelDownload"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_38"
             android:layout_marginLeft="@dimen/_10"
@@ -101,15 +95,12 @@
             tools:ignore="TouchTargetSizeCheck">
 
             <TextView
-              android:id="@+id/tvDialogRightBtn"
+              android:id="@+id/tvCancelDownload"
               style="@style/style_textviews"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_centerInParent="true"
               android:layout_margin="@dimen/_5"
-              android:drawableStart="@drawable/ic_okay_check"
-              android:drawablePadding="@dimen/_5"
-              android:drawableTint="@color/color_surface"
               android:ellipsize="end"
               android:fontFamily="@font/font_family_bold"
               android:gravity="center_vertical|center_horizontal"
@@ -118,7 +109,7 @@
               android:shadowDx="1"
               android:shadowDy="1"
               android:shadowRadius=".1"
-              android:text="@string/label_okay"
+              android:text="@string/label_cancel_installing"
               android:textColor="@color/color_surface"
               android:textSize="@dimen/message_text_size"
               tools:ignore="SpUsage,TextSizeCheck" />
