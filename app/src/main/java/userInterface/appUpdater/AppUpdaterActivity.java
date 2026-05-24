@@ -31,7 +31,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	private AppUpdaterViewModel viewModel;
-	private StylizedDialogBuilder downloadingDialog;
+	
 	
 	/**
 	 * Locks the activity orientation to prevent configuration changes during update operations.
@@ -117,17 +117,16 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	private void showDownloaderDialog() {
-		if (downloadingDialog == null) {
-			downloadingDialog = new StylizedDialogBuilder(this)
-				.setCancelable(false)
-				.enableSlideUpAnimation()
-				.setOnCloseClickListener(view -> stopDownloading())
-				.setPositiveButtonText(R.string.label_cancel_installing)
-				.setOnPositiveClickListener(view -> stopDownloading(), true)
-				.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350)
-				.enableBackgroundBlur(60);
-		}
-		downloadingDialog.show();
+		new StylizedDialogBuilder(this)
+			.setCancelable(false)
+			.enableSlideUpAnimation()
+			.setOnCloseClickListener(view -> stopDownloading())
+			.setPositiveButtonText(R.string.label_cancel_installing)
+			.setPositiveButtonIcons(R.drawable.ic_cancel_circle, 0)
+			.setOnPositiveClickListener(view -> stopDownloading(), true)
+			.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350)
+			.enableBackgroundBlur(60).
+			show();
 	}
 	
 	private void startDownloadingLatestApk() {
