@@ -3,9 +3,13 @@ package coreUtils.library.views;
 import static android.view.LayoutInflater.from;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,6 +88,29 @@ public class StylizedDialogBuilder {
 		if (alertDialog != null) {
 			alertDialog.setCancelable(cancelable);
 			alertDialog.setCanceledOnTouchOutside(cancelable);
+		}
+		return this;
+	}
+	
+	@NonNull public StylizedDialogBuilder applyBottomPositioning() {
+		enableBottomPosition();
+		enableSlideUpAnimation();
+		return this;
+	}
+	
+	@NonNull
+	public StylizedDialogBuilder setDialogAnimation(int animationResId) {
+		if (alertDialog != null && alertDialog.getWindow() != null) {
+			alertDialog.getWindow().getAttributes().windowAnimations = animationResId;
+		}
+		
+		return this;
+	}
+	
+	@NonNull
+	public StylizedDialogBuilder setDialogDismissListener(OnDismissListener listener) {
+		if (alertDialog != null) {
+			alertDialog.setOnDismissListener(listener);
 		}
 		return this;
 	}
@@ -179,5 +206,21 @@ public class StylizedDialogBuilder {
 				clearAllLayoutListeners(group.getChildAt(index));
 			}
 		}
+	}
+	
+	private void enableBottomPosition() {
+		if (alertDialog.getWindow() != null) {
+			alertDialog.getWindow().setGravity(Gravity.BOTTOM);
+			WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+			params.y = 0;
+			alertDialog.getWindow().setAttributes(params);
+			alertDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+			alertDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+		}
+	}
+	
+	private void enableSlideUpAnimation() {
+		setDialogAnimation(R.style.style_dialog_window_animation);
 	}
 }
