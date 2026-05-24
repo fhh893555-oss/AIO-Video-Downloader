@@ -27,14 +27,13 @@
     app:shadow1_Outer_Blur="@dimen/_5"
     app:shadow1_Outer_Color="@color/color_secondary"
     app:shadow1_Outer_Distance="@dimen/_2"
-    app:shadow_Outer_Area="@dimen/_20"
+    app:shadow_Outer_Area="@dimen/_10"
     app:stroke_Alpha=".3"
     app:stroke_ColorType="gradient_sweep"
     app:stroke_Gradient_Angle="-45"
     app:stroke_Gradient_Color0="@color/color_primary"
     app:stroke_Gradient_Color1="@color/color_primary_variant"
     app:stroke_Width="1dp">
-
     <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -56,12 +55,13 @@
 
       <ImageView
         android:id="@+id/imgDialog"
-        android:layout_width="@dimen/_250"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_350"
+        android:layout_height="@dimen/_200"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:importantForAccessibility="no"
-        android:src="@drawable/img_updater_act_corner" />
+        android:src="@drawable/img_updater_act_dialog_top" />
 
       <LinearLayout
         android:layout_width="match_parent"
