@@ -34,6 +34,7 @@ import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
+import userInterface.appUpdater.AppUpdaterViewModel.DownloadStatus;
 import userInterface.openingSplash.OpeningActivity;
 
 /**
@@ -307,6 +308,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 			if (handleDownloadError(downloadStatus)) return;
 			dismissDownloadError();
 			updateDownloadProgress(downloadStatus);
+			handleDownloadComplete(downloadStatus);
 		});
 	}
 	
@@ -386,7 +388,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	 * @param downloadStatus the current download status containing progress, bytes downloaded,
 	 *                       and total file size information
 	 */
-	private void updateDownloadProgress(AppUpdaterViewModel.DownloadStatus downloadStatus) {
+	private void updateDownloadProgress(DownloadStatus downloadStatus) {
 		int percentage = downloadStatus.getProgress();
 		long downloadedByte = downloadStatus.getDownloadedByte();
 		long totalFileSizeInByte = downloadStatus.getTotalFileSize();
@@ -441,6 +443,46 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	/**
+	 * Handles the completion of an APK download and initiates installation.
+	 * <p>
+	 * This method checks if the download status indicates successful completion,
+	 * verifies the downloaded APK file exists, is a valid file, and has non-zero size.
+	 * If all checks pass, it deactivates the download flag, closes the download dialog,
+	 * and triggers the system's APK installer to install the downloaded application.
+	 * Any exceptions during the installation process are caught and logged.
+	 * </p>
+	 *
+	 * <p><b>Installation Flow:</b>
+	 * <ol>
+	 *   <li>Verify download status is COMPLETED</li>
+	 *   <li>Validate the APK file exists, is a file, and has content</li>
+	 *   <li>Set download active flag to false</li>
+	 *   <li>Close and release the download dialog</li>
+	 *   <li>Launch system APK installer via {@link FileStorageUtility#openApkFile}</li>
+	 * </ol>
+	 * </p>
+	 *
+	 * @param downloadStatus the current download status containing the completed APK file
+	 */
+	private void handleDownloadComplete(DownloadStatus downloadStatus) {
+		try {
+			if (downloadStatus.getState() == DownloadStatus.State.COMPLETED) {
+				File apkFile = downloadStatus.getFile();
+				if (apkFile.exists() && apkFile.isFile() && apkFile.length() > 0) {
+					isDownloadActive = false;
+					if (downloadDialog != null) {
+						downloadDialog.close();
+						downloadDialog = null;
+					}
+					FileStorageUtility.openApkFile(this, apkFile);
+				}
+			}
+		} catch (Exception error) {
+			logger.error("Failed to install apk file: ", error);
+		}
+	}
+	
+	/**
 	 * Handles download error states by resetting UI components and displaying error messages.
 	 * <p>
 	 * This method checks if the provided DownloadStatus contains an error. If an error is present,
@@ -465,7 +507,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	 * @param downloadStatus the current download status containing potential error information
 	 * @return true if an error was handled (error present and non-empty), false otherwise
 	 */
-	private boolean handleDownloadError(AppUpdaterViewModel.DownloadStatus downloadStatus) {
+	private boolean handleDownloadError(DownloadStatus downloadStatus) {
 		if (downloadStatus.getError() == null) return false;
 		if (!downloadStatus.getError().isEmpty()) {
 			isDownloadActive = false;

@@ -231,28 +231,4 @@ public final class ShareHelper {
         intent.putExtra(EXTRA_TEXT, text);
         context.startActivity(Intent.createChooser(intent, title));
     }
-
-    /**
-     * Opens an APK file to initiate the package installation process.
-     * <p>
-     * This method generates a content URI using {@link FileProvider} to securely share
-     * the file with the system installer, sets the appropriate MIME type for Android
-     * packages, and grants the necessary read permissions.
-     * </p>
-     *
-     * @param context The application or activity context used to access the FileProvider and start the activity.
-     * @param apkFile The {@link File} object pointing to the APK to be installed.
-     */
-    public static void openApkFile(Context context, File apkFile) {
-        try {
-            String authority = context.getPackageName() + ".provider";
-            Uri apkUri = FileProvider.getUriForFile(context, authority, apkFile);
-            Intent intent = new Intent(ACTION_VIEW);
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION | FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        } catch (Exception error) {
-            logger.error("Error opening APK file", error);
-        }
-    }
 }

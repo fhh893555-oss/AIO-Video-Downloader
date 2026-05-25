@@ -995,9 +995,9 @@ public class URLUtility {
 
             for (String param : query.split("&")) {
                 String[] pair = param.split("=");
-                String key = URLDecoder.decode(pair[0], "UTF-8");
+                String key = URLDecoder.decode(pair[0], UTF_8);
                 String value = pair.length > 1
-                        ? URLDecoder.decode(pair[1], "UTF-8")
+                        ? URLDecoder.decode(pair[1], UTF_8)
                         : "";
                 queryParams.put(key, value);
             }
@@ -1005,10 +1005,10 @@ public class URLUtility {
             StringBuilder normalizedQuery = new StringBuilder();
             for (Map.Entry<String, String> entry : queryParams.entrySet()) {
                 if (normalizedQuery.length() > 0) normalizedQuery.append("&");
-                String encodedKey = encode(entry.getKey(), "UTF-8");
+                String encodedKey = encode(entry.getKey(), UTF_8);
                 normalizedQuery.append(encodedKey);
                 normalizedQuery.append("=");
-                String encodedValue = encode(entry.getValue(), "UTF-8");
+                String encodedValue = encode(entry.getValue(), UTF_8);
                 normalizedQuery.append(encodedValue);
             }
 
