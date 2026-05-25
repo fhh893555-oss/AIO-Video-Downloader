@@ -307,7 +307,7 @@ public final class StylizedDialogBuilder {
 	 */
 	@NotNull
 	public StylizedDialogBuilder enableFadeInAnimation() {
-		setDialogAnimation(R.style.style_dialog_window_slide_animation);
+		setDialogAnimation(R.style.style_dialog_window_fade_animation);
 		return this;
 	}
 	
@@ -735,6 +735,14 @@ public final class StylizedDialogBuilder {
 	 * and ViewGroup containers with children.
 	 * </p>
 	 *
+	 * <p><b>Traversal Behavior:</b>
+	 * <ul>
+	 *   <li>Sets OnClickListener to null on the current view</li>
+	 *   <li>If the view is a ViewGroup, recursively processes all child views</li>
+	 *   <li>Skips silently if the input view is null</li>
+	 * </ul>
+	 * </p>
+	 *
 	 * @param view the root view to start clearing listeners from, or null to skip
 	 */
 	private void clearAllLayoutListeners(@Nullable View view) {
@@ -752,18 +760,12 @@ public final class StylizedDialogBuilder {
 	 * <p>
 	 * This method configures the dialog to appear anchored to the bottom of the screen,
 	 * with transparent background and full width. The window gravity is set to BOTTOM,
-	 * allowing
-	 * the dialog to slide up from the bottom edge rather than centering vertically.
+	 * allowing the dialog to slide up from the bottom edge rather than centering vertically.
 	 * </p>
 	 *
-	 * <p><b>Configuration Applied:</b>
-	 * <ul>
-	 *   <li>Window gravity set to Gravity.BOTTOM</li>
-	 *   <li>Zero vertical offset (y = 0)</li>
-	 *   <li>Transparent background drawable</li>
-	 *   <li>Layout width: MATCH_PARENT (full screen width)</li>
-	 *   <li>Layout height: WRAP_CONTENT (height based on content)</li>
-	 * </ul>
+	 * <p><b>Usage Context:</b>
+	 * Typically called before showing a dialog that should slide up from the bottom,
+	 * such as a bottom sheet styled dialog or action selection menu.
 	 * </p>
 	 */
 	private void enableBottomPosition() {

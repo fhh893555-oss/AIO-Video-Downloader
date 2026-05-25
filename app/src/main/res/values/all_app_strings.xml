@@ -145,5 +145,8 @@
   <string name="title_download_has_failed">Download Has Failed</string>
   <string name="title_download_has_failed_reason">Download interrupted. This can happen if the screen was closed or network dropped.</string>
   <string name="label_something_went_wrong">Something went wrong, try again later.</string>
+  <string name="text_storage_permission_required">Storage permission is required to download and install the update package. Please enable permission to continue</string>
+  <string name="label_allow_now">Allow Now</string>
+  <string name="label_storage_permission_needed">Storage Permission Needed</string>
 
 </resources>

@@ -29,6 +29,7 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.TimeFormats;
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
+import coreUtils.library.views.MessageDialogBuilder;
 import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
@@ -249,7 +250,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	 */
 	private void setupButtonClickEvents() {
 		binding.btnBack.setOnClickListener(view -> finish());
-		binding.top2.btnInstallUpdate.setOnClickListener(view -> showDownloaderDialog());
+		binding.top2.btnInstallUpdate.setOnClickListener(view -> validateAndStartDownload());
 		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
 	}
 	
@@ -525,7 +526,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		StylizedDialogBuilder downloadDialog = new StylizedDialogBuilder(this);
 		downloadDialog.setCustomContentView(R.layout.activity_updater_1_dialog_1);
 		downloadDialog.setCancelable(false);
-		downloadDialog.enableSlideUpAnimation();
+		downloadDialog.enableFadeInAnimation();
 		downloadDialog.setOnCloseClickListener(view -> stopDownloadingLatestApk());
 		downloadDialog.setPositiveButtonText(R.string.label_cancel_installing);
 		downloadDialog.setPositiveButtonIcons(R.drawable.ic_cancel_circle, 0);
@@ -606,6 +607,72 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		int versionCode = updateInfo.getVersionCode();
 		String versionInfo = versionName + " (" + versionCode + ")";
 		binding.top2.tvAppVersionInfo.setText(versionInfo);
+	}
+	
+	/**
+	 * Validates storage permission before initiating the download process.
+	 * <p>
+	 * This method checks whether the app has full file system access permission.
+	 * If permission is granted, it proceeds to show the download dialog and start
+	 * the download. If permission is missing, it prompts the user to grant it
+	 * via {@link #promptForStorageAccess()} before allowing the download to proceed.
+	 * </p>
+	 *
+	 * <p><b>Permission Flow:</b>
+	 * <ul>
+	 *   <li>Permission granted → Show download dialog → Start download</li>
+	 *   <li>Permission denied → Show permission request dialog → Await user action</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * <p><b>Usage Context:</b>
+	 * Typically called when the user taps the "Install Update" button, ensuring
+	 * storage access is available before attempting to write the downloaded APK.
+	 * </p>
+	 */
+	private void validateAndStartDownload() {
+		if (!FileStorageUtility.hasFullFileSystemAccess(this)) promptForStorageAccess();
+		else showDownloaderDialog();
+	}
+	
+	/**
+	 * Prompts the user to grant all files access permission if not already granted.
+	 * <p>
+	 * This method checks whether the app has full file system access permission
+	 * (MANAGE_EXTERNAL_STORAGE on Android 11+). If not, it displays a custom dialog
+	 * explaining the requirement and provides options to cancel or proceed to the
+	 * system settings for granting permission.
+	 * </p>
+	 *
+	 * <p><b>Dialog Configuration:</b>
+	 * <ul>
+	 *   <li>Message: Text explaining storage permission requirement</li>
+	 *   <li>Left Button: "Cancel" with cancel circle icon - dismisses dialog</li>
+	 *   <li>Right Button: "Allow Now" with okay check icon - requests all files access</li>
+	 *   <li>Animation: Slide-up entrance</li>
+	 *   <li>Background blur: 60 units</li>
+	 *   <li>Cancelable: True (user can dismiss by tapping outside)</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * <p><b>Usage Context:</b>
+	 * Called when the app needs to download or access files in external storage
+	 * and the necessary permission has not been granted yet.
+	 * </p>
+	 */
+	private void promptForStorageAccess() {
+		new MessageDialogBuilder(this)
+			.enableBackgroundBlur(60)
+			.setCancelable(true)
+			.enableFadeInAnimation()
+			.setTitle(R.string.label_storage_permission_needed)
+			.setMessage(R.string.text_storage_permission_required)
+			.setLeftButtonText(R.string.label_cancel)
+			.setRightButtonText(R.string.label_allow_now)
+			.setLeftButtonIcons(R.drawable.ic_cancel_circle, 0)
+			.setRightButtonIcons(R.drawable.ic_okay_check, 0)
+			.setOnRightClickListener(view -> requestForAllFilesAccess(), true)
+			.show();
 	}
 	
 	/**
