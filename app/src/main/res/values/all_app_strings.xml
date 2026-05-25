@@ -148,5 +148,10 @@
   <string name="text_storage_permission_required">Storage permission is required to download and install the update package. Please enable permission to continue</string>
   <string name="label_allow_now">Allow Now</string>
   <string name="label_storage_permission_needed">Storage Permission Needed</string>
+  <string name="title_app_crashed">Something Went Wrong</string>
+  <string name="subtitle_app_crashed">It look like Tube AIO just crashed.\nWe\'re really sorry about that.</string>
+  <string name="btn_yes_report_it">Yes, Report It</string>
+  <string name="btn_no_thanks">No Thanks</string>
+  <string name="title_continue_anyway">Continue Anyway</string>
 
 </resources>
