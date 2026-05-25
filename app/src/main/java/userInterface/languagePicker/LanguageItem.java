@@ -4,20 +4,39 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 
 /**
- * An immutable data container (Java Record) representing an individual language configuration option
- * inside the user interface.
+ * A data record representing a language option available for selection in the language picker.
  * <p>
- * This model encapsulates all properties necessary to render a localized language choice item on screen,
- * including string identifiers and android-specific graphical resource references.
+ * This immutable record encapsulates all necessary information about a language choice,
+ * including its display name, ISO language code, flag illustration resource, and a
+ * background color resource for visual styling. Using a Java record provides built-in
+ * equals(), hashCode(), and toString() methods while ensuring thread-safety through
+ * immutability.
  * </p>
  *
- * @param languageName         The human-readable title of the language (e.g., "English", "Español").
- * @param languageCode         The unique localization ISO or regional code configuration string
- *                             (e.g., "en", "es").
- * @param illustrationResId    The Android drawable resource identifier representing the language's
- *                             graphical flag or icon.
- * @param backgroundColorResId The Android color resource identifier utilized to paint background
- *                             elements or card themes.
+ * <p><b>Usage Example:</b>
+ * <pre>
+ * LanguageItem english = new LanguageItem(
+ *     "English",
+ *     "en",
+ *     R.drawable.ic_flag_uk,
+ *     R.color.language_bg_english
+ * );
+ * </pre>
+ * </p>
+ *
+ * <p><b>Field Descriptions:</b>
+ * <ul>
+ *   <li><b>languageName:</b> Human-readable display name (e.g., "English", "Español")</li>
+ *   <li><b>languageCode:</b> ISO language code (e.g., "en", "es", "fr") for locale configuration</li>
+ *   <li><b>illustrationResId:</b> Drawable resource ID for flag or country illustration</li>
+ *   <li><b>backgroundColorResId:</b> Color resource ID for background styling of the language item</li>
+ * </ul>
+ * </p>
+ *
+ * @param languageName         The human-readable display name of the language
+ * @param languageCode         The ISO language code for system locale configuration
+ * @param illustrationResId    The drawable resource ID for the language's flag or icon
+ * @param backgroundColorResId The color resource ID for the language item's background
  */
 public record LanguageItem(String languageName,
                            String languageCode,
@@ -25,20 +44,34 @@ public record LanguageItem(String languageName,
                            @ColorRes int backgroundColorResId) {
 	
 	/**
-	 * Returns the Android drawable resource identifier for this language's flag or icon graphic.
+	 * Returns the drawable resource ID for the language's flag or illustration.
+	 * <p>
+	 * This method provides access to the illustration resource that visually represents
+	 * the language, typically a country flag or cultural icon. The returned resource ID
+	 * can be used with {@link android.widget.ImageView#setImageResource(int)} to display
+	 * the illustration in the language selection UI.
+	 * </p>
 	 *
-	 * @return An integer referencing a valid drawable resource package identifier.
+	 * @return The drawable resource ID (e.g., R.drawable.ic_flag_uk, R.drawable.ic_flag_spain)
 	 */
-	@Override public int illustrationResId() {
+	@Override
+	public int illustrationResId() {
 		return illustrationResId;
 	}
 	
 	/**
-	 * Returns the Android color resource identifier used to theme the item's background layer.
+	 * Returns the color resource ID for the language item's background styling.
+	 * <p>
+	 * This method provides access to the background color resource associated with the
+	 * language option, allowing for customized visual distinction between different
+	 * language items in the selection grid. The returned resource ID can be used with
+	 * {@link android.widget.TextView#setBackgroundResource(int)} or similar methods.
+	 * </p>
 	 *
-	 * @return An integer referencing a valid color resource package identifier.
+	 * @return The color resource ID (e.g., R.color.language_bg_english, R.color.language_bg_spanish)
 	 */
-	@Override public int backgroundColorResId() {
+	@Override
+	public int backgroundColorResId() {
 		return backgroundColorResId;
 	}
 }

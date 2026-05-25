@@ -23,10 +23,28 @@ import java.util.List;
  * and dispatches click interactions back to host components via a registered {@link LanguageCallback}.
  * It features clean data instantiation routines that optimize performance for localized configurations.
  * </p>
- * * @see RecyclerView.Adapter
  *
+ * <p><b>Key Responsibilities:</b>
+ * <ul>
+ *   <li>Manages the list of language items to be displayed in the RecyclerView</li>
+ *   <li>Inflates the language item layout and creates ViewHolder instances</li>
+ *   <li>Binds language data to views at specific positions</li>
+ *   <li>Dispatches language selection events to the registered callback</li>
+ *   <li>Handles efficient view recycling and reuse during scrolling</li>
+ * </ul>
+ * </p>
+ *
+ * <p><b>Data Binding:</b>
+ * The adapter receives a list of {@link LanguageItem} objects, each containing
+ * language name, code, and flag illustration resource ID. When a user clicks
+ * on a language item, the adapter calls {@link LanguageCallback#onLanguageSelected(LanguageItem)}
+ * to notify the parent component of the selection.
+ * </p>
+ *
+ * @see RecyclerView.Adapter
  * @see LanguageViewHolder
  * @see LanguageCallback
+ * @see LanguageItem
  */
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder> {
 	
@@ -34,10 +52,15 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	private final LanguageCallback callback;
 	
 	/**
-	 * Constructs a new LanguageAdapter instance with a specialized event callback.
+	 * Constructs a new LanguageAdapter with the specified callback listener.
+	 * <p>
+	 * This constructor initializes the adapter with a LanguageCallback that will be
+	 * invoked when a language item is selected by the user. The callback is passed
+	 * to each ViewHolder during binding to handle click events at the item level.
+	 * </p>
 	 *
-	 * @param callback The listener interface used to handle language click selection events
-	 *                 and communicate them back to the host Activity or Fragment.
+	 * @param callback The LanguageCallback interface for notifying language selection events.
+	 *                 This callback is typically implemented by the parent Activity or Fragment.
 	 */
 	public LanguageAdapter(LanguageCallback callback) {
 		this.callback = callback;
@@ -68,14 +91,17 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	}
 	
 	/**
-	 * Called when RecyclerView needs a new {@link LanguageViewHolder} of the given type to represent
-	 * an item. This new ViewHolder is constructed with a new View that can represent the items
-	 * of the given type.
+	 * Creates and inflates a new ViewHolder for language items in the RecyclerView.
+	 * <p>
+	 * This method inflates the language item layout resource ({@code activity_language_1_it_1})
+	 * and creates a new LanguageViewHolder instance that holds references to the
+	 * TextView and ImageView for that item. The inflated view is not attached to
+	 * the parent immediately; attachment happens later by the RecyclerView.
+	 * </p>
 	 *
-	 * @param parent   The ViewGroup into which the new View will be added after it is bound to
-	 *                 an adapter position.
-	 * @param viewType The view type of the new View.
-	 * @return A new LanguageViewHolder that holds a View for a language item.
+	 * @param parent   The ViewGroup into which the new view will be added
+	 * @param viewType The view type of the new view (not used in this adapter)
+	 * @return A new LanguageViewHolder instance containing the inflated item view
 	 */
 	@NonNull
 	@Override
@@ -86,16 +112,17 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	}
 	
 	/**
-	 * Binds the language data at the specified position to the provided ViewHolder.
+	 * Binds language item data to the ViewHolder at the specified position.
 	 * <p>
-	 * This method fetches the appropriate {@link LanguageItem} from the data list based
-	 * on its position and invokes the holder's internal binding logic to update the
-	 * UI components and register the click interaction listeners.
+	 * This method retrieves the LanguageItem from the list at the given position
+	 * and binds it to the ViewHolder by calling its {@link LanguageViewHolder#bind(LanguageItem,
+	 * LanguageCallback)}
+	 * method. The callback interface is passed through to handle click events when
+	 * a language item is selected by the user.
 	 * </p>
 	 *
-	 * @param holder   The ViewHolder instance which should be updated to represent the
-	 *                 contents of the item at the given position in the data set.
-	 * @param position The absolute row position of the item within the adapter's data set.
+	 * @param holder   The LanguageViewHolder to update with item data
+	 * @param position The position of the item within the adapter's data set
 	 */
 	@Override
 	public void onBindViewHolder(@NonNull LanguageViewHolder holder, int position) {
@@ -104,14 +131,15 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	}
 	
 	/**
-	 * Returns the total number of language items in the data set held by the adapter.
+	 * Returns the total number of language items in the data set.
 	 * <p>
-	 * This count is heavily utilized by the layout manager layout system to calculate
-	 * pagination limits, structural row constraints, and scroll boundaries.
+	 * This method is called by the RecyclerView to determine how many items
+	 * are available to display in the language selection grid. The count
+	 * corresponds to the size of the languageList containing all available
+	 * languages.
 	 * </p>
 	 *
-	 * @return The total size number of available language options inside the backing
-	 * list collection.
+	 * @return The number of language items in the list
 	 */
 	@Override
 	public int getItemCount() {
@@ -119,13 +147,31 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 	}
 	
 	/**
-	 * A ViewHolder implementation responsible for managing and displaying individual
-	 * language options inside a language selection list.
+	 * ViewHolder class for caching and managing language item views in the RecyclerView.
 	 * <p>
-	 * This class caches references to the UI widgets of the item view layout to
-	 * avoid expensive {@code findViewById()} operations during list scrolling, ensuring
-	 * smooth scrolling performance.
+	 * This static ViewHolder holds references to the UI components of a single language
+	 * item in the language selection grid. It efficiently reuses views during scrolling
+	 * by avoiding repeated findViewById calls. The ViewHolder also handles click events,
+	 * delegating language selection callbacks to the parent activity or fragment.
 	 * </p>
+	 *
+	 * <p><b>UI Components:</b>
+	 * <ul>
+	 *   <li>tvLangName - TextView displaying the language name (e.g., "English", "Spanish")</li>
+	 *   <li>ivFlag - ImageView showing the country or language flag illustration</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * <p><b>Binding Process:</b>
+	 * The {@link #bind(LanguageItem, LanguageCallback)} method populates the views with
+	 * language data and sets up click handling. When clicked, the selected language
+	 * is passed back through the LanguageCallback interface.
+	 * </p>
+	 *
+	 * @see RecyclerView.ViewHolder
+	 * @see LanguageAdapter
+	 * @see LanguageItem
+	 * @see LanguageCallback
 	 */
 	public static class LanguageViewHolder extends RecyclerView.ViewHolder {
 		
@@ -133,11 +179,14 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 		private final ImageView ivFlag;
 		
 		/**
-		 * Constructs a new ViewHolder instance and initializes references to
-		 * its child views.
+		 * Constructs a new LanguageViewHolder to hold and manage language item views.
+		 * <p>
+		 * This constructor initializes the ViewHolder by finding and storing references
+		 * to the language name TextView and flag ImageView from the provided item view.
+		 * These references are reused when binding data to avoid expensive findViewById calls.
+		 * </p>
 		 *
-		 * @param itemView The root view of the individual list item layout
-		 *                 inflated into the RecyclerView.
+		 * @param itemView The root view of the language item layout
 		 */
 		public LanguageViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -146,17 +195,17 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 		}
 		
 		/**
-		 * Binds language data models to the UI widgets and configures click interaction behaviors.
+		 * Binds language item data to the ViewHolder's views and sets up click handling.
 		 * <p>
-		 * This method applies text and image resources to the fields and registers a click
-		 * listener on the root {@code itemView}. When clicked, it passes the associated data back
-		 * to the registering component via the provided execution callback.
+		 * This method populates the TextView with the language name, sets the flag icon
+		 * using the provided resource ID, and configures a click listener on the item view.
+		 * When the item is clicked, the callback's {@link LanguageCallback#onLanguageSelected(LanguageItem)}
+		 * method is invoked with the selected language item, allowing the parent activity
+		 * to handle language selection events.
 		 * </p>
 		 *
-		 * @param languageItem     The target data entity containing display fields like
-		 *                         names and image references.
-		 * @param languageCallback The runtime listener configuration used to dispatch
-		 *                         click actions safely.
+		 * @param languageItem     The language item containing name, code, and flag illustration
+		 * @param languageCallback The callback interface for notifying language selection events
 		 */
 		public void bind(LanguageItem languageItem, LanguageCallback languageCallback) {
 			tvLangName.setText(languageItem.languageName());
