@@ -61,7 +61,7 @@
           android:shadowDx="1"
           android:shadowDy="1"
           android:shadowRadius=".1"
-          android:text="@string/label_file_sample_name"
+          android:text="@string/label__"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck" />
@@ -80,7 +80,7 @@
           android:fontFamily="@font/font_family_regular"
           android:maxLines="5"
           android:singleLine="false"
-          android:text="@string/label_sample_text_message"
+          android:text="@string/label__"
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck" />
       </ScrollView>

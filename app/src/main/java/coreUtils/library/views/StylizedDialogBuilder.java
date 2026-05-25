@@ -77,7 +77,7 @@ import coreUtils.library.process.LoggerUtils;
  * @see WeakReference
  * @see R.layout#dialog_stylized_window_1
  */
-public class StylizedDialogBuilder {
+public final class StylizedDialogBuilder {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private final WeakReference<BaseActivity<?>> weakActivityRef;
