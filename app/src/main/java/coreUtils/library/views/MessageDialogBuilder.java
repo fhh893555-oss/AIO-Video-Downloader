@@ -27,51 +27,49 @@ import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 
 public final class MessageDialogBuilder {
-
+	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private final WeakReference<BaseActivity<?>> weakActivityRef;
-
+	
 	private AlertDialog alertDialog;
 	private View dialogRootView;
-
+	
 	public MessageDialogBuilder(@NonNull BaseActivity<?> activity) {
 		this.weakActivityRef = new WeakReference<>(activity);
 		initializeBaseLayout();
 	}
-
+	
 	private void initializeBaseLayout() {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
-
+		
 		ViewGroup root = activity.findViewById(android.R.id.content);
 		dialogRootView = activity.getLayoutInflater()
 			.inflate(R.layout.dialog_normal_message_1, root, false);
-
+		
 		int styledResId = R.style.style_dialog_window;
 		AlertDialog.Builder nativeBuilder = new AlertDialog.Builder(activity, styledResId);
 		nativeBuilder.setView(dialogRootView);
 		this.alertDialog = nativeBuilder.create();
-
+		
 		this.alertDialog.setOnDismissListener(dialogInterface -> close());
-
-		View btnLeft = dialogRootView.findViewById(R.id.btnDialogLeft);
-		if (btnLeft != null) {
-			btnLeft.setOnClickListener(v -> close());
+		
+		if (dialogRootView != null) {
+			View btnLeft = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnLeft != null) {
+				btnLeft.setOnClickListener(v -> close());
+			}
+			
+			View btnRight = dialogRootView.findViewById(R.id.btnDialogRight);
+			if (btnRight != null) {
+				btnRight.setOnClickListener(v -> close());
+			}
 		}
-
-		View btnRight = dialogRootView.findViewById(R.id.btnDialogRight);
-		if (btnRight != null) {
-			btnRight.setOnClickListener(v -> close());
-		}
-
+		
 		enableSlideUpAnimation();
 		setCancelable(true);
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Title
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@NonNull
 	public MessageDialogBuilder setTitle(@NonNull String text) {
 		if (dialogRootView != null) {
@@ -80,7 +78,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setTitle(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -89,11 +87,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Message
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@NonNull
 	public MessageDialogBuilder setMessage(@NonNull String text) {
 		if (dialogRootView != null) {
@@ -102,7 +96,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setMessage(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -111,11 +105,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Left Button
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@NonNull
 	public MessageDialogBuilder setLeftButtonText(@NonNull String text) {
 		if (dialogRootView != null) {
@@ -124,7 +114,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setLeftButtonText(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -133,10 +123,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setLeftButtonIcons(@Nullable Drawable leftIcon,
-	                                                @Nullable Drawable rightIcon) {
+	                                               @Nullable Drawable rightIcon) {
 		if (dialogRootView != null) {
 			TextView tvLeftBtn = dialogRootView.findViewById(R.id.tvDialogLeftBtn);
 			if (tvLeftBtn != null) {
@@ -146,10 +136,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setLeftButtonIcons(@DrawableRes int leftResId,
-	                                                @DrawableRes int rightResId) {
+	                                               @DrawableRes int rightResId) {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity != null) {
 			Drawable leftDrawable = leftResId != 0
@@ -160,10 +150,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setOnLeftClickListener(@NonNull View.OnClickListener listener,
-	                                                    boolean shouldCloseAfterExecution) {
+	                                                   boolean shouldCloseAfterExecution) {
 		if (dialogRootView != null) {
 			View btnContainer = dialogRootView.findViewById(R.id.btnDialogLeft);
 			if (btnContainer != null) {
@@ -175,11 +165,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Right Button
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@NonNull
 	public MessageDialogBuilder setRightButtonText(@NonNull String text) {
 		if (dialogRootView != null) {
@@ -188,7 +174,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setRightButtonText(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -197,10 +183,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setRightButtonIcons(@Nullable Drawable leftIcon,
-	                                                 @Nullable Drawable rightIcon) {
+	                                                @Nullable Drawable rightIcon) {
 		if (dialogRootView != null) {
 			TextView tvRightBtn = dialogRootView.findViewById(R.id.tvDialogRightBtn);
 			if (tvRightBtn != null) {
@@ -210,10 +196,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setRightButtonIcons(@DrawableRes int leftResId,
-	                                                 @DrawableRes int rightResId) {
+	                                                @DrawableRes int rightResId) {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity != null) {
 			Drawable leftDrawable = leftResId != 0
@@ -224,10 +210,10 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setOnRightClickListener(@NonNull View.OnClickListener listener,
-	                                                     boolean shouldCloseAfterExecution) {
+	                                                    boolean shouldCloseAfterExecution) {
 		if (dialogRootView != null) {
 			View btnContainer = dialogRootView.findViewById(R.id.btnDialogRight);
 			if (btnContainer != null) {
@@ -239,11 +225,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Common Configuration
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@NonNull
 	public MessageDialogBuilder setCancelable(boolean cancelable) {
 		if (alertDialog != null) {
@@ -252,7 +234,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder enableBackgroundBlur(int blurRadius) {
 		if (alertDialog == null) return this;
@@ -268,7 +250,7 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setDialogAnimation(int animationResId) {
 		if (alertDialog != null && alertDialog.getWindow() != null) {
@@ -276,19 +258,19 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NotNull
 	public MessageDialogBuilder enableSlideUpAnimation() {
 		setDialogAnimation(R.style.style_dialog_window_slide_animation);
 		return this;
 	}
-
+	
 	@NotNull
 	public MessageDialogBuilder enableFadeInAnimation() {
 		setDialogAnimation(R.style.style_dialog_window_slide_animation);
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder setDialogDismissListener(OnDismissListener listener) {
 		if (alertDialog != null) {
@@ -299,37 +281,29 @@ public final class MessageDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public MessageDialogBuilder applyBottomPositioning() {
 		enableBottomPosition();
 		enableSlideUpAnimation();
 		return this;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Getters
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	@Nullable
 	public AlertDialog getAlertDialog() {
 		return alertDialog;
 	}
-
+	
 	@Nullable
 	public BaseActivity<?> getActivity() {
 		return weakActivityRef != null ? weakActivityRef.get() : null;
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Show / Close
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	public void show() {
 		try {
 			BaseActivity<?> activity = weakActivityRef.get();
 			if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
-
+			
 			if (alertDialog != null && !alertDialog.isShowing()) {
 				alertDialog.show();
 				Window window = alertDialog.getWindow();
@@ -341,7 +315,7 @@ public final class MessageDialogBuilder {
 			logger.error("Failed to present message dialog: ", error);
 		}
 	}
-
+	
 	public void close() {
 		try {
 			if (alertDialog != null) {
@@ -359,11 +333,7 @@ public final class MessageDialogBuilder {
 			logger.error("Exception during message dialog cleanup: ", error);
 		}
 	}
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// Internal Helpers
-	// ─────────────────────────────────────────────────────────────────────────
-
+	
 	private void clearAllLayoutListeners(@Nullable View view) {
 		if (view == null) return;
 		view.setOnClickListener(null);
@@ -373,7 +343,7 @@ public final class MessageDialogBuilder {
 			}
 		}
 	}
-
+	
 	private void enableBottomPosition() {
 		if (alertDialog.getWindow() != null) {
 			alertDialog.getWindow().setGravity(Gravity.BOTTOM);
