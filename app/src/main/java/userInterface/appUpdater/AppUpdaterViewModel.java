@@ -153,7 +153,8 @@ public class AppUpdaterViewModel extends ViewModel {
 				ThreadTask.executeOnMainThread(() -> {
 					logger.debug("Download progress info: percentage:" + percentage +
 						" download byte:" + downloadedByte);
-					downloadStatusLiveData.postValue(DownloadStatus.downloading(percentage));
+					downloadStatusLiveData.postValue( DownloadStatus
+						.downloading(percentage, downloadedByte));
 				});
 			}
 			
@@ -205,15 +206,25 @@ public class AppUpdaterViewModel extends ViewModel {
 	 * <p>
 	 * This immutable data class encapsulates all relevant information about a download's
 	 * status, including its current state (PENDING, DOWNLOADING, COMPLETED, etc.),
-	 * progress percentage, the downloaded file (if completed), and any error messages
-	 * (if an error occurred). Factory methods are provided for creating instances
-	 * representing each possible state.
+	 * progress percentage, bytes downloaded, the downloaded file (if completed), and
+	 * any error messages (if an error occurred). Factory methods are provided for
+	 * creating instances representing each possible state.
+	 * </p>
+	 *
+	 * <p><b>State Flow:</b>
+	 * <pre>
+	 * PENDING → DOWNLOADING → VERIFYING → COMPLETED
+	 *               ↓              ↓
+	 *             ERROR ←───── HASH_MISMATCH
+	 * </pre>
+	 * </p>
 	 */
 	public static class DownloadStatus {
 		public enum State {PENDING, DOWNLOADING, COMPLETED, ERROR, VERIFYING, HASH_MISMATCH}
 		
 		private final State state;
 		private final short progress;
+		private final long downloadedByte;
 		private final File file;
 		private final String error;
 		
@@ -225,14 +236,16 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * time and cannot be modified afterward, ensuring thread-safety and consistency.
 		 * </p>
 		 *
-		 * @param state    the current download state (PENDING, DOWNLOADING, etc.)
-		 * @param progress the completion percentage (0-100)
-		 * @param file     the downloaded APK file reference (null until completed)
-		 * @param error    the error message if an error occurred (null otherwise)
+		 * @param state          the current download state (PENDING, DOWNLOADING, etc.)
+		 * @param progress       the completion percentage (0-100)
+		 * @param downloadedByte the total number of bytes downloaded so far
+		 * @param file           the downloaded APK file reference (null until completed)
+		 * @param error          the error message if an error occurred (null otherwise)
 		 */
-		private DownloadStatus(State state, short progress, File file, String error) {
+		private DownloadStatus(State state, short progress, long downloadedByte, File file, String error) {
 			this.state = state;
 			this.progress = progress;
+			this.downloadedByte = downloadedByte;
 			this.file = file;
 			this.error = error;
 		}
@@ -241,13 +254,14 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * Creates a status indicating the download is waiting to start.
 		 * <p>
 		 * This is the initial state when a download is requested but has not yet begun.
-		 * Progress is 0% and no file or error information is available.
+		 * Progress is 0%, no bytes have been downloaded, and no file or error information
+		 * is available.
 		 * </p>
 		 *
 		 * @return a DownloadStatus instance with PENDING state
 		 */
 		public static DownloadStatus pending() {
-			return new DownloadStatus(State.PENDING, (short) 0, null, null);
+			return new DownloadStatus(State.PENDING, (short) 0, 0L, null, null);
 		}
 		
 		/**
@@ -258,12 +272,14 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * relative to the total file size reported by the server.
 		 * </p>
 		 *
-		 * @param progress the current download completion percentage (0-100)
-		 * @return a DownloadStatus instance with DOWNLOADING state and specified progress
+		 * @param progress       the current download completion percentage (0-100)
+		 * @param downloadedByte the number of bytes successfully downloaded so far
+		 * @return a DownloadStatus instance with DOWNLOADING state, specified progress,
+		 * and downloaded byte count
 		 */
-		public static DownloadStatus downloading(short progress) {
+		public static DownloadStatus downloading(short progress, long downloadedByte) {
 			return new DownloadStatus(State.DOWNLOADING,
-				progress, null, null);
+				progress, downloadedByte, null, null);
 		}
 		
 		/**
@@ -272,12 +288,13 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * This state occurs immediately after the download completes, before the file is
 		 * reported as successfully downloaded. During this phase, the SHA-256 hash of the
 		 * file is computed and compared against the expected hash from the server.
+		 * Progress is reported as 100% with the total file size as downloaded bytes.
 		 * </p>
 		 *
 		 * @return a DownloadStatus instance with VERIFYING state and 100% progress
 		 */
 		public static DownloadStatus verifying() {
-			return new DownloadStatus(State.VERIFYING, (short) 100, null, null);
+			return new DownloadStatus(State.VERIFYING, (short) 100, 100L, null, null);
 		}
 		
 		/**
@@ -285,7 +302,8 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * <p>
 		 * This state is reached when the file has been fully downloaded and has passed
 		 * integrity verification. The provided File reference points to the verified APK
-		 * file, which is ready for installation. Progress is reported as 100%.
+		 * file, which is ready for installation. Progress is reported as 100% with the
+		 * total file size as downloaded bytes.
 		 * </p>
 		 *
 		 * @param file the downloaded APK file that passed integrity verification
@@ -293,7 +311,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 */
 		public static DownloadStatus completed(File file) {
 			return new DownloadStatus(State.COMPLETED, (short) 100,
-				file, null);
+				file.length(), file, null);
 		}
 		
 		/**
@@ -301,14 +319,15 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * <p>
 		 * This factory method is called when an unrecoverable error occurs during the download
 		 * process, such as network failures, I/O errors, or server-side issues. The resulting
-		 * status contains zero progress and no file reference, only the error description.
+		 * status contains zero progress, no downloaded bytes, no file reference, and only the
+		 * error description.
 		 * </p>
 		 *
 		 * @param error a human-readable description explaining the cause of the download failure
 		 * @return a DownloadStatus instance configured with ERROR state and the provided error message
 		 */
 		public static DownloadStatus error(String error) {
-			return new DownloadStatus(State.ERROR, (short) 0, null,
+			return new DownloadStatus(State.ERROR, (short) 0, 0L, null,
 				error);
 		}
 		
@@ -321,10 +340,11 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * download should be retried or the user should be notified to download manually.
 		 * </p>
 		 *
-		 * @return a DownloadStatus instance configured with HASH_MISMATCH state and a default error message
+		 * @return a DownloadStatus instance configured with HASH_MISMATCH state, zero progress,
+		 * and a default error message
 		 */
 		public static DownloadStatus hashMismatch() {
-			return new DownloadStatus(State.HASH_MISMATCH, (short) 0, null,
+			return new DownloadStatus(State.HASH_MISMATCH, (short) 0, 0L, null,
 				"Hash verification failed.");
 		}
 		
@@ -354,6 +374,22 @@ public class AppUpdaterViewModel extends ViewModel {
 		 */
 		public short getProgress() {
 			return progress;
+		}
+		
+		/**
+		 * Returns the total number of bytes downloaded so far.
+		 * <p>
+		 * This value represents the cumulative size of data received from the server.
+		 * It can be used to display detailed download information (e.g., "5.2 MB / 10 MB")
+		 * alongside the percentage progress. For PENDING, ERROR, and HASH_MISMATCH states,
+		 * this value will be 0. For COMPLETED and VERIFYING states, it will equal the
+		 * total file size.
+		 * </p>
+		 *
+		 * @return the number of bytes successfully downloaded
+		 */
+		public long getDownloadedByte() {
+			return downloadedByte;
 		}
 		
 		/**
