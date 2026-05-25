@@ -144,5 +144,6 @@
   <string name="label_connecting">Connecting…</string>
   <string name="title_download_has_failed">Download Has Failed</string>
   <string name="title_download_has_failed_reason">Download interrupted. This can happen if the screen was closed or network dropped.</string>
+  <string name="label_something_went_wrong">Something went wrong, try again later.</string>
 
 </resources>
