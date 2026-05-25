@@ -85,7 +85,7 @@
         android:text="@string/text_updater_info"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/small_text_size"
-        tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText" />
+        tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText,TextContrastCheck" />
 
       <View
         android:layout_width="match_parent"
@@ -149,7 +149,7 @@
                 android:text="@string/desc_whats_new"
                 android:textColor="@color/color_text_secondary"
                 android:textSize="@dimen/small_text_size"
-                tools:ignore="SpUsage,TextSizeCheck" />
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
             </LinearLayout>
 
             <ImageView
@@ -160,7 +160,7 @@
               android:rotation="270"
               android:src="@drawable/ic_arrow_down"
               android:tint="@color/color_text_secondary"
-              tools:ignore="ContentDescription,UseAppTint" />
+              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
           </LinearLayout>
 
           <TextView
@@ -175,7 +175,7 @@
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/smaller_text_size"
             android:visibility="visible"
-            tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck" />
+            tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
       </ScrollView>
 
@@ -251,6 +251,101 @@
             tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
 
+      </LinearLayout>
+    </LinearLayout>
+  </com.github.dangiashish.StyledCardView>
+
+  <com.github.dangiashish.StyledCardView
+    android:id="@+id/containerDownloadError"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="-10dp"
+    android:visibility="gone"
+    app:background_ColorType="gradient_linear"
+    app:background_Gradient_Angle="45"
+    app:background_Gradient_Color0="@color/color_card"
+    app:background_Gradient_Color1="@color/color_surface"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/default_radius"
+    app:shadow0_Outer_Alpha=".1"
+    app:shadow0_Outer_Angle="-45"
+    app:shadow0_Outer_Blur="@dimen/_5"
+    app:shadow0_Outer_Color="@color/color_error"
+    app:shadow0_Outer_Distance="@dimen/_5"
+    app:shadow1_Outer_Alpha="0.1"
+    app:shadow1_Outer_Angle="360"
+    app:shadow1_Outer_Blur="@dimen/_5"
+    app:shadow1_Outer_Color="@color/color_warning"
+    app:shadow1_Outer_Distance="@dimen/_2"
+    app:shadow_Outer_Area="@dimen/_10"
+    app:stroke_Alpha=".5"
+    app:stroke_ColorType="gradient_sweep"
+    app:stroke_Gradient_Angle="-45"
+    app:stroke_Gradient_Color0="@color/color_warning"
+    app:stroke_Gradient_Color1="@color/color_error"
+    app:stroke_Width="1dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:padding="@dimen/_12">
+
+      <com.github.dangiashish.StyledCardView
+        android:layout_width="@dimen/_40"
+        android:layout_height="@dimen/_40"
+        app:background_ColorType="gradient_linear"
+        app:background_Gradient_Angle="90"
+        app:background_Gradient_Color0="@color/color_error"
+        app:background_Type="fill_stroke"
+        app:cornerRadius="@dimen/default_radius">
+
+        <ImageView
+          android:id="@+id/ivError"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:contentDescription="@string/label_stay_connected"
+          android:padding="@dimen/_8"
+          android:src="@drawable/ic_bad_shield_badge"
+          android:tint="@color/color_surface"
+          tools:ignore="UseAppTint" />
+      </com.github.dangiashish.StyledCardView>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12"
+        android:orientation="vertical">
+
+        <TextView
+          android:id="@+id/tvDownloadError"
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/_0"
+          android:fontFamily="@font/font_family_medium"
+          android:text="@string/label__"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/normal_text_size"
+          tools:ignore="SpUsage,TextSizeCheck" />
+
+        <TextView
+          android:id="@+id/tvDownloadErrorDetailed"
+          style="@style/style_textviews"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/_0"
+          android:layout_marginTop="@dimen/_5"
+          android:layout_marginRight="@dimen/_0"
+          android:layout_marginBottom="@dimen/_0"
+          android:fontFamily="@font/font_family_regular"
+          android:maxLines="3"
+          android:singleLine="false"
+          android:text="@string/label__"
+          android:textColor="@color/color_text_secondary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
     </LinearLayout>
   </com.github.dangiashish.StyledCardView>

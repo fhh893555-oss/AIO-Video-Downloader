@@ -150,6 +150,7 @@ public class ApkDownloader {
 					logger.debug("HEAD request canceled.");
 					return;
 				}
+				
 				handleHeadRequestFailure(error, outputFile, updateInfo, listener);
 			}
 			
@@ -197,8 +198,11 @@ public class ApkDownloader {
 			long localSize = outputFile.length();
 			if (localSize == totalServerSize) {
 				handleAlreadyDownloaded(outputFile, listener);
+				
 			} else if (localSize < totalServerSize) {
-				executeResumedDownload(outputFile, updateInfo, listener, localSize);
+				executeResumedDownload(outputFile, updateInfo,
+					listener, localSize);
+				
 			} else {
 				reinitializeDownload(outputFile, updateInfo, listener);
 			}
@@ -346,6 +350,7 @@ public class ApkDownloader {
 					logger.debug("Download request canceled.");
 					return;
 				}
+				
 				logger.error("Network request failed: " + error.getMessage());
 				listener.onError(error.getMessage());
 			}
@@ -367,6 +372,18 @@ public class ApkDownloader {
 		});
 	}
 	
+	/**
+	 * Checks if an HTTP response indicates a failed request and notifies the listener.
+	 * <p>
+	 * This method evaluates the HTTP status code of the response. If the response is not
+	 * successful (status code outside 2xx range), it logs the error and notifies the
+	 * listener with an appropriate error message containing the HTTP status code.
+	 * </p>
+	 *
+	 * @param response the OkHttp Response to check for success status
+	 * @param listener callback listener to receive error notification if request failed
+	 * @return true if the request failed (response not successful), false otherwise
+	 */
 	private boolean isRequestFailed(@NonNull Response response,
 	                                @NonNull ProgressListener listener) {
 		if (!response.isSuccessful()) {
@@ -378,6 +395,26 @@ public class ApkDownloader {
 		return false;
 	}
 	
+	/**
+	 * Determines whether the download should be aborted based on resume support and file writability.
+	 * <p>
+	 * This method performs two critical checks:
+	 * <ol>
+	 *   <li>If resume was requested but the server doesn't support it (HTTP 206),
+	 *       the existing partial file is deleted and the download will restart from scratch.
+	 *       This is not considered an abort condition; the method returns false.</li>
+	 *   <li>If the output file exists but is not writable (permission issue or file locked),
+	 *       an error is reported to the listener and the method returns true to indicate
+	 *       the download should be aborted.</li>
+	 * </ol>
+	 * </p>
+	 *
+	 * @param serverSupportsResume true if server responded with HTTP 206 (Partial Content)
+	 * @param isResume             true if this download was attempting to resume (downloadedBytes > 0)
+	 * @param outputFile           the destination file to check for writability
+	 * @param listener             callback listener for error notification if file is not writable
+	 * @return true if the download should be aborted (file not writable), false otherwise
+	 */
 	private boolean shouldAbortDownload(boolean serverSupportsResume,
 	                                    boolean isResume,
 	                                    @NonNull File outputFile,
@@ -400,6 +437,30 @@ public class ApkDownloader {
 		return false;
 	}
 	
+	/**
+	 * Processes the download response body and handles any exceptions during stream processing.
+	 * <p>
+	 * This method delegates to {@link #processDownloadStream} for the actual file writing
+	 * and hash verification. It uses a try-with-resources block to ensure the ResponseBody
+	 * is properly closed after processing. Specific exceptions are caught and converted
+	 * into user-friendly error messages for permission-related failures, while general
+	 * exceptions are logged with appropriate handling for cancellation scenarios.
+	 * </p>
+	 *
+	 * <p><b>Exception Handling:</b>
+	 * <ul>
+	 *   <li><b>FileNotFoundException:</b> Indicates storage permission denied or protected file</li>
+	 *   <li><b>SecurityException:</b> Indicates security restriction on write location</li>
+	 *   <li><b>General Exception:</b> May be I/O errors or hashing failures; cancellation is suppressed</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param body                 the OkHttp ResponseBody containing the download stream
+	 * @param startingBytes        number of bytes already downloaded (resume offset)
+	 * @param serverSupportsResume true if server responded with HTTP 206 (Partial Content)
+	 * @param outputFile           the destination file to write the APK content
+	 * @param listener             callback listener for progress and error events
+	 */
 	private void handleDownloadResponse(@NotNull ResponseBody body,
 	                                    long startingBytes,
 	                                    boolean serverSupportsResume,
@@ -523,7 +584,7 @@ public class ApkDownloader {
 	 *
 	 * <p><b>Verification Process:</b>
 	 * <ol>
-	 *   <li>Creates a SHA-256 MessageDigest instance</li>
+	 *   <li>Creates an SHA-256 MessageDigest instance</li>
 	 *   <li>Reads the file in 8KB chunks, updating the digest incrementally</li>
 	 *   <li>Converts the final digest bytes to a hexadecimal string</li>
 	 *   <li>Notifies listener with 100% progress and the computed hash</li>

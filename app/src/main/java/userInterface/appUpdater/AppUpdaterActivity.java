@@ -17,15 +17,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
 
 import coreUtils.base.BaseActivity;
-import coreUtils.library.networks.URLUtility;
 import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.TimeFormats;
@@ -82,8 +79,6 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		showLatestUpdateVersion();
 		showWhatsNewChangelog();
 		setupButtonClickEvents();
-		
-		// startDownloadLatestApk();
 	}
 	
 	private void applyGradientToTitle() {
@@ -143,62 +138,88 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		ProgressBar pbDownload = contentView.findViewById(R.id.pbDownload);
 		
 		getViewModel().getDownloadStatusLiveData().observe(this, downloadStatus -> {
-			int percentage = downloadStatus.getProgress();
-			long downloadedByte = downloadStatus.getDownloadedByte();
-			long currentTime = System.currentTimeMillis();
+			if (handleDownloadError(downloadStatus, downloadDialog)) return;
+			else dismissDownloadError();
 			
-			tvPercentage.setText(MessageFormat.format("{0}%", percentage));
-			pbDownload.setProgress(percentage);
-			
-			long totalByte = 0;
-			String totalInFormat = "--";
-			
-			if (percentage > 0) {
-				totalByte = (downloadedByte * 100L) / percentage;
-				totalInFormat = FileStorageUtility.humanReadableSizeOf(totalByte);
-				tvTotalSize.setText(totalInFormat);
-			} else {
-				tvTotalSize.setText("--");
-			}
-			
-			String downloadedInFormat = FileStorageUtility.humanReadableSizeOf(downloadedByte);
-			tvProgressSize.setText(MessageFormat.format("{0} / {1}", downloadedInFormat, totalInFormat));
-			
-			if (lastProgressTime > 0 && currentTime > lastProgressTime) {
-				long timeDelta = currentTime - lastProgressTime;
-				long bytesDelta = downloadedByte - lastProgressBytes;
-				
-				if (bytesDelta >= 0) {
-					double currentSpeed = (bytesDelta * 1000.0) / timeDelta;
-					
-					if (smoothedSpeed == 0) {
-						smoothedSpeed = currentSpeed;
-					} else {
-						smoothedSpeed = (smoothedSpeed * 0.8) + (currentSpeed * 0.2);
-					}
-					
-					tvSpeedValue.setText(MessageFormat.format("{0}/s",
-						FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed)));
-					
-					if (smoothedSpeed > 0 && totalByte > downloadedByte) {
-						long bytesRemaining = totalByte - downloadedByte;
-						long secondsRemaining = (long) (bytesRemaining / smoothedSpeed);
-						
-						tvTimeValue.setText(TimeFormats.toHumanReadableTime(secondsRemaining));
-					} else if (totalByte == downloadedByte) {
-						tvTimeValue.setText(R.string.label_finishing);
-					} else {
-						tvTimeValue.setText("--:--");
-					}
-				}
-			} else {
-				tvSpeedValue.setText(R.string.label_connecting);
-				tvTimeValue.setText("--:--");
-			}
-			
-			lastProgressBytes = downloadedByte;
-			lastProgressTime = currentTime;
+			updateDownloadProgress(downloadStatus, tvPercentage, pbDownload,
+				tvTotalSize, tvProgressSize, tvSpeedValue, tvTimeValue);
 		});
+	}
+	
+	private void updateDownloadProgress(AppUpdaterViewModel.DownloadStatus downloadStatus,
+	                                    TextView tvPercentage, ProgressBar pbDownload,
+	                                    TextView tvTotalSize, TextView tvProgressSize,
+	                                    TextView tvSpeedValue, TextView tvTimeValue) {
+		int percentage = downloadStatus.getProgress();
+		long downloadedByte = downloadStatus.getDownloadedByte();
+		long totalFileSizeInByte = downloadStatus.getTotalFileSize();
+		long currentTime = System.currentTimeMillis();
+		
+		String totalInFormat = FileStorageUtility
+			.humanReadableSizeOf(totalFileSizeInByte);
+		
+		String downloadedInFormat = FileStorageUtility
+			.humanReadableSizeOf(downloadedByte);
+		
+		tvPercentage.setText(MessageFormat.format("{0}%", percentage));
+		pbDownload.setProgress(percentage);
+		
+		if (percentage > 0) tvTotalSize.setText(totalInFormat);
+		else tvTotalSize.setText("--");
+		
+		tvProgressSize.setText(MessageFormat.format("{0} / {1}",
+			downloadedInFormat, totalInFormat));
+		
+		if (lastProgressTime > 0 && currentTime > lastProgressTime) {
+			long timeDelta = currentTime - lastProgressTime;
+			long bytesDelta = downloadedByte - lastProgressBytes;
+			
+			if (bytesDelta >= 0) {
+				double currentSpeed = (bytesDelta * 1000.0) / timeDelta;
+				
+				if (smoothedSpeed == 0) smoothedSpeed = currentSpeed;
+				else smoothedSpeed = (smoothedSpeed * 0.8) + (currentSpeed * 0.2);
+				
+				tvSpeedValue.setText(MessageFormat.format("{0}/s",
+					FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed)));
+				
+				if (smoothedSpeed > 0 && totalFileSizeInByte > downloadedByte) {
+					long bytesRemaining = totalFileSizeInByte - downloadedByte;
+					long secondsRemaining = (long) (bytesRemaining / smoothedSpeed);
+					
+					tvTimeValue.setText(TimeFormats.toHumanReadableTime(secondsRemaining));
+				} else if (totalFileSizeInByte == downloadedByte) {
+					tvTimeValue.setText(R.string.label_finishing);
+				} else {
+					tvTimeValue.setText("--:--");
+				}
+			}
+		} else {
+			tvSpeedValue.setText(R.string.label_connecting);
+			tvTimeValue.setText("--:--");
+		}
+		
+		lastProgressBytes = downloadedByte;
+		lastProgressTime = currentTime;
+	}
+	
+	private boolean handleDownloadError(AppUpdaterViewModel.DownloadStatus downloadStatus,
+	                                    StylizedDialogBuilder downloadDialog) {
+		if (downloadStatus.getError() == null) return false;
+		if (!downloadStatus.getError().isEmpty()) {
+			stopDownloading();
+			binding.top2.tvDownloadError.setText(R.string.title_download_has_failed);
+			binding.top2.tvDownloadErrorDetailed.setText(R.string.title_download_has_failed_reason);
+			binding.top2.containerDownloadError.setVisibility(View.VISIBLE);
+			return true;
+		}
+		return false;
+	}
+	
+	private void dismissDownloadError() {
+		binding.top2.tvDownloadError.setText(R.string.label__);
+		binding.top2.tvDownloadErrorDetailed.setText(R.string.label__);
+		binding.top2.containerDownloadError.setVisibility(View.GONE);
 	}
 	
 	@NonNull private StylizedDialogBuilder getStylizedDialogBuilder() {
@@ -228,8 +249,6 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	private void stopDownloading() {
-		vibrate();
-		StylizedToastView.showError(this, getString(R.string.hint_updating_is_canceled));
 		getViewModel().stopDownloadingAPK();
 	}
 	

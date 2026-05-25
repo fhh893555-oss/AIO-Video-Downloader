@@ -140,7 +140,9 @@
   <string name="label_sample_0_mb">0 MB</string>
   <string name="label_sample_00_00_00">00:00:00</string>
   <string name="hint_updating_is_canceled">Updating is canceled</string>
-  <string name="label_finishing">Finishing...</string>
-  <string name="label_connecting">Connecting...</string>
+  <string name="label_finishing">Finishing…</string>
+  <string name="label_connecting">Connecting…</string>
+  <string name="title_download_has_failed">Download Has Failed</string>
+  <string name="title_download_has_failed_reason">Download interrupted. This can happen if the screen was closed or network dropped.</string>
 
 </resources>
