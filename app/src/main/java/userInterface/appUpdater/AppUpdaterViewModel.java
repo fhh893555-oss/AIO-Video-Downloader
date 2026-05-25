@@ -120,6 +120,16 @@ public class AppUpdaterViewModel extends ViewModel {
 		downloadTask.start();
 	}
 	
+	/**
+	 * Stops the ongoing APK download operation and cancels the background task.
+	 * <p>
+	 * This method halts the active download by calling stop on the ApkDownloader instance
+	 * and cancels the associated ThreadTask. It is typically called when the user navigates
+	 * away from the update screen or manually cancels the download. After cancellation,
+	 * any partially downloaded file may be deleted or left for resume depending on the
+	 * downloader implementation.
+	 * </p>
+	 */
 	public void stopDownloadingAPK() {
 		downloader.stopDownload();
 		downloadTask.cancel();
@@ -132,11 +142,13 @@ public class AppUpdaterViewModel extends ViewModel {
 	 * asynchronous callbacks to the ViewModel's LiveData, allowing UI components to observe
 	 * download status updates. The listener handles progress tracking, hash verification,
 	 * and error reporting, automatically updating the downloadStatusLiveData accordingly.
+	 * All callbacks are executed on the main thread to ensure thread-safe LiveData updates.
 	 * </p>
 	 *
 	 * <p><b>Callback Handling:</b>
 	 * <ul>
-	 *   <li><b>onProgressUpdate:</b> Posts DOWNLOADING status with current percentage</li>
+	 *   <li><b>onProgressUpdate:</b> Posts DOWNLOADING status with current percentage,
+	 *       downloaded bytes, and total file size</li>
 	 *   <li><b>onDownloadComplete:</b> Posts VERIFYING status, validates SHA-256 hash,
 	 *       then posts either COMPLETED or HASH_MISMATCH based on verification result</li>
 	 *   <li><b>onError:</b> Posts ERROR status with the error message</li>
@@ -144,20 +156,44 @@ public class AppUpdaterViewModel extends ViewModel {
 	 * </p>
 	 *
 	 * @param updateInfo contains the expected SHA-256 hash for file integrity verification
-	 * @return a ProgressListener implementation that updates downloadStatusLiveData
+	 * @return a ProgressListener implementation that updates downloadStatusLiveData on the main thread
 	 */
 	private ApkDownloader.ProgressListener buildProgressListener(@NonNull UpdateInfo updateInfo) {
 		return new ApkDownloader.ProgressListener() {
+			/**
+			 * Called periodically during download to report current progress.
+			 * <p>
+			 * This method receives progress updates from the downloader and posts them
+			 * to the LiveData as a DOWNLOADING status. The update is executed on the
+			 * main thread to allow UI components to safely observe and display the progress.
+			 * </p>
+			 *
+			 * @param percentage     the current download completion percentage (0-100)
+			 * @param downloadedByte the number of bytes successfully downloaded so far
+			 * @param totalFileSize  the total size of the file being downloaded in bytes
+			 */
 			@Override
-			public void onProgressUpdate(short percentage, long downloadedByte) {
+			public void onProgressUpdate(short percentage, long downloadedByte, long totalFileSize) {
 				ThreadTask.executeOnMainThread(() -> {
 					logger.debug("Download progress info: percentage:" + percentage +
 						" download byte:" + downloadedByte);
-					downloadStatusLiveData.postValue( DownloadStatus
-						.downloading(percentage, downloadedByte));
+					downloadStatusLiveData.postValue(DownloadStatus
+						.downloading(percentage, downloadedByte, totalFileSize));
 				});
 			}
 			
+			/**
+			 * Called when the download completes successfully.
+			 * <p>
+			 * This method initiates hash verification on the main thread. It first posts
+			 * a VERIFYING status, then compares the downloaded file's hash against the
+			 * expected hash from the server. If the hashes match, a COMPLETED status is
+			 * posted with the APK file; otherwise, a HASH_MISMATCH status is posted.
+			 * </p>
+			 *
+			 * @param apkFile           the downloaded APK file
+			 * @param downloadedApkHash the SHA-256 hash of the downloaded file
+			 */
 			@Override
 			public void onDownloadComplete(File apkFile, String downloadedApkHash) {
 				ThreadTask.executeOnMainThread(() -> {
@@ -177,6 +213,16 @@ public class AppUpdaterViewModel extends ViewModel {
 				});
 			}
 			
+			/**
+			 * Called when an error occurs during the download process.
+			 * <p>
+			 * This method posts an ERROR status with the provided error message to the
+			 * LiveData, allowing UI components to display appropriate error feedback to
+			 * the user. The update is executed on the main thread for thread safety.
+			 * </p>
+			 *
+			 * @param errorMessage a descriptive error message explaining the failure
+			 */
 			@Override
 			public void onError(String errorMessage) {
 				ThreadTask.executeOnMainThread(() -> {
@@ -206,9 +252,9 @@ public class AppUpdaterViewModel extends ViewModel {
 	 * <p>
 	 * This immutable data class encapsulates all relevant information about a download's
 	 * status, including its current state (PENDING, DOWNLOADING, COMPLETED, etc.),
-	 * progress percentage, bytes downloaded, the downloaded file (if completed), and
-	 * any error messages (if an error occurred). Factory methods are provided for
-	 * creating instances representing each possible state.
+	 * progress percentage, bytes downloaded, total file size, the downloaded file
+	 * (if completed), and any error messages (if an error occurred). Factory methods
+	 * are provided for creating instances representing each possible state.
 	 * </p>
 	 *
 	 * <p><b>State Flow:</b>
@@ -225,6 +271,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		private final State state;
 		private final short progress;
 		private final long downloadedByte;
+		private final long totalFileSize;
 		private final File file;
 		private final String error;
 		
@@ -239,13 +286,16 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * @param state          the current download state (PENDING, DOWNLOADING, etc.)
 		 * @param progress       the completion percentage (0-100)
 		 * @param downloadedByte the total number of bytes downloaded so far
+		 * @param totalFileSize  the total size of the file being downloaded in bytes
 		 * @param file           the downloaded APK file reference (null until completed)
 		 * @param error          the error message if an error occurred (null otherwise)
 		 */
-		private DownloadStatus(State state, short progress, long downloadedByte, File file, String error) {
+		private DownloadStatus(State state, short progress, long downloadedByte,
+		                       long totalFileSize, File file, String error) {
 			this.state = state;
 			this.progress = progress;
 			this.downloadedByte = downloadedByte;
+			this.totalFileSize = totalFileSize;
 			this.file = file;
 			this.error = error;
 		}
@@ -261,7 +311,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * @return a DownloadStatus instance with PENDING state
 		 */
 		public static DownloadStatus pending() {
-			return new DownloadStatus(State.PENDING, (short) 0, 0L, null, null);
+			return new DownloadStatus(State.PENDING, (short) 0, 0L, 0L, null, null);
 		}
 		
 		/**
@@ -274,12 +324,13 @@ public class AppUpdaterViewModel extends ViewModel {
 		 *
 		 * @param progress       the current download completion percentage (0-100)
 		 * @param downloadedByte the number of bytes successfully downloaded so far
+		 * @param totalFileSize  the total size of the file being downloaded in bytes
 		 * @return a DownloadStatus instance with DOWNLOADING state, specified progress,
-		 * and downloaded byte count
+		 * downloaded byte count, and total file size
 		 */
-		public static DownloadStatus downloading(short progress, long downloadedByte) {
+		public static DownloadStatus downloading(short progress, long downloadedByte, long totalFileSize) {
 			return new DownloadStatus(State.DOWNLOADING,
-				progress, downloadedByte, null, null);
+				progress, downloadedByte, totalFileSize, null, null);
 		}
 		
 		/**
@@ -294,7 +345,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * @return a DownloadStatus instance with VERIFYING state and 100% progress
 		 */
 		public static DownloadStatus verifying() {
-			return new DownloadStatus(State.VERIFYING, (short) 100, 100L, null, null);
+			return new DownloadStatus(State.VERIFYING, (short) 100, 100L, 100L, null, null);
 		}
 		
 		/**
@@ -311,7 +362,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 */
 		public static DownloadStatus completed(File file) {
 			return new DownloadStatus(State.COMPLETED, (short) 100,
-				file.length(), file, null);
+				file.length(), file.length(), file, null);
 		}
 		
 		/**
@@ -327,7 +378,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * @return a DownloadStatus instance configured with ERROR state and the provided error message
 		 */
 		public static DownloadStatus error(String error) {
-			return new DownloadStatus(State.ERROR, (short) 0, 0L, null,
+			return new DownloadStatus(State.ERROR, (short) 0, 0L, 0L, null,
 				error);
 		}
 		
@@ -344,7 +395,7 @@ public class AppUpdaterViewModel extends ViewModel {
 		 * and a default error message
 		 */
 		public static DownloadStatus hashMismatch() {
-			return new DownloadStatus(State.HASH_MISMATCH, (short) 0, 0L, null,
+			return new DownloadStatus(State.HASH_MISMATCH, (short) 0, 0L, 0L, null,
 				"Hash verification failed.");
 		}
 		
@@ -390,6 +441,21 @@ public class AppUpdaterViewModel extends ViewModel {
 		 */
 		public long getDownloadedByte() {
 			return downloadedByte;
+		}
+		
+		/**
+		 * Returns the total size of the file being downloaded.
+		 * <p>
+		 * This value represents the complete file size in bytes as reported by the server.
+		 * It can be used together with {@link #getDownloadedByte()} to display detailed
+		 * download information. For PENDING and ERROR states, this value may be 0 until
+		 * the file size is known.
+		 * </p>
+		 *
+		 * @return the total file size in bytes, or 0 if not yet known
+		 */
+		public long getTotalFileSize() {
+			return totalFileSize;
 		}
 		
 		/**

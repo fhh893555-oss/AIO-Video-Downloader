@@ -307,6 +307,20 @@ public class ApkDownloader {
 	 * </ul>
 	 * </p>
 	 *
+	 * <p><b>Cancellation Handling:</b>
+	 * The request is stored in {@code currentCall} to allow external cancellation via
+	 * {@link #stopDownload()}. When cancellation occurs, the callback checks
+	 * {@link Call#isCanceled()} and suppresses error reporting to avoid misleading
+	 * error messages for user-initiated cancellations.
+	 * </p>
+	 *
+	 * <p><b>Error Handling:</b>
+	 * The method handles various error scenarios including network failures, HTTP errors,
+	 * file permission issues (FileNotFoundException, SecurityException), and general
+	 * I/O exceptions. User-friendly error messages are provided for permission-related
+	 * failures to guide the user toward resolution.
+	 * </p>
+	 *
 	 * @param url             the complete HTTPS URL of the APK file to download
 	 * @param outputFile      the destination file where the APK will be saved
 	 * @param listener        callback listener for progress updates and completion events
@@ -338,60 +352,83 @@ public class ApkDownloader {
 			
 			@Override
 			public void onResponse(@NotNull Call call, @NotNull Response response) {
-				if (!response.isSuccessful()) {
-					String errorMsg = "Server returned HTTP error: " + response.code();
-					logger.error(errorMsg);
-					listener.onError(errorMsg);
-					return;
-				}
+				if (isRequestFailed(response, listener)) return;
 				
 				ResponseBody body = response.body();
-				
 				boolean serverSupportsResume = isResume && response.code() == 206;
 				long startingBytes = serverSupportsResume ? downloadedBytes : 0;
 				
-				if (isResume && !serverSupportsResume) {
-					logger.warning("Server does not support resuming. Restarting download.");
-					if (outputFile.exists()) {
-						outputFile.delete();
-					}
-				}
+				if (shouldAbortDownload(serverSupportsResume, isResume,
+					outputFile, listener)) return;
 				
-				if (outputFile.exists() && !outputFile.canWrite()) {
-					String errorMsg = "Download failed: target file is not writable. " +
-						"Try clearing app storage or granting storage permission.";
-					logger.error(errorMsg);
-					listener.onError(errorMsg);
-					return;
-				}
-				
-				try {
-					processDownloadStream(body, outputFile, listener,
-						startingBytes, serverSupportsResume);
-				} catch (FileNotFoundException error) {
-					String errorMsg = "Cannot write APK file — " +
-						"storage permission may be denied or the file is protected.";
-					logger.error(errorMsg);
-					listener.onError(errorMsg);
-					
-				} catch (SecurityException error) {
-					String errorMsg = "Security restriction: cannot write to download " +
-						"location. Grant storage permission and try again.";
-					logger.error(errorMsg);
-					
-					listener.onError(errorMsg);
-				} catch (Exception error) {
-					if (currentCall != null && currentCall.isCanceled()) {
-						logger.debug("Download stream interrupted by cancellation.");
-					} else {
-						logger.error("Error writing file or hashing: " + error.getMessage());
-						listener.onError(error.getMessage());
-					}
-				} finally {
-					body.close();
-				}
+				handleDownloadResponse(body, startingBytes,
+					serverSupportsResume, outputFile, listener);
 			}
 		});
+	}
+	
+	private boolean isRequestFailed(@NonNull Response response,
+	                                @NonNull ProgressListener listener) {
+		if (!response.isSuccessful()) {
+			String errorMsg = "Server returned HTTP error: " + response.code();
+			logger.error(errorMsg);
+			listener.onError(errorMsg);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean shouldAbortDownload(boolean serverSupportsResume,
+	                                    boolean isResume,
+	                                    @NonNull File outputFile,
+	                                    @NonNull ProgressListener listener) {
+		if (isResume && !serverSupportsResume) {
+			logger.warning("Server does not support resuming. Restarting download.");
+			if (outputFile.exists()) {
+				outputFile.delete();
+			}
+		}
+		
+		if (outputFile.exists() && !outputFile.canWrite()) {
+			String errorMsg = "Download failed: target file is not writable. " +
+				"Try clearing app storage or granting storage permission.";
+			
+			logger.error(errorMsg);
+			listener.onError(errorMsg);
+			return true;
+		}
+		return false;
+	}
+	
+	private void handleDownloadResponse(@NotNull ResponseBody body,
+	                                    long startingBytes,
+	                                    boolean serverSupportsResume,
+	                                    @NonNull File outputFile,
+	                                    @NonNull ProgressListener listener) {
+		try (body) {
+			processDownloadStream(body, outputFile, listener,
+				startingBytes, serverSupportsResume);
+			
+		} catch (FileNotFoundException error) {
+			String errorMsg = "Cannot write APK file — " +
+				"storage permission may be denied or the file is protected.";
+			logger.error(errorMsg);
+			listener.onError(errorMsg);
+			
+		} catch (SecurityException error) {
+			String errorMsg = "Security restriction: cannot write to download " +
+				"location. Grant storage permission and try again.";
+			logger.error(errorMsg);
+			
+			listener.onError(errorMsg);
+		} catch (Exception error) {
+			if (currentCall != null && currentCall.isCanceled()) {
+				logger.debug("Download stream interrupted by cancellation.");
+			} else {
+				logger.error("Error writing file or hashing: " + error.getMessage());
+				listener.onError(error.getMessage());
+			}
+		}
 	}
 	
 	/**
@@ -401,6 +438,8 @@ public class ApkDownloader {
 	 * is enabled. It streams data from the network response body, writes it to the output file,
 	 * and simultaneously computes an SHA-256 hash of the entire file for integrity verification.
 	 * Progress updates are reported back through the ProgressListener at regular intervals.
+	 * The method also checks for cancellation requests during the streaming loop to allow
+	 * graceful interruption of long-running downloads.
 	 * </p>
 	 *
 	 * <p><b>Resume Download Support:</b>
@@ -409,9 +448,15 @@ public class ApkDownloader {
 	 * continuously updated to reflect the complete file after all data is written.
 	 * </p>
 	 *
+	 * <p><b>Cancellation Support:</b>
+	 * During the streaming loop, the method checks {@code currentCall.isCanceled()} and exits
+	 * early if a cancellation was requested. This prevents unnecessary I/O operations and
+	 * provides responsive cancellation for user-initiated stop requests.
+	 * </p>
+	 *
 	 * @param body                   the OkHttp ResponseBody containing the download stream
 	 * @param outputFile             the destination file on disk to write the APK content
-	 * @param listener               callback listener for progress and completion events, may be null
+	 * @param listener               callback listener for progress and completion events, must be non-null
 	 * @param alreadyDownloadedBytes number of bytes already downloaded in a previous session
 	 * @param appendToFile           whether to append to an existing file (resume) or overwrite
 	 * @throws IOException              if an I/O error occurs during reading, writing, or hashing
@@ -457,7 +502,7 @@ public class ApkDownloader {
 				
 				if (totalBytes > 0) {
 					short percentage = (short) ((currentDownloadedBytes * 100L) / totalBytes);
-					listener.onProgressUpdate(percentage, currentDownloadedBytes);
+					listener.onProgressUpdate(percentage, currentDownloadedBytes, totalBytes);
 				}
 			}
 			outputStream.flush();
@@ -476,6 +521,20 @@ public class ApkDownloader {
 	 * the file hasn't been corrupted or tampered with during download.
 	 * </p>
 	 *
+	 * <p><b>Verification Process:</b>
+	 * <ol>
+	 *   <li>Creates a SHA-256 MessageDigest instance</li>
+	 *   <li>Reads the file in 8KB chunks, updating the digest incrementally</li>
+	 *   <li>Converts the final digest bytes to a hexadecimal string</li>
+	 *   <li>Notifies listener with 100% progress and the computed hash</li>
+	 * </ol>
+	 * </p>
+	 *
+	 * <p><b>Error Handling:</b>
+	 * If hashing fails (e.g., file read error, algorithm not available), an error
+	 * notification is sent to the listener with a descriptive message.
+	 * </p>
+	 *
 	 * @param outputFile the downloaded APK file that has been fully written to disk
 	 * @param listener   the progress listener to notify about completion and hash results,
 	 *                   may be null to skip notifications
@@ -491,7 +550,7 @@ public class ApkDownloader {
 				}
 			}
 			if (listener != null) {
-				listener.onProgressUpdate((short) 100, outputFile.length());
+				listener.onProgressUpdate((short) 100, outputFile.length(), outputFile.length());
 				listener.onDownloadComplete(outputFile, bytesToHex(digest.digest()));
 			}
 		} catch (Exception error) {
@@ -530,7 +589,18 @@ public class ApkDownloader {
 	 * This method immediately terminates any active network request associated with
 	 * this downloader instance, whether it's the initial HEAD request or the
 	 * actual file download. If a download was in progress, the partial file
-	 * will remain on disk for future resume attempts.
+	 * will remain on disk for future resume attempts. This method is safe to
+	 * call even when no download is active.
+	 * </p>
+	 *
+	 * <p><b>Usage Example:</b>
+	 * <pre>
+	 * ApkDownloader downloader = new ApkDownloader();
+	 * downloader.startDownload(updateInfo, downloadDir, listener);
+	 *
+	 * // Later, if user cancels
+	 * downloader.stopDownload();
+	 * </pre>
 	 * </p>
 	 */
 	public void stopDownload() {
@@ -542,25 +612,57 @@ public class ApkDownloader {
 	}
 	
 	/**
-	 * Callback interface for monitoring APK download progress and completion.
+	 * Callback interface for monitoring APK download progress, completion, and errors.
 	 * <p>
 	 * Implement this interface to receive real-time updates during the app update
 	 * download process. Methods are called at various stages including progress updates,
-	 * successful completion with file verification, and error conditions.
+	 * successful completion with file verification, and error conditions. All callbacks
+	 * are invoked on the downloader's thread; implementations should handle thread
+	 * switching if UI updates are required.
+	 * </p>
+	 *
+	 * <p><b>Typical Usage:</b>
+	 * <pre>
+	 * downloader.startDownload(updateInfo, downloadDir, new ProgressListener() {
+	 *     public void onProgressUpdate(short percentage, long downloadedByte, long totalFileSize) {
+	 *         runOnUiThread(() -> progressBar.setProgress(percentage));
+	 *     }
+	 *
+	 *     public void onDownloadComplete(File apkFile, String downloadedApkHash) {
+	 *         runOnUiThread(() -> installApk(apkFile));
+	 *     }
+	 *
+	 *     public void onError(String errorMessage) {
+	 *         runOnUiThread(() -> showError(errorMessage));
+	 *     }
+	 * });
+	 * </pre>
 	 * </p>
 	 */
 	public interface ProgressListener {
 		
 		/**
 		 * Called periodically during the download to report current progress.
+		 * <p>
+		 * This method is invoked multiple times as data is received from the server,
+		 * typically after each chunk of data is written. It provides both percentage
+		 * completion and raw byte counts for detailed progress display.
+		 * </p>
 		 *
 		 * @param percentage     the download completion percentage (0-100)
 		 * @param downloadedByte the total number of bytes downloaded so far
+		 * @param totalFileSize  the total size of the file being downloaded in bytes
 		 */
-		void onProgressUpdate(short percentage, long downloadedByte);
+		void onProgressUpdate(short percentage, long downloadedByte, long totalFileSize);
 		
 		/**
 		 * Called when the APK download is complete and file integrity has been verified.
+		 * <p>
+		 * This method is invoked after the entire file has been downloaded and its
+		 * SHA-256 hash has been computed. The provided hash can be compared against
+		 * the expected hash from the server for additional verification, though basic
+		 * verification is already performed by the downloader before this callback.
+		 * </p>
 		 *
 		 * @param apkFile           the downloaded APK file ready for installation
 		 * @param downloadedApkHash the SHA-256 hash of the downloaded file for integrity validation
@@ -569,6 +671,12 @@ public class ApkDownloader {
 		
 		/**
 		 * Called when an error occurs during the download or verification process.
+		 * <p>
+		 * This method is invoked for any recoverable or unrecoverable error during
+		 * the download, including network failures, I/O errors, hash mismatches, or
+		 * insufficient storage space. The error message provides details that can be
+		 * displayed to the user or logged for debugging.
+		 * </p>
 		 *
 		 * @param errorMessage a human-readable description of the error that occurred
 		 */

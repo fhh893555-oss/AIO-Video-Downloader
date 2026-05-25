@@ -17,12 +17,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
 
 import coreUtils.base.BaseActivity;
+import coreUtils.library.networks.URLUtility;
 import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.TimeFormats;
