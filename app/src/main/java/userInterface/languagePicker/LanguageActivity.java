@@ -28,6 +28,32 @@ import userInterface.termsConsPolicy.TermsPolicyActivity;
  * settings when a target language choice is confirmed.
  * </p>
  *
+ * <p><b>Key Features:</b>
+ * <ul>
+ *   <li>Displays available languages in a 3-column grid layout</li>
+ *   <li>Provides a skip button for users who want to proceed with default language settings</li>
+ *   <li>Automatically saves selected language preference to app configuration</li>
+ *   <li>Applies locale changes to the entire application context</li>
+ *   <li>Navigates to Terms & Conditions screen after language selection</li>
+ *   <li>Applies gradient styling to the title text for visual appeal</li>
+ * </ul>
+ * </p>
+ *
+ * <p><b>Layout Structure:</b>
+ * <ul>
+ *   <li>Top: Title text with gradient effect</li>
+ *   <li>Middle: RecyclerView displaying language options in grid format</li>
+ *   <li>Bottom: Skip button for bypassing language selection</li>
+ * </ul>
+ * </p>
+ *
+ * <p><b>Behavioral Notes:</b>
+ * When a language is selected, the activity automatically saves the configuration,
+ * applies the new locale using {@link LocaleHelper}, and proceeds to the next
+ * onboarding step (TermsPolicyActivity). The skip button marks the locale as
+ * configured without changing it and proceeds to the next screen.
+ * </p>
+ *
  * @see BaseActivity
  * @see LanguageCallback
  * @see LanguageViewModel
@@ -54,12 +80,15 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Inflates the {@link ActivityLanguage1Binding} for this activity.
-	 * This method provides the binding instance used to interact with the UI components
-	 * in a type-safe manner.
+	 * Inflates the view binding for the Language selection activity.
+	 * <p>
+	 * This method initializes the {@link ActivityLanguage1Binding} using the provided
+	 * {@link LayoutInflater}, allowing for type-safe access to the layout's views
+	 * including the title text, language RecyclerView, and skip button.
+	 * </p>
 	 *
-	 * @param inflater The {@link LayoutInflater} used to inflate the binding.
-	 * @return A new instance of {@link ActivityLanguage1Binding}.
+	 * @param inflater The {@link LayoutInflater} used to inflate the binding
+	 * @return A new instance of {@link ActivityLanguage1Binding}
 	 */
 	@Override
 	protected ActivityLanguage1Binding inflateBinding(LayoutInflater inflater) {
@@ -67,12 +96,16 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Executes supplementary setup routines immediately after the layout system completes
-	 * initialization.This hook coordinates UI styling configurations and adapter links.
+	 * Initializes the activity's components once the layout has been loaded.
 	 * <p>
-	 * It loads data variants into components, establishes operational interaction buttons,
-	 * and applies dynamic runtime graphics to header title elements.
+	 * This method is called after the layout has been inflated and performs the
+	 * following setup in sequence:
 	 * </p>
+	 * <ol>
+	 *   <li>Initializes the RecyclerView and binds language data from the ViewModel</li>
+	 *   <li>Configures the skip button click listener</li>
+	 *   <li>Applies gradient styling to the "Language" portion of the title text</li>
+	 * </ol>
 	 */
 	@Override
 	protected void onLoadedLayout() {
@@ -82,11 +115,19 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Initializes and retrieves the {@link LanguageViewModel} for this activity.
-	 * This method uses a {@link ViewModelProvider} to ensure the ViewModel
-	 * is scoped to the activity's lifecycle.
+	 * Retrieves or creates the LanguageViewModel instance for this activity.
+	 * <p>
+	 * This method uses {@link ViewModelProvider} to obtain the ViewModel scoped to
+	 * this activity's lifecycle. The ViewModel survives configuration changes such
+	 * as screen rotations, preserving language data and selection state.
+	 * </p>
 	 *
-	 * @return A non-null instance of {@link LanguageViewModel}.
+	 * <p><b>ViewModel Scope:</b>
+	 * The ViewModel is tied to the activity's lifecycle and will be cleared only
+	 * when the activity finishes, not during configuration changes.
+	 * </p>
+	 *
+	 * @return The {@link LanguageViewModel} instance associated with this activity
 	 */
 	@NonNull
 	private LanguageViewModel getLanguageViewModel() {
@@ -95,10 +136,13 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Initializes the view components for the language selection screen.
-	 * This method sets up the RecyclerView and binds the language data from the ViewModel.
+	 * Initializes the UI components for the language selection screen.
+	 * <p>
+	 * This method sets up the RecyclerView that displays available language options
+	 * and binds the language data from the ViewModel to the adapter.
+	 * </p>
 	 *
-	 * @param languageViewModel The ViewModel providing the list of available languages.
+	 * @param languageViewModel The ViewModel that provides language data for the adapter
 	 */
 	private void initViews(LanguageViewModel languageViewModel) {
 		setupRecyclerView();
@@ -106,9 +150,20 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Configures the RecyclerView for displaying available languages.
-	 * Sets up the adapter, a GridLayoutManager with 3 columns, and
-	 * applies item decoration for consistent grid spacing.
+	 * Configures the RecyclerView for displaying language options in a grid layout.
+	 * <p>
+	 * This method creates and sets up the LanguageAdapter, configures a GridLayoutManager
+	 * with 3 columns, and adds spacing decoration between grid items. The RecyclerView
+	 * will display available language options that users can select from.
+	 * </p>
+	 *
+	 * <p><b>Configuration Details:</b>
+	 * <ul>
+	 *   <li>Adapter: LanguageAdapter handles language item rendering and click events</li>
+	 *   <li>LayoutManager: GridLayoutManager with 3 columns</li>
+	 *   <li>Item Decoration: GridLayoutSpacing with 2dp spacing between items</li>
+	 * </ul>
+	 * </p>
 	 */
 	private void setupRecyclerView() {
 		languageAdapter = new LanguageAdapter(this);
@@ -120,10 +175,15 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Binds the language data from the ViewModel to the view.
-	 * Observes the list of available languages and updates the adapter when changes occur.
+	 * Observes language data from the ViewModel and updates the RecyclerView adapter.
+	 * <p>
+	 * This method sets up a LiveData observer on the language list provided by the
+	 * ViewModel. Whenever the language data changes, the observer updates the adapter
+	 * with the new list, causing the RecyclerView to refresh and display the updated
+	 * language options.
+	 * </p>
 	 *
-	 * @param viewModel The {@link LanguageViewModel} providing the language data stream.
+	 * @param viewModel The ViewModel containing the LiveData of language items
 	 */
 	private void bindLanguageData(LanguageViewModel viewModel) {
 		viewModel.getLanguages().observe(this, languages -> {
@@ -134,9 +194,21 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Initializes the click listeners for the activity buttons.
-	 * Sets up the skip button to mark the locale as configured, save the configuration,
-	 * and proceed to the next activity.
+	 * Configures click listeners for all interactive buttons in the language selection screen.
+	 * <p>
+	 * This method currently sets up the skip button, which allows users to bypass
+	 * language selection and proceed with the default or previously configured locale.
+	 * When clicked, it marks the locale as configured in the app settings and navigates
+	 * to the next activity in the onboarding flow.
+	 * </p>
+	 *
+	 * <p><b>Skip Button Behavior:</b>
+	 * <ul>
+	 *   <li>Sets isLocaleConfigured flag to true in AppConfigsRepo</li>
+	 *   <li>Saves the updated configuration</li>
+	 *   <li>Opens the next activity (TermsPolicyActivity)</li>
+	 * </ul>
+	 * </p>
 	 */
 	private void initializeButtons() {
 		binding.btnSkip.setOnClickListener(view -> {
@@ -147,10 +219,21 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Applies a color gradient effect to a specific portion of the title text.
+	 * Applies a color gradient span to the "Language" portion of the title text.
 	 * <p>
-	 * This method searches for the word "Language" within the title TextView and, if found,
-	 * applies a linear gradient using the app's secondary and primary variant colors.
+	 * This method searches for the word "Language" within the title text. If found,
+	 * it applies a linear gradient transition between the secondary color and primary
+	 * variant color to that specific word using {@link TextViewsUtils#applyGradientSpan}.
+	 * This creates a visually appealing gradient effect that highlights the key part
+	 * of the language selection title.
+	 * </p>
+	 *
+	 * <p><b>Gradient Parameters:</b>
+	 * <ul>
+	 *   <li>Start color: R.color.color_secondary</li>
+	 *   <li>End color: R.color.color_primary_variant</li>
+	 *   <li>Span length: 8 characters ("Language")</li>
+	 * </ul>
 	 * </p>
 	 */
 	private void applyGradientToTitle() {
@@ -168,13 +251,26 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Handles the selection of a specific language by the user.
-	 * This method logs the selection, updates the application configuration,
-	 * persists the chosen language code, applies the locale change globally
-	 * using {@link LocaleHelper}, and proceeds to the next activity.
+	 * Called when the user selects a language from the language picker.
+	 * <p>
+	 * This method handles the language selection callback, logging the selection,
+	 * saving the selected language code and locale configuration status to the
+	 * app configuration repository, applying the language change to the application
+	 * context, and proceeding to the next activity in the onboarding flow.
+	 * </p>
 	 *
-	 * @param languageItem The {@link LanguageItem} object containing the name and
-	 *                     code of the selected language.
+	 * <p><b>Actions Performed:</b>
+	 * <ul>
+	 *   <li>Logs the selected language name and code for debugging</li>
+	 *   <li>Stores the language code in AppConfigsRepo</li>
+	 *   <li>Sets isLocaleConfigured flag to true</li>
+	 *   <li>Saves the updated configuration</li>
+	 *   <li>Changes the app's locale using LocaleHelper</li>
+	 *   <li>Opens the next activity (TermsPolicyActivity)</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param languageItem The selected language item containing language name and code
 	 */
 	@Override
 	public void onLanguageSelected(LanguageItem languageItem) {
@@ -189,10 +285,20 @@ public class LanguageActivity extends
 	}
 	
 	/**
-	 * Navigates to the Terms and Policy screen.
+	 * Opens the next activity in the onboarding flow after language selection.
 	 * <p>
-	 * This method clears the existing task stack and starts the {@link TermsPolicyActivity}
-	 * as a new task, applies a fade transition animation, and finishes the current activity.
+	 * This method creates an intent to start the TermsPolicyActivity, adds flags
+	 * to clear the activity stack (preventing the user from returning to the language
+	 * selection screen), applies a fade animation transition, and finishes the
+	 * current activity.
+	 * </p>
+	 *
+	 * <p><b>Navigation Flags:</b>
+	 * <ul>
+	 *   <li>{@link Intent#FLAG_ACTIVITY_NEW_TASK} - Starts the activity in a new task</li>
+	 *   <li>{@link Intent#FLAG_ACTIVITY_CLEAR_TASK} - Clears any existing activities from the
+	 *   task</li>
+	 * </ul>
 	 * </p>
 	 */
 	private void openNextActivity() {
