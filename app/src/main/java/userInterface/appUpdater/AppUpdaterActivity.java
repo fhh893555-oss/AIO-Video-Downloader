@@ -29,7 +29,6 @@ import coreUtils.library.process.TimeFormats;
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.StylizedDialogBuilder;
-import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.openingSplash.OpeningActivity;
@@ -41,6 +40,11 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private long lastProgressBytes = 0;
 	private long lastProgressTime = 0;
 	private double smoothedSpeed = 0;
+	private StylizedDialogBuilder downloadDialog;
+	private boolean isDownloadActive = false;
+
+	private TextView tvPercentage, tvProgressSize, tvSpeedValue, tvTimeValue, tvTotalSize;
+	private ProgressBar pbDownload;
 	
 	/**
 	 * Locks the activity orientation to prevent configuration changes during update operations.
@@ -79,6 +83,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		showLatestUpdateVersion();
 		showWhatsNewChangelog();
 		setupButtonClickEvents();
+		observeDownloadStatus();
 	}
 	
 	private void applyGradientToTitle() {
@@ -122,34 +127,33 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private void openOfficialWebsite() {
 	
 	}
-	
-	private void showDownloaderDialog() {
-		StylizedDialogBuilder downloadDialog = getStylizedDialogBuilder();
-		downloadDialog.show();
-		
-		startDownloadingLatestApk();
-		
-		View contentView = downloadDialog.getCustomContentView();
-		TextView tvPercentage = contentView.findViewById(R.id.tvPercentage);
-		TextView tvProgressSize = contentView.findViewById(R.id.tvProgressSize);
-		TextView tvSpeedValue = contentView.findViewById(R.id.tvSpeedValue);
-		TextView tvTimeValue = contentView.findViewById(R.id.tvTimeValue);
-		TextView tvTotalSize = contentView.findViewById(R.id.tvTotalSize);
-		ProgressBar pbDownload = contentView.findViewById(R.id.pbDownload);
-		
+
+	private void observeDownloadStatus() {
 		getViewModel().getDownloadStatusLiveData().observe(this, downloadStatus -> {
-			if (handleDownloadError(downloadStatus, downloadDialog)) return;
-			else dismissDownloadError();
-			
-			updateDownloadProgress(downloadStatus, tvPercentage, pbDownload,
-				tvTotalSize, tvProgressSize, tvSpeedValue, tvTimeValue);
+			if (!isDownloadActive) return;
+			if (handleDownloadError(downloadStatus)) return;
+			dismissDownloadError();
+			updateDownloadProgress(downloadStatus);
 		});
 	}
-	
-	private void updateDownloadProgress(AppUpdaterViewModel.DownloadStatus downloadStatus,
-	                                    TextView tvPercentage, ProgressBar pbDownload,
-	                                    TextView tvTotalSize, TextView tvProgressSize,
-	                                    TextView tvSpeedValue, TextView tvTimeValue) {
+
+	private void showDownloaderDialog() {
+		downloadDialog = getStylizedDialogBuilder();
+		downloadDialog.show();
+		isDownloadActive = true;
+
+		startDownloadingLatestApk();
+
+		View contentView = downloadDialog.getCustomContentView();
+		tvPercentage = contentView.findViewById(R.id.tvPercentage);
+		tvProgressSize = contentView.findViewById(R.id.tvProgressSize);
+		tvSpeedValue = contentView.findViewById(R.id.tvSpeedValue);
+		tvTimeValue = contentView.findViewById(R.id.tvTimeValue);
+		tvTotalSize = contentView.findViewById(R.id.tvTotalSize);
+		pbDownload = contentView.findViewById(R.id.pbDownload);
+	}
+
+	private void updateDownloadProgress(AppUpdaterViewModel.DownloadStatus downloadStatus) {
 		int percentage = downloadStatus.getProgress();
 		long downloadedByte = downloadStatus.getDownloadedByte();
 		long totalFileSizeInByte = downloadStatus.getTotalFileSize();
@@ -203,11 +207,14 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		lastProgressTime = currentTime;
 	}
 	
-	private boolean handleDownloadError(AppUpdaterViewModel.DownloadStatus downloadStatus,
-	                                    StylizedDialogBuilder downloadDialog) {
+	private boolean handleDownloadError(AppUpdaterViewModel.DownloadStatus downloadStatus) {
 		if (downloadStatus.getError() == null) return false;
 		if (!downloadStatus.getError().isEmpty()) {
-			stopDownloading();
+			isDownloadActive = false;
+			if (downloadDialog != null) {
+				downloadDialog.close();
+				downloadDialog = null;
+			}
 			binding.top2.tvDownloadError.setText(R.string.title_download_has_failed);
 			binding.top2.tvDownloadErrorDetailed.setText(R.string.title_download_has_failed_reason);
 			binding.top2.containerDownloadError.setVisibility(View.VISIBLE);
@@ -249,6 +256,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 	
 	private void stopDownloading() {
+		isDownloadActive = false;
 		getViewModel().stopDownloadingAPK();
 	}
 	

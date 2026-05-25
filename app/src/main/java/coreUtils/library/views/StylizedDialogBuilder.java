@@ -581,8 +581,7 @@ public class StylizedDialogBuilder {
 	 * @return this builder instance for method chaining
 	 */
 	@NonNull
-	public StylizedDialogBuilder setOnCloseClickListener(@Nullable
-	                                                     View.OnClickListener listener) {
+	public StylizedDialogBuilder setOnCloseClickListener(@Nullable View.OnClickListener listener) {
 		if (dialogRootView != null) {
 			View btnClose = dialogRootView.findViewById(R.id.btnCloseDialog);
 			if (btnClose != null) {
