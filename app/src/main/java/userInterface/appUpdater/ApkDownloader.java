@@ -189,8 +189,12 @@ public class ApkDownloader {
 		response.close();
 		
 		if (totalServerSize <= 0) {
-			if (outputFile.exists()) outputFile.delete();
-			executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
+			if (outputFile.exists() && outputFile.length() > 0) {
+				handleAlreadyDownloaded(outputFile, listener);
+			} else {
+				if (outputFile.exists()) outputFile.delete();
+				executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
+			}
 			return;
 		}
 		
