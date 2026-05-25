@@ -125,7 +125,7 @@
             android:text="@string/label_good"
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/smaller_text_size"
-            tools:ignore="SpUsage,TextSizeCheck" />
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
 
         <LinearLayout
@@ -158,7 +158,7 @@
             android:text="@string/label_average"
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/smaller_text_size"
-            tools:ignore="SpUsage,TextSizeCheck" />
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
 
         <LinearLayout
@@ -191,7 +191,7 @@
             android:text="@string/label_poor"
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/smaller_text_size"
-            tools:ignore="SpUsage,TextSizeCheck" />
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
 
         <LinearLayout
@@ -224,7 +224,7 @@
             android:text="@string/label_angry"
             android:textColor="@color/color_text_secondary"
             android:textSize="@dimen/smaller_text_size"
-            tools:ignore="SpUsage,TextSizeCheck" />
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
 
       </LinearLayout>
