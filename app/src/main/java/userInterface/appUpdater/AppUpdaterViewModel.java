@@ -244,6 +244,7 @@ public class AppUpdaterViewModel extends ViewModel {
 	@Override
 	protected void onCleared() {
 		super.onCleared();
+		downloader.stopDownload();
 		downloadTask.cancel();
 	}
 	

@@ -138,6 +138,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	}
 
 	private void showDownloaderDialog() {
+		if (isDownloadActive) return;
 		downloadDialog = getStylizedDialogBuilder();
 		downloadDialog.show();
 		isDownloadActive = true;
@@ -215,6 +216,12 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 				downloadDialog.close();
 				downloadDialog = null;
 			}
+			tvPercentage = null;
+			pbDownload = null;
+			tvTotalSize = null;
+			tvProgressSize = null;
+			tvSpeedValue = null;
+			tvTimeValue = null;
 			binding.top2.tvDownloadError.setText(R.string.title_download_has_failed);
 			binding.top2.tvDownloadErrorDetailed.setText(R.string.title_download_has_failed_reason);
 			binding.top2.containerDownloadError.setVisibility(View.VISIBLE);
