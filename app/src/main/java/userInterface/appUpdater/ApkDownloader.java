@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -127,6 +128,14 @@ public class ApkDownloader {
 			"_" + updateInfo.getVersionCode() + "_" + updateInfo.getVersionName() + ".apk";
 		
 		File outputFile = new File(downloadDir, fileName);
+		
+		if (outputFile.exists() && !outputFile.canWrite()) {
+			String errorMsg = "Cannot write to existing APK file. " +
+				"The file may be protected or storage permission is denied.";
+			logger.error(errorMsg);
+			listener.onError(errorMsg);
+			return;
+		}
 		
 		Request headRequest = new Request.Builder()
 			.url(updateInfo.getApkFileUrl())
@@ -348,9 +357,29 @@ public class ApkDownloader {
 					}
 				}
 				
+				if (outputFile.exists() && !outputFile.canWrite()) {
+					String errorMsg = "Download failed: target file is not writable. " +
+						"Try clearing app storage or granting storage permission.";
+					logger.error(errorMsg);
+					listener.onError(errorMsg);
+					return;
+				}
+				
 				try {
 					processDownloadStream(body, outputFile, listener,
 						startingBytes, serverSupportsResume);
+				} catch (FileNotFoundException error) {
+					String errorMsg = "Cannot write APK file — " +
+						"storage permission may be denied or the file is protected.";
+					logger.error(errorMsg);
+					listener.onError(errorMsg);
+					
+				} catch (SecurityException error) {
+					String errorMsg = "Security restriction: cannot write to download " +
+						"location. Grant storage permission and try again.";
+					logger.error(errorMsg);
+					
+					listener.onError(errorMsg);
 				} catch (Exception error) {
 					if (currentCall != null && currentCall.isCanceled()) {
 						logger.debug("Download stream interrupted by cancellation.");
@@ -418,6 +447,10 @@ public class ApkDownloader {
 			int bytesRead;
 			
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				if (currentCall != null && currentCall.isCanceled()) {
+					logger.debug("Download cancelled during stream processing.");
+					return;
+				}
 				outputStream.write(buffer, 0, bytesRead);
 				digest.update(buffer, 0, bytesRead);
 				currentDownloadedBytes += bytesRead;
