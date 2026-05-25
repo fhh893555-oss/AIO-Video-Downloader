@@ -38,6 +38,9 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
 	private AppUpdaterViewModel viewModel;
+	private long lastProgressBytes = 0;
+	private long lastProgressTime = 0;
+	private double smoothedSpeed = 0;
 	
 	/**
 	 * Locks the activity orientation to prevent configuration changes during update operations.
@@ -159,41 +162,37 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 			tvProgressSize.setText(MessageFormat.format("{0} / {1}", downloadedInFormat, totalInFormat));
 			
 			if (lastProgressTime > 0 && currentTime > lastProgressTime) {
-				long timeDelta = currentTime - lastProgressTime; // Milliseconds elapsed
-				long bytesDelta = downloadedByte - lastProgressBytes; // Bytes downloaded since last tick
+				long timeDelta = currentTime - lastProgressTime;
+				long bytesDelta = downloadedByte - lastProgressBytes;
 				
 				if (bytesDelta >= 0) {
-					// Speed in Bytes per Second
 					double currentSpeed = (bytesDelta * 1000.0) / timeDelta;
 					
-					// Apply Exponential Moving Average (EMA) to smooth out flickering speeds
 					if (smoothedSpeed == 0) {
 						smoothedSpeed = currentSpeed;
 					} else {
 						smoothedSpeed = (smoothedSpeed * 0.8) + (currentSpeed * 0.2);
 					}
 					
-					// Set speed text (e.g., "4.5 MB/s" or "850 KB/s")
-					tvSpeedValue.setText(FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed) + "/s");
+					tvSpeedValue.setText(MessageFormat.format("{0}/s",
+						FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed)));
 					
-					// Calculate Estimated Time Remaining (ETA)
 					if (smoothedSpeed > 0 && totalByte > downloadedByte) {
 						long bytesRemaining = totalByte - downloadedByte;
 						long secondsRemaining = (long) (bytesRemaining / smoothedSpeed);
 						
 						tvTimeValue.setText(TimeFormats.toHumanReadableTime(secondsRemaining));
 					} else if (totalByte == downloadedByte) {
-						tvTimeValue.setText("Finishing...");
+						tvTimeValue.setText(R.string.label_finishing);
 					} else {
 						tvTimeValue.setText("--:--");
 					}
 				}
 			} else {
-				tvSpeedValue.setText("Connecting...");
+				tvSpeedValue.setText(R.string.label_connecting);
 				tvTimeValue.setText("--:--");
 			}
 			
-			// Save current values to compare against on the next packet tick
 			lastProgressBytes = downloadedByte;
 			lastProgressTime = currentTime;
 		});
