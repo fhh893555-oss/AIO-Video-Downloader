@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -24,6 +25,8 @@ import javax.annotation.Nullable;
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.AppDirsValidator;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.TimeFormats;
+import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
@@ -127,12 +130,72 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		
 		View contentView = downloadDialog.getCustomContentView();
 		TextView tvPercentage = contentView.findViewById(R.id.tvPercentage);
+		TextView tvProgressSize = contentView.findViewById(R.id.tvProgressSize);
+		TextView tvSpeedValue = contentView.findViewById(R.id.tvSpeedValue);
+		TextView tvTimeValue = contentView.findViewById(R.id.tvTimeValue);
+		TextView tvTotalSize = contentView.findViewById(R.id.tvTotalSize);
 		ProgressBar pbDownload = contentView.findViewById(R.id.pbDownload);
+		
 		getViewModel().getDownloadStatusLiveData().observe(this, downloadStatus -> {
-			String progress = downloadStatus.getProgress() + "%";
-			tvPercentage.setText(progress);
+			int percentage = downloadStatus.getProgress();
+			long downloadedByte = downloadStatus.getDownloadedByte();
+			long currentTime = System.currentTimeMillis();
 			
-			pbDownload.setProgress(downloadStatus.getProgress());
+			tvPercentage.setText(MessageFormat.format("{0}%", percentage));
+			pbDownload.setProgress(percentage);
+			
+			long totalByte = 0;
+			String totalInFormat = "--";
+			
+			if (percentage > 0) {
+				totalByte = (downloadedByte * 100L) / percentage;
+				totalInFormat = FileStorageUtility.humanReadableSizeOf(totalByte);
+				tvTotalSize.setText(totalInFormat);
+			} else {
+				tvTotalSize.setText("--");
+			}
+			
+			String downloadedInFormat = FileStorageUtility.humanReadableSizeOf(downloadedByte);
+			tvProgressSize.setText(MessageFormat.format("{0} / {1}", downloadedInFormat, totalInFormat));
+			
+			if (lastProgressTime > 0 && currentTime > lastProgressTime) {
+				long timeDelta = currentTime - lastProgressTime; // Milliseconds elapsed
+				long bytesDelta = downloadedByte - lastProgressBytes; // Bytes downloaded since last tick
+				
+				if (bytesDelta >= 0) {
+					// Speed in Bytes per Second
+					double currentSpeed = (bytesDelta * 1000.0) / timeDelta;
+					
+					// Apply Exponential Moving Average (EMA) to smooth out flickering speeds
+					if (smoothedSpeed == 0) {
+						smoothedSpeed = currentSpeed;
+					} else {
+						smoothedSpeed = (smoothedSpeed * 0.8) + (currentSpeed * 0.2);
+					}
+					
+					// Set speed text (e.g., "4.5 MB/s" or "850 KB/s")
+					tvSpeedValue.setText(FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed) + "/s");
+					
+					// Calculate Estimated Time Remaining (ETA)
+					if (smoothedSpeed > 0 && totalByte > downloadedByte) {
+						long bytesRemaining = totalByte - downloadedByte;
+						long secondsRemaining = (long) (bytesRemaining / smoothedSpeed);
+						
+						tvTimeValue.setText(TimeFormats.toHumanReadableTime(secondsRemaining));
+					} else if (totalByte == downloadedByte) {
+						tvTimeValue.setText("Finishing...");
+					} else {
+						tvTimeValue.setText("--:--");
+					}
+				}
+			} else {
+				tvSpeedValue.setText("Connecting...");
+				tvTimeValue.setText("--:--");
+			}
+			
+			// Save current values to compare against on the next packet tick
+			lastProgressBytes = downloadedByte;
+			lastProgressTime = currentTime;
 		});
 	}
 	

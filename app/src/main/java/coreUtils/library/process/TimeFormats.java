@@ -366,7 +366,7 @@ public final class TimeFormats {
      * @param totalSeconds the total duration in seconds
      * @return a formatted duration string (e.g., "H:mm:ss" or "m:ss")
      */
-    private static String toHumanReadableTime(long totalSeconds) {
+    public static String toHumanReadableTime(long totalSeconds) {
         long hours = totalSeconds / 3600;
         long minutes = (totalSeconds % 3600) / 60;
         long seconds = totalSeconds % 60;
