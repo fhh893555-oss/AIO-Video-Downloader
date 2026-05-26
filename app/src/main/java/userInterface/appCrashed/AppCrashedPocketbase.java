@@ -8,7 +8,35 @@ import org.json.JSONObject;
 import coreUtils.library.process.LoggerUtils;
 import dataRepo.manager.PocketBaseClient;
 
-public class AppCrashedPocketbase extends PocketBaseClient {
+/**
+ * Concrete implementation of {@link PocketBaseClient} specifically designed for
+ * submitting application crash reports to a remote PocketBase collection.
+ * <p>
+ * This class specializes the abstract {@link PocketBaseClient} to handle crash
+ * telemetry data. It provides a fixed collection name (via {@link #COLLECTION_NAME})
+ * and exposes a convenience method {@link #sendCrashInfoToServer(AppCrashedInfo)}
+ * that transforms an {@link AppCrashedInfo} object into a JSON payload and
+ * transmits it using the inherited {@link #post(JSONObject)} method. All network
+ * operations inherit the HTTP client configuration, error handling, and logging
+ * behavior from the parent class.
+ * </p>
+ * <ul>
+ * <li>The collection name is expected to be a constant matching a preconfigured
+ *     PocketBase collection (e.g., "app_crashes")</li>
+ * <li>Field keys (e.g., {@code FIELD_DEVICE_ID}, {@code FIELD_STACKTRACE}) must
+ *     align with the server-side schema</li>
+ * <li>Network failures are logged but do not propagate exceptions to the caller;
+ *     {@code null} is returned instead</li>
+ * <li>Designed for use within a crash reporting service or uncaught exception
+ *     handler</li>
+ * </ul>
+ *
+ * @see PocketBaseClient
+ * @see AppCrashedInfo
+ * @see #sendCrashInfoToServer(AppCrashedInfo)
+ */
+public final class AppCrashedPocketbase extends PocketBaseClient {
+	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private static final String COLLECTION_NAME = "appCrashes";
 	private static final String FILED_DEVICE_ID = "deviceId";
@@ -18,10 +46,58 @@ public class AppCrashedPocketbase extends PocketBaseClient {
 	private static final String FIELD_STACKTRACE = "stackStrace";
 	private static final String FIELD_DETAILED_INFO = "detailedInfo";
 	
-	@NonNull @Override protected String getCollectionName() {
+	/**
+	 * Returns the fixed collection name used for crash report storage on the server.
+	 * <p>
+	 * This implementation overrides the abstract getCollectionName()
+	 * method from {@link PocketBaseClient}, returning a constant string that
+	 * identifies the remote collection where crash information is stored.
+	 * The collection name is expected to be preconfigured on the server side
+	 * (e.g., "app_crashes" or "crash_reports").
+	 * </p>
+	 *
+	 * @return the non-null collection name string as defined by
+	 * {@code COLLECTION_NAME} constant
+	 */
+	@NonNull
+	@Override
+	protected String getCollectionName() {
 		return COLLECTION_NAME;
 	}
 	
+	/**
+	 * Constructs a JSON payload from crash information and submits it to the server
+	 * via a POST request.
+	 * <p>
+	 * This method transforms an {@link AppCrashedInfo} object into a structured
+	 * {@link JSONObject} payload, mapping each crash field to a corresponding
+	 * server-side field key. The payload is then sent using the inherited
+	 * {@link #post(JSONObject)} method, which handles network transmission and
+	 * response parsing. A {@link JSONException} may be thrown if the payload
+	 * construction fails (e.g., due to invalid field values), but network
+	 * errors are caught and logged internally by {@code post()}, returning
+	 * {@code null} instead.
+	 * </p>
+	 * <ul>
+	 * <li>Uses static field keys (e.g., {@code FILED_DEVICE_ID},
+	 *     {@code FIELD_ANDROID_VERSION}) for consistent server mapping</li>
+	 * <li>The {@code crashInfo.getDetailedInfo()} method is called twice:
+	 *     once for {@code FILED_DEVICE_ID} and again for
+	 *     {@code FIELD_DETAILED_INFO} (verify mapping correctness)</li>
+	 * <li>Returns the server response as a {@link JSONObject} or {@code null}
+	 *     if the POST request fails</li>
+	 * </ul>
+	 *
+	 * @param crashInfo the populated crash information container; must not be
+	 *                  {@code null}
+	 * @return a {@link JSONObject} containing the server's response (typically
+	 * the created record with server-generated fields), or {@code null}
+	 * if the network request fails
+	 * @throws JSONException if constructing the JSON payload fails due to
+	 *                       invalid data types or missing keys
+	 * @see #post(JSONObject)
+	 * @see AppCrashedInfo
+	 */
 	public JSONObject sendCrashInfoToServer(AppCrashedInfo crashInfo) throws JSONException {
 		JSONObject payload = new JSONObject();
 		payload.put(FILED_DEVICE_ID, crashInfo.getDetailedInfo());
