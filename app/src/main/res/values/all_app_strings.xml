@@ -153,13 +153,12 @@
   <string name="btn_yes_report_it">Yes, Report It</string>
   <string name="btn_no_thanks">No Thanks</string>
   <string name="title_continue_anyway">Continue Anyway</string>
-  <string name="label_crash_feature_title_improve">Help Us Improve</string>
-  <string name="text_crash_feature_desc_improve">Would you like to report this issue to our team? Your report helps us fix bugs and improve the app for everyone.</string>
-  <string name="label_crash_feature_title_fix_speed">Fix Issues Faster</string>
-  <string name="text_crash_feature_desc_fix_speed">Your report helps us identify and fix crashes quickly.</string>
-  <string name="label_crash_feature_title_privacy">Privacy First</string>
-  <string name="text_crash_feature_desc_privacy">We only collect crash data and device info related to this issue.</string>
+  <string name="label_crash_feature_improve">Help Us Improve</string>
+  <string name="desc_crash_feature_improve">Would you like to report this issue to our team? Your report helps us fix bugs and improve the app for everyone.</string>
+  <string name="label_crash_feature_fix_speed">Fix Issues Faster</string>
+  <string name="desc_crash_feature_fix_speed">Your report instantly sends diagnostic data to our team, allowing us to pinpoint the issue and deploy a hotfix right away.</string>
+  <string name="label_crash_feature_privacy">Privacy First</string>
+  <string name="desc_crash_feature_privacy">We only collect technical crash logs and basic device info related to this specific event. Your personal files remain completely untouched.</string>
   <string name="label_crash_feature_title_community">Improve for Everyone</string>
-  <string name="text_crash_feature_desc_community">Every report helps make Tube AIO more stable and reliable.</string>
-
+  <string name="text_crash_feature_desc_community">Your reports directly help our team identify bugs and ensure long-term stability for all Tube AIO users.</string>
 </resources>

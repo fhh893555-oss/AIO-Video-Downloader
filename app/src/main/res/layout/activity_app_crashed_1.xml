@@ -61,6 +61,8 @@
         android:layout_marginRight="@dimen/_20"
         android:fontFamily="@font/font_family_medium"
         android:gravity="center"
+        android:maxLines="2"
+        android:singleLine="false"
         android:text="@string/subtitle_app_crashed"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/message_text_size"
@@ -140,8 +142,8 @@
                 android:layout_marginLeft="@dimen/_0"
                 android:layout_marginRight="@dimen/_0"
                 android:layout_marginBottom="@dimen/_5"
-                android:fontFamily="@font/font_family_medium"
-                android:text="@string/label_crash_feature_title_improve"
+                android:fontFamily="@font/font_family_bold"
+                android:text="@string/label_crash_feature_improve"
                 android:textColor="@color/color_primary"
                 android:textSize="@dimen/message_text_size"
                 tools:ignore="SpUsage,TextSizeCheck" />
@@ -149,8 +151,8 @@
               <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/font_family_regular"
-                android:text="@string/text_crash_feature_desc_improve"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/desc_crash_feature_improve"
                 android:textColor="@color/color_text_secondary"
                 android:textSize="@dimen/small_text_size"
                 tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
@@ -180,7 +182,7 @@
               android:padding="@dimen/_5"
               android:src="@drawable/ic_pest_control"
               android:tint="@color/color_accent"
-              tools:ignore="ContentDescription,UseAppTint" />
+              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
 
             <LinearLayout
               android:layout_width="0dp"
@@ -196,7 +198,7 @@
                 android:layout_marginRight="@dimen/_0"
                 android:layout_marginBottom="@dimen/_5"
                 android:fontFamily="@font/font_family_medium"
-                android:text="@string/label_crash_feature_title_fix_speed"
+                android:text="@string/label_crash_feature_fix_speed"
                 android:textColor="@color/color_primary"
                 android:textSize="@dimen/message_text_size"
                 tools:ignore="SpUsage,TextSizeCheck" />
@@ -205,10 +207,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/font_family_regular"
-                android:text="@string/text_crash_feature_desc_fix_speed"
+                android:text="@string/desc_crash_feature_fix_speed"
                 android:textColor="@color/color_text_secondary"
                 android:textSize="@dimen/small_text_size"
-                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,VisualLintLongText" />
             </LinearLayout>
           </LinearLayout>
 
@@ -229,7 +231,7 @@
               android:padding="@dimen/_5"
               android:src="@drawable/ic_shield_lock_fill"
               android:tint="@color/color_success"
-              tools:ignore="ContentDescription,UseAppTint" />
+              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
 
             <LinearLayout
               android:layout_width="0dp"
@@ -245,7 +247,7 @@
                 android:layout_marginRight="@dimen/_0"
                 android:layout_marginBottom="@dimen/_5"
                 android:fontFamily="@font/font_family_medium"
-                android:text="@string/label_crash_feature_title_privacy"
+                android:text="@string/label_crash_feature_privacy"
                 android:textColor="@color/color_primary"
                 android:textSize="@dimen/message_text_size"
                 tools:ignore="SpUsage,TextSizeCheck" />
@@ -254,10 +256,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/font_family_regular"
-                android:text="@string/text_crash_feature_desc_privacy"
+                android:text="@string/desc_crash_feature_privacy"
                 android:textColor="@color/color_text_secondary"
                 android:textSize="@dimen/small_text_size"
-                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,VisualLintLongText" />
             </LinearLayout>
           </LinearLayout>
 
@@ -278,7 +280,7 @@
               android:padding="@dimen/_8"
               android:src="@drawable/ic_love_favorite_fill"
               android:tint="@color/color_text_hint"
-              tools:ignore="ContentDescription,UseAppTint" />
+              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
 
             <LinearLayout
               android:layout_width="0dp"

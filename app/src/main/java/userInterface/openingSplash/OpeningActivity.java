@@ -24,6 +24,7 @@ import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.configs.AppConfigsRepo;
+import userInterface.appCrashed.AppCrashedActivity;
 import userInterface.appUpdater.AppUpdaterActivity;
 import userInterface.appUpdater.AppUpdaterUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
@@ -115,7 +116,9 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		
 		applyGradientToTitle();
 		loadVersionInfo();
-		checkUpdatesAndNavigate();
+		//checkUpdatesAndNavigate();
+		Intent intent = new Intent(this, AppCrashedActivity.class);
+		startActivity(intent);
 	}
 	
 	/**
