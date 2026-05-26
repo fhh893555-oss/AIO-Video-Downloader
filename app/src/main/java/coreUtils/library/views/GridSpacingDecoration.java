@@ -8,101 +8,75 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * A RecyclerView ItemDecoration that adds consistent spacing between items in a GridLayoutManager.
+ * A {@link RecyclerView.ItemDecoration} that applies adaptive spacing to items
+ * within a {@link GridLayoutManager}, with special handling for full-span items.
  * <p>
- * This decoration is specifically designed for use with GridLayoutManager and provides
- * intelligent spacing that handles both regular grid items and full-span items (such as
- * headers or footers that occupy all columns). The spacing is applied uniformly around
- * items, with special handling for edge items to ensure consistent visual appearance.
+ * This decoration differentiates between standard grid items and items that occupy
+ * the entire span width (e.g., headers, footers, or promotional banners). Full-span
+ * items receive uniform spacing on all four sides, with top spacing applied only
+ * to the first position. Standard grid items receive asymmetric horizontal spacing
+ * where left and right gaps are distributed proportionally (full spacing on outer
+ * edges, half spacing between columns). Bottom spacing is applied uniformly to
+ * all non-full-span items.
  * </p>
- *
- * <p><b>Key Features:</b>
  * <ul>
- *   <li>Automatic spacing calculation based on column position</li>
- *   <li>Special handling for full-span items (spanSize == spanCount)</li>
- *   <li>Asymmetric spacing where inner columns share the total spacing budget</li>
- *   <li>Bottom spacing applied to all items for vertical consistency</li>
- *   <li>Top spacing only applied to the first full-span item</li>
+ * <li>Uses {@link GridLayoutManager.SpanSizeLookup} to detect full-span items</li>
+ * <li>Full-span items are identified when {@code spanSize == spanCount}</li>
+ * <li>Column calculation skips position 0 (assumed full-span item)</li>
+ * <li>Silently returns on invalid positions or missing layout manager</li>
  * </ul>
- * </p>
- *
- * <p><b>Spacing Distribution Example (3 columns with 12px spacing):</b>
- * <pre>
- * Column 0: left=12px, right=6px
- * Column 1: left=6px,  right=6px
- * Column 2: left=6px,  right=12px
- * </pre>
- * This ensures that spacing between adjacent columns totals 12px, and edges have
- * proper padding from the screen boundaries.
- * </p>
- *
- * <p><b>Usage Example:</b>
- * <pre>
- * RecyclerView recyclerView = findViewById(R.id.recyclerView);
- * GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
- * recyclerView.setLayoutManager(layoutManager);
- *
- * int spacingPx = getResources().getDimensionPixelSize(R.dimen.grid_spacing);
- * recyclerView.addItemDecoration(new GridSpacingDecoration(spacingPx));
- * </pre>
- * </p>
- *
- * <p><b>Requirements:</b>
- * <ul>
- * <li>Requires {@link androidx.recyclerview.widget.GridLayoutManager} (or subclass).</li>
- * <li>Full-span positions must return {@code spanCount} via span size lookup.</li>
- * <li>Define spacing in pixels (convert from dp using display metrics).</li>
- * </ul>
- * </p>
  *
  * @see RecyclerView.ItemDecoration
  * @see GridLayoutManager
- * @see #getItemOffsets(Rect, View, RecyclerView, RecyclerView.State)
+ * @see GridLayoutManager.SpanSizeLookup
  */
 public class GridSpacingDecoration extends RecyclerView.ItemDecoration {
 	private final int spacingPx;
 	
 	/**
-	 * Constructs a new GridSpacingDecoration with the specified spacing in pixels.
+	 * Constructs a grid spacing decoration with the specified gap size.
 	 * <p>
-	 * This decoration adds consistent spacing between items in a GridLayoutManager,
-	 * handling both full-span items (items that occupy all columns) and regular
-	 * grid items. The spacing is applied as padding around each item.
+	 * The provided spacing value is applied uniformly as the base unit for all
+	 * offsets. Full-span items receive this value directly on all edges, while
+	 * standard grid items receive either full or half values depending on their
+	 * column position (leftmost, middle, or rightmost column).
 	 * </p>
 	 *
-	 * @param spacingPx the spacing amount in pixels to apply between grid items
+	 * @param spacingPx the base spacing size in pixels, applied as the maximum
+	 *                  gap between adjacent items
 	 */
 	public GridSpacingDecoration(int spacingPx) {
 		this.spacingPx = spacingPx;
 	}
 	
 	/**
-	 * Calculates and applies offset spacing for each item in the RecyclerView grid.
+	 * Calculates per-item offsets based on span occupancy and column position.
 	 * <p>
-	 * This method determines the appropriate spacing for each item based on its position,
-	 * span size, and column index within the grid. Full-span items receive equal spacing
-	 * on left, right, and bottom (with top spacing only for the first item). Regular
-	 * grid items receive asymmetric spacing where inner columns share spacing equally.
-	 * </p>
-	 *
-	 * <p><b>Spacing Logic:</b>
+	 * This method distinguishes between two item types:
 	 * <ul>
-	 *   <li><b>Full-span items:</b> Equal spacing on left and right, bottom spacing,
-	 *       top spacing only for the first item (position 0)</li>
-	 *   <li><b>Regular grid items:</b> Bottom spacing for all items; left/right spacing
-	 *       varies by column: first column gets full left spacing, last column gets
-	 *       full right spacing, inner columns share spacing equally</li>
+	 * <li><b>Full-span items</b> (spanSize == spanCount): receive {@code spacingPx}
+	 *     on left, right, and bottom edges. Top edge receives spacing only when the
+	 *     item is at position 0.</li>
+	 * <li><b>Standard grid items</b>: receive bottom spacing of {@code spacingPx}.
+	 *     Horizontal offsets are asymmetric: leftmost column receives full
+	 *     {@code spacingPx} on left and half on right; other columns receive half
+	 *     on left and full on right.</li>
 	 * </ul>
+	 * The method silently returns if the child has no valid adapter position or
+	 * if the parent's layout manager is not a {@link GridLayoutManager}.
 	 * </p>
 	 *
-	 * @param outRect the rectangle to receive the offset values (left, top, right, bottom)
+	 * @param outRect the rectangle to receive the offset values for this child
 	 * @param view    the child view to decorate
-	 * @param parent  the RecyclerView this decoration is attached to
-	 * @param state   the current state of the RecyclerView
+	 * @param parent  the {@link RecyclerView} containing the child
+	 * @param state   the current state of the RecyclerView (unused in this
+	 *                implementation)
 	 */
 	@Override
-	public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
-	                           @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+	public void getItemOffsets(@NonNull Rect outRect,
+	                           @NonNull View view,
+	                           @NonNull RecyclerView parent,
+	                           @NonNull RecyclerView.State state) {
 		int position = parent.getChildAdapterPosition(view);
 		if (position == RecyclerView.NO_POSITION) return;
 		

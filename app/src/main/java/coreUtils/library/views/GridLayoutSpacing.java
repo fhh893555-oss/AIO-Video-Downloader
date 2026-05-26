@@ -8,61 +8,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Proportional item spacing decoration for {@link androidx.recyclerview.widget.GridLayoutManager}.
+ * A {@link RecyclerView.ItemDecoration} that distributes uniform spacing between
+ * items in a {@link GridLayoutManager}.
  * <p>
- * This decoration distributes spacing proportionally across columns, creating visually
- * balanced gaps between grid items. It supports two modes: with edge spacing (spacing
- * applied to left/right edges of the RecyclerView) or without edge spacing (spacing
- * only between items). The spacing calculation uses integer division to ensure
- * consistent pixel values across different screen widths and column counts.
+ * This decoration calculates per-item offsets to create evenly distributed gaps
+ * around grid cells while maintaining consistent total spacing across rows and
+ * columns. The spacing algorithm supports two modes: edge-inclusive (padding
+ * applied to screen edges) and edge-exclusive (no padding on outer boundaries).
+ * The implementation dynamically adapts to the {@link GridLayoutManager}'s span
+ * count and computes fractional spacing per column to avoid visual clustering.
  * </p>
- *
- * <p><b>Key Features:</b>
  * <ul>
- *   <li>Proportional spacing distribution across columns</li>
- *   <li>Option to include or exclude edge spacing</li>
- *   <li>Automatic top spacing for rows after the first</li>
- *   <li>Works with any span count (number of columns)</li>
- *   <li>Uses integer-based pixel calculations for precise layout</li>
+ * <li>Spacing is defined in pixels and applied uniformly in all directions</li>
+ * <li>When {@code includeEdge} is {@code true}, top and bottom edges also receive
+ *     spacing</li>
+ * <li>Uses integer division carefully to preserve exact pixel distribution</li>
+ * <li>Automatically ignores items with invalid adapter positions</li>
  * </ul>
- * </p>
- *
- * <p><b>Spacing Examples (spanCount = 3, spacingPx = 12):</b>
- * <pre>
- * With edge spacing (includeEdge = true):
- * Column 0: left=12px, right=4px
- * Column 1: left=4px,  right=4px
- * Column 2: left=4px,  right=12px
- *
- * Without edge spacing (includeEdge = false):
- * Column 0: left=0px,  right=4px
- * Column 1: left=4px,  right=4px
- * Column 2: left=8px,  right=4px
- * </pre>
- * </p>
- *
- * <p><b>Usage Example:</b>
- * <pre>
- * RecyclerView recyclerView = findViewById(R.id.recyclerView);
- * GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
- * recyclerView.setLayoutManager(layoutManager);
- *
- * // Convert dp to pixels
- * int spacingPx = (int) TypedValue.applyDimension(
- *     TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
- *
- * // Add decoration with edge spacing
- * recyclerView.addItemDecoration(new GridLayoutSpacing(spacingPx, true));
- * </pre>
- * </p>
- *
- * <p><b>Requirements:</b>
- * <ul>
- *   <li>RecyclerView must use GridLayoutManager (or a subclass)</li>
- *   <li>Spacing should be defined in pixels (convert from dp using display metrics)</li>
- *   <li>For optimal results, spacingPx should be divisible by spanCount</li>
- * </ul>
- * </p>
  *
  * @see RecyclerView.ItemDecoration
  * @see GridLayoutManager
@@ -74,29 +36,32 @@ public class GridLayoutSpacing extends RecyclerView.ItemDecoration {
 	private final boolean includeEdge;
 	
 	/**
-	 * Constructs a new GridLayoutSpacing with the specified spacing and edge spacing enabled.
+	 * Constructs a spacing decoration with edge spacing enabled.
 	 * <p>
-	 * This convenience constructor calls {@link #GridLayoutSpacing(int, boolean)} with
-	 * includeEdge set to true, meaning spacing will be applied to the edges of the grid
-	 * (left and right sides of the RecyclerView).
+	 * This is a convenience constructor that delegates to
+	 * {@link #GridLayoutSpacing(int, boolean)} with {@code includeEdge} set to
+	 * {@code true}, applying spacing to all four sides of the grid including
+	 * screen edges.
 	 * </p>
 	 *
-	 * @param spacingPx the spacing amount in pixels between grid items
+	 * @param spacingPx the uniform spacing between grid items in pixels
 	 */
 	public GridLayoutSpacing(int spacingPx) {
 		this(spacingPx, true);
 	}
 	
 	/**
-	 * Constructs a new GridLayoutSpacing with the specified spacing and edge spacing option.
+	 * Constructs a spacing decoration with explicit edge inclusion control.
 	 * <p>
-	 * This decoration adds consistent spacing between items in a GridLayoutManager,
-	 * with the option to include or exclude spacing at the edges (left/right sides).
-	 * The spacing is distributed proportionally across columns.
+	 * When {@code includeEdge} is {@code true}, the decoration adds spacing
+	 * to the top of the first row and to the left/right edges of columns.
+	 * When {@code false}, spacing is applied only between adjacent items,
+	 * leaving the outer edges flush with the parent container boundaries.
 	 * </p>
 	 *
-	 * @param spacingPx   the spacing amount in pixels between grid items
-	 * @param includeEdge true to add spacing at the edges of the grid, false to leave no edge spacing
+	 * @param spacingPx   the uniform spacing between grid items in pixels
+	 * @param includeEdge {@code true} to apply spacing to screen edges,
+	 *                    {@code false} to apply spacing only between items
 	 */
 	public GridLayoutSpacing(int spacingPx, boolean includeEdge) {
 		this.spacingPx = spacingPx;
@@ -104,33 +69,27 @@ public class GridLayoutSpacing extends RecyclerView.ItemDecoration {
 	}
 	
 	/**
-	 * Calculates and applies offset spacing for each item in the RecyclerView grid.
+	 * Calculates and applies per-item offset rectangles for grid spacing.
 	 * <p>
-	 * This method distributes spacing proportionally across columns based on the item's
-	 * position within the grid. When includeEdge is true, edge items receive outer spacing;
-	 * when false, spacing is only between items with no edge padding.
+	 * This method determines the column index of each child view based on its
+	 * adapter position and the {@link GridLayoutManager}'s span count. It then
+	 * computes proportional left and right offsets using integer arithmetic to
+	 * distribute the total spacing evenly across columns. Top and bottom offsets
+	 * are applied conditionally based on row position and the
+	 * {@code includeEdge} flag. The method silently returns if the child has
+	 * no valid adapter position or if the layout manager is not a
+	 * {@link GridLayoutManager}.
 	 * </p>
+	 * <ul>
+	 * <li>Left Edge: {@code spacingPx - column * spacingPx / spanCount}</li>
+	 * <li>Right Edge: {@code (column + 1) * spacingPx / spanCount}</li>
+	 * <li>Top: Applied to the first row only if {@code includeEdge} is true.</li>
+	 * <li>Bottom: Applied to every row if {@code includeEdge} is true.</li>
+	 * </ul>
 	 *
-	 * <p><b>Spacing Calculation (includeEdge = true):</b>
-	 * <pre>
-	 * left = spacingPx - (column * spacingPx / spanCount)
-	 * right = (column + 1) * spacingPx / spanCount
-	 * top = spacingPx (for first row)
-	 * bottom = spacingPx (for all items)
-	 * </pre>
-	 *
-	 * <b>Spacing Calculation (includeEdge = false):</b>
-	 * <pre>
-	 * left = column * spacingPx / spanCount
-	 * right = spacingPx - (column + 1) * spacingPx / spanCount
-	 * top = spacingPx (for rows after the first)
-	 * bottom = 0 (no bottom spacing)
-	 * </pre>
-	 * </p>
-	 *
-	 * @param outRect the rectangle to receive the offset values (left, top, right, bottom)
+	 * @param outRect the rectangle to receive the offset values for this child
 	 * @param view    the child view to decorate
-	 * @param parent  the RecyclerView this decoration is attached to
+	 * @param parent  the {@link RecyclerView} containing the child
 	 * @param state   the current state of the RecyclerView
 	 */
 	@Override

@@ -1,11 +1,14 @@
 package userInterface.appCrashed;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 
 import com.nextgen.databinding.ActivityAppCrashed1Binding;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.views.ActivityAnimator;
+import userInterface.openingSplash.OpeningActivity;
 
 public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
@@ -43,6 +46,17 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
 	}
 	
 	@Override protected void onLoadedLayout() {
-	
+		setupButtonClicks();
 	}
+	
+	
+	private void setupButtonClicks() {
+		binding.btnContinueAnyway.setOnClickListener(view -> {
+			Intent intent = new Intent(AppCrashedActivity.this, OpeningActivity.class);
+			ActivityAnimator.animActivityFade(AppCrashedActivity.this);
+			startActivity(intent);
+			finish();
+		});
+	}
+	
 }
