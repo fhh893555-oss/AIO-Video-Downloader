@@ -9,7 +9,7 @@
 
   <ImageView
     android:id="@+id/ivTopImage"
-    android:layout_width="@dimen/_350"
+    android:layout_width="@dimen/_300"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/_20"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/_20"
-        android:layout_marginTop="@dimen/_5"
+        android:layout_marginTop="@dimen/_10"
         android:layout_marginRight="@dimen/_20"
         android:fontFamily="@font/font_family_medium"
         android:gravity="center"
@@ -70,6 +70,7 @@
     <com.github.dangiashish.StyledCardView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/_10"
       app:background_ColorType="gradient_linear"
       app:background_Gradient_Angle="45"
       app:background_Gradient_Color0="@color/color_card"
@@ -102,72 +103,213 @@
         <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/_15"
+          android:layout_marginTop="@dimen/_10"
+          android:layout_marginRight="@dimen/_15"
+          android:layout_marginBottom="@dimen/_10"
           android:orientation="vertical">
 
           <LinearLayout
-            android:id="@+id/itemAcceptance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="vertical"
-            android:paddingVertical="@dimen/_10">
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_primary_light_color"
+              android:padding="@dimen/_5"
+              android:src="@drawable/ic_verified_shield"
+              android:tint="@color/color_primary"
+              tools:ignore="ContentDescription,UseAppTint" />
 
             <LinearLayout
-              android:layout_width="match_parent"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:orientation="horizontal">
+              android:layout_weight="1"
+              android:orientation="vertical">
 
-              <ImageView
-                android:layout_width="@dimen/_40"
-                android:layout_height="@dimen/_40"
-                android:layout_marginEnd="@dimen/_12"
-                android:background="@drawable/ic_rd_background_color"
-                android:padding="@dimen/_5"
-                android:src="@drawable/img_agree_terms"
-                android:tint="@color/color_primary"
-                tools:ignore="ContentDescription,UseAppTint" />
-
-              <LinearLayout
-                android:layout_width="0dp"
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/label_crash_feature_title_improve"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage,TextSizeCheck" />
 
-                <TextView
-                  style="@style/style_textviews"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginLeft="@dimen/_0"
-                  android:layout_marginRight="@dimen/_0"
-                  android:layout_marginBottom="@dimen/_5"
-                  android:fontFamily="@font/font_family_medium"
-                  android:text="@string/title_acceptance_terms"
-                  android:textColor="@color/color_primary"
-                  android:textSize="@dimen/message_text_size"
-                  tools:ignore="SpUsage,TextSizeCheck" />
-
-                <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:fontFamily="@font/font_family_regular"
-                  android:text="@string/desc_acceptance_terms"
-                  android:textColor="@color/color_text_secondary"
-                  android:textSize="@dimen/small_text_size"
-                  tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
-              </LinearLayout>
-
-              <ImageView
-                android:layout_width="@dimen/_20"
-                android:layout_height="@dimen/_20"
-                android:layout_marginLeft="@dimen/_10"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_arrow_down"
-                android:tint="@color/color_text_secondary"
-                tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/text_crash_feature_desc_improve"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
             </LinearLayout>
           </LinearLayout>
+
+          <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_15"
+            android:background="@color/color_divider" />
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_accent_color_light"
+              android:padding="@dimen/_5"
+              android:src="@drawable/ic_pest_control"
+              android:tint="@color/color_accent"
+              tools:ignore="ContentDescription,UseAppTint" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/label_crash_feature_title_fix_speed"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage,TextSizeCheck" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/text_crash_feature_desc_fix_speed"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+          </LinearLayout>
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_success_color_light"
+              android:padding="@dimen/_5"
+              android:src="@drawable/ic_shield_lock_fill"
+              android:tint="@color/color_success"
+              tools:ignore="ContentDescription,UseAppTint" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/label_crash_feature_title_privacy"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage,TextSizeCheck" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/text_crash_feature_desc_privacy"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+          </LinearLayout>
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+              android:layout_width="@dimen/_40"
+              android:layout_height="@dimen/_40"
+              android:layout_gravity="center_vertical"
+              android:layout_marginEnd="@dimen/_12"
+              android:background="@drawable/ic_rd_divide_color_light"
+              android:padding="@dimen/_8"
+              android:src="@drawable/ic_love_favorite_fill"
+              android:tint="@color/color_text_hint"
+              tools:ignore="ContentDescription,UseAppTint" />
+
+            <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:orientation="vertical">
+
+              <TextView
+                style="@style/style_textviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_0"
+                android:layout_marginRight="@dimen/_0"
+                android:layout_marginBottom="@dimen/_5"
+                android:fontFamily="@font/font_family_medium"
+                android:text="@string/label_crash_feature_title_community"
+                android:textColor="@color/color_primary"
+                android:textSize="@dimen/message_text_size"
+                tools:ignore="SpUsage,TextSizeCheck" />
+
+              <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/text_crash_feature_desc_community"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+          </LinearLayout>
+
         </LinearLayout>
       </ScrollView>
     </com.github.dangiashish.StyledCardView>

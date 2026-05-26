@@ -21,9 +21,11 @@
   <color name="color_icon">#356DFF</color>
 
   <color name="color_success">#2ECC71</color>
+  <color name="color_success_light">#E9FFF4</color>
   <color name="color_warning">#FFB020</color>
   <color name="color_error">#FF4D67</color>
   <color name="color_divider">#DDE7F5</color>
+  <color name="color_divider_light">#4BDDE7F5</color>
 
   <color name="color_card">#FFFFFF</color>
   <color name="color_card_stroke">#E2EBFF</color>
