@@ -116,9 +116,9 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 		
 		applyGradientToTitle();
 		loadVersionInfo();
-		//checkUpdatesAndNavigate();
-		Intent intent = new Intent(this, AppCrashedActivity.class);
-		startActivity(intent);
+		checkUpdatesAndNavigate();
+		//Intent intent = new Intent(this, AppCrashedActivity.class);
+		//startActivity(intent);
 	}
 	
 	/**

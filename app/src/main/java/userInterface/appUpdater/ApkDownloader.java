@@ -12,10 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import coreUtils.library.networks.URLUtility;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -156,7 +160,14 @@ public class ApkDownloader {
 			
 			@Override
 			public void onResponse(@NotNull Call call, @NotNull Response response) {
-				startOrResumeDownload(response, outputFile, updateInfo, listener);
+				try {
+					startOrResumeDownload(response, outputFile, updateInfo, listener);
+					
+				} catch (MalformedURLException error) {
+					logger.error("Url malfunction is found: ", error);
+				} catch (Exception error) {
+					logger.error("Something went wrong: ", error);
+				}
 			}
 		});
 	}
@@ -183,12 +194,15 @@ public class ApkDownloader {
 	private void startOrResumeDownload(@NonNull Response response,
 	                                   @NotNull File outputFile,
 	                                   @NonNull UpdateInfo updateInfo,
-	                                   @NonNull ProgressListener listener) {
+	                                   @NonNull ProgressListener listener) throws MalformedURLException {
 		String apkFileUrl = updateInfo.getApkFileUrl();
-		long totalServerSize = response.body().contentLength();
+		long totalServerSize = URLUtility.getFileSizeFromUrl(new URL(apkFileUrl));
+		logger.debug("Received file size form server: " +
+			FileStorageUtility.humanReadableSizeOf(totalServerSize));
 		response.close();
 		
 		if (totalServerSize <= 0) {
+			logger.debug("File size is received from server: 0Byte");
 			if (outputFile.exists()) outputFile.delete();
 			executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
 			return;
@@ -196,17 +210,26 @@ public class ApkDownloader {
 		
 		if (outputFile.exists()) {
 			long localSize = outputFile.length();
+			logger.debug("Local file is existed, file size:" +
+				FileStorageUtility.humanReadableSizeOf(localSize));
+			
 			if (localSize == totalServerSize) {
+				logger.debug("Local file and server file size matched, " +
+					"meaning no need to download");
 				handleAlreadyDownloaded(outputFile, listener);
 				
 			} else if (localSize < totalServerSize) {
+				logger.debug("Local file has not fully downloaded, " +
+					"need to resume download");
 				executeResumedDownload(outputFile, updateInfo,
 					listener, localSize);
 				
 			} else {
+				logger.debug("Starting over the download");
 				reinitializeDownload(outputFile, updateInfo, listener);
 			}
 		} else {
+			logger.debug("Local file is not found, redownload the file");
 			executeDownloadRequest(apkFileUrl, outputFile, listener, 0);
 		}
 	}

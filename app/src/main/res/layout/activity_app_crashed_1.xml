@@ -9,7 +9,7 @@
 
   <ImageView
     android:id="@+id/ivTopImage"
-    android:layout_width="@dimen/_300"
+    android:layout_width="@dimen/_200"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/_20"
@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/ivTopImage"
-    android:layout_marginTop="-50dp"
+    android:layout_marginTop="-30dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -122,6 +122,7 @@
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
               android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_primary_light_color"
               android:padding="@dimen/_5"
@@ -177,6 +178,7 @@
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
               android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_accent_color_light"
               android:padding="@dimen/_5"
@@ -226,6 +228,7 @@
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
               android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_success_color_light"
               android:padding="@dimen/_5"
@@ -275,6 +278,7 @@
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
               android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_divide_color_light"
               android:padding="@dimen/_8"
@@ -316,102 +320,109 @@
       </ScrollView>
     </com.github.dangiashish.StyledCardView>
 
-    <RelativeLayout
-      android:id="@+id/btnReportCrash"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/_40"
-      android:layout_marginLeft="@dimen/_20"
-      android:layout_marginTop="@dimen/_20"
-      android:layout_marginRight="@dimen/_20"
-      android:layout_marginBottom="@dimen/_5"
-      android:background="@drawable/bg_button_gradient"
-      android:clickable="true"
-      android:elevation="@dimen/_2"
-      android:focusable="true"
-      tools:ignore="TouchTargetSizeCheck">
-
-      <TextView
-        android:id="@+id/tvReportCrash"
-        style="@style/style_textviews"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/font_family_bold"
-        android:gravity="center"
-        android:shadowColor="@color/color_primary"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius=".1"
-        android:text="@string/btn_yes_report_it"
-        android:textColor="@color/color_surface"
-        android:textSize="@dimen/message_text_size"
-        tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
-          TextSizeCheck,TextContrastCheck" />
-    </RelativeLayout>
-
-    <RelativeLayout
-      android:id="@+id/btnNoThanks"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/_40"
-      android:layout_marginLeft="@dimen/_20"
-      android:layout_marginTop="@dimen/_10"
-      android:layout_marginRight="@dimen/_20"
-      android:layout_marginBottom="@dimen/_5"
-      android:alpha=".8"
-      android:background="@drawable/bg_button_gradient_stroke"
-      android:clickable="true"
-      android:elevation="@dimen/_2"
-      android:focusable="true"
-      tools:ignore="TouchTargetSizeCheck">
-
-      <TextView
-        android:id="@+id/tvNoThanks"
-        style="@style/style_textviews"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/font_family_regular"
-        android:gravity="center"
-        android:shadowColor="@color/color_primary"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius=".1"
-        android:text="@string/btn_no_thanks"
-        android:textColor="@color/color_primary"
-        android:textSize="@dimen/message_text_size"
-        tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
-          TextSizeCheck,TextContrastCheck" />
-    </RelativeLayout>
-
     <LinearLayout
-      android:id="@+id/btnContinueAnyway"
-      android:layout_width="wrap_content"
+      android:id="@+id/bottomContainer"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/_10"
-      android:alpha="0.5"
-      android:background="@drawable/bg_button_negative"
-      android:clickable="true"
-      android:gravity="center_vertical"
-      android:orientation="horizontal"
-      android:paddingLeft="@dimen/_5"
-      android:paddingTop="@dimen/_2"
-      android:paddingRight="@dimen/_5"
-      android:paddingBottom="@dimen/_2"
-      tools:ignore="TouchTargetSizeCheck">
+      android:orientation="vertical">
 
-      <TextView
-        style="@style/style_textviews"
+      <RelativeLayout
+        android:id="@+id/btnReportCrash"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/_40"
+        android:layout_marginLeft="@dimen/_20"
+        android:layout_marginTop="@dimen/_20"
+        android:layout_marginRight="@dimen/_20"
+        android:layout_marginBottom="@dimen/_5"
+        android:background="@drawable/bg_button_gradient"
+        android:clickable="true"
+        android:elevation="@dimen/_2"
+        android:focusable="true"
+        tools:ignore="TouchTargetSizeCheck">
+
+        <TextView
+          android:id="@+id/tvReportCrash"
+          style="@style/style_textviews"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:fontFamily="@font/font_family_bold"
+          android:gravity="center"
+          android:shadowColor="@color/color_primary"
+          android:shadowDx="1"
+          android:shadowDy="1"
+          android:shadowRadius=".1"
+          android:text="@string/btn_yes_report_it"
+          android:textColor="@color/color_surface"
+          android:textSize="@dimen/message_text_size"
+          tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
+          TextSizeCheck,TextContrastCheck" />
+      </RelativeLayout>
+
+      <RelativeLayout
+        android:id="@+id/btnNoThanks"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40"
+        android:layout_marginLeft="@dimen/_20"
+        android:layout_marginTop="@dimen/_10"
+        android:layout_marginRight="@dimen/_20"
+        android:layout_marginBottom="@dimen/_5"
+        android:alpha=".8"
+        android:background="@drawable/bg_button_gradient_stroke"
+        android:clickable="true"
+        android:elevation="@dimen/_2"
+        android:focusable="true"
+        tools:ignore="TouchTargetSizeCheck">
+
+        <TextView
+          android:id="@+id/tvNoThanks"
+          style="@style/style_textviews"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:fontFamily="@font/font_family_regular"
+          android:gravity="center"
+          android:shadowColor="@color/color_primary"
+          android:shadowDx="1"
+          android:shadowDy="1"
+          android:shadowRadius=".1"
+          android:text="@string/btn_no_thanks"
+          android:textColor="@color/color_primary"
+          android:textSize="@dimen/message_text_size"
+          tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
+          TextSizeCheck,TextContrastCheck" />
+      </RelativeLayout>
+
+      <LinearLayout
+        android:id="@+id/btnContinueAnyway"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/_0"
-        android:fontFamily="@font/font_family_medium"
-        android:gravity="center"
-        android:text="@string/title_continue_anyway"
-        android:textColor="@color/color_text_primary"
-        android:textSize="@dimen/small_text_size"
-        tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_10"
+        android:alpha="0.5"
+        android:background="@drawable/bg_button_negative"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/_5"
+        android:paddingTop="@dimen/_2"
+        android:paddingRight="@dimen/_5"
+        android:paddingBottom="@dimen/_2"
+        tools:ignore="TouchTargetSizeCheck">
+
+        <TextView
+          style="@style/style_textviews"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_margin="@dimen/_0"
+          android:fontFamily="@font/font_family_medium"
+          android:gravity="center"
+          android:text="@string/title_continue_anyway"
+          android:textColor="@color/color_text_primary"
+          android:textSize="@dimen/small_text_size"
+          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+      </LinearLayout>
     </LinearLayout>
   </LinearLayout>
 </RelativeLayout>
