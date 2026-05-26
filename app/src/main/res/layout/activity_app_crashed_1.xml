@@ -47,7 +47,7 @@
         android:shadowRadius=".1"
         android:text="@string/title_app_crashed"
         android:textColor="@color/color_text_primary"
-        android:textSize="@dimen/title_text_size"
+        android:textSize="@dimen/sub_heading_text_size"
         tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
 
       <TextView
@@ -59,7 +59,7 @@
         android:layout_marginLeft="@dimen/_20"
         android:layout_marginTop="@dimen/_10"
         android:layout_marginRight="@dimen/_20"
-        android:fontFamily="@font/font_family_medium"
+        android:fontFamily="@font/font_family_regular"
         android:gravity="center"
         android:maxLines="2"
         android:singleLine="false"
@@ -108,7 +108,7 @@
           android:layout_marginLeft="@dimen/_15"
           android:layout_marginTop="@dimen/_10"
           android:layout_marginRight="@dimen/_15"
-          android:layout_marginBottom="@dimen/_10"
+          android:layout_marginBottom="@dimen/_15"
           android:orientation="vertical">
 
           <LinearLayout
