@@ -8,28 +8,138 @@ import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import sysModules.newPipeLib.cache.YtStreamInfo;
 
+/**
+ * Provides static utility methods for global ObjectBox database initialization and
+ * box access across the application.
+ * <p>
+ * This final helper class centralizes all interactions with the ObjectBox database
+ * framework, including one-time {@link BoxStore} initialization and typed
+ * {@link Box} retrieval for application entities such as {@link AppConfig},
+ * {@link AppUser}, and {@link YtStreamInfo}. All methods are static, requiring no
+ * instance allocation. The class maintains a single shared {@link BoxStore}
+ * reference that must be initialized via {@link #initialize(BaseApplication)}
+ * before any box accessor methods are called.
+ * </p>
+ * <ul>
+ * <li>The class is declared {@code final} to prevent subclassing</li>
+ * <li>All methods are static and thread-safe when {@code objectBoxStore} is fully
+ *     initialized</li>
+ * <li>Entities are managed via generated {@code MyObjectBox} builder class</li>
+ * <li>Callers should ensure initialization occurs once during application startup</li>
+ * </ul>
+ *
+ * @see BoxStore
+ * @see Box
+ * @see MyObjectBox
+ * @see #initialize(BaseApplication)
+ */
 public final class ObjectBoxHelper {
-    private static BoxStore objectBoxStore;
-
-    public static void initialize(BaseApplication baseApplication) {
-        objectBoxStore = MyObjectBox.builder()
-                .androidContext(baseApplication)
-                .build();
-    }
-
-    public static BoxStore getObjectBoxStore() {
-        return objectBoxStore;
-    }
-
-    public static Box<AppConfig> getAppConfigBox() {
-        return objectBoxStore.boxFor(AppConfig.class);
-    }
-
-    public static Box<AppUser> getAppUserBox() {
-        return objectBoxStore.boxFor(AppUser.class);
-    }
-
-    public static Box<YtStreamInfo> getYtStreamInfoBox() {
-        return objectBoxStore.boxFor(YtStreamInfo.class);
-    }
+	
+	private static BoxStore objectBoxStore;
+	
+	/**
+	 * Initializes the global ObjectBox {@link BoxStore} instance for the application.
+	 * <p>
+	 * This method must be called once during application startup (typically in
+	 * {@link BaseApplication#onCreate()}) to construct the underlying database
+	 * store. It uses the generated {@code MyObjectBox} builder class to create
+	 * a {@link BoxStore} configured with the provided Android application context.
+	 * Subsequent calls to {@link #getObjectBoxStore()} will return the initialized
+	 * instance, and box accessor methods (e.g., {@link #getAppConfigBox()}) will
+	 * function correctly.
+	 * </p>
+	 * <ul>
+	 * <li>This method is not thread-safe and should be called on the main thread</li>
+	 * <li>Only one {@link BoxStore} instance should exist per application
+	 *     process</li>
+	 * <li>Calling this method multiple times may create redundant instances or
+	 *     throw exceptions depending on the implementation</li>
+	 * </ul>
+	 *
+	 * @param baseApplication the application context required for ObjectBox
+	 *                        initialization; must not be {@code null}
+	 * @see MyObjectBox
+	 * @see BoxStore
+	 * @see #getObjectBoxStore()
+	 */
+	public static void initialize(BaseApplication baseApplication) {
+		objectBoxStore = MyObjectBox.builder()
+			.androidContext(baseApplication)
+			.build();
+	}
+	
+	/**
+	 * Returns the globally initialized ObjectBox {@link BoxStore} instance.
+	 * <p>
+	 * This getter provides access to the single {@link BoxStore} instance created
+	 * during {@link #initialize(BaseApplication)}. The store is required for
+	 * obtaining typed {@link Box} objects via {@link BoxStore#boxFor(Class)} and
+	 * for managing database transactions, queries, and subscriptions. Callers
+	 * should ensure that {@link #initialize(BaseApplication)} has been called
+	 * before invoking this method; otherwise, a {@code null} reference may be
+	 * returned or a runtime exception may occur.
+	 * </p>
+	 *
+	 * @return the singleton {@link BoxStore} instance, or {@code null} if not yet
+	 * initialized
+	 * @see BoxStore
+	 * @see #initialize(BaseApplication)
+	 */
+	public static BoxStore getObjectBoxStore() {
+		return objectBoxStore;
+	}
+	
+	/**
+	 * Returns the ObjectBox {@link Box} instance for the {@link AppConfig} entity.
+	 * <p>
+	 * This static factory method retrieves the typed box from the shared
+	 * {@code objectBoxStore} instance, enabling database operations such as
+	 * {@link Box#put(Object)}, {@link Box#get(long)}, {@link Box#query()}, and
+	 * {@link Box#remove(long)} for {@link AppConfig} objects. The box is
+	 * thread-safe and can be cached locally for repeated use.
+	 * </p>
+	 *
+	 * @return a non-null {@link Box} handling {@link AppConfig} entity persistence
+	 * @see Box
+	 * @see AppConfig
+	 */
+	public static Box<AppConfig> getAppConfigBox() {
+		return objectBoxStore.boxFor(AppConfig.class);
+	}
+	
+	/**
+	 * Returns the ObjectBox {@link Box} instance for the {@link AppUser} entity.
+	 * <p>
+	 * This method provides typed access to the underlying object box for
+	 * {@link AppUser} objects. Callers can perform standard CRUD operations,
+	 * execute queries with {@link Box#query()}, or manage relationships defined
+	 * in the entity model. The returned box is backed by the same
+	 * {@link io.objectbox.BoxStore} instance used across the application.
+	 * </p>
+	 *
+	 * @return a non-null {@link Box} handling {@link AppUser} entity persistence
+	 * @see Box
+	 * @see AppUser
+	 */
+	public static Box<AppUser> getAppUserBox() {
+		return objectBoxStore.boxFor(AppUser.class);
+	}
+	
+	/**
+	 * Returns the ObjectBox {@link Box} instance for the {@link YtStreamInfo} entity.
+	 * <p>
+	 * This static accessor retrieves the box responsible for persisting YouTube
+	 * stream information objects. Common use cases include storing stream
+	 * metadata, caching video details, or managing offline content queues. The
+	 * box operates on the main ObjectBox thread and supports reactive queries
+	 * via {@link Box#query()} and {@link io.objectbox.reactive.DataSubscription}.
+	 * </p>
+	 *
+	 * @return a non-null {@link Box} handling {@link YtStreamInfo} entity persistence
+	 * @see Box
+	 * @see YtStreamInfo
+	 */
+	public static Box<YtStreamInfo> getYtStreamInfoBox() {
+		return objectBoxStore.boxFor(YtStreamInfo.class);
+	}
 }
