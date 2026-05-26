@@ -121,7 +121,8 @@
             <ImageView
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
-              android:layout_gravity="center_vertical"
+              android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_primary_light_color"
               android:padding="@dimen/_5"
@@ -176,7 +177,8 @@
             <ImageView
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
-              android:layout_gravity="center_vertical"
+              android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_accent_color_light"
               android:padding="@dimen/_5"
@@ -225,7 +227,8 @@
             <ImageView
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
-              android:layout_gravity="center_vertical"
+              android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_success_color_light"
               android:padding="@dimen/_5"
@@ -274,7 +277,8 @@
             <ImageView
               android:layout_width="@dimen/_40"
               android:layout_height="@dimen/_40"
-              android:layout_gravity="center_vertical"
+              android:layout_gravity="top|left"
+              android:layout_marginTop="@dimen/_5"
               android:layout_marginEnd="@dimen/_12"
               android:background="@drawable/ic_rd_divide_color_light"
               android:padding="@dimen/_8"
