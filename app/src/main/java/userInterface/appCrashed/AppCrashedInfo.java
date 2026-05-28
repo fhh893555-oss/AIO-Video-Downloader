@@ -4,8 +4,8 @@ import android.content.pm.PackageInfo;
 
 import java.io.Serializable;
 
-import io.objectbox.Box;
 import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
 
 /**
  * A serializable data container that captures application crash context information
@@ -31,6 +31,7 @@ import io.objectbox.annotation.Entity;
 @Entity
 public final class AppCrashedInfo implements Serializable {
 	
+	@Id public long id = 0L;
 	private String deviceId;
 	private String androidVersion;
 	private String userCountry;
@@ -80,7 +81,7 @@ public final class AppCrashedInfo implements Serializable {
 	 * </p>
 	 *
 	 * @return the Android version string (e.g., "14" or "Android 14"), or
-	 *         {@code null} if not set
+	 * {@code null} if not set
 	 */
 	public String getAndroidVersion() {
 		return androidVersion;
@@ -115,7 +116,7 @@ public final class AppCrashedInfo implements Serializable {
 	 * </p>
 	 *
 	 * @return the country code string (e.g., "US", "IN", "GB"), or {@code null}
-	 *         if not set
+	 * if not set
 	 */
 	public String getUserCountry() {
 		return userCountry;

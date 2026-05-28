@@ -1051,9 +1051,53 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "8:6987622126561797307",
+      "lastPropertyId": "7:1969513754282203926",
+      "name": "AppCrashedInfo",
+      "properties": [
+        {
+          "id": "1:2860399166649479618",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2233963727550911571",
+          "name": "deviceId",
+          "type": 9
+        },
+        {
+          "id": "3:756442980144020173",
+          "name": "androidVersion",
+          "type": 9
+        },
+        {
+          "id": "4:4634411566896939083",
+          "name": "userCountry",
+          "type": 9
+        },
+        {
+          "id": "5:2697697651615843439",
+          "name": "applicationVersion",
+          "type": 9
+        },
+        {
+          "id": "6:2256311753121830010",
+          "name": "stackStraceInfo",
+          "type": 9
+        },
+        {
+          "id": "7:1969513754282203926",
+          "name": "detailedInfo",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "7:2067232067978310556",
+  "lastEntityId": "8:6987622126561797307",
   "lastIndexId": "13:7167463063313784109",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

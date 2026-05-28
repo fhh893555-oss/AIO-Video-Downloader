@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:2619012508564781816",
-      "lastPropertyId": "54:4659384282973381080",
+      "lastPropertyId": "55:2529785081629778346",
       "name": "AppConfig",
       "properties": [
         {
@@ -278,6 +278,11 @@
           "id": "54:4659384282973381080",
           "name": "httpUserAgentForBrowser",
           "type": 9
+        },
+        {
+          "id": "55:2529785081629778346",
+          "name": "isTermsConditionsAgreed",
+          "type": 1
         }
       ],
       "relations": []
