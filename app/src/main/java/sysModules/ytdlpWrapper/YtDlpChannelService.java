@@ -8,15 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
-import dataRepo.manager.PocketBaseClient;
+import dataRepo.dbManager.PocketBaseClient;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

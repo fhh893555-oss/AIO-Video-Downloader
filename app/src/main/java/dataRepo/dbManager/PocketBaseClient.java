@@ -1,4 +1,4 @@
-package dataRepo.manager;
+package dataRepo.dbManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

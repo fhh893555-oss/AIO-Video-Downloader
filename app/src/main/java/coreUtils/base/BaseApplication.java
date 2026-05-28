@@ -9,7 +9,7 @@ import com.nextgen.BuildConfig;
 import coreUtils.library.process.CrashLogWriter;
 import coreUtils.library.process.LoggerUtils;
 import dataRepo.configs.AppConfigsRepo;
-import dataRepo.manager.ObjectBoxHelper;
+import dataRepo.dbManager.ObjectBoxHelper;
 import dataRepo.user.AppUserRepo;
 import sysModules.interCaches.AppRawFiles;
 import sysModules.newPipeLib.cache.YtStreamInfoRepo;

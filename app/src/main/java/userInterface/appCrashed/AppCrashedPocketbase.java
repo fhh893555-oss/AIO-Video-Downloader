@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import coreUtils.library.process.LoggerUtils;
-import dataRepo.manager.PocketBaseClient;
+import dataRepo.dbManager.PocketBaseClient;
 
 /**
  * Concrete implementation of {@link PocketBaseClient} specifically designed for

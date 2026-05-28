@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
-import dataRepo.manager.PocketBaseClient;
+import dataRepo.dbManager.PocketBaseClient;
 import okhttp3.Request;
 import okhttp3.Response;
 

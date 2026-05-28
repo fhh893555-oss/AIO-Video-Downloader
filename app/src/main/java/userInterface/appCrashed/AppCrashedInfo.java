@@ -1,6 +1,11 @@
 package userInterface.appCrashed;
 
+import android.content.pm.PackageInfo;
+
 import java.io.Serializable;
+
+import io.objectbox.Box;
+import io.objectbox.annotation.Entity;
 
 /**
  * A serializable data container that captures application crash context information
@@ -23,6 +28,7 @@ import java.io.Serializable;
  * @see Serializable
  * @see Thread#getDefaultUncaughtExceptionHandler()
  */
+@Entity
 public final class AppCrashedInfo implements Serializable {
 	
 	private String deviceId;
@@ -34,6 +40,13 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Returns the unique hardware identifier of the device where the crash occurred.
+	 * <p>
+	 * This value is typically obtained from {@link android.provider.Settings.Secure#ANDROID_ID}
+	 * or a generated advertising ID. It helps distinguish unique devices in crash
+	 * analytics, enabling calculation of unique user impact and per-device issue
+	 * frequency. Note that this identifier may be reset on factory reset or when
+	 * the app is reinstalled on some Android versions.
+	 * </p>
 	 *
 	 * @return the device ID string, or {@code null} if not set
 	 */
@@ -43,8 +56,15 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Sets the unique hardware identifier of the device where the crash occurred.
+	 * <p>
+	 * The provided ID should be a stable per-device identifier that persists across
+	 * app restarts. Common sources include {@link android.provider.Settings.Secure#ANDROID_ID}
+	 * or a hashed version of the MAC address. This field is used to deduplicate
+	 * crash reports from the same physical device.
+	 * </p>
 	 *
-	 * @param deviceId the device ID string (e.g., ANDROID_ID or advertising ID)
+	 * @param deviceId the device ID string (e.g., ANDROID_ID or advertising ID);
+	 *                 may be {@code null} if the identifier cannot be obtained
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
@@ -52,9 +72,15 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Returns the Android OS version running on the device at the time of crash.
+	 * <p>
+	 * This value is typically sourced from {@link android.os.Build.VERSION#RELEASE}
+	 * (e.g., "14", "13", "12.0"). It is critical for identifying version-specific
+	 * bugs, particularly those introduced or resolved in particular Android
+	 * releases or vendor-specific ROMs.
+	 * </p>
 	 *
 	 * @return the Android version string (e.g., "14" or "Android 14"), or
-	 * {@code null} if not set
+	 *         {@code null} if not set
 	 */
 	public String getAndroidVersion() {
 		return androidVersion;
@@ -62,9 +88,17 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Sets the Android OS version running on the device at the time of crash.
+	 * <p>
+	 * This value should be populated from {@link android.os.Build.VERSION#RELEASE}
+	 * and may optionally include the API level from
+	 * {@link android.os.Build.VERSION#SDK_INT}. Including this information allows
+	 * crash reporting systems to surface Android version-specific patterns and
+	 * target fixes appropriately.
+	 * </p>
 	 *
 	 * @param androidVersion the Android version string (typically from
-	 *                       {@link android.os.Build.VERSION#RELEASE})
+	 *                       {@link android.os.Build.VERSION#RELEASE}); may be
+	 *                       {@code null} if the version cannot be resolved
 	 */
 	public void setAndroidVersion(String androidVersion) {
 		this.androidVersion = androidVersion;
@@ -72,9 +106,16 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Returns the geographical country code of the user when the crash occurred.
+	 * <p>
+	 * The country code is formatted as an ISO 3166-1 alpha-2 string (e.g., "US",
+	 * "IN", "GB") typically obtained from the device's default locale using
+	 * {@link java.util.Locale#getCountry()}. This field helps correlate crashes
+	 * with regional factors such as network conditions, localized content, or
+	 * region-specific API behavior.
+	 * </p>
 	 *
 	 * @return the country code string (e.g., "US", "IN", "GB"), or {@code null}
-	 * if not set
+	 *         if not set
 	 */
 	public String getUserCountry() {
 		return userCountry;
@@ -82,9 +123,15 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Sets the geographical country code of the user when the crash occurred.
+	 * <p>
+	 * The country code should be formatted as an ISO 3166-1 alpha-2 string
+	 * (e.g., "US", "IN", "GB") obtained from
+	 * {@link java.util.Locale#getCountry()}. This value helps correlate crashes
+	 * with regional network conditions or localized application behavior.
+	 * </p>
 	 *
-	 * @param userCountry the ISO 3166-1 alpha-2 country code (typically from
-	 *                    {@link java.util.Locale#getCountry()})
+	 * @param userCountry the ISO 3166-1 alpha-2 country code; may be {@code null}
+	 *                    if the country could not be determined
 	 */
 	public void setUserCountry(String userCountry) {
 		this.userCountry = userCountry;
@@ -92,9 +139,15 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Returns the version name of the crashing application.
+	 * <p>
+	 * This value typically comes from
+	 * {@link android.content.pm.PackageInfo#versionName} and represents the
+	 * user-facing version string (e.g., "3.2.1", "2.0.0-beta"). It is used to
+	 * identify which application release produced the crash and to filter or
+	 * group crash reports by version.
+	 * </p>
 	 *
-	 * @return the application version string (e.g., "3.2.1"), or {@code null}
-	 * if not set
+	 * @return the application version string, or {@code null} if not set
 	 */
 	public String getApplicationVersion() {
 		return applicationVersion;
@@ -102,9 +155,14 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Sets the version name of the crashing application.
+	 * <p>
+	 * This value should be populated from {@link PackageInfo#versionName}
+	 * at crash time. It enables server-side aggregation of crashes by application
+	 * version, helping developers prioritize fixes for the most affected releases.
+	 * </p>
 	 *
-	 * @param applicationVersion the app version string (typically from
-	 *                           {@link android.content.pm.PackageInfo#versionName})
+	 * @param applicationVersion the app version string (e.g., "3.2.1"); may be
+	 *                           {@code null} if the version could not be resolved
 	 */
 	public void setApplicationVersion(String applicationVersion) {
 		this.applicationVersion = applicationVersion;
@@ -114,10 +172,16 @@ public final class AppCrashedInfo implements Serializable {
 	 * Returns the raw stack trace string from the crash exception.
 	 * <p>
 	 * The returned string is typically formatted using
-	 * {@link android.util.Log#getStackTraceString(Throwable)}.
+	 * {@link android.util.Log#getStackTraceString(Throwable)} and contains the
+	 * complete exception chain with line numbers and class names. This is the
+	 * primary diagnostic data used to identify the root cause of the crash.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> The method name contains the typo "Strace" instead of "Trace"
+	 * for backward compatibility with existing serialized data.
 	 * </p>
 	 *
-	 * @return the stack trace string, or {@code null} if not set
+	 * @return the formatted stack trace string, or {@code null} if not set
 	 */
 	public String getStackStraceInfo() {
 		return stackStraceInfo;
@@ -126,11 +190,19 @@ public final class AppCrashedInfo implements Serializable {
 	/**
 	 * Sets the raw stack trace string from the crash exception.
 	 * <p>
+	 * The provided string is typically obtained from
+	 * {@link android.util.Log#getStackTraceString(Throwable)} and contains the
+	 * full exception stack trace formatted as a single string. This method
+	 * stores the value for later serialization or remote reporting.
+	 * </p>
+	 * <p>
 	 * <b>Note:</b> The method name contains the typo "Strace" instead of "Trace".
-	 * This is preserved for backward compatibility with existing serialized data.
+	 * This is preserved for backward compatibility with existing serialized data
+	 * and should not be corrected to avoid breaking deserialization.
 	 * </p>
 	 *
-	 * @param stackStraceInfo the formatted stack trace string
+	 * @param stackStraceInfo the formatted stack trace string; may be
+	 *                        {@code null} if no stack trace is available
 	 */
 	public void setStackStraceInfo(String stackStraceInfo) {
 		this.stackStraceInfo = stackStraceInfo;
@@ -138,9 +210,15 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Returns any additional developer-provided context information for the crash.
+	 * <p>
+	 * This field can contain arbitrary supplemental data such as the current
+	 * screen name, network connectivity state, user session identifiers, or any
+	 * other debugging context that helps diagnose the crash conditions. The
+	 * content is developer-defined and unstructured.
+	 * </p>
 	 *
 	 * @return a detailed info string (e.g., custom metadata, user actions), or
-	 * {@code null} if not set
+	 * {@code null} if no additional information was provided
 	 */
 	public String getDetailedInfo() {
 		return detailedInfo;
@@ -148,9 +226,16 @@ public final class AppCrashedInfo implements Serializable {
 	
 	/**
 	 * Sets any additional developer-provided context information for the crash.
+	 * <p>
+	 * This setter allows crash reporting code to attach supplemental debugging
+	 * context that is not captured by other dedicated fields (e.g., current
+	 * activity name, last user action, API request state). The value is stored
+	 * as-is and will be serialized alongside other crash data.
+	 * </p>
 	 *
 	 * @param detailedInfo an arbitrary string containing supplemental crash
-	 *                     details (e.g., current screen name, network state)
+	 *                     details (e.g., current screen name, network state);
+	 *                     may be {@code null}
 	 */
 	public void setDetailedInfo(String detailedInfo) {
 		this.detailedInfo = detailedInfo;

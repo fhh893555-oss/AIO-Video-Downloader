@@ -14,7 +14,7 @@ import java.io.Serializable;
 import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
-import dataRepo.manager.PocketBaseClient;
+import dataRepo.dbManager.PocketBaseClient;
 
 /**
  * Utility class for checking and retrieving application updates from a PocketBase backend.

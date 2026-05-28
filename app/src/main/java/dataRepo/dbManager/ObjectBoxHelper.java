@@ -1,4 +1,4 @@
-package dataRepo.manager;
+package dataRepo.dbManager;
 
 import coreUtils.base.BaseApplication;
 import dataRepo.configs.AppConfig;
@@ -7,6 +7,7 @@ import dataRepo.user.AppUser;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import sysModules.newPipeLib.cache.YtStreamInfo;
+import userInterface.appCrashed.AppCrashedInfo;
 
 /**
  * Provides static utility methods for global ObjectBox database initialization and
@@ -141,5 +142,31 @@ public final class ObjectBoxHelper {
 	 */
 	public static Box<YtStreamInfo> getYtStreamInfoBox() {
 		return objectBoxStore.boxFor(YtStreamInfo.class);
+	}
+	
+	/**
+	 * Returns the ObjectBox {@link Box} instance for the {@link AppCrashedInfo} entity.
+	 * <p>
+	 * This static accessor retrieves the typed box responsible for persisting
+	 * application crash report objects. The returned box enables standard CRUD
+	 * operations such as {@link Box#put(Object)} to store crash data locally,
+	 * {@link Box#get(long)} to retrieve individual records by ID, and
+	 * {@link Box#query()} to perform complex searches across stored crash
+	 * information.
+	 * </p>
+	 * <p>
+	 * Local storage of crash reports using this box can serve as a persistent
+	 * queue for crash data that has not yet been successfully transmitted to a
+	 * remote server, enabling retry mechanisms and offline crash capture.
+	 * </p>
+	 *
+	 * @return a non-null {@link Box} handling {@link AppCrashedInfo} entity
+	 *         persistence operations
+	 * @see Box
+	 * @see AppCrashedInfo
+	 * @see #getObjectBoxStore()
+	 */
+	public static Box<AppCrashedInfo> getAppCrashedInfoBox() {
+		return objectBoxStore.boxFor(AppCrashedInfo.class);
 	}
 }

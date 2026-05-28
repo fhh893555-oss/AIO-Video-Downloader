@@ -18,7 +18,7 @@ import coreUtils.base.BaseApplication;
 import coreUtils.library.process.DeviceSignature;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
-import dataRepo.manager.PocketBaseClient;
+import dataRepo.dbManager.PocketBaseClient;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
