@@ -16,6 +16,7 @@ import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
+import userInterface.openingSplash.LauncherActivity;
 import userInterface.openingSplash.OpeningActivity;
 
 /**
@@ -134,7 +135,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
 	 * to three distinct buttons: "Continue Anyway" (proceeds without reporting),
 	 * "Report Crash" (submits crash data before proceeding), and "No, Thanks"
 	 * (dismisses without reporting). All handlers share the common behavior of
-	 * navigating to {@link OpeningActivity} with a fade transition animation,
+	 * navigating to {@link LauncherActivity} with a fade transition animation,
 	 * followed by finishing the current activity.
 	 * </p>
 	 *
@@ -144,9 +145,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
 	 */
 	private void setupButtonClicks() {
 		binding.btnContinueAnyway.setOnClickListener(view -> {
-			Intent intent = new Intent(
-				AppCrashedActivity.this, OpeningActivity.class);
-			
+			Intent intent = new Intent(AppCrashedActivity.this, LauncherActivity.class);
 			ActivityAnimator.animActivityFade(AppCrashedActivity.this);
 			startActivity(intent);
 			finish();
@@ -159,7 +158,6 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
 				binding.btnContinueAnyway.performClick();
 			}
 		});
-		
 	}
 	
 	/**

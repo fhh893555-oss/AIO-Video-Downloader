@@ -100,7 +100,7 @@ public final class AppCrashedPocketbase extends PocketBaseClient {
 	 */
 	public JSONObject sendCrashInfoToServer(AppCrashedInfo crashInfo) throws JSONException {
 		JSONObject payload = new JSONObject();
-		payload.put(FILED_DEVICE_ID, crashInfo.getDetailedInfo());
+		payload.put(FILED_DEVICE_ID, crashInfo.getDeviceId());
 		payload.put(FIELD_ANDROID_VERSION, crashInfo.getAndroidVersion());
 		payload.put(FIELD_APP_VERSION, crashInfo.getApplicationVersion());
 		payload.put(FIELD_USER_COUNTRY, crashInfo.getUserCountry());

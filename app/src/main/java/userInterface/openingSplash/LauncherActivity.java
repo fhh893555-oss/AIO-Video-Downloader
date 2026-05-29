@@ -8,8 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextgen.R;
 
+import coreUtils.library.process.VersionInfo;
 import dataRepo.configs.AppConfig;
 import dataRepo.configs.AppConfigsRepo;
+import dataRepo.user.AppUserRepo;
+import userInterface.appCrashed.AppCrashedActivity;
+import userInterface.appCrashed.AppCrashedInfo;
 
 /**
  * Launcher activity that serves as the application's entry point and crash detection handler.
@@ -82,11 +86,19 @@ public class LauncherActivity extends AppCompatActivity {
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AppConfig appConfig = AppConfigsRepo.getConfig();
-		if (appConfig.hasAppCrashedRecently) {
+		if (!appConfig.hasAppCrashedRecently) {
 			appConfig.hasAppCrashedRecently = false;
 			appConfig.save();
 			
-			Intent intent = new Intent(this, OpeningActivity.class);
+			AppCrashedInfo crashedInfo = new AppCrashedInfo();
+			crashedInfo.setDetailedInfo("DemoDemoDemoDemoDemo");
+			crashedInfo.setDeviceId(AppUserRepo.getUser().userDeviceId);
+			crashedInfo.setUserCountry(AppUserRepo.getUser().countryCode);
+			crashedInfo.setAndroidVersion("15");
+			crashedInfo.setApplicationVersion(VersionInfo.getVersionName(this));
+			
+			Intent intent = new Intent(this, AppCrashedActivity.class);
+			intent.putExtra(AppCrashedActivity.CRASHED_INFO_INTENT_KEY, crashedInfo);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			overridePendingTransition(R.anim.anim_fade_enter, R.anim.anim_fade_exit);
 			startActivity(intent);
