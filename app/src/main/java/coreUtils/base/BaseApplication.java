@@ -1,5 +1,7 @@
 package coreUtils.base;
 
+import static java.lang.Thread.setDefaultUncaughtExceptionHandler;
+
 import android.app.Application;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -11,6 +13,7 @@ import coreUtils.library.process.LoggerUtils;
 import dataRepo.configs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
 import dataRepo.user.AppUserRepo;
+import sysModules.crashedHandler.GlobalCrashedHandler;
 import sysModules.interCaches.AppRawFiles;
 import sysModules.newPipeLib.cache.YtStreamInfoRepo;
 import sysModules.newPipeLib.libs.NewPipeLibraryManager;
@@ -100,6 +103,7 @@ public class BaseApplication extends Application {
 		configureThemeBySystem();
 		super.onCreate();
 		AppContext = this;
+		registerGlobalCrashHandler();
 		initRepositories();
 		initLottieComposition();
 		initYtDlpService();
@@ -132,6 +136,10 @@ public class BaseApplication extends Application {
 		CrashLogWriter.shutdown();
 		AppUserRepo.release();
 		super.onTerminate();
+	}
+	
+	private void registerGlobalCrashHandler() {
+		setDefaultUncaughtExceptionHandler(new GlobalCrashedHandler());
 	}
 	
 	/**
