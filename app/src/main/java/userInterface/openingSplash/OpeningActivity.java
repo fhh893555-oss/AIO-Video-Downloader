@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
@@ -31,52 +32,55 @@ import userInterface.languagePicker.LanguageActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 /**
- * Splash screen activity that serves as the entry point for the application.
- * <p>
- * This activity displays branding animations using Lottie, applies gradient styling
- * to the app title, shows the current version information, and handles initial
- * navigation logic including update checks and onboarding flow routing.
- * </p>
+ * Opening screen activity that serves as the launch entry point for the application.
+ * This activity displays a branded loading screen with a Lottie animation, the app
+ * title with gradient text effect, and the current version information. It performs
+ * update checks and navigates to the appropriate next screen based on app state.
  *
- * <p><b>Navigation Flow:</b>
- * <ol>
- *   <li>Displays splash animation for 1 second</li>
- *   <li>Checks for available app updates from the server</li>
- *   <li>If update exists: redirects to {@link AppUpdaterActivity}</li>
- *   <li>If no update: proceeds to {@link LanguageActivity} or {@link TermsPolicyActivity}
- *       based on user configuration (locale setup and terms agreement status)</li>
- * </ol>
- * </p>
- *
- * <p><b>Configuration Decisions:</b>
- * The activity evaluates two persisted flags from {@link AppConfigsRepo}:
+ * <p><strong>Core responsibilities:</strong>
  * <ul>
- *   <li><i>isLocaleConfigured</i> - Determines if language has been selected</li>
- *   <li><i>isTermsConditionsAgreed</i> - Determines if terms have been accepted</li>
+ * <li>Displays a loading animation using Lottie while preparing the app.</li>
+ * <li>Applies gradient color span to the "NextGen" word in the title.</li>
+ * <li>Loads and displays the current application version.</li>
+ * <li>Checks for available updates via {@link #checkUpdatesAndNavigate()}.</li>
+ * <li>Navigates to update screen if available, or proceeds to language/terms/main
+ *     screen based on configuration state.</li>
+ * <li>Locks screen orientation to portrait for consistent layout rendering.</li>
  * </ul>
- * Terms agreement takes priority over locale configuration when both are incomplete.
- * </p>
+ *
+ * <p><strong>Navigation flow:</strong>
+ * After a 1-second delay, the activity checks for app updates. If an update is
+ * available, {@link AppUpdaterActivity} is launched. Otherwise, navigation proceeds
+ * to {@link TermsPolicyActivity} (if terms not agreed), {@link LanguageActivity}
+ * (if locale not configured), or the main activity based on {@link #getDestinationIntent()}.
+ *
+ * <p><strong>Layout:</strong>
+ * Uses {@code activity_opening1.xml} with a Lottie animation view, title TextView,
+ * and version TextView. The word "NextGen" in the title receives a gradient effect
+ * from {@code color_secondary} to {@code color_primary_variant}.
  *
  * @see BaseActivity
  * @see ActivityOpening1Binding
  * @see AppUpdaterActivity
- * @see LanguageActivity
  * @see TermsPolicyActivity
- * @see AppUpdaterUtils
+ * @see LanguageActivity
  */
-public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
+public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
 	/**
-	 * Locks the activity orientation to prevent configuration changes during splash display.
-	 * <p>
-	 * Returns true to lock the screen orientation, preventing the system from recreating
-	 * the activity when the device is rotated. This ensures smooth animation playback
-	 * and avoids disruptions during the initial loading phase.
-	 * </p>
+	 * Determines whether the activity's screen orientation should be locked.
+	 * This implementation returns {@code true}, forcing the opening screen
+	 * to remain in portrait mode regardless of device rotation.
 	 *
-	 * @return true to lock orientation, false to allow rotation
+	 * <p><strong>Design rationale:</strong>
+	 * Locking the orientation ensures the Lottie loading animation, title text,
+	 * and version information maintain a consistent layout without unexpected
+	 * reconfigurations during the brief display period before navigation.
+	 *
+	 * @return {@code true} to lock the activity to portrait orientation.
+	 * @see BaseActivity#shouldLockOrientation()
 	 */
 	@Override
 	protected boolean shouldLockOrientation() {
@@ -84,29 +88,43 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Inflates the view binding for the opening splash screen activity.
-	 * <p>
-	 * Uses the generated ActivityOpening1Binding class to inflate the layout XML,
-	 * providing type-safe access to all UI components including the Lottie animation
-	 * view, title text, and version display TextView.
-	 * </p>
+	 * Inflates the activity's layout using view binding and returns the generated
+	 * binding instance for {@code activity_opening1.xml}. This method is called
+	 * during the base activity's {@code setContentView()} phase to create the
+	 * binding object that provides type-safe access to all views in the layout,
+	 * including the Lottie animation view, title TextView, and version TextView.
 	 *
-	 * @param inflater LayoutInflater instance used to inflate the layout
-	 * @return ActivityOpening1Binding containing references to all UI elements
+	 * @param inflater The layout inflater service used to create the view hierarchy.
+	 *                 Must not be {@code null}.
+	 * @return The {@link ActivityOpening1Binding} instance containing references
+	 * to all views defined in the opening screen layout.
+	 * @see BaseActivity#inflateBinding(LayoutInflater)
 	 */
 	@Override protected ActivityOpening1Binding inflateBinding(LayoutInflater inflater) {
 		return ActivityOpening1Binding.inflate(inflater);
 	}
 	
 	/**
-	 * Configures all UI components after the layout has been successfully inflated.
-	 * <p>
-	 * This lifecycle method performs the following initialization steps:
-	 * Enables merge path support for Lottie animation (compatible with KitKat+),
-	 * applies gradient color styling to the "NextGen" portion of the title text,
-	 * loads and displays the current app version information, and initiates the
-	 * update check and navigation flow.
-	 * </p>
+	 * Performs post-layout initialization after the content view has been inflated.
+	 * This method is invoked by the base activity at the end of {@code onCreate()}
+	 * and is responsible for configuring the Lottie loading animation, applying
+	 * visual enhancements to the title text, loading version information, and
+	 * initiating the update check and navigation flow.
+	 *
+	 * <p><strong>Initialization order:</strong>
+	 * <ol>
+	 * <li>Enables merge paths for the Lottie animation (KitKat and above compatibility).</li>
+	 * <li>Applies gradient span to the word "NextGen" in the title via
+	 *     {@link #applyGradientToTitle()}.</li>
+	 * <li>Loads and displays the current app version via {@link #loadVersionInfo()}.</li>
+	 * <li>Checks for updates and navigates to the appropriate next screen via
+	 *     {@link #checkUpdatesAndNavigate()}.</li>
+	 * </ol>
+	 *
+	 * @see BaseActivity#onLoadedLayout()
+	 * @see #applyGradientToTitle()
+	 * @see #loadVersionInfo()
+	 * @see #checkUpdatesAndNavigate()
 	 */
 	@Override
 	protected void onLoadedLayout() {
@@ -119,12 +137,26 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Applies a gradient color effect to the "NextGen" substring in the title TextView.
-	 * <p>
-	 * Searches for the word "NextGen" within the title text. If found, uses TextViewsUtils
-	 * to apply a gradient span transitioning from secondary color to primary variant color
-	 * across the 7 characters of the word. This creates a visually appealing branding effect.
-	 * </p>
+	 * Applies a gradient color span to the word "NextGen" within the title text view.
+	 * This method searches for the substring "NextGen" in the full title text and,
+	 * if found, applies a gradient effect using
+	 * {@link TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)}.
+	 *
+	 * <p><strong>Visual effect:</strong>
+	 * The gradient transitions from {@code color_secondary} to
+	 * {@code color_primary_variant}, spanning the 7 characters of the word
+	 * "NextGen". This creates a highlighted, branded appearance for the key
+	 * word in the opening screen title, drawing user attention to the app's
+	 * name or tagline.
+	 *
+	 * <p><strong>Error handling:</strong>
+	 * If the word "NextGen" is not found in the title string (e.g., due to
+	 * localization or layout changes), the method silently does nothing without
+	 * throwing an exception. The start index check ensures the span is only
+	 * applied when the substring exists.
+	 *
+	 * @see TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)
+	 * @see #getColor(int)
 	 */
 	private void applyGradientToTitle() {
 		String fullText = binding.tvTitle.getText().toString();
@@ -141,13 +173,15 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Retrieves and displays the current application version information.
-	 * <p>
-	 * Fetches both the version name (e.g., "2.1.0") and version code (e.g., 42) from
-	 * VersionInfo utility. Formats them as "versionName (versionCode)" and displays the
-	 * result in the version TextView. Logs the formatted version string for debugging
-	 * purposes.
-	 * </p>
+	 * Loads and displays the current application version information on the screen.
+	 * This method retrieves both the version name (e.g., "1.2.3") and version code
+	 * (e.g., "4") from {@link VersionInfo}, formats them as a combined string,
+	 * logs the result for debugging, and sets the text on the version TextView.
+	 *
+	 * <p><strong>Format example:</strong> "1.2.3 (4)"
+	 *
+	 * @see VersionInfo#getVersionCode(android.content.Context)
+	 * @see VersionInfo#getVersionName(android.content.Context)
 	 */
 	private void loadVersionInfo() {
 		BaseApplication app = BaseApplication.AppContext;
@@ -159,13 +193,25 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Delays execution for 1 second, then checks for available app updates in the background.
-	 * <p>
-	 * This method serves as the entry point for post-splash navigation logic. It waits 1 second
-	 * to ensure animations complete, then fetches update information from the server. If an
-	 * update is available, it redirects to the app updater screen; otherwise, it proceeds to
-	 * the normal application flow (language selection or terms agreement).
-	 * </p>
+	 * Checks for application updates after a 1-second delay, then navigates either
+	 * to the app updater screen or the next screen based on update availability.
+	 * The update check runs in a background thread to avoid blocking the UI,
+	 * while navigation logic executes on the main thread.
+	 *
+	 * <p><strong>Execution flow:</strong>
+	 * <ol>
+	 * <li>Delays execution by 1000ms to allow the opening screen to be visible.</li>
+	 * <li>Executes {@link #getLatestUpdateInfo()} in background thread.</li>
+	 * <li>On main thread, evaluates whether an update is available via
+	 *     {@link AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)}.</li>
+	 * <li>If update available, calls {@link #launchAppUpdater(UpdateInfo)}.</li>
+	 * <li>If no update, calls {@link #proceedToNextScreen()}.</li>
+	 * </ol>
+	 *
+	 * @see #getLatestUpdateInfo()
+	 * @see AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)
+	 * @see #launchAppUpdater(UpdateInfo)
+	 * @see #proceedToNextScreen()
 	 */
 	private void checkUpdatesAndNavigate() {
 		new Handler(Looper.getMainLooper()).postDelayed(() ->
@@ -185,14 +231,22 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Launches the app updater activity with the latest update information.
-	 * <p>
-	 * Executes on the main thread to start AppUpdaterActivity, passing the UpdateInfo object
-	 * as an intent extra. Triggers haptic feedback vibration and applies a fade animation
-	 * transition. The updater activity will handle the download and installation process.
-	 * </p>
+	 * Launches the application updater screen with the latest update information.
+	 * This method constructs an intent targeting {@link AppUpdaterActivity},
+	 * attaches the {@link UpdateInfo} object as an extra using the key
+	 * {@link AppUpdaterActivity#KEY_INTENT_RECEIVED_KEY}, triggers a short
+	 * haptic vibration via {@link #vibrate()}, starts the activity with a
+	 * fade animation, and finishes the current opening activity.
 	 *
-	 * @param latestUpdateInfo The update details containing version info and APK download URL
+	 * <p>The fade animation is applied via
+	 * {@link ActivityAnimator#animActivityFade(BaseActivity)}.
+	 *
+	 * @param latestUpdateInfo The {@link UpdateInfo} object containing version
+	 *                         details, changelog, and download URL. Must not be
+	 *                         {@code null} when an update is available.
+	 * @see AppUpdaterActivity
+	 * @see UpdateInfo
+	 * @see #vibrate()
 	 */
 	private void launchAppUpdater(UpdateInfo latestUpdateInfo) {
 		Intent intent = new Intent(OpeningActivity.this, AppUpdaterActivity.class);
@@ -203,13 +257,25 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Navigates to the next appropriate screen when no update is required.
-	 * <p>
-	 * Determines the destination activity based on current configuration state (locale setup
-	 * and terms agreement), adds flags to clear the activity stack so users cannot return
-	 * to the splash screen, logs the navigation decision, and starts the activity with a
-	 * fade animation before finishing the current splash activity.
-	 * </p>
+	 * Navigates to the appropriate next screen based on the application's
+	 * configuration state. This method constructs an intent using
+	 * {@link #getDestinationIntent()}, adds flags to clear the activity stack,
+	 * applies a fade transition animation, starts the target activity, and
+	 * finishes the current opening screen.
+	 *
+	 * <p><strong>Intent flags:</strong>
+	 * <ul>
+	 * <li>{@link Intent#FLAG_ACTIVITY_NEW_TASK} - Starts the activity as a new task.</li>
+	 * <li>{@link Intent#FLAG_ACTIVITY_CLEAR_TASK} - Clears any existing activities
+	 *     from the task stack before launching.</li>
+	 * </ul>
+	 *
+	 * <p>The method logs whether the locale is already configured for debugging
+	 * purposes, then applies a fade animation via
+	 * {@link ActivityAnimator#animActivityFade(BaseActivity)}.
+	 *
+	 * @see #getDestinationIntent()
+	 * @see ActivityAnimator#animActivityFade(BaseActivity)
 	 */
 	private void proceedToNextScreen() {
 		Intent destinationIntent = getDestinationIntent();
@@ -227,16 +293,25 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Determines the next activity to launch based on user configuration state.
-	 * <p>
-	 * Evaluates two configuration flags: locale setup status and terms agreement status.
-	 * Priority is given to terms agreement - if terms are not agreed, always navigates to
-	 * TermsPolicyActivity. Otherwise, navigates to LanguageActivity if locale is not configured,
-	 * or to TermsPolicyActivity if locale is configured. Adds an extra flag when launching
-	 * the terms activity to indicate this was launched from the opening screen.
-	 * </p>
+	 * Determines the appropriate destination activity based on the current
+	 * application configuration state. The decision logic evaluates:
+	 * <ol>
+	 * <li>If terms and conditions have not been agreed, opens
+	 *     {@link TermsPolicyActivity} with launch location extras.</li>
+	 * <li>Otherwise, if locale is configured, opens the main activity (default).</li>
+	 * <li>Otherwise, opens {@link LanguageActivity} for language selection.</li>
+	 * </ol>
 	 *
-	 * @return Intent configured to launch the appropriate onboarding activity
+	 * <p>When the terms activity is selected, the method adds an extra with key
+	 * {@link TermsPolicyActivity#LAUNCHED_LOCATION_OF_ACTIVITY} and value
+	 * {@link TermsPolicyActivity#LAUNCHED_FROM_OPENING_SCREEN} to indicate the
+	 * origin of the launch.
+	 *
+	 * @return A non-null {@link Intent} targeting the determined destination
+	 * {@link BaseActivity} subclass.
+	 * @see AppConfigsRepo#getConfig()
+	 * @see TermsPolicyActivity
+	 * @see LanguageActivity
 	 */
 	@NonNull
 	private Intent getDestinationIntent() {
@@ -263,16 +338,18 @@ public class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 	}
 	
 	/**
-	 * Fetches the latest application update information from the PocketBase server.
-	 * <p>
-	 * Creates an instance of AppUpdaterUtils, generates a unique device signature using
-	 * the device's hardware identifiers as a request parameter, and queries the server
-	 * for the most recent update record. Returns null if no update record exists, the
-	 * network request fails, or the response cannot be parsed properly.
-	 * </p>
+	 * Fetches the latest application update information from the remote server.
+	 * This method creates an {@link AppUpdaterUtils} instance, generates a unique
+	 * device identifier via {@link DeviceSignature}, and retrieves update details
+	 * such as version code, changelog, and download URL.
 	 *
-	 * @return UpdateInfo object containing version code, version name, APK download URL,
-	 * and changelog JSON, or null if no update is available or an error occurs
+	 * <p>The fetched {@link UpdateInfo} can be used to check for available updates
+	 * and prompt the user to install a newer version of the application.
+	 *
+	 * @return An {@link UpdateInfo} object containing the latest version details,
+	 * or {@code null} if the fetch operation fails or no update is available.
+	 * @see AppUpdaterUtils#fetchLatestUpdateInfo(String)
+	 * @see DeviceSignature#generate()
 	 */
 	private UpdateInfo getLatestUpdateInfo() {
 		AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils();
