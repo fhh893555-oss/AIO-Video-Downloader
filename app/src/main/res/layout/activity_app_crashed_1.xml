@@ -46,8 +46,8 @@
         android:shadowDy="1"
         android:shadowRadius=".1"
         android:text="@string/title_app_crashed"
-        android:textColor="@color/color_text_primary"
-        android:textSize="@dimen/sub_heading_text_size"
+        android:textColor="@color/color_error"
+        android:textSize="@dimen/title_text_size"
         tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
 
       <TextView
@@ -93,8 +93,8 @@
       app:stroke_Alpha=".3"
       app:stroke_ColorType="gradient_sweep"
       app:stroke_Gradient_Angle="-45"
-      app:stroke_Gradient_Color0="@color/color_primary"
-      app:stroke_Gradient_Color1="@color/color_primary_variant"
+      app:stroke_Gradient_Color0="@color/color_warning"
+      app:stroke_Gradient_Color1="@color/color_error"
       app:stroke_Width="1dp">
 
       <ScrollView

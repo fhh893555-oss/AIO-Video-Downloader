@@ -34,7 +34,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="@dimen/_5"
-      android:fontFamily="@font/font_family_bold"
+      android:fontFamily="@font/font_family_extrabold"
       android:gravity="center"
       android:shadowColor="@color/color_background"
       android:shadowDx="1"
@@ -132,7 +132,7 @@
         android:text="@string/subtext_app_splash_credit"
         android:textColor="@color/color_text_secondary"
         android:textSize="@dimen/message_text_size"
-        tools:ignore="SpUsage,TextSizeCheck" />
+        tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
 
       <TextView
         android:id="@+id/tvVersion"

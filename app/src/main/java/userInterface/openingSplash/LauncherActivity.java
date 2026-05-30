@@ -84,13 +84,6 @@ public class LauncherActivity extends AppCompatActivity {
 	 */
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		//todo: remove this part
-		if (BaseApplication.isDebugBuild()) {
-			debugTestLaunch();
-			return;
-		}
-		
 		AppConfigs appConfig = AppConfigsRepo.getConfig();
 		if (appConfig.hasAppCrashedRecently) {
 			appConfig.hasAppCrashedRecently = false;
@@ -113,6 +106,11 @@ public class LauncherActivity extends AppCompatActivity {
 			startActivity(intent);
 			finish();
 		}
+	}
+	
+	private static void makeAppCrash() {
+		String[] all = new String[10];
+		String string = all[11];
 	}
 	
 	private void debugTestLaunch() {
