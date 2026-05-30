@@ -1151,6 +1151,17 @@ public final class FileStorageUtility {
 		}
 	}
 	
+	public static String toMegabytesString(double size) {
+		if (size < 0) {
+			String errorMessage = "File size cannot be negative: ";
+			throw new IllegalArgumentException(errorMessage + size);
+		}
+		
+		double sizeInMb = size / (1024.0 * 1024.0);
+		DecimalFormat df = new DecimalFormat("##.##");
+		return df.format(sizeInMb) + " MB";
+	}
+	
 	/**
 	 * Formats a byte size into a human-readable string with the appropriate unit (B, KB, MB, or GB).
 	 * <p>

@@ -19,7 +19,7 @@
     android:layout_height="wrap_content"
     android:text="@string/title_downloading_update"
     android:textColor="@color/color_text_primary"
-    android:textSize="@dimen/sub_heading_text_size"
+    android:textSize="@dimen/title_text_size"
     tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
 
   <TextView
@@ -286,8 +286,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_margin="@dimen/_0"
-          android:fontFamily="@font/font_family_medium"
-          android:text="@string/label_stay_connected"
+          android:fontFamily="@font/font_family_semibold"
+          android:text="@string/label_dont_close_app"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck" />

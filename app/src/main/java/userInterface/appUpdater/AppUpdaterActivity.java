@@ -395,10 +395,10 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		long currentTime = System.currentTimeMillis();
 		
 		String totalInFormat = FileStorageUtility
-			.humanReadableSizeOf(totalFileSizeInByte);
+			.toMegabytesString(totalFileSizeInByte);
 		
 		String downloadedInFormat = FileStorageUtility
-			.humanReadableSizeOf(downloadedByte);
+			.toMegabytesString(downloadedByte);
 		
 		tvPercentage.setText(MessageFormat.format("{0}%", percentage));
 		pbDownload.setProgress(percentage);
@@ -420,7 +420,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 				else smoothedSpeed = (smoothedSpeed * 0.8) + (currentSpeed * 0.2);
 				
 				tvSpeedValue.setText(MessageFormat.format("{0}/s",
-					FileStorageUtility.humanReadableSizeOf((long) smoothedSpeed)));
+					FileStorageUtility.toMegabytesString(smoothedSpeed)));
 				
 				if (smoothedSpeed > 0 && totalFileSizeInByte > downloadedByte) {
 					long bytesRemaining = totalFileSizeInByte - downloadedByte;
