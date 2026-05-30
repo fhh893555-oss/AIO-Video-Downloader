@@ -1,5 +1,7 @@
 package userInterface.languagePicker;
 
+import android.widget.TextView;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 
@@ -33,9 +35,9 @@ import coreUtils.library.process.LocaleHelper;
  * providing constructor, accessors, {@code equals()}, {@code hashCode()},
  * and {@code toString()} methods.
  *
- * @param languageName        The display name of the language
- * @param languageCode        The ISO code for locale configuration
- * @param illustrationResId   Resource ID of the flag/illustration drawable
+ * @param languageName         The display name of the language
+ * @param languageCode         The ISO code for locale configuration
+ * @param illustrationResId    Resource ID of the flag/illustration drawable
  * @param backgroundColorResId Resource ID of the background color
  * @see LocaleHelper#changeLanguage(String, BaseActivity)
  * @see LanguageAdapter
@@ -54,7 +56,8 @@ public record LanguageItem(String languageName,
 	 * the illustration in the language selection UI.
 	 * </p>
 	 *
-	 * @return The drawable resource ID (e.g., R.drawable.ic_flag_uk, R.drawable.ic_flag_spain)
+	 * @return The drawable resource ID (e.g., R.drawable.ic_flag_uk,
+	 * R.drawable.ic_flag_spain)
 	 */
 	@Override
 	public int illustrationResId() {
@@ -67,10 +70,11 @@ public record LanguageItem(String languageName,
 	 * This method provides access to the background color resource associated with the
 	 * language option, allowing for customized visual distinction between different
 	 * language items in the selection grid. The returned resource ID can be used with
-	 * {@link android.widget.TextView#setBackgroundResource(int)} or similar methods.
+	 * {@link TextView#setBackgroundResource(int)} or similar methods.
 	 * </p>
 	 *
-	 * @return The color resource ID (e.g., R.color.language_bg_english, R.color.language_bg_spanish)
+	 * @return The color resource ID (e.g.,
+	 * R.color.language_bg_english, R.color.language_bg_spanish)
 	 */
 	@Override
 	public int backgroundColorResId() {
