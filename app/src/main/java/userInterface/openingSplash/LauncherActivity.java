@@ -17,6 +17,7 @@ import io.objectbox.Box;
 import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.appCrashed.AppCrashedActivity;
+import userInterface.languagePicker.LanguageActivity;
 import userInterface.userFeedback.FeedbackActivity;
 
 /**
@@ -117,7 +118,7 @@ public class LauncherActivity extends AppCompatActivity {
 	}
 	
 	private void debugTestLaunch() {
-		Intent intent = new Intent(this, FeedbackActivity.class);
+		Intent intent = new Intent(this, LanguageActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		overridePendingTransition(R.anim.anim_fade_enter, R.anim.anim_fade_exit);
 		startActivity(intent);

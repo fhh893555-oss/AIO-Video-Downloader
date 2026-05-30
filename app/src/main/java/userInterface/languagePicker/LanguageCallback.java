@@ -1,43 +1,31 @@
 package userInterface.languagePicker;
 
 /**
- * Listener interface used to capture and handle language selection events
- * within the user interface.
- * <p>
- * Implement this interface in Activities, Fragments, or ViewModels that
- * need to update the application's locale configuration or refresh UI text
- * strings when a user chooses a new language from a list or spinner.
- * </p>
+ * Callback interface for handling language selection events within the
+ * language picker UI. Implementing classes (typically an Activity or Fragment)
+ * receive notifications when a user taps on a language option in the
+ * RecyclerView or other selection components.
  *
- * <p><b>Typical Usage:</b>
+ * <p><strong>Usage pattern:</strong>
  * <pre>
- * public class LanguageActivity extends BaseActivity implements LanguageCallback {
- *     private LanguageAdapter adapter;
- *
- *     private void setupRecyclerView() {
- *         adapter = new LanguageAdapter(this); // 'this' as LanguageCallback
- *         binding.rvLangs.setAdapter(adapter);
- *     }
+ * public class LanguageActivity extends BaseActivity
+ *     implements LanguageCallback {
  *
  *     {@literal @}Override
  *     public void onLanguageSelected(LanguageItem languageItem) {
- *         // Save selected language
- *         AppConfigsRepo.getConfig().selectedLanguageCode = languageItem.languageCode();
- *         AppConfigsRepo.getConfig().save();
- *
- *         // Apply locale change
- *         LocaleHelper.changeLanguage(languageItem.languageCode(), this);
- *
- *         // Navigate to next screen
- *         openNextActivity();
+ *         // Save selection, apply locale, navigate
  *     }
  * }
  * </pre>
- * </p>
  *
- * @see LanguageItem
+ * <p>The callback is passed to {@link LanguageAdapter} at construction time
+ * and invoked from the ViewHolder's click listener when a language item is
+ * selected. The implementing component is responsible for persisting the
+ * selection, updating the application's locale, and any subsequent navigation.
+ *
  * @see LanguageAdapter
- * @see LanguageActivity
+ * @see LanguageItem
+ * @see #onLanguageSelected(LanguageItem)
  */
 public interface LanguageCallback {
 	

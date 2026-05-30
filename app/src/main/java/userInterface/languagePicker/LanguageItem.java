@@ -3,40 +3,42 @@ package userInterface.languagePicker;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 
+import coreUtils.base.BaseActivity;
+import coreUtils.library.process.LocaleHelper;
+
 /**
- * A data record representing a language option available for selection in the language picker.
- * <p>
- * This immutable record encapsulates all necessary information about a language choice,
- * including its display name, ISO language code, flag illustration resource, and a
- * background color resource for visual styling. Using a Java record provides built-in
- * equals(), hashCode(), and toString() methods while ensuring thread-safety through
- * immutability.
- * </p>
+ * Data record representing a single language option available for selection
+ * in the language picker screen. This immutable record encapsulates all
+ * necessary information to display a language item, including the display name,
+ * ISO language code, and resource identifiers for visual presentation.
  *
- * <p><b>Usage Example:</b>
- * <pre>
- * LanguageItem english = new LanguageItem(
- *     "English",
- *     "en",
- *     R.drawable.ic_flag_uk,
- *     R.color.language_bg_english
- * );
- * </pre>
- * </p>
- *
- * <p><b>Field Descriptions:</b>
+ * <p><strong>Field descriptions:</strong>
  * <ul>
- *   <li><b>languageName:</b> Human-readable display name (e.g., "English", "Español")</li>
- *   <li><b>languageCode:</b> ISO language code (e.g., "en", "es", "fr") for locale configuration</li>
- *   <li><b>illustrationResId:</b> Drawable resource ID for flag or country illustration</li>
- *   <li><b>backgroundColorResId:</b> Color resource ID for background styling of the language item</li>
+ * <li>{@code languageName} - Display name of the language (e.g., "English",
+ *     "हिन्दी", "Español").</li>
+ * <li>{@code languageCode} - ISO language code (e.g., "EN", "HI", "ES") used
+ *     for locale configuration via {@link LocaleHelper}.</li>
+ * <li>{@code illustrationResId} - Drawable resource ID for the flag or
+ *     illustration representing the language/country.</li>
+ * <li>{@code backgroundColorResId} - Color resource ID for the background
+ *     of the language item grid cell (provides visual variety).</li>
  * </ul>
- * </p>
  *
- * @param languageName         The human-readable display name of the language
- * @param languageCode         The ISO language code for system locale configuration
- * @param illustrationResId    The drawable resource ID for the language's flag or icon
- * @param backgroundColorResId The color resource ID for the language item's background
+ * <p><strong>Usage in UI:</strong>
+ * The adapter binds these fields to a TextView for the language name and an
+ * ImageView for the illustration. The background color is typically applied
+ * to the item's root layout or card container.
+ *
+ * <p>This class is a Java record (immutable data carrier), automatically
+ * providing constructor, accessors, {@code equals()}, {@code hashCode()},
+ * and {@code toString()} methods.
+ *
+ * @param languageName        The display name of the language
+ * @param languageCode        The ISO code for locale configuration
+ * @param illustrationResId   Resource ID of the flag/illustration drawable
+ * @param backgroundColorResId Resource ID of the background color
+ * @see LocaleHelper#changeLanguage(String, BaseActivity)
+ * @see LanguageAdapter
  */
 public record LanguageItem(String languageName,
                            String languageCode,
