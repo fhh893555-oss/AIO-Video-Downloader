@@ -19,68 +19,19 @@ import coreUtils.library.strings.StringHelper;
 
 /**
  * ViewModel responsible for managing feedback data and the submission process.
- * <p>
- * This class handles the state for user-selected reactions, optional screenshots,
- * and the asynchronous submission of feedback to the server. It provides
- * {@link LiveData} streams to observe submission progress, success, and errors.
- * The ViewModel survives configuration changes (screen rotations, keyboard
- * visibility changes), preserving user input and submission state during
- * orientation changes.
- * </p>
+ * This class handles user-selected reactions, optional screenshots, and the
+ * asynchronous submission of feedback to the server. It provides LiveData
+ * streams to observe submission progress, success, and errors, surviving
+ * configuration changes like screen rotations.
  *
- * <p><b>Managed State:</b>
- * <ul>
- *   <li><b>selectedReaction</b> - User's chosen sentiment (Excellent, Good, Average, Poor, Angry)</li>
- *   <li><b>selectedScreenshot</b> - Optional image attachment for the feedback</li>
- *   <li><b>isSubmitting</b> - Boolean flag indicating if a submission is in progress</li>
- *   <li><b>submissionSuccess</b> - Boolean indicating the result of the last submission attempt</li>
- *   <li><b>submissionError</b> - Error message string when submission fails</li>
- * </ul>
- * </p>
+ * <p><strong>Managed state:</strong>
+ * selectedReaction (user sentiment), selectedScreenshot (optional attachment),
+ * isSubmitting (submission in progress flag), submissionSuccess (result of
+ * last submission), submissionError (error message on failure).</p>
  *
- * <p><b>Observable LiveData:</b>
- * UI components can observe these LiveData streams to react to state changes:
- * <ul>
- *   <li>Update reaction button highlighting</li>
- *   <li>Show/hide loading indicators</li>
- *   <li>Display success or error messages</li>
- *   <li>Reset form after successful submission</li>
- * </ul>
- * </p>
- *
- * <p><b>Usage Example:</b>
- * <pre>
- * public class FeedbackActivity extends AppCompatActivity {
- *     private FeedbackViewModel viewModel;
- *
- *     protected void onCreate(Bundle savedInstanceState) {
- *         super.onCreate(savedInstanceState);
- *         viewModel = new ViewModelProvider(this).get(FeedbackViewModel.class);
- *
- *         viewModel.getSelectedReaction().observe(this, reaction -> {
- *             updateReactionUI(reaction);
- *         });
- *
- *         viewModel.getIsSubmitting().observe(this, isSubmitting -> {
- *             sendButton.setEnabled(!isSubmitting);
- *             progressBar.setVisibility(isSubmitting ? View.VISIBLE : View.GONE);
- *         });
- *
- *         viewModel.getSubmissionSuccess().observe(this, success -> {
- *             if (Boolean.TRUE.equals(success)) {
- *                 showSuccessAndFinish();
- *             }
- *         });
- *
- *         viewModel.getSubmissionError().observe(this, error -> {
- *             if (error != null) {
- *                 showErrorToast(error);
- *             }
- *         });
- *     }
- * }
- * </pre>
- * </p>
+ * <p>UI components observe these LiveData to update reaction highlighting,
+ * show/hide loading indicators, display success/error messages, and reset
+ * the form after successful submission.</p>
  *
  * @see ViewModel
  * @see LiveData
@@ -202,55 +153,36 @@ public class FeedbackViewModel extends ViewModel {
 	}
 	
 	/**
-	 * Gets the LiveData containing the error message if the feedback submission process fails.
-	 * <p>
+	 * Gets the LiveData containing the error message if the feedback submission fails.
 	 * This LiveData holds a localized error message that can be displayed to the user
-	 * when a submission fails. It is updated automatically by {@link #handleSubmissionError()}
-	 * when an error occurs. UI components observing this LiveData can show the error message
-	 * in a toast or dialog.
-	 * </p>
+	 * when a submission fails. It is updated automatically when an error occurs.
 	 *
-	 * @return A {@link LiveData} object holding the error message string, or null if no
-	 * error has occurred
+	 * @return A {@link LiveData} object holding the error message string,
+	 * or {@code null} if no error has occurred
 	 */
 	public LiveData<String> getSubmissionError() {
 		return submissionError;
 	}
 	
 	/**
-	 * Sends the feedback data to the server asynchronously.
-	 * <p>
-	 * This method prevents duplicate submissions by checking the {@code isSubmitting} state.
-	 * It executes the network request on a background thread and updates the LiveData
-	 * constants ({@code isSubmitting}, {@code submissionSuccess}, {@code submissionError})
-	 * on the main thread based on the result.
-	 * </p>
+	 * Sends the feedback data to the server asynchronously. This method prevents
+	 * duplicate submissions by checking the {@code isSubmitting} state. The network
+	 * request executes on a background thread, and LiveData constants
+	 * ({@code isSubmitting}, {@code submissionSuccess}, {@code submissionError})
+	 * are updated on the main thread based on the result.
 	 *
-	 * <p><b>Submission Flow:</b>
-	 * <ol>
-	 *   <li>Checks if a submission is already in progress; returns early if true</li>
-	 *   <li>Sets isSubmitting to true to block duplicate submissions</li>
-	 *   <li>Creates a ThreadTask with a WeakReference to prevent memory leaks</li>
-	 *   <li>Binds the task to the provided LifecycleOwner for automatic cancellation</li>
-	 *   <li>Executes network request on background thread using FeedbackPocketbase</li>
-	 *   <li>Updates LiveData on main thread with success/failure result</li>
-	 *   <li>Resets isSubmitting to false and updates error LiveData if needed</li>
-	 * </ol>
-	 * </p>
+	 * <p><strong>Submission flow:</strong>
+	 * Check if submission in progress (return early if true) → set isSubmitting = true
+	 * → execute network request on background → update LiveData on main thread
+	 * → reset isSubmitting to false.
 	 *
-	 * <p><b>Error Handling:</b>
-	 * If an exception occurs during network communication, the method catches it,
-	 * resets the submitting state, and triggers the error handling flow without
-	 * affecting the success LiveData.
-	 * </p>
-	 *
-	 * @param lifecycleOwner The lifecycle owner used to observe the background task and
-	 *                       prevent memory leaks (typically Activity or Fragment)
+	 * @param lifecycleOwner The lifecycle owner used to bind the background task
+	 *                       (typically Activity or Fragment)
 	 * @param reaction       The user's selected reaction/rating category
 	 * @param subject        The subject or title of the feedback
 	 * @param email          The contact email address of the sender (optional)
 	 * @param message        The detailed feedback message content
-	 * @param screenshot     An optional image file attached to the feedback, or {@code null}
+	 * @param screenshot     An optional image file attached to the feedback, or null
 	 */
 	public void sendFeedback(LifecycleOwner lifecycleOwner, String reaction,
 	                         String subject, String email, String message, DocumentFile screenshot) {

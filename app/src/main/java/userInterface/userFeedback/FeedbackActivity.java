@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.nextgen.R;
@@ -32,61 +33,29 @@ import coreUtils.library.views.TextViewsUtils;
 import coreUtils.library.views.listeners.EditTextListener;
 
 /**
- * FeedbackActivity provides a user interface for submitting application feedback.
- * <p>
- * This activity allows users to:
+ * Activity that allows users to submit feedback about the application. This screen
+ * provides a comprehensive feedback form including reaction selection (Excellent,
+ * Good, Average, Poor, Angry), subject line, optional email, detailed feedback
+ * message (with 500-character limit), and optional screenshot attachment.
+ *
+ * <p><strong>Core responsibilities:</strong>
  * <ul>
- *     <li>Select a reaction representing their experience (Excellent to Angry).</li>
- *     <li>Enter a subject and a detailed feedback message (up to 500 characters).</li>
- *     <li>Attach an image file from the device (with a size limit of 5MB).</li>
- *     <li>Optionally provide an email address for follow-up.</li>
- *     <li>Quickly paste text from the clipboard into the subject field.</li>
+ * <li>Displays five reaction options with visual selection highlighting.</li>
+ * <li>Provides input fields for subject, email, and detailed feedback.</li>
+ * <li>Shows real-time character counter (0/500) with color change on limit exceed.</li>
+ * <li>Supports screenshot attachment with file size validation (max 5MB).</li>
+ * <li>Offers clipboard paste shortcut for subject field.</li>
+ * <li>Submits feedback to remote server via ViewModel.</li>
+ * <li>Displays success/error toasts and disables UI during submission.</li>
  * </ul>
- * </p>
  *
- * <p><b>Architecture:</b>
- * The class follows the MVVM architecture, utilizing {@link FeedbackViewModel} to handle
- * data submission and state management. It also manages UI states for submission
- * progress, success, and error handling. LiveData observers keep the UI synchronized
- * with the ViewModel's state across configuration changes.
- * </p>
- *
- * <p><b>Validation Rules:</b>
- * <ul>
- *   <li>Subject must not be empty</li>
- *   <li>Feedback message must not be empty</li>
- *   <li>Feedback message must not exceed 500 characters</li>
- *   <li>Screenshot attachments must be less than 5MB</li>
- * </ul>
- * </p>
- *
- * <p><b>UI Features:</b>
- * <ul>
- *   <li>Five reaction buttons with visual highlighting for selected state</li>
- *   <li>Real-time character counter for feedback message (0/500 to 500/500)</li>
- *   <li>Clipboard paste button for quick subject input</li>
- *   <li>Image picker with file name and size display</li>
- *   <li>Loading state during submission with disabled send button</li>
- *   <li>Success/error toast notifications</li>
- * </ul>
- * </p>
- *
- * <p><b>Submission Flow:</b>
- * <ol>
- *   <li>User selects reaction (defaults to Excellent)</li>
- *   <li>User enters subject and feedback message</li>
- *   <li>Optionally attaches screenshot (max 5MB)</li>
- *   <li>Clicks send button → validation occurs</li>
- *   <li>If valid, ViewModel submits to server via FeedbackPocketbase</li>
- *   <li>UI shows loading state during network request</li>
- *   <li>On success: toast shown, form reset, return to previous screen</li>
- *   <li>On error: error toast shown, user can retry</li>
- * </ol>
- * </p>
+ * <p><strong>Validation rules:</strong>
+ * Subject cannot be empty, feedback cannot be empty or exceed 500 characters,
+ * and attachments cannot exceed 5MB if provided.
  *
  * @see BaseActivity
+ * @see ActivityFeedback1Binding
  * @see FeedbackViewModel
- * @see FeedbackPocketbase
  * @see FeedbackReactions
  */
 public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
@@ -96,16 +65,25 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	private ActivityResultLauncher<String> imagePickerLauncher;
 	
 	/**
-	 * Inflates the view binding for the Feedback activity.
-	 * <p>
-	 * This method initializes the {@link ActivityFeedback1Binding} using the provided
-	 * {@link LayoutInflater}, allowing for type-safe access to the layout's views.
-	 * The binding provides direct references to all UI components including the
-	 * reaction buttons, text inputs, and feedback submission controls.
-	 * </p>
+	 * Inflates the activity's layout using view binding and returns the generated
+	 * binding instance for {@code activity_feedback1.xml}. This method is called
+	 * during the base activity's {@code setContentView()} phase to create the
+	 * binding object that provides type-safe access to all views in the layout.
 	 *
-	 * @param inflater The {@link LayoutInflater} used to inflate the binding
-	 * @return A new instance of {@link ActivityFeedback1Binding}
+	 * <p>The layout includes the following sections:
+	 * <ul>
+	 * <li>{@code top1} - Title section with gradient text effect.</li>
+	 * <li>{@code top2} - Reaction selection area with five emoji/feedback options.</li>
+	 * <li>{@code top3} - Input fields for subject, email, feedback message,
+	 *     character counter, and action buttons.</li>
+	 * </ul>
+	 *
+	 * @param inflater The layout inflater service used to create the view hierarchy.
+	 *                 Must not be {@code null}.
+	 * @return The {@link ActivityFeedback1Binding} instance containing references
+	 * to all views defined in the feedback screen layout.
+	 * @see BaseActivity#inflateBinding(LayoutInflater)
+	 * @see ActivityFeedback1Binding
 	 */
 	@Override
 	protected ActivityFeedback1Binding inflateBinding(LayoutInflater inflater) {
@@ -113,15 +91,18 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Determines whether the activity should be locked to a specific orientation.
-	 * <p>
-	 * Overriding this method and returning {@code true} ensures that the feedback screen
-	 * maintains a consistent orientation (typically portrait), preventing layout
-	 * inconsistencies during rotation and ensuring that the feedback form layout
-	 * remains stable while the user is typing or selecting attachments.
-	 * </p>
+	 * Determines whether the activity's screen orientation should be locked.
+	 * This implementation returns {@code true}, forcing the feedback screen
+	 * to remain in portrait mode regardless of device rotation.
 	 *
-	 * @return {@code true} to lock the orientation; {@code false} otherwise
+	 * <p><strong>Design rationale:</strong>
+	 * Locking the orientation ensures the reaction selection grid, input fields,
+	 * character counter, and action buttons maintain a consistent layout while
+	 * the user composes their feedback message, preventing unexpected UI
+	 * reconfigurations that could interrupt typing or selection.
+	 *
+	 * @return {@code true} to lock the activity to portrait orientation.
+	 * @see BaseActivity#shouldLockOrientation()
 	 */
 	@Override
 	protected boolean shouldLockOrientation() {
@@ -129,20 +110,31 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Initializes the activity's components and UI state once the layout has been loaded.
-	 * <p>
-	 * This method is called after the layout has been inflated and serves as the main
-	 * initialization entry point. It performs the following setup in sequence:
-	 * </p>
+	 * Performs post-layout initialization after the content view has been inflated.
+	 * This method is invoked by the base activity at the end of {@code onCreate()}
+	 * and is responsible for setting up the ViewModel, image picker, UI enhancements,
+	 * button listeners, input monitoring, observers, and default reaction selection.
+	 *
+	 * <p><strong>Initialization order:</strong>
 	 * <ol>
-	 *   <li>Creates or retrieves the ViewModel instance</li>
-	 *   <li>Initializes the image picker for screenshot attachments</li>
-	 *   <li>Applies gradient styling to the "Feedback" title text</li>
-	 *   <li>Sets up all button click listeners (back, reactions, upload, paste, send)</li>
-	 *   <li>Monitors feedback text input with a character counter</li>
-	 *   <li>Configures LiveData observers for submission state, success, and errors</li>
-	 *   <li>Sets "Excellent" as the default selected reaction</li>
+	 * <li>Initializes the ViewModel via {@link #initViewModel()}.</li>
+	 * <li>Sets up the image picker for screenshot attachments via {@link #initImagePicker()}.</li>
+	 * <li>Applies gradient span to the word "Feedback" via {@link #applyGradientToTitle()}.</li>
+	 * <li>Configures all button click listeners via {@link #setupButtonClicks()}.</li>
+	 * <li>Monitors feedback message length with character counter via {@link #monitorFeedbackLength()}.</li>
+	 * <li>Initializes ViewModel LiveData observers via {@link #initViewModelObservers()}.</li>
+	 * <li>Selects "Excellent" reaction as the default option via
+	 * {@link #selectExcellentReactionByDefault()}.</li>
 	 * </ol>
+	 *
+	 * @see BaseActivity#onLoadedLayout()
+	 * @see #initViewModel()
+	 * @see #initImagePicker()
+	 * @see #applyGradientToTitle()
+	 * @see #setupButtonClicks()
+	 * @see #monitorFeedbackLength()
+	 * @see #initViewModelObservers()
+	 * @see #selectExcellentReactionByDefault()
 	 */
 	@Override
 	protected void onLoadedLayout() {
@@ -156,36 +148,37 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Returns the {@link FeedbackViewModel} instance associated with this activity.
-	 * <p>
-	 * This method provides access to the ViewModel which manages the state and business logic
-	 * for the feedback submission process, including reaction selection, screenshot attachments,
-	 * submission progress tracking, and error handling. The ViewModel is created and retained
-	 * by the ViewModelProvider and survives configuration changes.
-	 * </p>
+	 * Returns the ViewModel instance associated with this feedback activity.
+	 * This getter provides access to the ViewModel for observers and other
+	 * methods that need to interact with the ViewModel's LiveData or call
+	 * its methods.
 	 *
-	 * @return The current {@link FeedbackViewModel} instance
+	 * <p>The ViewModel is created in {@link #initViewModel()} and is scoped
+	 * to the activity's lifecycle, surviving configuration changes.
+	 *
+	 * @return The {@link FeedbackViewModel} instance. Never {@code null} after
+	 * {@link #initViewModel()} has been called.
+	 * @see #initViewModel()
+	 * @see FeedbackViewModel
 	 */
 	public FeedbackViewModel getViewModel() {
 		return viewModel;
 	}
 	
 	/**
-	 * Initializes the {@link FeedbackViewModel} for this activity.
-	 * <p>
-	 * This method uses the {@link ViewModelProvider} to create or retrieve an existing
-	 * instance of {@code FeedbackViewModel}, ensuring the ViewModel persists through
-	 * configuration changes such as screen rotations. The ViewModel is scoped to this
-	 * activity's lifecycle and will be cleared when the activity is finished.
-	 * </p>
+	 * Initializes the ViewModel for the feedback screen. This method creates a
+	 * {@link FeedbackViewModel} instance using the {@link ViewModelProvider} scoped
+	 * to this activity. The ViewModel is responsible for managing UI-related data
+	 * such as selected reaction, screenshot attachment, submission state, and
+	 * LiveData for observing results and errors.
 	 *
-	 * <p><b>Initialization Details:</b>
-	 * <ul>
-	 *   <li>Uses the default ViewModelProvider with this activity as the scope</li>
-	 *   <li>Returns an existing ViewModel if one already exists for this activity</li>
-	 *   <li>Creates a new instance only on first request</li>
-	 * </ul>
-	 * </p>
+	 * <p>The ViewModel survives configuration changes (though orientation is locked)
+	 * and retains data across the activity lifecycle, preventing data loss during
+	 * recreations.
+	 *
+	 * @see ViewModelProvider
+	 * @see FeedbackViewModel
+	 * @see #getViewModel()
 	 */
 	private void initViewModel() {
 		viewModel = new ViewModelProvider(this)
@@ -193,24 +186,27 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Initializes the image picker functionality for feedback attachments.
-	 * <p>
+	 * Initializes the image picker functionality for attaching screenshots to feedback.
 	 * This method performs the following setup:
-	 * <ul>
-	 *     <li>Resets the attachment UI container to show the initial upload state.</li>
-	 *     <li>Registers an {@link ActivityResultLauncher} for the
-	 *     {@link ActivityResultContracts.GetContent}
-	 *     contract to handle file selection and validation.</li>
-	 *     <li>Observes the ViewModel's selected screenshot LiveData to update the UI when
-	 *     a file is successfully attached or removed.</li>
-	 * </ul>
-	 * </p>
+	 * <ol>
+	 * <li>Resets the attachment container UI to its default state (upload button visible,
+	 *     preview hidden).</li>
+	 * <li>Registers an {@link ActivityResultLauncher} using the
+	 * {@link ActivityResultContracts.GetContent}
+	 *     contract to allow users to select an image from their device storage.</li>
+	 * <li>Observes the ViewModel's selected screenshot LiveData to update the UI
+	 *     when a file is selected.</li>
+	 * </ol>
 	 *
-	 * <p><b>Lifecycle Integration:</b>
-	 * The ActivityResultLauncher is automatically managed by the Activity Result API
-	 * and is registered only once during activity creation to prevent redundant
-	 * registrations and ensure proper lifecycle handling.
-	 * </p>
+	 * <p>When the user selects an image, the callback {@link #validateAttachmentFile(Uri)}
+	 * is invoked to validate the file size. Upon successful validation, the ViewModel
+	 * stores the selected file, and {@link #observeSelectedAttachmentFile(DocumentFile)}
+	 * updates the UI to show the file name and size.
+	 *
+	 * @see #validateAttachmentFile(Uri)
+	 * @see #observeSelectedAttachmentFile(DocumentFile)
+	 * @see #resetUploadAttachmentContainer(int, int)
+	 * @see ActivityResultContracts.GetContent
 	 */
 	private void initImagePicker() {
 		resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
@@ -224,16 +220,25 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Updates the UI to display information about the selected attachment file.
-	 * <p>
-	 * This method is called when a file is successfully selected and validated.
-	 * It retrieves the file name and size, updates the corresponding text views,
-	 * and toggles the visibility of the attachment container to show the
-	 * selected file details instead of the upload button.
-	 * </p>
+	 * Observes and displays the selected screenshot attachment in the UI.
+	 * When the ViewModel's selected screenshot LiveData emits a non-null
+	 * {@link DocumentFile}, this method:
+	 * <ul>
+	 * <li>Shows the attachment preview container and hides the upload button.</li>
+	 * <li>Displays the selected file's name in the attachment TextView.</li>
+	 * <li>Displays the file size in a human-readable format (e.g., "123 KB").</li>
+	 * </ul>
 	 *
-	 * @param documentFile The {@link DocumentFile} representing the selected attachment.
-	 *                     If null, the method returns without performing any action.
+	 * <p>If the {@code documentFile} parameter is {@code null}, the method returns
+	 * early without updating the UI, maintaining the current attachment state.
+	 *
+	 * @param documentFile The selected screenshot file, or {@code null} if no
+	 *                     file is currently selected. Must contain a valid name
+	 *                     for proper display.
+	 * @see DocumentFile#getName()
+	 * @see DocumentFile#length()
+	 * @see FileStorageUtility#humanReadableSizeOf(long)
+	 * @see #resetUploadAttachmentContainer(int, int)
 	 */
 	private void observeSelectedAttachmentFile(DocumentFile documentFile) {
 		if (documentFile == null) return;
@@ -250,16 +255,29 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Validates the selected attachment file and updates the ViewModel if it meets requirements.
-	 * <p>
-	 * This method processes a file URI from the image picker, converts it to a DocumentFile,
-	 * and checks if the file size is within the 5MB limit. Valid files are stored in the
-	 * ViewModel, triggering UI updates to display the file name and size. Files exceeding
-	 * the limit trigger haptic feedback and display a warning toast without updating the ViewModel.
-	 * </p>
+	 * Validates an image file selected by the user for attachment to feedback.
+	 * This method checks the file size and accepts it only if it is less than
+	 * 5 megabytes (5 * 1024 * 1024 bytes).
 	 *
-	 * @param fileUri The URI of the file selected from the image picker, or null if selection
-	 *                was canceled
+	 * <p><strong>Validation behavior:</strong>
+	 * <ul>
+	 * <li>If the file size is less than 5MB, the screenshot is stored in the
+	 *     ViewModel via {@link FeedbackViewModel#setSelectedScreenshot(DocumentFile)}.</li>
+	 * <li>If the file size exceeds 5MB, a warning toast is displayed, and a
+	 *     50ms haptic vibration is triggered. The file is rejected.</li>
+	 * <li>If the file URI is {@code null}, the method does nothing.</li>
+	 * </ul>
+	 *
+	 * <p>The 5MB limit ensures that feedback submissions remain reasonably sized
+	 * for network transmission and server storage constraints.
+	 *
+	 * @param fileUri The URI of the image file selected by the user. May be
+	 *                {@code null}, in which case validation is skipped.
+	 * @see DocumentFile#fromSingleUri(android.content.Context, android.net.Uri)
+	 * @see DocumentFile#length()
+	 * @see FeedbackViewModel#setSelectedScreenshot(DocumentFile)
+	 * @see #vibrate(long)
+	 * @see StylizedToastView#showWarning(BaseActivity, CharSequence)
 	 */
 	private void validateAttachmentFile(Uri fileUri) {
 		if (fileUri != null) {
@@ -275,18 +293,25 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Updates the visibility of the attachment-related UI containers.
-	 * <p>
-	 * This method toggles between two UI states: one where a selected attachment is
-	 * displayed with file details and a cancel button, and another where the user
-	 * is prompted to upload a new picture. This provides visual feedback as the
-	 * user adds or removes attachments from their feedback submission.
-	 * </p>
+	 * Resets the visibility state of the attachment upload UI components.
+	 * This method controls two containers: the attachment preview container
+	 * (shown when a file is attached) and the upload picture button container
+	 * (shown when no file is attached).
 	 *
-	 * @param attachmentVisibility The visibility state (e.g., {@link View#VISIBLE}, {@link View#GONE})
-	 *                             for the container displaying the selected attachment details
-	 * @param uploadPicVisibility  The visibility state (e.g., {@link View#VISIBLE}, {@link View#GONE})
-	 *                             for the container prompting the user to upload a picture
+	 * <p><strong>Typical usage patterns:</strong>
+	 * <ul>
+	 * <li>When a file is selected: hide upload button, show attachment preview.</li>
+	 * <li>When upload is canceled: show upload button, hide attachment preview.</li>
+	 * <li>After successful submission: reset to default (show upload button).</li>
+	 * </ul>
+	 *
+	 * @param attachmentVisibility The visibility state for the attachment preview
+	 *                             container (e.g., {@link View#VISIBLE}, {@link View#GONE}).
+	 * @param uploadPicVisibility  The visibility state for the upload picture button
+	 *                             container (e.g., {@link View#VISIBLE}, {@link View#GONE}).
+	 * @see View#setVisibility(int)
+	 * @see #resetFeedbackSubmission()
+	 * @see #setupCancelUploadListener()
 	 */
 	private void resetUploadAttachmentContainer(int attachmentVisibility,
 	                                            int uploadPicVisibility) {
@@ -295,13 +320,24 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Applies a color gradient span to a specific portion of the feedback title text.
-	 * <p>
-	 * This method searches for the keyword "Feedback" within the title's text. If found,
-	 * it applies a linear gradient transition between the secondary and primary variant
-	 * colors to that specific word using {@link TextViewsUtils#applyGradientSpan}.
-	 * This creates a visually appealing gradient effect on the "Feedback" text.
-	 * </p>
+	 * Applies a gradient color span to the word "Feedback" within the feedback screen
+	 * title text view. This method searches for the substring "Feedback" in the full
+	 * title text and, if found, applies a gradient effect using
+	 * {@link TextViewsUtils#applyGradientSpan(android.widget.TextView, int, int, int, int)}.
+	 *
+	 * <p><strong>Visual effect:</strong>
+	 * The gradient transitions from {@code color_secondary} to
+	 * {@code color_primary_variant}, spanning the 8 characters of the word
+	 * "Feedback". This creates a highlighted, branded appearance for the key word
+	 * in the feedback screen title, drawing user attention to the purpose of the screen.
+	 *
+	 * <p><strong>Error handling:</strong>
+	 * If the word "Feedback" is not found in the title string (e.g., due to
+	 * localization changes), the method silently does nothing without throwing
+	 * an exception.
+	 *
+	 * @see TextViewsUtils#applyGradientSpan(android.widget.TextView, int, int, int, int)
+	 * @see #getColor(int)
 	 */
 	private void applyGradientToTitle() {
 		String fullText = binding.top1.tvFeedbackTitle.getText().toString();
@@ -318,24 +354,26 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Initializes and configures the click listeners for all interactive UI elements in the activity.
-	 * <p>
-	 * This method serves as the central setup point for all button click handlers in the
-	 * feedback screen. It delegates to specific setup methods for each UI component,
-	 * ensuring clean separation of concerns and maintainable code organization.
-	 * </p>
+	 * Initializes all button click listeners for the feedback screen. This method
+	 * aggregates the setup calls for each interactive UI component, ensuring all
+	 * user input elements respond appropriately to clicks.
 	 *
-	 * <p><b>UI Components Configured:</b>
+	 * <p><strong>Buttons configured:</strong>
 	 * <ul>
-	 *     <li>The back button to close the activity</li>
-	 *     <li>The reaction selection buttons (Excellent, Good, Average, Poor, Angry) to
-	 *     update the UI and ViewModel</li>
-	 *     <li>The attachment upload button to launch the image picker</li>
-	 *     <li>The cancel upload button to remove selected screenshots</li>
-	 *     <li>The paste button to populate the subject field from the clipboard</li>
-	 *     <li>The send button to trigger feedback validation and submission</li>
+	 * <li>Back button via {@link #setupBackButton()}</li>
+	 * <li>Reaction selection options via {@link #setupReactionListeners()}</li>
+	 * <li>Upload picture button via {@link #setupUploadButton()}</li>
+	 * <li>Cancel upload button via {@link #setupCancelUploadListener()}</li>
+	 * <li>Paste from clipboard button via {@link #setupPasteButton()}</li>
+	 * <li>Send feedback button via {@link #setupFeedbackButton()}</li>
 	 * </ul>
-	 * </p>
+	 *
+	 * @see #setupBackButton()
+	 * @see #setupReactionListeners()
+	 * @see #setupUploadButton()
+	 * @see #setupCancelUploadListener()
+	 * @see #setupPasteButton()
+	 * @see #setupFeedbackButton()
 	 */
 	private void setupButtonClicks() {
 		setupBackButton();
@@ -347,12 +385,15 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures the click listener for the back button.
-	 * <p>
-	 * When clicked, it triggers a haptic vibration feedback to acknowledge the user's
-	 * input and finishes the current activity, returning the user to the previous screen
-	 * without submitting any feedback data.
-	 * </p>
+	 * Configures the back button click listener. When the user clicks the back button,
+	 * this method triggers a short haptic vibration and finishes the current activity,
+	 * returning the user to the previous screen.
+	 *
+	 * <p>The haptic feedback provides tactile confirmation of the button press,
+	 * enhancing the user experience with a subtle vibration.
+	 *
+	 * @see #buttonVibrate()
+	 * @see #finish()
 	 */
 	private void setupBackButton() {
 		binding.btnBack.setOnClickListener(view -> {
@@ -362,32 +403,30 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures click listeners for the feedback reaction buttons (Excellent, Good,
-	 * Average, Poor, Angry).
-	 * <p>
-	 * This method maps each reaction layout to its corresponding selection logic, ensuring
-	 * that clicking a reaction updates the ViewModel and reflects the selection visually in
-	 * the UI. It also initializes the necessary references to images and text views for each
-	 * reaction state.
-	 * </p>
+	 * Configures click listeners for all five feedback reaction options (Excellent,
+	 * Good, Average, Poor, Angry). Each reaction is represented by a LinearLayout
+	 * containing an ImageView (emoji/icon) and a TextView (label). When a reaction
+	 * is clicked, the method delegates to
+	 * {@link #applyReactionSelection(String, ImageView, TextView)} to update the UI
+	 * and ViewModel state.
 	 *
-	 * <p><b>Reaction Options Configured:</b>
+	 * <p><strong>Reaction components mapping:</strong>
 	 * <ul>
-	 *   <li>Excellent - Happy face icon and text</li>
-	 *   <li>Good - Thumbs up/positive icon and text</li>
-	 *   <li>Average - Neutral face icon and text</li>
-	 *   <li>Poor - Thumbs down/negative icon and text</li>
-	 *   <li>Angry - Angry face icon and text</li>
+	 * <li>Excellent → {@code btnHappy}, {@code imgHappy}, {@code txtHappy}</li>
+	 * <li>Good → {@code btnGood}, {@code imgGood}, {@code txtGood}</li>
+	 * <li>Average → {@code btnAverage}, {@code imgAverage}, {@code txtAverage}</li>
+	 * <li>Poor → {@code btnPoor}, {@code imgPoor}, {@code txtPoor}</li>
+	 * <li>Angry → {@code btnAngry}, {@code imgAngry}, {@code txtAngry}</li>
 	 * </ul>
-	 * </p>
 	 *
-	 * <p><b>Behavior:</b>
-	 * When a reaction button is clicked, it triggers
-	 * {@link #applyReactionSelection(String, ImageView, TextView)}
-	 * which updates the ViewModel with the selected reaction, resets all reaction UI elements
-	 * to their default unselected state, and highlights only the clicked reaction with a bold
-	 * typeface, primary color, and selected visual state.
-	 * </p>
+	 * <p>Each reaction name is obtained from the {@link FeedbackReactions} enum
+	 * using the {@link Enum#name()} method. The default reaction (Excellent) is
+	 * pre-selected via {@link #selectExcellentReactionByDefault()} during
+	 * ViewModel initialization.
+	 *
+	 * @see #applyReactionSelection(String, ImageView, TextView)
+	 * @see FeedbackReactions
+	 * @see #selectExcellentReactionByDefault()
 	 */
 	private void setupReactionListeners() {
 		String excellent = FeedbackReactions.Excellent.name();
@@ -421,12 +460,19 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures the click listener for the upload button to trigger the system image picker.
-	 * <p>
-	 * When clicked, it provides haptic feedback and launches an activity result contract
-	 * to allow the user to select an image file from their device storage. The selected
-	 * image will be attached to the feedback submission as a screenshot or visual reference.
-	 * </p>
+	 * Configures the upload picture button click listener. When the user clicks the
+	 * upload button, this method triggers a short haptic vibration and launches the
+	 * system image picker to allow the user to select a screenshot or image to
+	 * attach with their feedback. The launcher uses the {@link ActivityResultLauncher}
+	 * with MIME type "image/*" to accept all image formats.
+	 *
+	 * <p>After an image is selected, it is processed and stored in the ViewModel
+	 * via the selected screenshot LiveData. The UI then updates to show a preview
+	 * of the attached image and the cancel upload button.
+	 *
+	 * @see #buttonVibrate()
+	 * @see #imagePickerLauncher
+	 * @see FeedbackViewModel#setSelectedScreenshot(DocumentFile)
 	 */
 	private void setupUploadButton() {
 		binding.top3.btnUploadPic.setOnClickListener(view -> {
@@ -436,13 +482,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures the click listener for the cancel upload button.
-	 * <p>
-	 * When triggered, it clears the currently selected attachment from the ViewModel
-	 * and resets the UI to show the initial upload prompt instead of the file details.
-	 * This allows the user to discard a previously selected screenshot and optionally
-	 * choose a different one.
-	 * </p>
+	 * Configures the cancel upload button click listener. When the user clicks the
+	 * cancel button while a screenshot is attached, this method clears the selected
+	 * screenshot from the ViewModel and resets the attachment container UI to its
+	 * default state. (Hiding the preview and showing the add attachment button.)
+	 *
+	 * <p>The reset operation uses {@link #resetUploadAttachmentContainer(int, int)}
+	 * with {@link View#GONE} for hiding the preview container and {@link View#VISIBLE}
+	 * for showing the add attachment button.
+	 *
+	 * @see FeedbackViewModel#setSelectedScreenshot(DocumentFile)
+	 * @see #resetUploadAttachmentContainer(int, int)
 	 */
 	private void setupCancelUploadListener() {
 		binding.top3.btnCancelUpload.setOnClickListener(view -> {
@@ -452,13 +502,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Retrieves text from the system clipboard and populates the feedback subject field.
-	 * <p>
-	 * This method uses {@link ClipboardHelper} to access the clipboard. If valid text
-	 * is found, it updates the {@code editSubject} view with the clipboard content.
-	 * This provides a convenient way for users to paste error logs, crash reports,
-	 * or other relevant text without manually typing or long-pressing the input field.
-	 * </p>
+	 * Configures the paste button click listener. When the user clicks the paste icon,
+	 * this method triggers a short haptic vibration via {@link #buttonVibrate()} and
+	 * populates the subject input field with text retrieved from the system clipboard
+	 * via {@link #fillSubjectFromClipboard()}.
+	 *
+	 * <p>This feature provides a convenient way for users to quickly paste error
+	 * messages, log output, or other relevant text into the feedback subject field
+	 * without manual typing.
+	 *
+	 * @see #buttonVibrate()
+	 * @see #fillSubjectFromClipboard()
 	 */
 	private void setupPasteButton() {
 		binding.top3.btnPasteIcon.setOnClickListener(view -> {
@@ -468,12 +522,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures the click listener for the feedback submission button.
-	 * <p>
-	 * This includes setting up the back button, reaction selection buttons (Excellent,
-	 * Good, Average, Poor, Angry), attachment upload and cancellation controls,
-	 * the clipboard paste utility for the subject field, and the final feedback
-	 * submission trigger.
+	 * Configures the send feedback button click listener. When the user clicks the
+	 * send button, this method triggers a short haptic vibration and initiates the
+	 * feedback validation and submission process via {@link #validateAndSendFeedback()}.
+	 *
+	 * <p>The button is automatically disabled during active submission (handled by
+	 * {@link #handleFeedbackSubmission()}) to prevent duplicate submissions while
+	 * a network request is in progress.
+	 *
+	 * @see #buttonVibrate()
+	 * @see #validateAndSendFeedback()
+	 * @see #handleFeedbackSubmission()
 	 */
 	private void setupFeedbackButton() {
 		binding.top3.btnSendFeedback.setOnClickListener(view -> {
@@ -483,11 +542,27 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures text change listeners for the feedback input fields.
-	 * <p>
-	 * Specifically, it monitors the feedback description field to update a real-time
-	 * character counter. It also dynamically changes the counter's text color to
-	 * an error state if the input exceeds the maximum limit of 500 characters.
+	 * Monitors the length of the feedback message input field and updates a
+	 * character count display in real time. This method attaches a text change
+	 * listener to the feedback EditText that updates a TextView showing the
+	 * current character count (e.g., "42/500").
+	 *
+	 * <p><strong>Visual behavior:</strong>
+	 * <ul>
+	 * <li>The counter displays as "{currentLength}/500".</li>
+	 * <li>When the input length exceeds 500 characters, the counter text color
+	 *     changes to error color ({@code color_error}) to warn the user.</li>
+	 * <li>When within the limit (≤ 500 characters), the counter uses secondary
+	 *     text color ({@code color_text_secondary}).</li>
+	 * </ul>
+	 *
+	 * <p>This validation prevents submission of overly long feedback, as the
+	 * validation logic in {@link #validateAndSendFeedback()} rejects messages
+	 * longer than 500 characters.
+	 *
+	 * @see #validateAndSendFeedback()
+	 * @see android.text.TextWatcher
+	 * @see EditTextListener
 	 */
 	private void monitorFeedbackLength() {
 		binding.top3.editFeedback.addTextChangedListener(new EditTextListener() {
@@ -503,18 +578,20 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures LiveData observers for the {@link FeedbackViewModel}.
-	 * <p>
-	 * This method sets up all necessary observers to monitor the ViewModel's state
-	 * and update the UI accordingly. It observes three key states:
-	 * </p>
+	 * Initializes all LiveData observers for the feedback ViewModel. This method
+	 * aggregates the setup of UI state observers, including submission state,
+	 * submission success result, and submission error handling.
+	 *
+	 * <p><strong>Observers initialized:</strong>
 	 * <ul>
-	 *     <li><b>Submission State:</b> Toggles the enablement, opacity, and text of the send button</li>
-	 *     <li><b>Success Result:</b> Triggers a success toast and resets the feedback form upon
-	 *     successful transmission</li>
-	 *     <li><b>Error:</b> Displays a toast message containing the error details if the
-	 *     submission fails</li>
+	 * <li>{@link #handleFeedbackSubmission()} - Updates button UI during submission.</li>
+	 * <li>{@link #observeSubmissionResult()} - Handles successful submission.</li>
+	 * <li>{@link #observeSubmissionErrors()} - Displays error messages.</li>
 	 * </ul>
+	 *
+	 * @see #handleFeedbackSubmission()
+	 * @see #observeSubmissionResult()
+	 * @see #observeSubmissionErrors()
 	 */
 	private void initViewModelObservers() {
 		handleFeedbackSubmission();
@@ -523,14 +600,22 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Configures an observer for the feedback submission error LiveData.
-	 * <p>
-	 * This method monitors the {@link FeedbackViewModel} for any error messages
-	 * generated during the submission process. When an error occurs, it displays
-	 * a stylized error toast to the user and triggers haptic vibration to provide
-	 * immediate tactile feedback. The toast is only shown if the error message
-	 * is non-null and not empty.
-	 * </p>
+	 * Observes submission error messages from the ViewModel and displays them to
+	 * the user. When the LiveData emits a non-null, non-empty error message,
+	 * this method shows an error toast with the message and triggers haptic
+	 * feedback to alert the user.
+	 *
+	 * <p>Common error scenarios include:
+	 * <ul>
+	 * <li>Network connectivity issues (no internet).</li>
+	 * <li>Server-side validation failures.</li>
+	 * <li>Timeout or server unavailability.</li>
+	 * <li>Authentication or permission errors.</li>
+	 * </ul>
+	 *
+	 * @see FeedbackViewModel#getSubmissionError()
+	 * @see StylizedToastView#showError(BaseActivity, CharSequence)
+	 * @see #vibrate()
 	 */
 	private void observeSubmissionErrors() {
 		getViewModel().getSubmissionError().observe(this, errorMessage -> {
@@ -542,18 +627,19 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Observes the LiveData streams from the {@link FeedbackViewModel} to handle the UI state
-	 * during and after the feedback submission process.
-	 * <p>
-	 * This method sets up observers for:
-	 * <ul>
-	 *     <li><b>Submission Loading State:</b> Disables the send button and shows a loading
-	 *     indicator (text change and alpha) while the feedback is being transmitted.</li>
-	 *     <li><b>Submission Success:</b> Displays a success toast, triggers haptic feedback,
-	 *     and resets the form fields upon successful delivery.</li>
-	 *     <li><b>Submission Error:</b> Displays an error toast and triggers haptic feedback
-	 *     if the submission fails.</li>
-	 * </ul>
+	 * Observes the feedback submission result LiveData from the ViewModel. When a
+	 * successful submission occurs, this method displays a success toast message,
+	 * resets all input fields and attachments, and triggers haptic feedback.
+	 *
+	 * <p>The observer is lifecycle-aware, automatically cleaning up when the
+	 * activity is destroyed. Success is indicated by {@code isSuccess} being
+	 * {@code true}. The observed LiveData is typically updated by the ViewModel
+	 * after a network request completes.
+	 *
+	 * @see FeedbackViewModel#getSubmissionSuccess()
+	 * @see #resetFeedbackSubmission()
+	 * @see StylizedToastView#showSuccess(BaseActivity, CharSequence)
+	 * @see #vibrate()
 	 */
 	private void observeSubmissionResult() {
 		getViewModel().getSubmissionSuccess().observe(this, isSuccess -> {
@@ -567,24 +653,22 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Observes the submission state and updates the UI accordingly during feedback transmission.
-	 * <p>
-	 * This method sets up a LiveData observer on the ViewModel's submission state. When feedback
-	 * is being submitted, the send button is disabled, its opacity is reduced, the button text
-	 * changes to a "sending" indicator, and the text color changes to primary. Once submission
-	 * completes (success or failure), the button returns to its normal enabled state with the
-	 * original text and color. This provides visual feedback to the user during network operations.
-	 * </p>
+	 * Observes the submission state LiveData to update the UI during feedback submission.
+	 * While feedback is being sent, this method disables the send button, reduces its
+	 * opacity, changes the button text to "Sending...", and changes the text color.
+	 * When submission completes, the button returns to its default enabled state.
 	 *
-	 * <p><b>UI State Transitions:</b>
+	 * <p><strong>UI changes during submission:</strong>
 	 * <ul>
-	 *   <li><b>Submitting (isSubmitting = true):</b> Button disabled, alpha 0.8f, text "Sending...",
-	 *       text color primary</li>
-	 *   <li><b>Not Submitting (isSubmitting = false):</b> Button enabled, alpha 1.0f, text
-	 *   "Send Feedback",
-	 *       text color surface</li>
+	 * <li>Send button is disabled (prevents duplicate submissions).</li>
+	 * <li>Button alpha reduced to 0.8f (visual indicator of disabled state).</li>
+	 * <li>Button text changes to "Sending feedback".</li>
+	 * <li>Button text color changes to primary color.</li>
 	 * </ul>
-	 * </p>
+	 *
+	 * @see FeedbackViewModel#getIsSubmitting()
+	 * @see android.widget.Button#setEnabled(boolean)
+	 * @see android.widget.Button#setAlpha(float)
 	 */
 	private void handleFeedbackSubmission() {
 		getViewModel().getIsSubmitting().observe(this, isSubmitting -> {
@@ -599,23 +683,19 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Resets the feedback submission form to its initial clean state.
-	 * <p>
-	 * This method clears all user input fields (subject, email, and feedback message),
-	 * removes any selected screenshot attachments, and resets the attachment container
-	 * UI visibility. It is typically called after a successful feedback submission or
-	 * when the user chooses to start over with a new feedback entry.
-	 * </p>
+	 * Resets all feedback input fields and clears the selected screenshot after a
+	 * successful submission. This method clears the subject, email, and feedback
+	 * text fields, resets the attachment container visibility (hiding the preview
+	 * and showing the add button), and clears the selected screenshot from the
+	 * ViewModel.
 	 *
-	 * <p><b>Actions Performed:</b>
-	 * <ul>
-	 *   <li>Clears the subject input field</li>
-	 *   <li>Clears the email input field</li>
-	 *   <li>Clears the feedback message field</li>
-	 *   <li>Resets attachment container visibility (hides preview, shows add button)</li>
-	 *   <li>Removes any selected screenshot from the ViewModel</li>
-	 * </ul>
-	 * </p>
+	 * <p>The attachment container reset uses {@link #resetUploadAttachmentContainer(int, int)}
+	 * with parameters {@link View#GONE} for hiding preview and {@link View#VISIBLE}
+	 * for showing the add attachment button.
+	 *
+	 * @see #resetUploadAttachmentContainer(int, int)
+	 * @see FeedbackViewModel#setSelectedScreenshot(DocumentFile)
+	 * @see android.widget.EditText#setText(CharSequence)
 	 */
 	private void resetFeedbackSubmission() {
 		binding.top3.editSubject.setText("");
@@ -626,27 +706,33 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Updates the UI to reflect the user's selected feedback reaction.
-	 * <p>
-	 * This method manages the visual state of all feedback reaction options (Happy, Good,
-	 * Average, Poor, Angry) based on which one the user selected. It updates the ViewModel
-	 * with the chosen reaction, resets all reaction icons and text labels to their default
-	 * appearance (regular typeface, secondary text color, unselected state), and then
-	 * highlights only the selected reaction by applying a bold typeface, primary color,
-	 * and selected state to its corresponding UI components.
-	 * </p>
+	 * Applies the visual selection state for a feedback reaction option. This method
+	 * updates the ViewModel with the selected reaction, resets all reaction UI
+	 * components to their default (unselected) state, then highlights the specific
+	 * reaction's image and text to indicate current selection.
 	 *
-	 * <p><b>Visual Effects Applied:</b>
+	 * <p><strong>Visual changes applied to all reactions (reset):</strong>
 	 * <ul>
-	 *   <li><b>Selected Reaction:</b> Bold typeface, primary text color, selected image state</li>
-	 *   <li><b>Unselected Reactions:</b> Regular typeface, secondary text color, unselected image state</li>
+	 * <li>All images have {@code selected} state set to {@code false}</li>
+	 * <li>All text views have regular font typeface</li>
+	 * <li>All text views have secondary text color</li>
 	 * </ul>
-	 * </p>
 	 *
-	 * @param reaction         the string representation of the selected reaction
-	 *                         (e.g., "Excellent", "Good", "Average", "Poor", "Angry")
-	 * @param selectedImage    the {@link ImageView} corresponding to the selected reaction
-	 * @param selectedTextView the {@link TextView} label corresponding to the selected reaction
+	 * <p><strong>Visual changes applied to the selected reaction:</strong>
+	 * <ul>
+	 * <li>Selected image's {@code selected} state set to {@code true}</li>
+	 * <li>Selected text view gets primary color</li>
+	 * <li>Selected text view gets bold font typeface</li>
+	 * </ul>
+	 *
+	 * <p>Supported reactions: Happy (Excellent), Good, Average, Poor, Angry.
+	 *
+	 * @param reaction         The reaction string value to store in the ViewModel
+	 *                         (e.g., "Excellent", "Good", "Average", "Poor", "Angry").
+	 * @param selectedImage    The ImageView corresponding to the selected reaction.
+	 * @param selectedTextView The TextView corresponding to the selected reaction.
+	 * @see FeedbackViewModel#setSelectedReaction(String)
+	 * @see #selectExcellentReactionByDefault()
 	 */
 	private void applyReactionSelection(@NonNull String reaction,
 	                                    @NonNull ImageView selectedImage,
@@ -680,13 +766,17 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Sets the "Excellent" feedback reaction as the default selected state upon initialization.
-	 * <p>
-	 * This method is called during UI setup to establish a default feedback reaction
-	 * before the user makes a selection. It updates the ViewModel with the Excellent
-	 * reaction and applies visual highlighting to the corresponding UI components
-	 * (happy icon and text) to indicate the default selection state.
-	 * </p>
+	 * Sets the "Excellent" (Happy) reaction as the default selected option when the
+	 * feedback screen is first loaded. This method delegates to
+	 * {@link #applyReactionSelection(String, ImageView, TextView)} with the
+	 * Happy reaction's image and text views.
+	 *
+	 * <p>The default selection ensures that the user is never left with no reaction
+	 * selected, and it guides users toward a positive default response while still
+	 * allowing them to change their selection freely.
+	 *
+	 * @see FeedbackReactions#Excellent
+	 * @see #applyReactionSelection(String, ImageView, TextView)
 	 */
 	private void selectExcellentReactionByDefault() {
 		applyReactionSelection(FeedbackReactions.Excellent.name(),
@@ -694,22 +784,19 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Fills the feedback subject field with text retrieved from the system clipboard.
-	 * <p>
-	 * This method retrieves any available text from the device's clipboard using
-	 * {@link ClipboardHelper}. If the clipboard contains non-empty text, it automatically
-	 * populates the subject input field with that text as a convenience for the user.
-	 * This can be useful when users want to paste error logs, crash reports, or other
-	 * relevant information without manually typing or long-pressing the input field.
-	 * </p>
+	 * Fills the feedback subject input field with text retrieved from the system
+	 * clipboard. This method obtains the current clipboard content via
+	 * {@link ClipboardHelper#getTextFromClipboard(Context)} and, if the text is
+	 * non-empty, sets it as the subject field's text.
 	 *
-	 * <p><b>Behavior:</b>
-	 * <ul>
-	 *   <li>Retrieves text from clipboard using ClipboardHelper</li>
-	 *   <li>If clipboard text is present and non-empty, sets it as the subject text</li>
-	 *   <li>If clipboard is empty or contains no text, no action is taken</li>
-	 * </ul>
-	 * </p>
+	 * <p>This convenience feature allows users to quickly paste a pre-copied subject
+	 * line (e.g., from an error message or log) without manually typing it.
+	 *
+	 * <p>If the clipboard is empty or contains no text, the method does nothing
+	 * and the subject field remains unchanged.
+	 *
+	 * @see ClipboardHelper#getTextFromClipboard(Context)
+	 * @see android.widget.EditText#setText(CharSequence)
 	 */
 	private void fillSubjectFromClipboard() {
 		Context context = getBaseContext();
@@ -720,37 +807,30 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Validates the user input and initiates the feedback submission process.
-	 * <p>
-	 * This method performs several validation checks on the user's input before
-	 * submitting feedback to the server. It validates the subject field, feedback
-	 * message field, and enforces a maximum character limit. If validation passes,
-	 * it delegates to the ViewModel to send the feedback data.
-	 * </p>
+	 * Validates the user's feedback input and initiates the submission process if all
+	 * validation checks pass. This method extracts the subject, message, and email
+	 * from the input fields, performs validation on each field, and displays warning
+	 * toasts with haptic feedback for any validation failures.
 	 *
-	 * <p><b>Validation Rules:</b>
+	 * <p><strong>Validation rules:</strong>
 	 * <ul>
-	 *   <li>Subject field must not be empty</li>
-	 *   <li>Feedback message must not be empty</li>
-	 *   <li>Feedback message must not exceed 500 characters</li>
+	 * <li>Subject must not be empty. If empty → warning toast + vibration.</li>
+	 * <li>Feedback message must not be empty. If empty → warning toast + vibration.</li>
+	 * <li>Feedback message must not exceed 500 characters. If exceeded → warning
+	 *     toast + vibration.</li>
 	 * </ul>
-	 * </p>
 	 *
-	 * <p><b>Validation Failure Handling:</b>
-	 * If any validation fails, a warning toast is displayed and the device vibrates
-	 * to alert the user. No network request is initiated in these cases.
-	 * </p>
+	 * <p>If all validation checks pass, the method delegates to
+	 * {@link FeedbackViewModel#sendFeedback(LifecycleOwner, String, String, String, String, DocumentFile)}
+	 * to submit the feedback along with the selected reaction type and screenshot
+	 * (if any). The email field is optional and may be empty.
 	 *
-	 * <p><b>Data Submitted:</b>
-	 * Upon successful validation, the following data is sent to the ViewModel:
-	 * <ul>
-	 *   <li>Selected reaction (e.g., emoji rating)</li>
-	 *   <li>Subject line</li>
-	 *   <li>Email address</li>
-	 *   <li>Feedback message</li>
-	 *   <li>Selected screenshot (if any)</li>
-	 * </ul>
-	 * </p>
+	 * @see #getSubjectText()
+	 * @see #getFeedbackText()
+	 * @see #getEmailText()
+	 * @see #vibrate()
+	 * @see StylizedToastView#showWarning(BaseActivity, CharSequence)
+	 * @see FeedbackViewModel#sendFeedback(LifecycleOwner, String, String, String, String, DocumentFile)
 	 */
 	private void validateAndSendFeedback() {
 		String subject = getSubjectText().toString().trim();
@@ -783,42 +863,49 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	}
 	
 	/**
-	 * Retrieves the current text entered in the email address input field.
-	 * <p>
-	 * This method returns the user's email address as an Editable object,
-	 * allowing the calling code to modify the text if needed. The email is used
-	 * as the sender's reply-to address when submitting feedback.
-	 * </p>
+	 * Retrieves the text content from the email input field as a non-null Editable.
+	 * This method uses {@link Objects#requireNonNull(Object)} to ensure the returned
+	 * value is never {@code null}, even if the underlying EditText returns null
+	 * (which should not happen under normal circumstances).
 	 *
-	 * @return an Editable containing the user's email address text
+	 * <p>The returned {@link Editable} allows direct manipulation of the text content
+	 * if needed, though typically the text is read for validation or submission.
+	 *
+	 * @return The non-null {@link Editable} containing the user's entered email address.
+	 * @throws NullPointerException If the EditText's text is unexpectedly null.
+	 * @see android.widget.EditText#getText()
 	 */
 	@NonNull private Editable getEmailText() {
 		return Objects.requireNonNull(binding.top3.editEmail.getText());
 	}
 	
 	/**
-	 * Retrieves the current text entered in the feedback description field.
-	 * <p>
-	 * This method returns the user's detailed feedback message as an Editable object.
-	 * The feedback text typically contains the user's suggestions, bug reports,
-	 * or general comments about the application.
-	 * </p>
+	 * Retrieves the text content from the feedback input field as a non-null Editable.
+	 * This method uses {@link Objects#requireNonNull(Object)} to guarantee a non-null
+	 * return value, providing safe access to the user's feedback message text.
 	 *
-	 * @return an Editable containing the user's feedback message
+	 * <p>The returned Editable can be converted to a String via {@link Editable#toString()}
+	 * for validation, storage, or submission to the backend.
+	 *
+	 * @return The non-null {@link Editable} containing the user's entered feedback text.
+	 * @throws NullPointerException If the EditText's text is unexpectedly null.
+	 * @see android.widget.EditText#getText()
 	 */
 	@NonNull private Editable getFeedbackText() {
 		return Objects.requireNonNull(binding.top3.editFeedback.getText());
 	}
 	
 	/**
-	 * Retrieves the current text from the subject input field.
-	 * <p>
-	 * This method returns the user's chosen subject line for the feedback email
-	 * as an Editable object. The subject provides a brief summary of the feedback
-	 * content and helps with categorization on the receiving end.
-	 * </p>
+	 * Retrieves the text content from the subject input field as a non-null Editable.
+	 * This method uses {@link Objects#requireNonNull(Object)} to ensure the returned
+	 * value is never {@code null}, providing safe access to the user's subject line text.
 	 *
-	 * @return an Editable containing the subject text entered by the user
+	 * <p>The subject field is typically used to categorize the feedback (e.g., "Bug Report",
+	 * "Feature Request", "General Inquiry") before submission.
+	 *
+	 * @return The non-null {@link Editable} containing the user's entered subject text.
+	 * @throws NullPointerException If the EditText's text is unexpectedly null.
+	 * @see android.widget.EditText#getText()
 	 */
 	@NonNull private Editable getSubjectText() {
 		return Objects.requireNonNull(binding.top3.editSubject.getText());
