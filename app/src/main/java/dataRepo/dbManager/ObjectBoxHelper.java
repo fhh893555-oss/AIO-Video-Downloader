@@ -3,7 +3,7 @@ package dataRepo.dbManager;
 import coreUtils.base.BaseApplication;
 import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.MyObjectBox;
-import dataRepo.user.AppUser;
+import dataRepo.userDetails.AppUser;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import sysModules.newPipeLib.cache.YtStreamInfo;

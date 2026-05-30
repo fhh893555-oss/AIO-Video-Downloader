@@ -78,7 +78,7 @@ import okhttp3.Response;
 public final class FeedbackPocketbase extends PocketBaseClient {
 	
 	private final LoggerUtils logger = LoggerUtils.from(FeedbackPocketbase.class);
-	private final String COLLECTION_NAME = "feedbacks";
+	private final String COLLECTION_NAME = "userFeedbacks";
 	private final String FIELD_REACTION = "reaction";
 	private final String FIELD_SUBJECT = "subject";
 	private final String FIELD_MESSAGE = "message";

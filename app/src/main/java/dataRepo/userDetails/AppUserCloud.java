@@ -1,4 +1,4 @@
-package dataRepo.user;
+package dataRepo.userDetails;
 
 import android.graphics.Bitmap;
 

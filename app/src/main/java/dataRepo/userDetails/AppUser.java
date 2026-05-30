@@ -1,4 +1,4 @@
-package dataRepo.user;
+package dataRepo.userDetails;
 
 import java.io.Serializable;
 
@@ -6,9 +6,12 @@ import coreUtils.library.process.LoggerUtils;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Index;
+import io.objectbox.annotation.Transient;
 
 @Entity
 public class AppUser implements Serializable {
+	@Transient private final static LoggerUtils logger = LoggerUtils.from(AppUser.class);
+	
 	@Id(assignable = true)
 	public long id = 0L;
 	@Index public String userServerId = "";
@@ -31,7 +34,7 @@ public class AppUser implements Serializable {
 	public String preferredCategories = "";
 	public long lastSeenTimestamp = 0L;
 	
-	public static final String POCKETBASE_COLLECTION_NAME = "users";
+	public static final String POCKETBASE_COLLECTION_NAME = "userDetails";
 	public static final String POCKETBASE_REMOTE_NAME_FIELD = "name";
 	public static final String POCKETBASE_REMOTE_EMAIL_FIELD = "email";
 	public static final String POCKETBASE_REMOTE_DEVICE_ID_FIELD = "deviceId";
@@ -40,7 +43,6 @@ public class AppUser implements Serializable {
 	public static final String POCKETBASE_REMOTE_HAS_REFERRAL_BONUS_FIELD = "hasReferralBonus";
 	public static final String POCKETBASE_REMOTE_TOTAL_REFERRALS_COUNT_FIELD = "totalReferralsCount";
 	public static final String POCKETBASE_REMOTE_IS_BANNED_FIELD = "isBanned";
-	private final static LoggerUtils logger = LoggerUtils.from(AppUser.class);
 	
 	public void save() {
 		AppUserRepo.save(this);

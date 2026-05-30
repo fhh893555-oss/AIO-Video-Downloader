@@ -14,7 +14,7 @@ import coreUtils.library.process.CrashLogWriter;
 import coreUtils.library.process.LoggerUtils;
 import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
-import dataRepo.user.AppUserRepo;
+import dataRepo.userDetails.AppUserRepo;
 import io.objectbox.Box;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import sysModules.interCaches.AppRawFiles;

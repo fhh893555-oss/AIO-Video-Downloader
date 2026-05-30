@@ -16,7 +16,7 @@ import coreUtils.library.process.VersionInfo;
 import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
-import dataRepo.user.AppUserRepo;
+import dataRepo.userDetails.AppUserRepo;
 import io.objectbox.Box;
 
 /**

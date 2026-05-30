@@ -17,7 +17,7 @@ import coreUtils.base.BaseApplication;
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
 import dataRepo.downloads.DownloadInfo;
-import dataRepo.user.AppUserRepo;
+import dataRepo.userDetails.AppUserRepo;
 
 /**
  * Utility class providing helper methods for download-related operations.

@@ -8,13 +8,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextgen.R;
 
+import coreUtils.base.BaseActivity;
+import coreUtils.base.BaseApplication;
 import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
 import io.objectbox.Box;
+import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.appCrashed.AppCrashedActivity;
-import sysModules.crashedHandler.AppCrashedInfo;
+import userInterface.userFeedback.FeedbackActivity;
 
 /**
  * Entry point activity that determines the app's startup destination based on
@@ -82,6 +85,13 @@ public class LauncherActivity extends AppCompatActivity {
 	 */
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//todo: remove this part
+		if (BaseApplication.isDebugBuild()) {
+			debugTestLaunch();
+			return;
+		}
+		
 		AppConfigs appConfig = AppConfigsRepo.getConfig();
 		if (appConfig.hasAppCrashedRecently) {
 			appConfig.hasAppCrashedRecently = false;
@@ -104,5 +114,13 @@ public class LauncherActivity extends AppCompatActivity {
 			startActivity(intent);
 			finish();
 		}
+	}
+	
+	private void debugTestLaunch() {
+		Intent intent = new Intent(this, FeedbackActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		overridePendingTransition(R.anim.anim_fade_enter, R.anim.anim_fade_exit);
+		startActivity(intent);
+		finish();
 	}
 }
