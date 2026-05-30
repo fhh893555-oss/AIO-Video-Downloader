@@ -303,7 +303,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 	 * </ol>
 	 *
 	 * <p>When the terms activity is selected, the method adds an extra with key
-	 * {@link TermsPolicyActivity#LAUNCHED_LOCATION_OF_ACTIVITY} and value
+	 * {@link TermsPolicyActivity#KEY_ACTIVITY_LAUNCHED_LOCATION} and value
 	 * {@link TermsPolicyActivity#LAUNCHED_FROM_OPENING_SCREEN} to indicate the
 	 * origin of the launch.
 	 *
@@ -330,7 +330,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 		destinationIntent = new Intent(this, nextActivityToOpen);
 		if (isTermsActivitySelected) {
 			destinationIntent.getShortExtra(
-				TermsPolicyActivity.LAUNCHED_LOCATION_OF_ACTIVITY,
+				TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
 				TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);
 		}
 		

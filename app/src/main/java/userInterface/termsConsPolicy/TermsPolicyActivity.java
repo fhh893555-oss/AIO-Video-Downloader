@@ -3,6 +3,7 @@ package userInterface.termsConsPolicy;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.nextgen.R;
 import com.nextgen.databinding.ActivityTermsCon1Binding;
@@ -18,81 +19,52 @@ import dataRepo.appConfigs.AppConfigsRepo;
 import userInterface.openingSplash.OpeningActivity;
 
 /**
- * Activity that displays the Terms & Conditions and Privacy Policy for user acceptance.
- * <p>
- * This activity presents the legal terms and policies that users must agree to before
- * using the application. It provides an expandable/collapsible interface for browsing
- * different sections of the terms, including acceptance terms, app usage guidelines,
- * intellectual property rights, prohibited activities, liability limitations, and
- * policy change notifications.
- * </p>
+ * Activity that displays the application's Terms and Conditions and Privacy Policy.
+ * This screen presents a scrollable legal document with expandable sections for
+ * detailed clauses, a terms acceptance checkbox, and action buttons for agreement
+ * or navigation back. The activity tracks whether it was launched from the opening
+ * screen to determine appropriate navigation behavior upon agreement.
  *
- * <p><b>Key Features:</b>
+ * <p><strong>Core responsibilities:</strong>
  * <ul>
- *   <li><b>Expandable Sections:</b> Users can expand/collapse detailed policy sections
- *       by tapping on each category header</li>
- *   <li><b>Terms Acceptance:</b> Checkbox for users to indicate their agreement
- *       with all terms and conditions</li>
- *   <li><b>Smart Navigation:</b> Different behavior based on launch source
- *       (from opening screen vs. other screens)</li>
- *   <li><b>Persistent Agreement:</b> User's acceptance is saved via {@link AppConfigsRepo}
- *       and persists across app sessions</li>
- *   <li><b>Orientation Lock:</b> Screen orientation is locked to prevent layout
- *       issues during rotation</li>
+ * <li>Displays expandable/collapsible terms sections (Acceptance, Use of App,
+ *     Intellectual Property, Prohibited Activities, Limitations, Changes).</li>
+ * <li>Provides a checkbox for the user to indicate agreement with the terms.</li>
+ * <li>Saves the user's agreement status to {@link AppConfigsRepo} when confirmed.</li>
+ * <li>Applies gradient color span to the word "Conditions" in the title.</li>
+ * <li>Shows an error toast with haptic feedback if user declines terms.</li>
  * </ul>
- * </p>
  *
- * <p><b>Launch Sources:</b>
- * The activity behaves differently based on the {@link #LAUNCHED_LOCATION_OF_ACTIVITY} extra:
- * <ul>
- *   <li><b>From Opening Screen:</b> After acceptance, proceeds to main application flow</li>
- *   <li><b>From Other Screens:</b> After acceptance, returns to previous screen</li>
- * </ul>
- * </p>
- *
- * <p><b>Behavior Flow:</b>
- * <ol>
- *   <li>User reads the terms and conditions</li>
- *   <li>User checks the agreement checkbox</li>
- *   <li>User clicks "Agree & Continue" button</li>
- *   <li>If checkbox checked: saves agreement status, navigates to appropriate destination</li>
- *   <li>If checkbox not checked: shows error toast, vibrates, and closes activity</li>
- * </ol>
- * </p>
- *
- * <p><b>UI Components:</b>
- * <ul>
- *   <li>Gradient-styled title "Terms & Conditions"</li>
- *   <li>6 expandable content sections</li>
- *   <li>Terms agreement checkbox</li>
- *   <li>"Agree & Continue" action button</li>
- *   <li>Back button for navigation without acceptance</li>
- * </ul>
- * </p>
+ * <p><strong>Navigation behavior:</strong>
+ * If launched from {@link OpeningActivity} and user accepts terms → proceeds to
+ * next screen. If launched from elsewhere and user accepts → back button press.
+ * If user declines terms → error toast with vibration.
  *
  * @see BaseActivity
- * @see AppConfigsRepo
  * @see ActivityTermsCon1Binding
- * @see TextViewsUtils
+ * @see AppConfigsRepo
  */
-public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> {
+public final class TermsPolicyActivity
+	extends BaseActivity<ActivityTermsCon1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
-	public static final String LAUNCHED_LOCATION_OF_ACTIVITY = "Location";
+	public static final String KEY_ACTIVITY_LAUNCHED_LOCATION = "Location";
 	public static final short LAUNCHED_FROM_OPENING_SCREEN = 1;
 	public static final short LAUNCHED_FROM_SETTINGS_SCREEN = 2;
 	
 	/**
-	 * Determines whether the activity should be locked to a specific orientation.
-	 * <p>
-	 * Overriding this method and returning {@code true} ensures that the terms and
-	 * conditions screen maintains a consistent orientation (typically portrait),
-	 * preventing layout inconsistencies during rotation and ensuring that expanded
-	 * content panels remain in their correct state when the device is rotated.
-	 * </p>
+	 * Determines whether the activity's screen orientation should be locked.
+	 * This implementation returns {@code true}, forcing the terms and conditions
+	 * screen to remain in portrait mode regardless of device rotation.
 	 *
-	 * @return {@code true} to lock the orientation; {@code false} otherwise
+	 * <p><strong>Design rationale:</strong>
+	 * Locking the orientation ensures the expandable terms sections, checkbox,
+	 * and agree button maintain a consistent layout without unexpected UI
+	 * reconfigurations while the user reads the legal document.
+	 *
+	 * @return {@code true} to lock the activity to portrait orientation.
+	 * @see BaseActivity#shouldLockOrientation()
 	 */
 	@Override
 	protected boolean shouldLockOrientation() {
@@ -100,15 +72,22 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Inflates the view binding for the Terms and Conditions activity.
-	 * <p>
-	 * This method initializes the {@link ActivityTermsCon1Binding} using the provided
-	 * {@link LayoutInflater}, allowing for type-safe access to the layout's views
-	 * including the back button, expandable section items, checkbox, and agree button.
-	 * </p>
+	 * Inflates the activity's layout using view binding and returns the generated
+	 * binding instance for {@code activity_terms_con1.xml}. This method is called
+	 * during the base activity's {@code setContentView()} phase to create the
+	 * binding object that provides type-safe access to all views in the layout,
+	 * including the title TextView, expandable terms sections, terms checkbox,
+	 * agree button, and back button.
 	 *
-	 * @param inflater The {@link LayoutInflater} used to inflate the binding
-	 * @return A new instance of {@link ActivityTermsCon1Binding}
+	 * <p>The layout uses a merged view structure where {@code top1} contains the
+	 * title and {@code top2} contains the scrollable terms content, checkbox,
+	 * and action buttons.
+	 *
+	 * @param inflater The layout inflater service used to create the view hierarchy.
+	 *                 Must not be {@code null}.
+	 * @return The {@link ActivityTermsCon1Binding} instance containing references
+	 * to all views defined in the terms and conditions screen layout.
+	 * @see BaseActivity#inflateBinding(LayoutInflater)
 	 */
 	@Override
 	protected ActivityTermsCon1Binding inflateBinding(LayoutInflater inflater) {
@@ -116,16 +95,23 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Initializes the activity's components once the layout has been loaded.
-	 * <p>
-	 * This method is called after the layout has been inflated and performs the
-	 * following setup in sequence:
-	 * </p>
+	 * Performs post-layout initialization after the content view has been inflated.
+	 * This method is invoked by the base activity at the end of {@code onCreate()}
+	 * and is responsible for hiding expanded detail sections, applying visual
+	 * enhancements to the title text, and setting up all button click listeners.
+	 *
+	 * <p><strong>Initialization order:</strong>
 	 * <ol>
-	 *   <li>Hides all expandable detailed sections (starts with collapsed state)</li>
-	 *   <li>Applies gradient styling to the "Conditions" portion of the title text</li>
-	 *   <li>Sets up all button click listeners (back, expandable sections, checkbox, agree button)</li>
+	 * <li>Hides all expandable detail sections via {@link #hideExpandedDetails()}.</li>
+	 * <li>Applies gradient span to the word "Conditions" in the title via
+	 *     {@link #applyGradientToTitle()}.</li>
+	 * <li>Sets up all button click events via {@link #setupButtonClickEvents()}.</li>
 	 * </ol>
+	 *
+	 * @see BaseActivity#onLoadedLayout()
+	 * @see #hideExpandedDetails()
+	 * @see #applyGradientToTitle()
+	 * @see #setupButtonClickEvents()
 	 */
 	@Override
 	protected void onLoadedLayout() {
@@ -135,22 +121,24 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Applies a color gradient span to the "Conditions" portion of the terms title text.
-	 * <p>
-	 * This method searches for the word "Conditions" within the title text. If found,
-	 * it applies a linear gradient transition between the secondary color and primary
-	 * variant color to that specific word using {@link TextViewsUtils#applyGradientSpan}.
-	 * This creates a visually appealing gradient effect that highlights the key part
-	 * of the "Terms & Conditions" title.
-	 * </p>
+	 * Applies a gradient color span to the word "Conditions" within the terms title
+	 * text view. This method searches for the substring "Conditions" in the full
+	 * title text and, if found, applies a gradient effect using
+	 * {@link TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)}.
 	 *
-	 * <p><b>Gradient Parameters:</b>
-	 * <ul>
-	 *   <li>Start color: R.color.color_secondary</li>
-	 *   <li>End color: R.color.color_primary_variant</li>
-	 *   <li>Span length: 10 characters ("Conditions")</li>
-	 * </ul>
-	 * </p>
+	 * <p><strong>Visual effect:</strong>
+	 * The gradient transitions from {@code color_secondary} to
+	 * {@code color_primary_variant}, spanning the 10 characters of the word
+	 * "Conditions". This creates a highlighted, branded appearance for the key
+	 * word in the terms screen title, drawing user attention to the document type.
+	 *
+	 * <p><strong>Error handling:</strong>
+	 * If the word "Conditions" is not found in the title string (e.g., due to
+	 * localization changes), the method silently does nothing without throwing
+	 * an exception.
+	 *
+	 * @see TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)
+	 * @see #getColor(int)
 	 */
 	private void applyGradientToTitle() {
 		String fullText = binding.top1.tvTermsTitle.getText().toString();
@@ -167,21 +155,22 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Sets up all button click listeners for the terms and conditions activity.
-	 * <p>
-	 * This method serves as a central configuration point for all interactive buttons
-	 * on the terms screen. It delegates to individual setup methods for each button
-	 * to maintain clean, organized, and maintainable code.
-	 * </p>
+	 * Initializes all button click listeners for the terms and conditions screen.
+	 * This method aggregates the setup calls for individual button configurations,
+	 * ensuring all interactive elements respond appropriately to user input.
 	 *
-	 * <p><b>Buttons Configured:</b>
+	 * <p><strong>Buttons configured:</strong>
 	 * <ul>
-	 *   <li>Back button - finishes the activity</li>
-	 *   <li>Expandable section buttons - toggle detailed content visibility</li>
-	 *   <li>Terms checkbox - toggles agreement state</li>
-	 *   <li>Agree & Continue button - saves agreement and navigates accordingly</li>
+	 * <li>Back button via {@link #setupBackButtonClickEvent()}</li>
+	 * <li>Expandable terms sections via {@link #setupExpandTermsButtonClickEvent()}</li>
+	 * <li>Terms checkbox toggle via {@link #configureTermsCheckbox()}</li>
+	 * <li>Agree & Continue button via {@link #setupAgreeTermsButton()}</li>
 	 * </ul>
-	 * </p>
+	 *
+	 * @see #setupBackButtonClickEvent()
+	 * @see #setupExpandTermsButtonClickEvent()
+	 * @see #configureTermsCheckbox()
+	 * @see #setupAgreeTermsButton()
 	 */
 	private void setupButtonClickEvents() {
 		setupBackButtonClickEvent();
@@ -191,36 +180,41 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Configures the click listener for the back button.
-	 * <p>
-	 * When clicked, this method simply finishes the current activity, returning the user
-	 * to the previous screen without saving any changes to the terms agreement state.
-	 * This allows users to exit the terms screen without accepting or rejecting the terms.
-	 * </p>
+	 * Configures the back button click listener. When the user clicks the back button,
+	 * the current activity is finished and removed from the activity stack,
+	 * returning the user to the previous screen.
+	 *
+	 * <p>This provides a consistent navigation mechanism for returning to the
+	 * previous screen, whether the terms activity was launched from the opening
+	 * screen, settings menu, or other entry points.
+	 *
+	 * @see #finish()
 	 */
 	private void setupBackButtonClickEvent() {
 		binding.btnBack.setOnClickListener(view -> finish());
 	}
 	
 	/**
-	 * Configures click listeners for all expandable terms and conditions sections.
-	 * <p>
-	 * This method sets up toggle behavior for each expandable item in the terms screen.
-	 * When a user clicks on any of the section titles (Acceptance, Use of App,
-	 * Intellectual Property, Prohibited Activities, Limitation of Liability, Changes),
-	 * the corresponding detailed content panel toggles between visible and hidden states.
-	 * </p>
+	 * Sets up click listeners for all expandable terms and conditions sections.
+	 * Each item in the terms list (e.g., Acceptance, Use of App, Intellectual Property)
+	 * toggles the visibility of its corresponding detailed explanation view when clicked.
 	 *
-	 * <p><b>Sections Configured:</b>
+	 * <p><strong>Section mappings:</strong>
 	 * <ul>
-	 *   <li>itemAcceptance → extraAcceptance (Terms acceptance details)</li>
-	 *   <li>itemUseOfApp → extraUseOfApp (App usage guidelines)</li>
-	 *   <li>itemIntellectual → extraIntellectual (Intellectual property rights)</li>
-	 *   <li>itemProhibited → extraProhibited (Prohibited actions list)</li>
-	 *   <li>itemLimitation → extraLimitation (Liability limitations)</li>
-	 *   <li>itemChanges → extraChanges (Terms modification policy)</li>
+	 * <li>{@code itemAcceptance} toggles {@code extraAcceptance}</li>
+	 * <li>{@code itemUseOfApp} toggles {@code extraUseOfApp}</li>
+	 * <li>{@code itemIntellectual} toggles {@code extraIntellectual}</li>
+	 * <li>{@code itemProhibited} toggles {@code extraProhibited}</li>
+	 * <li>{@code itemLimitation} toggles {@code extraLimitation}</li>
+	 * <li>{@code itemChanges} toggles {@code extraChanges}</li>
 	 * </ul>
-	 * </p>
+	 *
+	 * <p>Each click listener invokes {@link #toggleVisibility(View)} to show or
+	 * hide the corresponding detailed content section, providing an expandable/
+	 * collapsible user interface pattern.
+	 *
+	 * @see #toggleVisibility(View)
+	 * @see #hideExpandedDetails()
 	 */
 	private void setupExpandTermsButtonClickEvent() {
 		binding.top2.itemAcceptance.setOnClickListener(view ->
@@ -243,20 +237,26 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Configures the click listener for the "Agree & Continue" button.
-	 * <p>
-	 * This method handles the terms agreement workflow. When clicked, it saves the checkbox
-	 * state to the AppConfig repository, then determines the appropriate action based on
-	 * whether terms were accepted and where the activity was launched from.
-	 * </p>
+	 * Configures the "Agree & Continue" button click behavior. When clicked, this
+	 * method saves the user's terms agreement status to the application configuration,
+	 * then determines the appropriate next action based on the checkbox state and
+	 * the activity's launch origin.
 	 *
-	 * <p><b>Behavior Matrix:</b>
+	 * <p><strong>Behavior matrix:</strong>
 	 * <ul>
-	 *   <li><b>Terms Accepted + From Opening Screen:</b> Navigates to OpeningActivity (main flow)</li>
-	 *   <li><b>Terms Accepted + Not From Opening Screen:</b> Simulates back button press</li>
-	 *   <li><b>Terms Not Accepted:</b> Shows error toast, vibrates, and finishes the activity</li>
+	 * <li>If checkbox is checked AND launched from opening screen → opens
+	 *     {@link OpeningActivity} to continue the startup flow.</li>
+	 * <li>If checkbox is checked AND NOT launched from opening screen → simulates
+	 *     a back button press to return to previous screen.</li>
+	 * <li>If checkbox is NOT checked → shows an error toast, triggers haptic
+	 *     feedback (50ms vibration), and finishes the activity.</li>
 	 * </ul>
-	 * </p>
+	 *
+	 * <p>The terms agreement status is persisted via {@link AppConfigsRepo#save(AppConfigs)}.
+	 *
+	 * @see #isLaunchedFromOpeningScreen()
+	 * @see StylizedToastView#showError(BaseActivity, CharSequence)
+	 * @see #vibrate(long)
 	 */
 	private void setupAgreeTermsButton() {
 		binding.top2.btnAgreeContinue.setOnClickListener(view -> {
@@ -282,13 +282,17 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Configures the checkbox toggling behavior for terms agreement.
-	 * <p>
-	 * This method sets up a click listener on the checkbox area/button that calls
-	 * {@link #toggleTermsAgreementCheckbox()} to invert the checkbox state. This provides
-	 * an alternative touch target for users to agree to terms, improving usability by
-	 * allowing them to tap either the checkbox or its surrounding container.
-	 * </p>
+	 * Configures the click listener for the terms agreement checkbox toggle button.
+	 * When the user clicks the {@code btnAcceptTermsCheck} button, the method
+	 * invokes {@link #toggleTermsAgreementCheckbox()} to invert the checked state
+	 * of the associated terms agreement checkbox.
+	 *
+	 * <p>This provides an alternative interaction pattern where users can tap a
+	 * larger button area to toggle the checkbox, improving touch accessibility
+	 * beyond directly tapping the relatively small checkbox control.
+	 *
+	 * @see #toggleTermsAgreementCheckbox()
+	 * @see #binding
 	 */
 	private void configureTermsCheckbox() {
 		binding.top2.btnAcceptTermsCheck.setOnClickListener(view ->
@@ -296,13 +300,28 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Hides all expandable detailed sections of the terms and conditions.
-	 * <p>
-	 * This method sets the visibility of all detail panels to GONE, effectively
-	 * collapsing any expanded content. These panels typically contain detailed
-	 * information about acceptance terms, app usage rights, intellectual property,
-	 * prohibited activities, limitation of liability, and changes to terms.
-	 * </p>
+	 * Hides all expandable detail sections within the terms and conditions screen.
+	 * This method sets the visibility of multiple extra content views to
+	 * {@link View#GONE}, including acceptance terms, app usage guidelines,
+	 * intellectual property information, prohibited activities, limitation of
+	 * liability, and changes to terms sections.
+	 *
+	 * <p><strong>Sections hidden:</strong>
+	 * <ul>
+	 * <li>{@code extraAcceptance} - Terms acceptance details</li>
+	 * <li>{@code extraUseOfApp} - Proper app usage guidelines</li>
+	 * <li>{@code extraIntellectual} - Intellectual property rights</li>
+	 * <li>{@code extraProhibited} - Prohibited activities list</li>
+	 * <li>{@code extraLimitation} - Limitation of liability</li>
+	 * <li>{@code extraChanges} - Changes to terms notification</li>
+	 * </ul>
+	 *
+	 * <p>This method is typically called when collapsing all expanded sections
+	 * or resetting the UI to its default collapsed state. The sections can later
+	 * be shown individually when the user expands specific details.
+	 *
+	 * @see View#setVisibility(int)
+	 * @see View#GONE
 	 */
 	private void hideExpandedDetails() {
 		binding.top2.extraAcceptance.setVisibility(View.GONE);
@@ -314,15 +333,16 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Toggles the visibility state of a target view between GONE and VISIBLE.
-	 * <p>
-	 * If the target view is currently GONE (hidden and not occupying layout space),
-	 * this method makes it VISIBLE. If it is VISIBLE, it becomes GONE. This is useful
-	 * for showing/hiding UI elements such as progress indicators, error messages,
-	 * or optional form fields.
-	 * </p>
+	 * Toggles the visibility state of the specified view between visible and gone.
+	 * If the target view is currently {@link View#GONE}, it becomes {@link View#VISIBLE}.
+	 * If the target view is currently {@link View#VISIBLE}, it becomes {@link View#GONE}.
 	 *
-	 * @param targetView The view whose visibility state will be toggled
+	 * <p>This utility method is commonly used for expanding/collapsing UI sections,
+	 * showing/hiding loading indicators, or toggling additional options panels.
+	 *
+	 * @param targetView The view whose visibility state should be toggled.
+	 *                   Must not be {@code null}.
+	 * @see View#setVisibility(int)
 	 */
 	private void toggleVisibility(View targetView) {
 		boolean isNoVisibility = targetView.getVisibility() == View.GONE;
@@ -330,39 +350,46 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	}
 	
 	/**
-	 * Toggles the checked state of the terms agreement checkbox.
-	 * <p>
-	 * This method inverts the current checked state of the checkbox, allowing users
-	 * to quickly toggle their agreement status without directly interacting with
-	 * the checkbox itself (e.g., by tapping a label or button associated with it).
-	 * </p>
+	 * Toggles the checked state of the terms agreement checkbox. This method
+	 * inverts the current checked state by calling
+	 * {@link android.widget.CheckBox#setChecked(boolean)} with the opposite
+	 * of the current value.
+	 *
+	 * <p>This is typically used in conjunction with a "Select All" or toggle
+	 * button that affects the terms agreement checkbox without requiring the
+	 * user to interact directly with the checkbox itself.
+	 *
+	 * @see android.widget.CheckBox#isChecked()
+	 * @see android.widget.CheckBox#setChecked(boolean)
 	 */
 	private void toggleTermsAgreementCheckbox() {
 		binding.top2.cbAgreeTerms.setChecked(!binding.top2.cbAgreeTerms.isChecked());
 	}
 	
 	/**
-	 * Determines whether this activity was launched from the opening/splash screen.
-	 * <p>
-	 * This method reads the {@link #LAUNCHED_LOCATION_OF_ACTIVITY} extra from the
-	 * intent that started this activity. It compares the value against the constant
-	 * {@link #LAUNCHED_FROM_OPENING_SCREEN} to determine if the TermsPolicyActivity
-	 * was opened from the splash screen (true) or from another source (false).
-	 * </p>
+	 * Determines whether this activity was launched from the opening screen
+	 * (i.e., {@link OpeningActivity}) rather than from another entry point.
+	 * This method extracts the {@link #KEY_ACTIVITY_LAUNCHED_LOCATION} extra
+	 * from the intent and compares it against the default value
+	 * {@link #LAUNCHED_FROM_OPENING_SCREEN}.
 	 *
-	 * <p><b>Usage Context:</b>
-	 * Different launch locations may require different behavior. For example, when
-	 * launched from the opening screen, the activity should not allow navigating
-	 * back without accepting terms, whereas other launch sources might be less strict.
-	 * </p>
+	 * <p><strong>Usage context:</strong>
+	 * The terms policy activity can be launched from multiple locations (e.g.,
+	 * opening screen, settings menu, or after an update). This method allows
+	 * the activity to customize its behavior—such as showing a back button or
+	 * modifying the UI—based on its origin.
 	 *
-	 * @return true if the activity was launched from the opening screen, false otherwise
+	 * @return {@code true} if the activity was launched from {@link OpeningActivity},
+	 * {@code false} otherwise (e.g., launched from settings or other screens).
+	 * @see #getIntent()
+	 * @see #KEY_ACTIVITY_LAUNCHED_LOCATION
+	 * @see #LAUNCHED_FROM_OPENING_SCREEN
 	 */
 	private boolean isLaunchedFromOpeningScreen() {
 		Intent intent = getIntent();
 		short defaultIntentValue = LAUNCHED_FROM_OPENING_SCREEN;
 		short launchLocation = intent.getShortExtra(
-			LAUNCHED_LOCATION_OF_ACTIVITY, defaultIntentValue);
+			KEY_ACTIVITY_LAUNCHED_LOCATION, defaultIntentValue);
 		
 		return launchLocation == defaultIntentValue;
 	}
