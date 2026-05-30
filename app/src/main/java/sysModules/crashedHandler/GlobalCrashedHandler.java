@@ -111,6 +111,8 @@ public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandl
 			if (stackTrace.isEmpty()) return;
 			
 			Box<AppCrashedInfo> crashedInfoBox = ObjectBoxHelper.getAppCrashedInfoBox();
+			crashedInfoBox.removeAll();
+			
 			AppCrashedInfo appCrashInfo = getConfiguredAppCrashInfo(stackTrace);
 			appCrashInfo.id = AppCrashedInfo.APP_CRASHED_OBJECT_BOX_ID;
 			crashedInfoBox.put(appCrashInfo);

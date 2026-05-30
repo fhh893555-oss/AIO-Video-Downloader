@@ -128,6 +128,7 @@ public final class AppCrashedViewModel extends ViewModel {
 	 * @see #sendCrashInfoToServer(AppCrashedInfo, ServerReportCallback)
 	 */
 	public interface ServerReportCallback {
+		
 		/**
 		 * Called when the crash report has been successfully saved to the remote server.
 		 * <p>
