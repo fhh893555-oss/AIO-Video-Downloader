@@ -16,7 +16,7 @@ import dataRepo.dbManager.PocketBaseClient;
  * telemetry data. It provides a fixed collection name (via {@link #COLLECTION_NAME})
  * and exposes a convenience method {@link #sendCrashInfoToServer(AppCrashedInfo)}
  * that transforms an {@link AppCrashedInfo} object into a JSON payload and
- * transmits it using the inherited {@link #post(JSONObject)} method. All network
+ * transmits it using the inherited {@link #post(JSONObject, String)} method. All network
  * operations inherit the HTTP client configuration, error handling, and logging
  * behavior from the parent class.
  * </p>
@@ -72,7 +72,7 @@ public final class AppCrashedPocketbase extends PocketBaseClient {
 	 * This method transforms an {@link AppCrashedInfo} object into a structured
 	 * {@link JSONObject} payload, mapping each crash field to a corresponding
 	 * server-side field key. The payload is then sent using the inherited
-	 * {@link #post(JSONObject)} method, which handles network transmission and
+	 * {@link #post(JSONObject, String)} method, which handles network transmission and
 	 * response parsing. A {@link JSONException} may be thrown if the payload
 	 * construction fails (e.g., due to invalid field values), but network
 	 * errors are caught and logged internally by {@code post()}, returning
@@ -95,7 +95,7 @@ public final class AppCrashedPocketbase extends PocketBaseClient {
 	 * if the network request fails
 	 * @throws JSONException if constructing the JSON payload fails due to
 	 *                       invalid data types or missing keys
-	 * @see #post(JSONObject)
+	 * @see #post(JSONObject, String)
 	 * @see AppCrashedInfo
 	 */
 	public JSONObject sendCrashInfoToServer(AppCrashedInfo crashInfo) throws JSONException {
@@ -106,6 +106,6 @@ public final class AppCrashedPocketbase extends PocketBaseClient {
 		payload.put(FIELD_USER_COUNTRY, crashInfo.getUserCountry());
 		payload.put(FIELD_STACKTRACE, crashInfo.getStackStraceInfo());
 		payload.put(FIELD_DETAILED_INFO, crashInfo.getDetailedInfo());
-		return post(payload);
+		return post(payload, crashInfo.getDeviceId());
 	}
 }
