@@ -214,7 +214,7 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 			}
 			
 			RequestBody requestBody = multipartBuilder.build();
-			JSONObject response = postMultipart(requestBody);
+			JSONObject response = postMultipart(requestBody, deviceId);
 			if (response != null) {
 				String serverId = response.optString("id");
 				if (!serverId.isEmpty()) {
@@ -375,17 +375,20 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	 *
 	 * @param requestBody The multipart/form-data body containing feedback fields
 	 *                    (subject, message, email, reaction) and optional screenshot attachments
+	 * @param deviceId    the device identifier sent in the {@code X-Device-Id} header
+	 *                    for request contextualization
 	 * @return A {@link JSONObject} containing the server response if the request was successful;
 	 * {@code null} if the request failed, the response body was empty, an exception occurred,
 	 * or the HTTP status code indicates an error (non-2xx)
 	 */
-	private JSONObject postMultipart(RequestBody requestBody) {
+	private JSONObject postMultipart(RequestBody requestBody, String deviceId) {
 		Response response = null;
 		try {
 			Request request = new Request.Builder()
 				.url(getRecordsUrl())
 				.post(requestBody)
 				.addHeader("Accept", "application/json")
+				.addHeader("X-Device-Id", deviceId)
 				.build();
 			
 			response = getHttpClient().newCall(request).execute();
