@@ -17,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+
 /**
  * Serves as the abstract foundation for communicating with a PocketBase backend
  * API, encapsulating HTTP client configuration and CRUD operation templates.
@@ -124,7 +125,8 @@ public abstract class PocketBaseClient {
 	 */
 	@Nullable
 	protected JSONObject query(@NonNull String filter,
-	                           @Nullable String fields, @NonNull String deviceId) {
+	                           @Nullable String fields,
+	                           @NonNull String deviceId) {
 		try {
 			String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8);
 			StringBuilder url = new StringBuilder(getRecordsUrl())
@@ -180,18 +182,22 @@ public abstract class PocketBaseClient {
 	 * @param recordId the unique identifier of the record to patch (appended to
 	 *                 the base URL path)
 	 * @param data     a {@link JSONObject} containing the partial fields to update
+	 * @param deviceId the device identifier sent in the {@code X-Device-Id} header
+	 *                 for request contextualization
 	 * @return a {@link JSONObject} parsed from the successful response body, or
 	 * {@code null} if the request failed or response was invalid
 	 * @see #getRecordsUrl()
-	 * @see #post(JSONObject)
+	 * @see #post(JSONObject, String)
 	 */
 	@Nullable
 	protected JSONObject patch(@NonNull String recordId,
-	                           @NonNull JSONObject data) {
+	                           @NonNull JSONObject data,
+	                           @NonNull String deviceId) {
 		try {
 			RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
 			Request request = new Request.Builder()
 				.url(getRecordsUrl() + "/" + recordId)
+				.addHeader("X-Device-Id", deviceId)
 				.patch(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
@@ -224,20 +230,24 @@ public abstract class PocketBaseClient {
 	 * <li>Logs debug-level messages for HTTP errors and error-level for exceptions</li>
 	 * </ul>
 	 *
-	 * @param data a {@link JSONObject} containing the data to post (e.g., new
-	 *             record fields in JSON format)
+	 * @param data     a {@link JSONObject} containing the data to post (e.g., new
+	 *                 record fields in JSON format)
+	 * @param deviceId the device identifier sent in the {@code X-Device-Id} header
+	 *                 for request contextualization
 	 * @return a {@link JSONObject} parsed from the successful response body
 	 * (typically the created record including server-generated fields),
 	 * or {@code null} if the request failed
-	 * @see #patch(String, JSONObject)
+	 * @see #patch(String, JSONObject, String)
 	 * @see RequestBody
 	 */
 	@Nullable
-	protected JSONObject post(@NonNull JSONObject data) {
+	protected JSONObject post(@NonNull JSONObject data, @NonNull String deviceId) {
 		try {
 			RequestBody requestBody = RequestBody.create(data.toString(), jsonMedia);
 			Request request = new Request.Builder()
-				.url(getRecordsUrl()).post(requestBody).build();
+				.url(getRecordsUrl())
+				.addHeader("X-Device-Id", deviceId)
+				.post(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
 				if (!response.isSuccessful()) {
@@ -272,6 +282,8 @@ public abstract class PocketBaseClient {
 	 * </ul>
 	 *
 	 * @param requestBody the HTTP POST body to send (typically JSON or form-encoded)
+	 * @param deviceId    the device identifier sent in the {@code X-Device-Id} header
+	 *                    for request contextualization
 	 * @return a {@link JSONObject} parsed from the successful response body, or
 	 * {@code null} if the request failed or response was invalid
 	 * @see RequestBody
@@ -279,10 +291,12 @@ public abstract class PocketBaseClient {
 	 * @see JSONObject
 	 */
 	@Nullable
-	protected JSONObject post(@NonNull RequestBody requestBody) {
+	protected JSONObject post(@NonNull RequestBody requestBody, @NonNull String deviceId) {
 		try {
 			Request request = new Request.Builder()
-				.url(getRecordsUrl()).post(requestBody).build();
+				.url(getRecordsUrl())
+				.addHeader("X-Device-Id", deviceId)
+				.post(requestBody).build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
 				if (!response.isSuccessful()) {
@@ -304,7 +318,7 @@ public abstract class PocketBaseClient {
 	 * This setter allows external configuration of the {@link OkHttpClient}
 	 * instance, enabling customization of timeouts, interceptors, cache settings,
 	 * or connection specifications. The provided client must not be {@code null},
-	 * as subsequent calls to {@link #post(RequestBody)} depend on a valid client
+	 * as subsequent calls to {@link #post(RequestBody, String)} depend on a valid client
 	 * reference. No validation is performed on the client's configuration state.
 	 * </p>
 	 *
