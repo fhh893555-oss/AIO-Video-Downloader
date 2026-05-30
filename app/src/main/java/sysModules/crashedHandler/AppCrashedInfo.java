@@ -1,4 +1,4 @@
-package userInterface.appCrashed;
+package sysModules.crashedHandler;
 
 import android.content.pm.PackageInfo;
 

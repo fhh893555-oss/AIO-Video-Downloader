@@ -7,7 +7,7 @@ import dataRepo.user.AppUser;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import sysModules.newPipeLib.cache.YtStreamInfo;
-import userInterface.appCrashed.AppCrashedInfo;
+import sysModules.crashedHandler.AppCrashedInfo;
 
 /**
  * Provides static utility methods for global ObjectBox database initialization and

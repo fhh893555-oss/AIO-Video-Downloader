@@ -16,8 +16,8 @@ import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
+import sysModules.crashedHandler.AppCrashedInfo;
 import userInterface.openingSplash.LauncherActivity;
-import userInterface.openingSplash.OpeningActivity;
 
 /**
  * Displays crash information to the user after an unhandled exception occurs,

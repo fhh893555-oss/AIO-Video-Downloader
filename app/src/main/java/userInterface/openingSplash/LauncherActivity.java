@@ -14,7 +14,7 @@ import dataRepo.dbManager.ObjectBoxHelper;
 import io.objectbox.Box;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.appCrashed.AppCrashedActivity;
-import userInterface.appCrashed.AppCrashedInfo;
+import sysModules.crashedHandler.AppCrashedInfo;
 
 /**
  * Entry point activity that determines the app's startup destination based on

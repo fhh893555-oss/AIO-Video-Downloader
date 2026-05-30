@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 import coreUtils.library.process.ThreadTask.BackgroundTaskNoResult;
+import sysModules.crashedHandler.AppCrashedInfo;
+import sysModules.crashedHandler.AppCrashedPocketbase;
 
 /**
  * Manages crash report data and server submission operations for the crash

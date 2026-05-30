@@ -18,7 +18,6 @@ import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
 import dataRepo.user.AppUserRepo;
 import io.objectbox.Box;
-import userInterface.appCrashed.AppCrashedInfo;
 
 /**
  * Global exception handler that captures uncaught crashes, persists crash data
