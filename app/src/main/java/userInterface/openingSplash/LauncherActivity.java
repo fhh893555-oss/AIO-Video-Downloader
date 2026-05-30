@@ -12,76 +12,73 @@ import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
 import io.objectbox.Box;
+import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.appCrashed.AppCrashedActivity;
 import userInterface.appCrashed.AppCrashedInfo;
 
 /**
- * Launcher activity that serves as the application's entry point and crash detection handler.
- * <p>
- * This activity is the first component launched when the application starts. It checks for
- * recent crash states stored in the app configuration and determines the appropriate
- * navigation flow. If a crash was detected in the previous session, it redirects to a
- * crash reporting screen; otherwise, it proceeds to the normal application launch flow
- * through {@link OpeningActivity}.
- * </p>
+ * Entry point activity that determines the app's startup destination based on
+ * crash recovery state. This activity acts as a decision router, checking
+ * whether the app experienced a crash during the previous session. If a crash
+ * is detected, the user is redirected to {@link AppCrashedActivity} with
+ * diagnostic information; otherwise, normal app flow proceeds to
+ * {@link OpeningActivity}.
  *
- * <p><b>Crash Detection Flow:</b>
- * <ul>
- *   <li>Reads {@code hasAppCrashedRecently} flag from {@link AppConfigsRepo}</li>
- *   <li>If true: clears the flag, saves configuration, and redirects to crash reporting activity</li>
- *   <li>If false: proceeds directly to the opening/splash screen</li>
- * </ul>
- * </p>
+ * <p><strong>Activity behavior:</strong>
+ * The activity does not display any UI of its own. It immediately evaluates
+ * the crash flag from {@link AppConfigsRepo}, clears the activity back stack
+ * using intent flags, and finishes itself after starting the target activity.
+ * This ensures the launcher activity is not retained in the navigation history.
  *
- * <p><b>Navigation Flags:</b>
- * When launching the opening screen, the intent uses {@link Intent#FLAG_ACTIVITY_NEW_TASK}
- * and {@link Intent#FLAG_ACTIVITY_CLEAR_TASK} flags to clear the activity stack,
- * ensuring the launcher is not retained in the back stack after navigation.
- * </p>
+ * <p><strong>Crash detection mechanism:</strong>
+ * The {@code hasAppCrashedRecently} flag is typically set by a global crash
+ * handler (e.g., {@link GlobalCrashedHandler}) before the app terminates.
+ * This activity resets the flag to {@code false} when a crash is reported,
+ * preventing infinite crash loops. The associated {@link AppCrashedInfo} entity
+ * is stored in ObjectBox and retrieved using a fixed box ID constant.
  *
- * <p><b>Transition Animation:</b>
- * A fade in/fade out transition animation is applied when moving to the opening screen,
- * providing a smooth visual transition between activities.
- * </p>
+ * <p><strong>Animation:</strong>
+ * A fade transition is applied to all activity launches using
+ * {@code R.anim.anim_fade_enter} and {@code R.anim.anim_fade_exit}, providing
+ * a smooth visual experience when switching between activities.
  *
  * @see AppCompatActivity
- * @see AppConfigsRepo
+ * @see AppCrashedActivity
  * @see OpeningActivity
+ * @see AppConfigsRepo
+ * @see GlobalCrashedHandler
  */
 public class LauncherActivity extends AppCompatActivity {
 	
 	/**
-	 * Called when the launcher activity is created.
-	 * <p>
-	 * This method serves as the application's main entry point. It checks if a crash occurred
-	 * in the previous app session by reading the {@code hasAppCrashedRecently} flag from
-	 * the app configuration. If a crash was detected, it clears the flag and saves the
-	 * configuration to reset the crash state for future launches. If no crash occurred,
-	 * it proceeds to the normal application launch flow by starting the opening splash screen.
-	 * </p>
+	 * Initializes the activity and determines the navigation destination based on
+	 * recent crash status. This method checks whether the app crashed during the
+	 * previous session by reading the {@link AppConfigs#hasAppCrashedRecently} flag.
+	 * If a crash occurred, the user is redirected to {@link AppCrashedActivity}
+	 * with crash details; otherwise, normal flow proceeds to {@link OpeningActivity}.
 	 *
-	 * <p><b>Crash Detection Flow:</b>
-	 * <ul>
-	 *   <li><b>Crash detected:</b> Flag is reset to false and configuration saved.
-	 *       (Note: Crash reporting UI should be launched here)</li>
-	 *   <li><b>No crash detected:</b> OpeningActivity is launched with flags to clear
-	 *       the activity stack</li>
-	 * </ul>
-	 * </p>
+	 * <p><strong>Crash recovery flow:</strong>
+	 * When {@code hasAppCrashedRecently} is {@code true}, the flag is immediately
+	 * reset to {@code false} to prevent infinite crash loops. The {@link AppCrashedInfo}
+	 * entity (with fixed box ID {@link AppCrashedInfo#APP_CRASHED_OBJECT_BOX_ID})
+	 * is retrieved from ObjectBox and passed as a serialized extra to the crash
+	 * reporting screen. Both paths clear the activity back stack using
+	 * {@link Intent#FLAG_ACTIVITY_NEW_TASK} and {@link Intent#FLAG_ACTIVITY_CLEAR_TASK},
+	 * ensuring the user cannot return to this launcher activity via the back button.
 	 *
-	 * <p><b>Navigation Flags:</b>
-	 * The intent uses {@link Intent#FLAG_ACTIVITY_NEW_TASK} to start a new task and
-	 * {@link Intent#FLAG_ACTIVITY_CLEAR_TASK} to clear any existing activities from the
-	 * task, ensuring the launcher activity is not retained in the back stack after
-	 * transitioning to the opening screen.
-	 * </p>
+	 * <p><strong>Visual transition:</strong>
+	 * A fade animation is applied to both navigation paths via
+	 * {@link #overridePendingTransition(int, int)} using
+	 * {@code R.anim.anim_fade_enter} and {@code R.anim.anim_fade_exit}.
 	 *
-	 * <p><b>Transition Animation:</b>
-	 * A fade enter and fade exit animation is applied when transitioning to the opening
-	 * activity, providing a smooth visual experience during app launch.
-	 * </p>
-	 *
-	 * @param savedInstanceState Previously saved state data, or null if no saved state exists
+	 * @param savedInstanceState Previously saved state bundle. Not used in this
+	 *                           implementation as the activity always finishes
+	 *                           immediately after redirecting.
+	 * @see AppConfigsRepo#getConfig()
+	 * @see AppConfigs#hasAppCrashedRecently
+	 * @see AppCrashedActivity
+	 * @see OpeningActivity
+	 * @see #finish()
 	 */
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -4,290 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:2619012508564781816",
-      "lastPropertyId": "55:2529785081629778346",
-      "name": "AppConfig",
-      "properties": [
-        {
-          "id": "1:4539055353728528141",
-          "name": "entityId",
-          "type": 6,
-          "flags": 129
-        },
-        {
-          "id": "2:2382175297760126908",
-          "name": "isLocaleConfigured",
-          "type": 1
-        },
-        {
-          "id": "3:6678380591184570366",
-          "name": "isAppReviewCompleted",
-          "type": 1
-        },
-        {
-          "id": "4:1029260235366651527",
-          "name": "hasSkippedBatteryOptimization",
-          "type": 1
-        },
-        {
-          "id": "5:3129950187633085217",
-          "name": "hasAppCrashedRecently",
-          "type": 1
-        },
-        {
-          "id": "6:3307794838912809613",
-          "name": "lastProcessedClipboardText",
-          "type": 9
-        },
-        {
-          "id": "7:1190126443937952654",
-          "name": "defaultDownloadLocationType",
-          "type": 5
-        },
-        {
-          "id": "8:6020553166009476997",
-          "name": "selectedDownloadDirectoryPath",
-          "type": 9
-        },
-        {
-          "id": "9:8391992720595770672",
-          "name": "selectedLanguageCode",
-          "type": 9
-        },
-        {
-          "id": "10:3113994359141068040",
-          "name": "selectedRegionCode",
-          "type": 9
-        },
-        {
-          "id": "11:8579809399971234561",
-          "name": "completedDownloadsSortOrder",
-          "type": 5
-        },
-        {
-          "id": "12:8146062288055967789",
-          "name": "activeDownloadsSortOrder",
-          "type": 5
-        },
-        {
-          "id": "13:4924346014033670737",
-          "name": "isDailySuggestionsEnabled",
-          "type": 1
-        },
-        {
-          "id": "14:122948846788612897",
-          "name": "totalSuccessfulDownloadCount",
-          "type": 5
-        },
-        {
-          "id": "15:7507669648112565285",
-          "name": "totalAppUsageDurationMs",
-          "type": 7
-        },
-        {
-          "id": "16:4789143081985701690",
-          "name": "formattedTotalUsageDuration",
-          "type": 9
-        },
-        {
-          "id": "17:3779467835537902948",
-          "name": "foregroundAppUsageDurationMs",
-          "type": 7
-        },
-        {
-          "id": "18:2646449702445079484",
-          "name": "formattedForegroundUsageDuration",
-          "type": 9
-        },
-        {
-          "id": "19:757677660728793240",
-          "name": "pushNotificationClickCount",
-          "type": 5
-        },
-        {
-          "id": "20:2254041411349868250",
-          "name": "pushNotificationReceivedCount",
-          "type": 5
-        },
-        {
-          "id": "21:8182169021053679194",
-          "name": "languageChangeButtonClickCount",
-          "type": 5
-        },
-        {
-          "id": "22:750791369768947496",
-          "name": "mediaPlaybackButtonClickCount",
-          "type": 5
-        },
-        {
-          "id": "23:1352078520895319872",
-          "name": "howToGuideButtonClickCount",
-          "type": 5
-        },
-        {
-          "id": "24:1693110539932090084",
-          "name": "videoUrlEditorButtonClickCount",
-          "type": 5
-        },
-        {
-          "id": "25:2746763962014774053",
-          "name": "homeHistoryMenuItemClickCount",
-          "type": 5
-        },
-        {
-          "id": "26:7009353589023381346",
-          "name": "homeBookmarksMenuItemClickCount",
-          "type": 5
-        },
-        {
-          "id": "27:3080862021889942115",
-          "name": "recentDownloadsMenuItemClickCount",
-          "type": 5
-        },
-        {
-          "id": "28:8764438121488672998",
-          "name": "homeFaviconMenuItemClickCount",
-          "type": 5
-        },
-        {
-          "id": "29:4160244085771173450",
-          "name": "versionCheckMenuItemClickCount",
-          "type": 5
-        },
-        {
-          "id": "30:3424625257953233093",
-          "name": "interstitialAdClickCount",
-          "type": 5
-        },
-        {
-          "id": "31:8745375366635909319",
-          "name": "interstitialAdImpressionCount",
-          "type": 5
-        },
-        {
-          "id": "32:7864257026002592302",
-          "name": "rewardedAdClickCount",
-          "type": 5
-        },
-        {
-          "id": "33:4501936731211788439",
-          "name": "rewardedAdImpressionCount",
-          "type": 5
-        },
-        {
-          "id": "34:5740863688830911941",
-          "name": "userInitiatedDownloadCount",
-          "type": 5
-        },
-        {
-          "id": "35:7435931356513469151",
-          "name": "isDownloadThumbnailHidden",
-          "type": 1
-        },
-        {
-          "id": "36:7141044859599515479",
-          "name": "isDownloadCompletionSoundEnabled",
-          "type": 1
-        },
-        {
-          "id": "37:1504876215809399036",
-          "name": "isDownloadNotificationHidden",
-          "type": 1
-        },
-        {
-          "id": "38:5223208764251680960",
-          "name": "isDownloadOpenedOnSingleClick",
-          "type": 1
-        },
-        {
-          "id": "39:4985974320932559639",
-          "name": "isDownloadAutoResumeEnabled",
-          "type": 1
-        },
-        {
-          "id": "40:4858209467200629645",
-          "name": "maxDownloadAutoResumeLimit",
-          "type": 5
-        },
-        {
-          "id": "41:8876090180226877780",
-          "name": "maxDownloadSpeedLimit",
-          "type": 6
-        },
-        {
-          "id": "42:1647547191693918841",
-          "name": "wifiOnlyDownloadEnabled",
-          "type": 1
-        },
-        {
-          "id": "43:1478740352956568337",
-          "name": "httpUserAgentForDownloads",
-          "type": 9
-        },
-        {
-          "id": "44:6010679649095026214",
-          "name": "httpProxyServerForDownloads",
-          "type": 9
-        },
-        {
-          "id": "45:2090303289841347512",
-          "name": "downloadConcurrencyLimit",
-          "type": 5
-        },
-        {
-          "id": "46:406516034838708438",
-          "name": "browserDefaultHomepageUrl",
-          "type": 9
-        },
-        {
-          "id": "47:3733373203812545433",
-          "name": "isDesktopBrowsingEnabled",
-          "type": 1
-        },
-        {
-          "id": "48:7982039074290995690",
-          "name": "isPrivateBrowsingEnabled",
-          "type": 1
-        },
-        {
-          "id": "49:7735387547021688129",
-          "name": "isAdBlockerEnabled",
-          "type": 1
-        },
-        {
-          "id": "50:7280773203274461752",
-          "name": "isJavaScriptEnabled",
-          "type": 1
-        },
-        {
-          "id": "51:8006104544786468029",
-          "name": "isImageLoadingEnabled",
-          "type": 1
-        },
-        {
-          "id": "52:7660024757037903273",
-          "name": "isPopupBlockerEnabled",
-          "type": 1
-        },
-        {
-          "id": "53:7759760333118582128",
-          "name": "isVideoGrabberEnabled",
-          "type": 1
-        },
-        {
-          "id": "54:4659384282973381080",
-          "name": "httpUserAgentForBrowser",
-          "type": 9
-        },
-        {
-          "id": "55:2529785081629778346",
-          "name": "isTermsConditionsAgreed",
-          "type": 1
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:2577609755931157676",
       "lastPropertyId": "21:4661386330009597774",
       "name": "AppUser",
@@ -1061,7 +777,7 @@
           "id": "1:2860399166649479618",
           "name": "id",
           "type": 6,
-          "flags": 1
+          "flags": 129
         },
         {
           "id": "2:2233963727550911571",
@@ -1095,18 +811,359 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "9:1686675606944043669",
+      "lastPropertyId": "55:4521715372393958330",
+      "name": "AppConfigs",
+      "properties": [
+        {
+          "id": "1:7864533068599918927",
+          "name": "entityId",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:8208176336383979067",
+          "name": "isLocaleConfigured",
+          "type": 1
+        },
+        {
+          "id": "3:519543728766616484",
+          "name": "isTermsConditionsAgreed",
+          "type": 1
+        },
+        {
+          "id": "4:7313296575900568988",
+          "name": "isAppReviewCompleted",
+          "type": 1
+        },
+        {
+          "id": "5:6399716186343808482",
+          "name": "hasSkippedBatteryOptimization",
+          "type": 1
+        },
+        {
+          "id": "6:5652396091075656965",
+          "name": "hasAppCrashedRecently",
+          "type": 1
+        },
+        {
+          "id": "7:3276842269846818123",
+          "name": "lastProcessedClipboardText",
+          "type": 9
+        },
+        {
+          "id": "8:7837939968485235286",
+          "name": "defaultDownloadLocationType",
+          "type": 5
+        },
+        {
+          "id": "9:3128261011240954436",
+          "name": "selectedDownloadDirectoryPath",
+          "type": 9
+        },
+        {
+          "id": "10:8102796229688456417",
+          "name": "selectedLanguageCode",
+          "type": 9
+        },
+        {
+          "id": "11:9088909682589424073",
+          "name": "selectedRegionCode",
+          "type": 9
+        },
+        {
+          "id": "12:1525773440750146698",
+          "name": "completedDownloadsSortOrder",
+          "type": 5
+        },
+        {
+          "id": "13:8113030746259216104",
+          "name": "activeDownloadsSortOrder",
+          "type": 5
+        },
+        {
+          "id": "14:6397681053180854120",
+          "name": "isDailySuggestionsEnabled",
+          "type": 1
+        },
+        {
+          "id": "15:7609794394244718931",
+          "name": "totalSuccessfulDownloadCount",
+          "type": 5
+        },
+        {
+          "id": "16:42657785764328518",
+          "name": "totalAppUsageDurationMs",
+          "type": 7
+        },
+        {
+          "id": "17:5384873051896773967",
+          "name": "formattedTotalUsageDuration",
+          "type": 9
+        },
+        {
+          "id": "18:2450689314506180213",
+          "name": "foregroundAppUsageDurationMs",
+          "type": 7
+        },
+        {
+          "id": "19:1902325142890675978",
+          "name": "formattedForegroundUsageDuration",
+          "type": 9
+        },
+        {
+          "id": "20:3480147763228083790",
+          "name": "pushNotificationClickCount",
+          "type": 5
+        },
+        {
+          "id": "21:379310458346054036",
+          "name": "pushNotificationReceivedCount",
+          "type": 5
+        },
+        {
+          "id": "22:3233593753493439790",
+          "name": "languageChangeButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "23:8259928485386172401",
+          "name": "mediaPlaybackButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "24:1025127537060021241",
+          "name": "howToGuideButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "25:2030824543644295637",
+          "name": "videoUrlEditorButtonClickCount",
+          "type": 5
+        },
+        {
+          "id": "26:4828566749556288236",
+          "name": "homeHistoryMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "27:4312868632116742499",
+          "name": "homeBookmarksMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "28:5860145225416909146",
+          "name": "recentDownloadsMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "29:3283964258621543836",
+          "name": "homeFaviconMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "30:7954523413205275880",
+          "name": "versionCheckMenuItemClickCount",
+          "type": 5
+        },
+        {
+          "id": "31:3865118311478366000",
+          "name": "interstitialAdClickCount",
+          "type": 5
+        },
+        {
+          "id": "32:1571454613927342668",
+          "name": "interstitialAdImpressionCount",
+          "type": 5
+        },
+        {
+          "id": "33:1652441365045424777",
+          "name": "rewardedAdClickCount",
+          "type": 5
+        },
+        {
+          "id": "34:3517713954960569061",
+          "name": "rewardedAdImpressionCount",
+          "type": 5
+        },
+        {
+          "id": "35:3399637389676315113",
+          "name": "userInitiatedDownloadCount",
+          "type": 5
+        },
+        {
+          "id": "36:6468017158470213716",
+          "name": "isDownloadThumbnailHidden",
+          "type": 1
+        },
+        {
+          "id": "37:4079087363473690672",
+          "name": "isDownloadCompletionSoundEnabled",
+          "type": 1
+        },
+        {
+          "id": "38:7542626979888862238",
+          "name": "isDownloadNotificationHidden",
+          "type": 1
+        },
+        {
+          "id": "39:5887277662981169948",
+          "name": "isDownloadOpenedOnSingleClick",
+          "type": 1
+        },
+        {
+          "id": "40:4306957354832270830",
+          "name": "isDownloadAutoResumeEnabled",
+          "type": 1
+        },
+        {
+          "id": "41:8520983454012257750",
+          "name": "maxDownloadAutoResumeLimit",
+          "type": 5
+        },
+        {
+          "id": "42:1516669669437478472",
+          "name": "maxDownloadSpeedLimit",
+          "type": 6
+        },
+        {
+          "id": "43:1065820431441544501",
+          "name": "wifiOnlyDownloadEnabled",
+          "type": 1
+        },
+        {
+          "id": "44:523962731870486754",
+          "name": "httpUserAgentForDownloads",
+          "type": 9
+        },
+        {
+          "id": "45:6537702578576237494",
+          "name": "httpProxyServerForDownloads",
+          "type": 9
+        },
+        {
+          "id": "46:6967722381197916008",
+          "name": "downloadConcurrencyLimit",
+          "type": 5
+        },
+        {
+          "id": "47:498123586907539367",
+          "name": "browserDefaultHomepageUrl",
+          "type": 9
+        },
+        {
+          "id": "48:7732506845751548873",
+          "name": "isDesktopBrowsingEnabled",
+          "type": 1
+        },
+        {
+          "id": "49:5120260127381988507",
+          "name": "isPrivateBrowsingEnabled",
+          "type": 1
+        },
+        {
+          "id": "50:319522911983998008",
+          "name": "isAdBlockerEnabled",
+          "type": 1
+        },
+        {
+          "id": "51:7196947951059456400",
+          "name": "isJavaScriptEnabled",
+          "type": 1
+        },
+        {
+          "id": "52:2238043837120096290",
+          "name": "isImageLoadingEnabled",
+          "type": 1
+        },
+        {
+          "id": "53:4215270986624287822",
+          "name": "isPopupBlockerEnabled",
+          "type": 1
+        },
+        {
+          "id": "54:24801607084777914",
+          "name": "isVideoGrabberEnabled",
+          "type": 1
+        },
+        {
+          "id": "55:4521715372393958330",
+          "name": "httpUserAgentForBrowser",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "8:6987622126561797307",
+  "lastEntityId": "9:1686675606944043669",
   "lastIndexId": "13:7167463063313784109",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    2619012508564781816
+  ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    6018552313637165568
+    6018552313637165568,
+    4539055353728528141,
+    2382175297760126908,
+    6678380591184570366,
+    1029260235366651527,
+    3129950187633085217,
+    3307794838912809613,
+    1190126443937952654,
+    6020553166009476997,
+    8391992720595770672,
+    3113994359141068040,
+    8579809399971234561,
+    8146062288055967789,
+    4924346014033670737,
+    122948846788612897,
+    7507669648112565285,
+    4789143081985701690,
+    3779467835537902948,
+    2646449702445079484,
+    757677660728793240,
+    2254041411349868250,
+    8182169021053679194,
+    750791369768947496,
+    1352078520895319872,
+    1693110539932090084,
+    2746763962014774053,
+    7009353589023381346,
+    3080862021889942115,
+    8764438121488672998,
+    4160244085771173450,
+    3424625257953233093,
+    8745375366635909319,
+    7864257026002592302,
+    4501936731211788439,
+    5740863688830911941,
+    7435931356513469151,
+    7141044859599515479,
+    1504876215809399036,
+    5223208764251680960,
+    4985974320932559639,
+    4858209467200629645,
+    8876090180226877780,
+    1647547191693918841,
+    1478740352956568337,
+    6010679649095026214,
+    2090303289841347512,
+    406516034838708438,
+    3733373203812545433,
+    7982039074290995690,
+    7735387547021688129,
+    7280773203274461752,
+    8006104544786468029,
+    7660024757037903273,
+    7759760333118582128,
+    4659384282973381080,
+    2529785081629778346
   ],
   "retiredRelationUids": [],
   "version": 1

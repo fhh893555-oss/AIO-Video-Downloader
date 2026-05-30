@@ -50,7 +50,7 @@ public class AppConfigsRepo {
         try {
             if (appConfigObjectBox == null) return;
             try (Query<AppConfigs> query = appConfigObjectBox.query()
-                    .equal(AppConfig_.entityId, APP_CONFIG_ID)
+                    .equal(AppConfigs_.entityId, APP_CONFIG_ID)
                     .build()) {
                 configSubscription = query.subscribe()
                         .observer(data -> {
