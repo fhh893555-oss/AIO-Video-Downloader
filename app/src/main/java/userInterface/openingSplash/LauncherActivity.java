@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextgen.R;
 
-import coreUtils.library.process.VersionInfo;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
-import dataRepo.user.AppUserRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
+import dataRepo.dbManager.ObjectBoxHelper;
+import io.objectbox.Box;
 import userInterface.appCrashed.AppCrashedActivity;
 import userInterface.appCrashed.AppCrashedInfo;
 
@@ -85,17 +85,14 @@ public class LauncherActivity extends AppCompatActivity {
 	 */
 	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AppConfig appConfig = AppConfigsRepo.getConfig();
-		if (!appConfig.hasAppCrashedRecently) {
+		AppConfigs appConfig = AppConfigsRepo.getConfig();
+		if (appConfig.hasAppCrashedRecently) {
 			appConfig.hasAppCrashedRecently = false;
 			appConfig.save();
 			
-			AppCrashedInfo crashedInfo = new AppCrashedInfo();
-			crashedInfo.setDetailedInfo("DemoDemoDemoDemoDemo");
-			crashedInfo.setDeviceId(AppUserRepo.getUser().userDeviceId);
-			crashedInfo.setUserCountry(AppUserRepo.getUser().countryCode);
-			crashedInfo.setAndroidVersion("15");
-			crashedInfo.setApplicationVersion(VersionInfo.getVersionName(this));
+			Box<AppCrashedInfo> crashedInfoBox = ObjectBoxHelper.getAppCrashedInfoBox();
+			long boxId = AppCrashedInfo.APP_CRASHED_OBJECT_BOX_ID;
+			AppCrashedInfo crashedInfo = crashedInfoBox.get(boxId);
 			
 			Intent intent = new Intent(this, AppCrashedActivity.class);
 			intent.putExtra(AppCrashedActivity.CRASHED_INFO_INTENT_KEY, crashedInfo);

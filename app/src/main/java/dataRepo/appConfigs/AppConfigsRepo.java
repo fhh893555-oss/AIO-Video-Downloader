@@ -1,4 +1,4 @@
-package dataRepo.configs;
+package dataRepo.appConfigs;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,16 +14,16 @@ public class AppConfigsRepo {
     private static final long APP_CONFIG_ID = 1L;
     private static final Set<AppConfigsObserver> observers = new HashSet<>();
     private static DataSubscription configSubscription;
-    private static volatile AppConfig activeConfig;
-    private static Box<AppConfig> appConfigObjectBox;
+    private static volatile AppConfigs activeConfig;
+    private static Box<AppConfigs> appConfigObjectBox;
 
     private AppConfigsRepo() {}
 
-    public static void initialize(Box<AppConfig> appConfigObjectBox) {
+    public static void initialize(Box<AppConfigs> appConfigObjectBox) {
         AppConfigsRepo.appConfigObjectBox = appConfigObjectBox;
-        AppConfig appConfig = AppConfigsRepo.appConfigObjectBox.get(APP_CONFIG_ID);
+        AppConfigs appConfig = AppConfigsRepo.appConfigObjectBox.get(APP_CONFIG_ID);
         if (appConfig == null) {
-            appConfig = new AppConfig();
+            appConfig = new AppConfigs();
             appConfig.entityId = APP_CONFIG_ID;
             AppConfigsRepo.appConfigObjectBox.put(appConfig);
         }
@@ -32,11 +32,11 @@ public class AppConfigsRepo {
         observeChanges();
     }
 
-    public static AppConfig getConfig() {
+    public static AppConfigs getConfig() {
         return activeConfig;
     }
 
-    public static void save(AppConfig config) {
+    public static void save(AppConfigs config) {
         if (appConfigObjectBox == null) {
             throw new IllegalStateException("AppConfigsRepo's not initialized");
         }
@@ -49,13 +49,13 @@ public class AppConfigsRepo {
     private static void observeChanges() {
         try {
             if (appConfigObjectBox == null) return;
-            try (Query<AppConfig> query = appConfigObjectBox.query()
+            try (Query<AppConfigs> query = appConfigObjectBox.query()
                     .equal(AppConfig_.entityId, APP_CONFIG_ID)
                     .build()) {
                 configSubscription = query.subscribe()
                         .observer(data -> {
                             if (data.isEmpty()) return;
-                            AppConfig updatedConfig = data.get(0);
+                            AppConfigs updatedConfig = data.get(0);
                             activeConfig = updatedConfig;
                             notifyObservers(updatedConfig);
                         });
@@ -65,7 +65,7 @@ public class AppConfigsRepo {
         }
     }
 
-    private static void notifyObservers(AppConfig config) {
+    private static void notifyObservers(AppConfigs config) {
         for (AppConfigsObserver observer : observers) {
             try {
                 observer.onConfigChanged(config);

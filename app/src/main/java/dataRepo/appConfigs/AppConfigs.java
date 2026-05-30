@@ -1,4 +1,4 @@
-package dataRepo.configs;
+package dataRepo.appConfigs;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 @Entity
-public class AppConfig implements Serializable {
+public class AppConfigs implements Serializable {
 	
 	@Id(assignable = true)
 	public long entityId = 0L;

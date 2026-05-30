@@ -13,8 +13,8 @@ import coreUtils.base.BaseApplication;
 import coreUtils.library.process.DeviceInfoUtils;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.dbManager.ObjectBoxHelper;
 import dataRepo.user.AppUserRepo;
 import io.objectbox.Box;
@@ -49,7 +49,7 @@ import userInterface.appCrashed.AppCrashedInfo;
  * @see Thread.UncaughtExceptionHandler
  * @see AppCrashedInfo
  * @see ObjectBoxHelper#getAppCrashedInfoBox()
- * @see AppConfig#hasAppCrashedRecently
+ * @see AppConfigs#hasAppCrashedRecently
  */
 public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandler {
 	
@@ -81,7 +81,7 @@ public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandl
 	 * <li>Uses try-with-resources to automatically close {@link StringWriter} and
 	 *     {@link PrintWriter}</li>
 	 * <li>Stores crash data via {@link ObjectBoxHelper#getAppCrashedInfoBox()}</li>
-	 * <li>Sets {@code hasAppCrashedRecently = true} in the {@link AppConfig} entity</li>
+	 * <li>Sets {@code hasAppCrashedRecently = true} in the {@link AppConfigs} entity</li>
 	 * <li>Method returns early (without side effects) only when stack trace is empty</li>
 	 * <li>The original default exception handler is not chained; no system crash
 	 *     dialog is displayed</li>
@@ -112,9 +112,11 @@ public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandl
 			if (stackTrace.isEmpty()) return;
 			
 			Box<AppCrashedInfo> crashedInfoBox = ObjectBoxHelper.getAppCrashedInfoBox();
-			crashedInfoBox.put(getConfiguredAppCrashInfo(stackTrace));
+			AppCrashedInfo appCrashInfo = getConfiguredAppCrashInfo(stackTrace);
+			appCrashInfo.id = AppCrashedInfo.APP_CRASHED_OBJECT_BOX_ID;
+			crashedInfoBox.put(appCrashInfo);
 			
-			AppConfig appConfig = AppConfigsRepo.getConfig();
+			AppConfigs appConfig = AppConfigsRepo.getConfig();
 			appConfig.hasAppCrashedRecently = true;
 			appConfig.save();
 			

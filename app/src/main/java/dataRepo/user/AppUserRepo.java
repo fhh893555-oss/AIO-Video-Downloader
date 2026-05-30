@@ -10,8 +10,8 @@ import coreUtils.base.BaseApplication;
 import coreUtils.library.process.DeviceSignature;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import io.objectbox.Box;
 import io.objectbox.query.Query;
 import io.objectbox.reactive.DataSubscription;
@@ -94,7 +94,7 @@ public final class AppUserRepo {
 			if (geoDetails == null) return;
 			
 			AppUser appUser = AppUserRepo.getUser();
-			AppConfig appConfig = AppConfigsRepo.getConfig();
+			AppConfigs appConfig = AppConfigsRepo.getConfig();
 			if (appUser == null || appConfig == null) return;
 			
 			appUser.countryCode = geoDetails.countryCode;

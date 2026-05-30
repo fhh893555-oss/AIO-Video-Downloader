@@ -6,8 +6,8 @@ import org.schabi.newpipe.extractor.localization.Localization;
 import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import okhttp3.OkHttpClient;
 
 public final class NewPipeLibraryManager {
@@ -20,7 +20,7 @@ public final class NewPipeLibraryManager {
 		newPipeInitTask.setBackgroundTask(callback -> {
 			try {
 				logger.debug("NewPipeExtractor library is initializing");
-				AppConfig appConfig = AppConfigsRepo.getConfig();
+				AppConfigs appConfig = AppConfigsRepo.getConfig();
 				String contentRegion = appConfig.selectedRegionCode;
 				OkHttpClient okHttpClient = HttpClientProvider.getOkHttpClient(5, 10);
 				NewPipe.init(new DefaultYTDownloaderImpl(okHttpClient), new Localization(contentRegion));

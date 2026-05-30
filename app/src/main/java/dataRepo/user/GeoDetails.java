@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 import coreUtils.library.strings.StringHelper;
-import dataRepo.configs.AppConfig;
+import dataRepo.appConfigs.AppConfigs;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -25,7 +25,7 @@ public final class GeoDetails {
 	public String continentCode = "";
 	public String zipCode = "";
 	
-	public static void fetch(OnLocationDataListener listener, AppConfig appConfig) {
+	public static void fetch(OnLocationDataListener listener, AppConfigs appConfig) {
 		new ThreadTask.Builder<GeoDetails, GeoDetails>()
 			.withBackgroundTask(callback -> {
 				try {

@@ -13,8 +13,8 @@ import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import userInterface.openingSplash.OpeningActivity;
 
 /**
@@ -260,7 +260,7 @@ public class TermsPolicyActivity extends BaseActivity<ActivityTermsCon1Binding> 
 	 */
 	private void setupAgreeTermsButton() {
 		binding.top2.btnAgreeContinue.setOnClickListener(view -> {
-			AppConfig config = AppConfigsRepo.getConfig();
+			AppConfigs config = AppConfigsRepo.getConfig();
 			config.isTermsConditionsAgreed = binding.top2.cbAgreeTerms.isChecked();
 			config.save();
 			

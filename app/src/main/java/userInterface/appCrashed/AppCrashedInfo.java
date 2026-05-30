@@ -30,7 +30,7 @@ import io.objectbox.annotation.Id;
  */
 @Entity
 public final class AppCrashedInfo implements Serializable {
-	
+	public static final long APP_CRASHED_OBJECT_BOX_ID = 1L;
 	@Id public long id = 0L;
 	private String deviceId;
 	private String androidVersion;

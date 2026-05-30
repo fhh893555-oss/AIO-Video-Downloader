@@ -15,8 +15,8 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.storage.FileExtensions;
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Transient;
@@ -164,16 +164,16 @@ public class DownloadInfo implements Serializable {
     }
 
     private void initStorageLocation() {
-        AppConfig appConfig = AppConfigsRepo.getConfig();
+        AppConfigs appConfig = AppConfigsRepo.getConfig();
         if (appConfig == null) return;
 
-        if (appConfig.defaultDownloadLocationType == AppConfig.PRIVATE_FOLDER) {
+        if (appConfig.defaultDownloadLocationType == AppConfigs.PRIVATE_FOLDER) {
             File appsInternalDataFolder = FileStorageUtility.getInternalDataFolder();
             String internalDataFolderPath = appsInternalDataFolder.getAbsolutePath();
             String appDownloadDirPath = internalDataFolderPath + "/Downloaded_Files";
             fileDirectory = StringHelper.removeDuplicateSlashes(appDownloadDirPath);
 
-        } else if (appConfig.defaultDownloadLocationType == AppConfig.SYSTEM_GALLERY) {
+        } else if (appConfig.defaultDownloadLocationType == AppConfigs.SYSTEM_GALLERY) {
             File publicDownloadFolder = FileStorageUtility.getPublicDownloadFolder();
             String publicDownloadFolderPath = publicDownloadFolder.getAbsolutePath();
             String fullDownloadPath = publicDownloadFolderPath + "/" + StringHelper.getText(R.string.title_default_app_folder);

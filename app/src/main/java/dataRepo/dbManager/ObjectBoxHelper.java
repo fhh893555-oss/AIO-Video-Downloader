@@ -1,8 +1,8 @@
 package dataRepo.dbManager;
 
 import coreUtils.base.BaseApplication;
-import dataRepo.configs.AppConfig;
-import dataRepo.configs.MyObjectBox;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.MyObjectBox;
 import dataRepo.user.AppUser;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -15,7 +15,7 @@ import userInterface.appCrashed.AppCrashedInfo;
  * <p>
  * This final helper class centralizes all interactions with the ObjectBox database
  * framework, including one-time {@link BoxStore} initialization and typed
- * {@link Box} retrieval for application entities such as {@link AppConfig},
+ * {@link Box} retrieval for application entities such as {@link AppConfigs},
  * {@link AppUser}, and {@link YtStreamInfo}. All methods are static, requiring no
  * instance allocation. The class maintains a single shared {@link BoxStore}
  * reference that must be initialized via {@link #initialize(BaseApplication)}
@@ -91,21 +91,21 @@ public final class ObjectBoxHelper {
 	}
 	
 	/**
-	 * Returns the ObjectBox {@link Box} instance for the {@link AppConfig} entity.
+	 * Returns the ObjectBox {@link Box} instance for the {@link AppConfigs} entity.
 	 * <p>
 	 * This static factory method retrieves the typed box from the shared
 	 * {@code objectBoxStore} instance, enabling database operations such as
 	 * {@link Box#put(Object)}, {@link Box#get(long)}, {@link Box#query()}, and
-	 * {@link Box#remove(long)} for {@link AppConfig} objects. The box is
+	 * {@link Box#remove(long)} for {@link AppConfigs} objects. The box is
 	 * thread-safe and can be cached locally for repeated use.
 	 * </p>
 	 *
-	 * @return a non-null {@link Box} handling {@link AppConfig} entity persistence
+	 * @return a non-null {@link Box} handling {@link AppConfigs} entity persistence
 	 * @see Box
-	 * @see AppConfig
+	 * @see AppConfigs
 	 */
-	public static Box<AppConfig> getAppConfigBox() {
-		return objectBoxStore.boxFor(AppConfig.class);
+	public static Box<AppConfigs> getAppConfigBox() {
+		return objectBoxStore.boxFor(AppConfigs.class);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.GridLayoutSpacing;
 import coreUtils.library.views.TextViewsUtils;
-import dataRepo.configs.AppConfigsRepo;
+import dataRepo.appConfigs.AppConfigsRepo;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 /**
