@@ -163,8 +163,8 @@ public final class AppUserRepo {
 	 * {@code userServerId} (non-null and non-empty), the method executes a background
 	 * task via {@link ThreadTask#executeInBackground(ThreadTask.BackgroundTaskNoResult)}
 	 * to send an update request to the PocketBase server using
-	 * {@link AppUserCloud#updateUser(String, JSONObject)}. Any exception during cloud sync
-	 * is logged but does not affect the local save operation.
+	 * {@link AppUserCloud#updateUser(String, JSONObject, String)}. Any exception during
+	 * cloud sync is logged but does not affect the local save operation.
 	 *
 	 * @param user             The {@link AppUser} instance to save. Must not be null.
 	 * @param syncToPocketBase If {@code true}, attempts to sync changes to the remote
@@ -173,7 +173,7 @@ public final class AppUserRepo {
 	 *                               (i.e., {@code userBox} is {@code null}).
 	 * @see #updateUser(UpdateBlock)
 	 * @see #toPocketBasePayload(AppUser)
-	 * @see AppUserCloud#updateUser(String, JSONObject)
+	 * @see AppUserCloud#updateUser(String, JSONObject, String)
 	 */
 	public static void save(AppUser user, boolean syncToPocketBase) {
 		if (userBox == null) {
@@ -189,7 +189,8 @@ public final class AppUserRepo {
 			ThreadTask.executeInBackground(() -> {
 				try {
 					JSONObject pocketBasePayload = toPocketBasePayload(user);
-					cloudClient.updateUser(user.userServerId, pocketBasePayload);
+					String deviceId = DeviceSignature.getInstance(BaseApplication.AppContext).generate();
+					cloudClient.updateUser(user.userServerId, pocketBasePayload, deviceId);
 				} catch (Exception error) {
 					logger.error("Sync to PocketBase failed", error);
 				}
@@ -478,7 +479,7 @@ public final class AppUserRepo {
 	 * Creates a new user record on the PocketBase server using the local user data.
 	 * This method converts the local {@link AppUser} to a JSON payload via
 	 * {@link #toPocketBasePayload(AppUser)} and sends it to the server via
-	 * {@link AppUserCloud#createUser(JSONObject)}.
+	 * {@link AppUserCloud#createUser(JSONObject, String)}.
 	 *
 	 * <p>If creation succeeds, the server-assigned record ID is extracted from the
 	 * response, stored in the local user's {@code userServerId} field, and the user
@@ -487,13 +488,14 @@ public final class AppUserRepo {
 	 * @param user The local {@link AppUser} instance to push to the server.
 	 *             Must not be null and should contain a valid device ID.
 	 * @see #toPocketBasePayload(AppUser)
-	 * @see AppUserCloud#createUser(JSONObject)
+	 * @see AppUserCloud#createUser(JSONObject, String)
 	 * @see #save(AppUser, boolean)
 	 */
 	private static void createServerUser(AppUser user) {
 		try {
 			logger.debug("Creating PocketBase user");
-			JSONObject response = cloudClient.createUser(toPocketBasePayload(user));
+			String deviceId = DeviceSignature.getInstance(BaseApplication.AppContext).generate();
+			JSONObject response = cloudClient.createUser(toPocketBasePayload(user), deviceId);
 			if (response != null) {
 				String serverId = response.optString("id");
 				if (!serverId.isEmpty()) {
@@ -708,8 +710,8 @@ public final class AppUserRepo {
 	 * @param user The local {@link AppUser} instance to convert. Must not be null.
 	 * @return A JSON object containing the mapped fields ready for remote sync,
 	 * or an empty JSON object on failure.
-	 * @see AppUserCloud#createUser(JSONObject)
-	 * @see AppUserCloud#updateUser(String, JSONObject)
+	 * @see AppUserCloud#createUser(JSONObject, String)
+	 * @see AppUserCloud#updateUser(String, JSONObject, String)
 	 */
 	private static JSONObject toPocketBasePayload(AppUser user) {
 		try {
