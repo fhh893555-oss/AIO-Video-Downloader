@@ -1,12 +1,40 @@
 package dataRepo.appConfigs;
 
+import com.nextgen.R;
+
 import java.io.Serializable;
 
+import coreUtils.library.strings.StringHelper;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
-@Entity
-public class AppConfigs implements Serializable {
+/**
+ * Entity class representing application-wide configuration settings persisted
+ * in the ObjectBox database. This singleton entity stores user preferences,
+ * feature toggles, and runtime flags that must survive app restarts.
+ *
+ * <p>The configuration is identified by a fixed {@code entityId} (typically 1)
+ * and accessed via {@link AppConfigsRepo#getConfig()}. Changes are automatically
+ * synchronized with the database and notify all registered observers via
+ * {@link AppConfigsObserver#onConfigChanged(AppConfigs)}.
+ *
+ * <p><strong>Common configuration fields include:</strong>
+ * <ul>
+ * <li>Crash recovery flags for detecting app crashes across sessions.</li>
+ * <li>UI theme settings (light/dark/follow system).</li>
+ * <li>Notification permission grant state.</li>
+ * <li>Storage location preference (private folder vs. system gallery).</li>
+ * <li>Media sorting options (date, name, size, type).</li>
+ * </ul>
+ *
+ * <p>Implements {@link Serializable} to allow configuration objects to be passed
+ * via Intents or saved in {@link android.os.Bundle} when needed.
+ *
+ * @see AppConfigsRepo
+ * @see AppConfigsObserver
+ * @see io.objectbox.annotation.Entity
+ */
+@Entity public class AppConfigs implements Serializable {
 	
 	@Id(assignable = true)
 	public long entityId = 0L;
@@ -62,7 +90,9 @@ public class AppConfigs implements Serializable {
 	public String httpProxyServerForDownloads = "";
 	public int downloadConcurrencyLimit = 1;
 	
-	public String browserDefaultHomepageUrl = "https://youtube.com";
+	public String browserDefaultHomepageUrl =
+		StringHelper.getText(R.string.https_youtube_com);
+	
 	public boolean isDesktopBrowsingEnabled = false;
 	public boolean isPrivateBrowsingEnabled = false;
 	public boolean isAdBlockerEnabled = true;
@@ -84,6 +114,23 @@ public class AppConfigs implements Serializable {
 	public static final int SORT_TYPE_VIDEOS_FIRST = 9;
 	public static final int SORT_TYPE_MUSIC_FIRST = 10;
 	
+	/**
+	 * Persists the current configuration instance to the database. This method is a
+	 * convenience wrapper around {@link AppConfigsRepo#save(AppConfigs)} that passes
+	 * {@code this} as the argument. Call this method after modifying any configuration
+	 * fields to ensure changes are stored persistently and to trigger notification
+	 * of all registered observers via {@link AppConfigsObserver#onConfigChanged(AppConfigs)}.
+	 *
+	 * <p><strong>Example usage:</strong>
+	 * <pre>
+	 * AppConfigs config = AppConfigsRepo.getConfig();
+	 * config.setThemeMode(ThemeMode.DARK);
+	 * config.save();
+	 * </pre>
+	 *
+	 * @see AppConfigsRepo#save(AppConfigs)
+	 * @see AppConfigsRepo#getConfig()
+	 */
 	public void save() {
 		AppConfigsRepo.save(this);
 	}
