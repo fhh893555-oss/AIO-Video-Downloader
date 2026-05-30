@@ -758,7 +758,8 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	 * </p>
 	 *
 	 * @param updateInfo the UpdateInfo object containing version and changelog details
-	 * @return a JSON formatted string describing the update's changes, or null/empty if not provided
+	 * @return a JSON formatted string describing the update's changes, or null/empty
+	 * if not provided
 	 */
 	private String getWhatsNewJSON(@NotNull UpdateInfo updateInfo) {
 		return updateInfo.getWhatsNewJSON();

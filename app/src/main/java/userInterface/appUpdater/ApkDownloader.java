@@ -31,28 +31,21 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 
 /**
  * Handles APK file downloading from a remote server with resume capability and integrity verification.
- * <p>
  * This class manages the complete download lifecycle for application update APK files,
  * including network requests, file I/O, SHA-256 hash calculation for integrity checks,
- * and automatic resume support for interrupted downloads. It uses OkHttp for efficient
- * asynchronous networking and provides progress callbacks through the ProgressListener interface.
- * </p>
+ * and automatic resume support for interrupted downloads using OkHttp.
  *
- * <p><b>Key Features:</b>
+ * <p><strong>Key features:</strong>
  * <ul>
- *   <li>Resumable downloads - automatically resumes partial downloads from where they left off</li>
- *   <li>Integrity verification - computes SHA-256 hash of downloaded files</li>
- *   <li>Progress tracking - real-time percentage and byte progress callbacks</li>
- *   <li>Error handling - graceful fallback to full download when resume is not supported</li>
+ * <li>Resumable downloads - automatically resumes partial downloads from where left off</li>
+ * <li>Integrity verification - computes SHA-256 hash of downloaded files</li>
+ * <li>Progress tracking - real-time percentage and byte progress callbacks</li>
+ * <li>Error handling - graceful fallback to full download when resume not supported</li>
  * </ul>
- * </p>
  *
- * <p><b>Usage Example:</b>
+ * <p><strong>Usage example:</strong>
  * <pre>
  * ApkDownloader downloader = new ApkDownloader();
- * UpdateInfo updateInfo = ...;
- * File downloadDir = new File(context.getExternalFilesDir(null), "updates");
- *
  * downloader.startDownload(updateInfo, downloadDir, new ProgressListener() {
  *     public void onProgressUpdate(short percentage, long downloadedByte) {
  *         updateProgressBar(percentage);
@@ -65,7 +58,6 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
  *     }
  * });
  * </pre>
- * </p>
  *
  * @see UpdateInfo
  * @see ProgressListener
