@@ -222,6 +222,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 					if (isUpdateAvailable(context, latestUpdateInfo)) {
 						logger.debug("Update available, launching app updater");
 						launchAppUpdater(latestUpdateInfo);
+						finish();
 					} else {
 						logger.debug("No update available, proceeding to next screen");
 						proceedToNextScreen();
