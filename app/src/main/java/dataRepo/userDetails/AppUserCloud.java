@@ -25,10 +25,10 @@ import okhttp3.Response;
  *
  * <p><strong>Core responsibilities:</strong>
  * <ul>
- * <li>Creates new user records via {@link #createUser(JSONObject)}.</li>
- * <li>Updates existing user records via {@link #updateUser(String, JSONObject)}
- *     and {@link #updateField(String, String, Object)}.</li>
- * <li>Uploads user profile photos via {@link #uploadUserPhoto(String, Bitmap)}.</li>
+ * <li>Creates new user records via {@link #createUser(JSONObject, String)}.</li>
+ * <li>Updates existing user records via {@link #updateUser(String, JSONObject, String)}
+ *     and {@link #updateField(String, String, Object, String)}.</li>
+ * <li>Uploads user profile photos via {@link #uploadUserPhoto(String, Bitmap, String)}.</li>
  * <li>Queries user records by device ID via {@link #getUserByDeviceId(String)}.</li>
  * <li>Retrieves specific field values via {@link #getField(String, String, String)}.</li>
  * </ul>
@@ -45,9 +45,9 @@ import okhttp3.Response;
  *
  * @see PocketBaseClient
  * @see AppUser
- * @see #createUser(JSONObject)
- * @see #updateUser(String, JSONObject)
- * @see #uploadUserPhoto(String, Bitmap)
+ * @see #createUser(JSONObject, String)
+ * @see #updateUser(String, JSONObject, String)
+ * @see #uploadUserPhoto(String, Bitmap, String)
  * @see #getUserByDeviceId(String)
  */
 public final class AppUserCloud extends PocketBaseClient {
@@ -75,7 +75,7 @@ public final class AppUserCloud extends PocketBaseClient {
 	
 	/**
 	 * Creates a new user record on the PocketBase server. This method delegates to
-	 * {@link #post(JSONObject)} to perform an HTTP POST request to the collection's
+	 * {@link #post(JSONObject, String)} to perform an HTTP POST request to the collection's
 	 * endpoint with the provided user data.
 	 *
 	 * <p><strong>Expected usage:</strong>
@@ -84,25 +84,28 @@ public final class AppUserCloud extends PocketBaseClient {
 	 * include required fields such as device ID, installation timestamp, and any
 	 * initial user preferences.
 	 *
-	 * @param data A {@link JSONObject} containing the user data to be stored.
-	 *             Must not be null. Required fields should match the server's
-	 *             collection schema.
+	 * @param data     A {@link JSONObject} containing the user data to be stored.
+	 *                 Must not be null. Required fields should match the server's
+	 *                 collection schema.
+	 * @param deviceId The device identifier used for authentication or tracking.
+	 *                 Must not be null.
 	 * @return The parsed JSON response from the server containing the newly created
 	 * record (including the server-assigned ID and timestamps), or
 	 * {@code null} if the request failed (e.g., network error, duplicate
 	 * device ID, or server validation error).
-	 * @see #post(JSONObject)
-	 * @see #updateUser(String, JSONObject)
+	 * @see #post(JSONObject, String)
+	 * @see #updateUser(String, JSONObject, String)
 	 */
 	@Nullable
-	public JSONObject createUser(@NonNull JSONObject data) {
-		return post(data);
+	public JSONObject createUser(@NonNull JSONObject data,
+	                             @NonNull String deviceId) {
+		return post(data, deviceId);
 	}
 	
 	/**
 	 * Updates a user record on the PocketBase server by performing a PATCH request
 	 * with the provided JSON data. This method is a pass-through convenience wrapper
-	 * that delegates directly to {@link #patch(String, JSONObject)}.
+	 * that delegates directly to {@link #patch(String, JSONObject, String)}.
 	 *
 	 * <p>Use this method when you need to update multiple fields simultaneously or
 	 * when you already have a constructed JSON object containing all changes.
@@ -110,22 +113,25 @@ public final class AppUserCloud extends PocketBaseClient {
 	 * @param serverId The PocketBase record ID of the user to update. Must not be null.
 	 * @param data     A {@link JSONObject} containing the fields to update and their
 	 *                 new values. Must not be null.
+	 * @param deviceId The device identifier used for authentication or tracking.
+	 *                 Must not be null.
 	 * @return The parsed JSON response from the server after a successful update,
 	 * or {@code null} if the request failed (e.g., network error,
 	 * authentication failure, or non-2xx HTTP response).
-	 * @see #patch(String, JSONObject)
-	 * @see #updateField(String, String, Object)
+	 * @see #patch(String, JSONObject, String)
+	 * @see #updateField(String, String, Object, String)
 	 */
 	@Nullable
 	public JSONObject updateUser(@NonNull String serverId,
-	                             @NonNull JSONObject data) {
-		return patch(serverId, data);
+	                             @NonNull JSONObject data,
+	                             @NonNull String deviceId) {
+		return patch(serverId, data, deviceId);
 	}
 	
 	/**
 	 * Updates a single field of a user record on the PocketBase server. This method
 	 * constructs a JSON object containing the specified field-value pair and delegates
-	 * to {@link #updateUser(String, JSONObject)} for the actual network operation.
+	 * to {@link #updateUser(String, JSONObject, String)}  for the actual network operation.
 	 *
 	 * <p><strong>Example usage:</strong>
 	 * <pre>
@@ -140,18 +146,21 @@ public final class AppUserCloud extends PocketBaseClient {
 	 * @param value    The new value to assign to the specified field. Must not be null.
 	 *                 The type should match the field's expected type on the server
 	 *                 (e.g., String, Integer, Boolean).
+	 * @param deviceId The device identifier used for authentication or tracking.
+	 *                 Must not be null.
 	 * @return {@code true} if the update was successful (server responded with 2xx and
 	 * returned a non-null response), {@code false} otherwise.
 	 * @throws JSONException If constructing the JSON object fails (e.g., invalid value type).
-	 * @see #updateUser(String, JSONObject)
-	 * @see #patch(String, JSONObject)
+	 * @see #updateUser(String, JSONObject, String)
+	 * @see #patch(String, JSONObject, String)
 	 */
 	public boolean updateField(@NonNull String serverId,
 	                           @NonNull String field,
-	                           @NonNull Object value) throws JSONException {
+	                           @NonNull Object value,
+	                           @NonNull String deviceId) throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put(field, value);
-		return patch(serverId, json) != null;
+		return patch(serverId, json, deviceId) != null;
 	}
 	
 	/**
@@ -163,7 +172,7 @@ public final class AppUserCloud extends PocketBaseClient {
 	 * @param fileName The stored filename returned by the server after upload.
 	 *                 Must not be null.
 	 * @return The complete file URL as a non-null string.
-	 * @see #uploadUserPhoto(String, Bitmap)
+	 * @see #uploadUserPhoto(String, Bitmap, String)
 	 * @see AppUser#POCKETBASE_COLLECTION_NAME
 	 */
 	@NonNull
@@ -240,6 +249,8 @@ public final class AppUserCloud extends PocketBaseClient {
 	 *                 {@code null} and must correspond to an existing user record.
 	 * @param bitmap   The user profile image as a {@link Bitmap}. Must not be
 	 *                 {@code null}. The bitmap is compressed to PNG format before upload.
+	 * @param deviceId the device identifier sent in the {@code X-Device-Id} header
+	 *                 for request contextualization
 	 * @return The fully constructed URL to the uploaded profile image, or {@code null}
 	 * if the upload failed for any reason (network error, server rejection,
 	 * parsing failure, etc.).
@@ -249,7 +260,8 @@ public final class AppUserCloud extends PocketBaseClient {
 	 */
 	@Nullable
 	public String uploadUserPhoto(@NonNull String serverId,
-	                              @NonNull Bitmap bitmap) {
+	                              @NonNull Bitmap bitmap,
+	                              @NonNull String deviceId) {
 		try {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
@@ -268,6 +280,7 @@ public final class AppUserCloud extends PocketBaseClient {
 			Request request = new Request.Builder()
 				.url(getRecordsUrl() + "/" + serverId)
 				.patch(multipart)
+				.addHeader("X-Device-Id", deviceId)
 				.build();
 			
 			try (Response response = httpClient.newCall(request).execute()) {
