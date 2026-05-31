@@ -23,20 +23,103 @@ import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
 import userInterface.fragmentsUIs.homepage.HomepageFragment;
 
+/**
+ * Main activity serving as the primary hub for the application. This activity
+ * provides bottom navigation tabs for switching between different sections
+ * (Home, Music, Movies, Games, Browser, Downloads) and manages fragment
+ * transactions using a {@link FragNavigator}.
+ *
+ * <p><strong>Core responsibilities:</strong>
+ * <ul>
+ * <li>Displays bottom navigation bar with tab buttons, icons, and labels.</li>
+ * <li>Manages fragment navigation via {@link FragNavigator}.</li>
+ * <li>Maintains the currently selected tab state via {@link MainViewModel}.</li>
+ * <li>Updates tab UI highlighting (semi-bold font, selected state) on tab switches.</li>
+ * <li>Locks screen orientation to portrait for consistent layout.</li>
+ * </ul>
+ *
+ * <p><strong>Navigation tabs:</strong>
+ * Home, Music, Movies, Games, Browser, Downloads. Currently, only the Home tab
+ * has a dedicated {@link HomepageFragment}; other tabs redirect to HomepageFragment
+ * as placeholders pending implementation.
+ *
+ * <p><strong>Layout:</strong>
+ * Uses {@code activity_main1.xml} with bottom navigation bar
+ * ({@code bottomTabs}) and a fragment container ({@code R.id.fragmentContainer}).
+ *
+ * @see BaseActivity
+ * @see ActivityMain1Binding
+ * @see FragNavigator
+ * @see MainViewModel
+ * @see NavigationTabs
+ * @see HomepageFragment
+ */
 public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private FragNavigator fragNavigator;
 	private MainViewModel mainViewModel;
 	
+	/**
+	 * Determines whether the activity's screen orientation should be locked.
+	 * This implementation returns {@code true}, forcing the main activity to
+	 * remain in portrait mode regardless of device rotation.
+	 *
+	 * <p><strong>Design rationale:</strong>
+	 * Locking the orientation ensures consistent layout and navigation behavior
+	 * across all tabs (Home, Music, Movies, Games, Browser, Downloads). This
+	 * prevents UI reconfigurations that could disrupt user interactions such as
+	 * scrolling through lists, watching videos, or browsing web content.
+	 *
+	 * @return {@code true} to lock the activity to portrait orientation.
+	 * @see BaseActivity#shouldLockOrientation()
+	 */
 	@Override protected boolean shouldLockOrientation() {
 		return true;
 	}
 	
+	/**
+	 * Inflates the activity's layout using view binding and returns the generated
+	 * binding instance for {@code activity_main1.xml}. This method is called
+	 * during the base activity's {@code setContentView()} phase to create the
+	 * binding object that provides type-safe access to all views in the layout.
+	 *
+	 * <p>The layout includes the bottom navigation bar (tab buttons, icons, labels)
+	 * and a fragment container ({@code R.id.fragmentContainer}) where different
+	 * fragments are displayed based on the selected tab.</p>
+	 *
+	 * @param inflater The layout inflater service used to create the view hierarchy.
+	 *                 Must not be {@code null}.
+	 * @return The {@link ActivityMain1Binding} instance containing references to
+	 * all views defined in the main activity layout.
+	 * @see BaseActivity#inflateBinding(LayoutInflater)
+	 * @see ActivityMain1Binding
+	 */
 	@Override protected ActivityMain1Binding inflateBinding(LayoutInflater inflater) {
 		return ActivityMain1Binding.inflate(inflater);
 	}
 	
+	/**
+	 * Performs post-layout initialization after the content view has been inflated.
+	 * This method is invoked by the base activity at the end of {@code onCreate()}
+	 * and is responsible for setting up the ViewModel, fragment navigator, bottom
+	 * navigation tabs, and loading the initial homepage.
+	 *
+	 * <p><strong>Initialization order:</strong>
+	 * <ol>
+	 * <li>Initializes the MainViewModel via {@link #initMainViewModel()}.</li>
+	 * <li>Initializes the FragmentNavigator for fragment transactions via
+	 *     {@link #initFragmentNavigator()}.</li>
+	 * <li>Sets up bottom tab button click listeners via {@link #initBottomTabButtons()}.</li>
+	 * <li>Programmatically loads the homepage fragment via {@link #loadHomepage()}.</li>
+	 * </ol>
+	 *
+	 * @see BaseActivity#onLoadedLayout()
+	 * @see #initMainViewModel()
+	 * @see #initFragmentNavigator()
+	 * @see #initBottomTabButtons()
+	 * @see #loadHomepage()
+	 */
 	@Override protected void onLoadedLayout() {
 		initMainViewModel();
 		initFragmentNavigator();
@@ -44,21 +127,82 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		loadHomepage();
 	}
 	
+	/**
+	 * Initializes the MainViewModel for the main activity. This method creates a
+	 * ViewModel instance using {@link ViewModelProvider} scoped to this activity.
+	 * The ViewModel manages UI-related data such as the currently selected
+	 * navigation tab and survives configuration changes.
+	 *
+	 * <p>The ViewModel is stored in the {@code mainViewModel} field and can be
+	 * accessed by other methods within this activity for observing LiveData
+	 * or updating state.
+	 *
+	 * @see ViewModelProvider
+	 * @see MainViewModel
+	 * @see #onLoadedLayout()
+	 */
 	private void initMainViewModel() {
 		ViewModelProvider viewModelProvider = new ViewModelProvider(this);
 		mainViewModel = viewModelProvider.get(MainViewModel.class);
 	}
 	
+	/**
+	 * Initializes the FragmentNavigator for managing fragment transactions.
+	 * This method retrieves the {@link FragmentManager} from the activity and
+	 * creates a new {@link FragNavigator} instance targeting the container
+	 * view with ID {@code R.id.fragmentContainer}.
+	 *
+	 * <p>The navigator is responsible for replacing fragments within the main
+	 * activity's container, applying fade animations, and managing back stack
+	 * entries for fragment navigation.
+	 *
+	 * @see FragmentManager
+	 * @see FragNavigator
+	 * @see #onLoadedLayout()
+	 */
 	private void initFragmentNavigator() {
 		FragmentManager frgManager = getSupportFragmentManager();
 		fragNavigator = new FragNavigator(frgManager, R.id.fragmentContainer);
 	}
 	
+	/**
+	 * Programmatically triggers the home tab click event to load the homepage fragment.
+	 * This method simulates a user click on the home tab button, initiating the
+	 * navigation to {@link HomepageFragment} and updating the UI to reflect the
+	 * home tab as selected. It is typically called during activity initialization
+	 * to set the initial screen.
+	 *
+	 * @see #initBottomTabButtons()
+	 * @see android.view.View#callOnClick()
+	 */
 	private void loadHomepage() {
 		ActivityMain1Tab1Binding bottomTabs = binding.bottomTabs;
 		bottomTabs.btnHomeTab.callOnClick();
 	}
 	
+	/**
+	 * Initializes click listeners for all bottom navigation tab buttons.
+	 * Each tab, when clicked, navigates to its corresponding fragment using
+	 * {@link #switchTab(BaseFragment, View, ImageView, TextView, NavigationTabs)}.
+	 *
+	 * <p><strong>Tab mappings:</strong>
+	 * <ul>
+	 * <li>Home Tab → {@link HomepageFragment} with {@link NavigationTabs#HOME_TAB}</li>
+	 * <li>Music Tab → {@link HomepageFragment} with {@link NavigationTabs#MUSIC_TAB}</li>
+	 * <li>Movies Tab → {@link HomepageFragment} with {@link NavigationTabs#MOVIES_TABS}</li>
+	 * <li>Games Tab → {@link HomepageFragment} with {@link NavigationTabs#GAMES_TAB}</li>
+	 * <li>Browser Tab → {@link HomepageFragment} with {@link NavigationTabs#HOME_TAB}</li>
+	 * <li>Files Tab → {@link HomepageFragment} with {@link NavigationTabs#HOME_TAB}</li>
+	 * </ul>
+	 *
+	 * <p><strong>Note:</strong> Currently, all tabs except Home navigate to
+	 * {@link HomepageFragment} with placeholder enum values. This indicates that
+	 * dedicated fragments for Music, Movies, Games, Browser, and Files tabs
+	 * are pending implementation (todo items).
+	 *
+	 * @see #switchTab(BaseFragment, View, ImageView, TextView, NavigationTabs)
+	 * @see HomepageFragment
+	 */
 	private void initBottomTabButtons() {
 		ActivityMain1Tab1Binding bottomTabs = binding.bottomTabs;
 		bottomTabs.btnHomeTab.setOnClickListener(view ->
@@ -92,6 +236,23 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 				bottomTabs.tvFilesTab, NavigationTabs.HOME_TAB));
 	}
 	
+	/**
+	 * Switches the currently displayed fragment to the specified tab fragment.
+	 * This method navigates to the target fragment, updates the ViewModel with
+	 * the active tab enum, and refreshes the UI to highlight the selected tab.
+	 *
+	 * <p>The navigation does not add the transaction to the back stack, as tab
+	 * switching should not accumulate back stack entries. Each tab replacement
+	 * directly replaces the previous fragment.</p>
+	 *
+	 * @param fragment      The fragment to navigate to (corresponding to the tab).
+	 * @param btnTab        The button/layout view representing the tab.
+	 * @param imgTab        The ImageView within the tab (icon).
+	 * @param tvTab         The TextView within the tab (label).
+	 * @param activeTabEnum The enum value representing the active tab.
+	 * @see #updateTabUI(View, ImageView, TextView)
+	 * @see FragNavigator#navigateTo(BaseFragment, boolean)
+	 */
 	private void switchTab(@NonNull BaseFragment<?> fragment,
 	                       @NonNull View btnTab,
 	                       @NotNull ImageView imgTab,
@@ -102,6 +263,24 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		updateTabUI(btnTab, imgTab, tvTab);
 	}
 	
+	/**
+	 * Updates the UI state of all bottom navigation tabs to reflect the newly
+	 * selected tab. This method deselects all tabs, resets all text labels to
+	 * regular font, then applies semi-bold font and selected state to the active tab.
+	 *
+	 * <p><strong>Visual changes applied:</strong>
+	 * <ul>
+	 * <li>All tab buttons have {@code selected} state set to {@code false}.</li>
+	 * <li>All tab text views have regular font typeface.</li>
+	 * <li>The active tab gets semi-bold font typeface and selected state set to
+	 *     {@code true}.</li>
+	 * </ul>
+	 *
+	 * @param activeBtnTab The button/layout view of the active tab.
+	 * @param activeImgTab The ImageView of the active tab (icon).
+	 * @param activeTvTab  The TextView of the active tab (label).
+	 * @see #switchTab(BaseFragment, View, ImageView, TextView, NavigationTabs)
+	 */
 	private void updateTabUI(@NotNull View activeBtnTab,
 	                         @NotNull ImageView activeImgTab,
 	                         @NotNull TextView activeTvTab) {
@@ -129,5 +308,4 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		activeTvTab.setTypeface(semiBoldFont);
 		activeBtnTab.setSelected(true);
 	}
-	
 }
