@@ -17,14 +17,59 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Helper class for synchronizing application configuration settings with the
+ * remote PocketBase server. This class manages download engine configuration
+ * retrieval and sync operations that determine which extraction library
+ * (yt-dlp or NewPipe) should be active for video/audio downloads.
+ *
+ * <p><strong>Core responsibilities:</strong>
+ * <ul>
+ * <li>Fetches download engine configuration from remote server.</li>
+ * <li>Updates local {@link AppConfigs} with active engine and NewPipe status.</li>
+ * <li>Runs sync operations asynchronously on background threads.</li>
+ * <li>Handles network errors gracefully without crashing the app.</li>
+ * </ul>
+ *
+ * <p><strong>Engine constants:</strong>
+ * <ul>
+ * <li>{@link #YTDLP_ENGINE} - "yt-dlp" (default download engine).</li>
+ * <li>{@link #NEWPIPE_ENGINE} - "newpipe" (alternative extraction library).</li>
+ * </ul>
+ *
+ * @see DownloadEngineConfig
+ * @see AppConfigs
+ * @see #syncDownloadEngineConfig(String, AppConfigs)
+ */
 public final class AppConfigsHelper {
 	private static final LoggerUtils logger = LoggerUtils.from(AppConfigsHelper.class);
 	
 	private static final String YTDLP_ENGINE = "YTDLP";
 	private static final String NEWPIPE_ENGINE = "NEWPIPE";
+	private static final String POCKETBASE_FIELD_DOWNLOAD_ENGINE = "downloadEngine";
 	private static final String POCKETBASE_FIELD_ACTIVE_ENGINE = "activeDownloadEngine";
 	private static final String POCKETBASE_FIELD_IS_NEWPIPE_DOWN = "isNewPipeDown";
 	
+	/**
+	 * Synchronizes the local download engine configuration with remote server settings.
+	 * This method runs on a background thread and fetches the latest engine configuration
+	 * from the server, then updates the local {@link AppConfigs} instance accordingly.
+	 *
+	 * <p><strong>Sync behavior:</strong>
+	 * <ul>
+	 * <li>If the server returns {@code null} configuration, the method returns early.</li>
+	 * <li>When the active engine is NOT {@link #NEWPIPE_ENGINE}, {@code useYtdlpAsDefaultDownloader}
+	 *     is set to {@code true} (use yt-dlp).</li>
+	 * <li>When the active engine IS {@link #NEWPIPE_ENGINE}, yt-dlp is not used as default.</li>
+	 * <li>The {@code isNewPipeUnavailable} flag is set directly from the server response.</li>
+	 * </ul>
+	 *
+	 * @param deviceId   The unique device identifier for the API request.
+	 * @param appConfigs The local configuration object to update. Must not be null.
+	 * @see #getDownloadEngineConfigFromServer(String)
+	 * @see AppConfigs#useYtdlpAsDefaultDownloader
+	 * @see AppConfigs#isNewPipeUnavailable
+	 */
 	public static void syncDownloadEngineConfig(String deviceId, AppConfigs appConfigs) {
 		ThreadTask.executeInBackground(() -> {
 			try {
@@ -39,15 +84,35 @@ public final class AppConfigsHelper {
 				
 				appConfigs.useYtdlpAsDefaultDownloader = !NEWPIPE_ENGINE.equals(activeEngine);
 				appConfigs.isNewPipeUnavailable = isNewPipeDown;
+				appConfigs.save();
 			} catch (Exception error) {
 				logger.error("Error syncing download engine: ", error);
 			}
 		});
 	}
 	
+	/**
+	 * Fetches the download engine configuration from the remote PocketBase server.
+	 * This method queries the "ytdlpChannel" collection for a record containing
+	 * the active download engine and NewPipe availability status.
+	 *
+	 * <p><strong>Request details:</strong>
+	 * GET request to {@code /api/collections/ytdlpChannel/records?fields=downloadEngine}
+	 * with desktop User-Agent header. The response expects an "items" array containing
+	 * the configuration object with fields defined by {@link #POCKETBASE_FIELD_ACTIVE_ENGINE}
+	 * and {@link #POCKETBASE_FIELD_IS_NEWPIPE_DOWN}.
+	 *
+	 * @param deviceId The unique device identifier sent in the X-Device-Id header.
+	 * @return A {@link DownloadEngineConfig} object populated with remote values,
+	 * or {@code null} if the request fails, response is empty, or an error occurs.
+	 * @see DownloadEngineConfig
+	 * @see PocketBaseClient#API_ENDPOINT
+	 */
 	@Nullable
 	private static DownloadEngineConfig getDownloadEngineConfigFromServer(@NotNull String deviceId) {
-		String path = "/api/collections/ytdlpChannel/records?fields=downloadEngine";
+		String path = "/api/collections/ytdlpChannel/records?fields=" +
+			POCKETBASE_FIELD_DOWNLOAD_ENGINE;
+		
 		int desktopHttpUserAgent = R.string.code_browser_default_desktop_http_user_agent;
 		Request request = new Request.Builder()
 			.url(PocketBaseClient.API_ENDPOINT + path)
@@ -62,13 +127,16 @@ public final class AppConfigsHelper {
 		try (Response response = okHttpClient.newCall(request).execute()) {
 			if (response.isSuccessful()) {
 				String body = response.body().string();
-				
 				JSONObject json = new JSONObject(body);
 				JSONArray items = json.getJSONArray("items");
+				
 				if (items.length() > 0) {
 					JSONObject configSource = items.getJSONObject(0);
-					String activeDownloadEngine = configSource.getString(POCKETBASE_FIELD_ACTIVE_ENGINE);
-					boolean isNewPipeLibDown = configSource.getBoolean(POCKETBASE_FIELD_IS_NEWPIPE_DOWN);
+					String activeDownloadEngine =
+						configSource.getString(POCKETBASE_FIELD_ACTIVE_ENGINE);
+					
+					boolean isNewPipeLibDown =
+						configSource.getBoolean(POCKETBASE_FIELD_IS_NEWPIPE_DOWN);
 					
 					engineConfig.setActiveDownloadEngine(activeDownloadEngine);
 					engineConfig.setNewPipeDown(isNewPipeLibDown);
@@ -137,7 +205,7 @@ public final class AppConfigsHelper {
 		 * this method returns the default engine as a fallback to ensure system stability.
 		 *
 		 * @return The active download engine identifier (e.g., "yt-dlp" or "newpipe").
-		 *         Never returns {@code null}.
+		 * Never returns {@code null}.
 		 * @see #setActiveDownloadEngine(String)
 		 * @see #YTDLP_ENGINE
 		 * @see #NEWPIPE_ENGINE
