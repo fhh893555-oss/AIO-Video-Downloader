@@ -54,6 +54,8 @@ import io.objectbox.annotation.Id;
 	public int completedDownloadsSortOrder = SORT_DATE_NEWEST_FIRST;
 	public int activeDownloadsSortOrder = SORT_DATE_NEWEST_FIRST;
 	public boolean isDailySuggestionsEnabled = true;
+	public boolean useYtdlpAsDefaultDownloader = true;
+	public boolean isNewPipeUnavailable = false;
 	
 	public int totalSuccessfulDownloadCount = 0;
 	public float totalAppUsageDurationMs = 0f;
