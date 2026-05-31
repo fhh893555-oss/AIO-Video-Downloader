@@ -77,8 +77,10 @@ android {
 
 dependencies {
     implementation libs.appcompat
+    implementation libs.material
     implementation libs.styled.cardview
     implementation libs.androidx.recyclerview
+    implementation libs.androidx.coordinatorlayout
 
     implementation libs.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.livedata
