@@ -3,11 +3,14 @@ package userInterface.mainScreen;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -59,6 +62,9 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private FragNavigator fragNavigator;
 	private MainViewModel mainViewModel;
+	private boolean isBottomNavVisible = true;
+	private int scrollDistance = 0;
+	private static final int SCROLL_THRESHOLD = 20;
 	
 	/**
 	 * Determines whether the activity's screen orientation should be locked.
@@ -125,6 +131,32 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		initFragmentNavigator();
 		initBottomTabButtons();
 		loadHomepage();
+		binding.fragmentContainer.setOnClickListener(view -> {
+			if (isBottomNavVisible) {
+				hideBottomNav();
+			} else {
+				showBottomNav();
+			}
+		});
+	}
+	
+	/**
+	 * Called when the activity is no longer in the foreground. This method saves
+	 * the current scroll position state before the activity loses focus. The
+	 * {@code scrollDistance} field is reset to 0 to prevent stale scroll position
+	 * data from being used when the activity resumes or is recreated.
+	 *
+	 * <p>Resetting the scroll distance here ensures that the bottom navigation
+	 * bar visibility logic starts from a clean state when the user returns to
+	 * this activity, avoiding unexpected animation or visibility states.
+	 *
+	 * @see android.app.Activity#onPause()
+	 * @see #scrollDistance
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		scrollDistance = 0;
 	}
 	
 	/**
@@ -258,6 +290,11 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	                       @NotNull ImageView imgTab,
 	                       @NotNull TextView tvTab,
 	                       @NonNull NavigationTabs activeTabEnum) {
+		binding.bottomTabNavigation.animate().cancel();
+		scrollDistance = 0;
+		isBottomNavVisible = true;
+		binding.bottomTabNavigation.setTranslationY(0);
+		
 		fragNavigator.navigateTo(fragment, false);
 		mainViewModel.setCurrentTabs(activeTabEnum);
 		updateTabUI(btnTab, imgTab, tvTab);
@@ -307,5 +344,131 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		
 		activeTvTab.setTypeface(semiBoldFont);
 		activeBtnTab.setSelected(true);
+	}
+	
+	/**
+	 * Configures a scroll listener on the provided {@link NestedScrollView} to
+	 * automatically show or hide the bottom navigation bar based on scroll direction.
+	 * When the user scrolls down (increasing Y), the bottom nav hides. When the user
+	 * scrolls up (decreasing Y), the bottom nav shows. The current scroll position
+	 * is stored in {@code scrollDistance} for reference.
+	 *
+	 * <p><strong>Scroll behavior:</strong>
+	 * <ul>
+	 * <li>Scrolling down (scrollY > oldScrollY) → hides bottom nav if visible.</li>
+	 * <li>Scrolling up (scrollY < oldScrollY) → shows bottom nav if hidden.</li>
+	 * <li>No action when scroll position does not change.</li>
+	 * </ul>
+	 *
+	 * @param nestedScrollView The {@link NestedScrollView} to attach the scroll listener to.
+	 *                         Must not be {@code null}.
+	 * @see #hideBottomNav()
+	 * @see #showBottomNav()
+	 * @see NestedScrollView#setOnScrollChangeListener(android.view.View.OnScrollChangeListener)
+	 */
+	public void setupNestedScrollListener(@NonNull NestedScrollView nestedScrollView) {
+		nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+			(view, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+				int deltaY = scrollY - oldScrollY;
+				
+				if ((deltaY > 0 && scrollDistance < 0) ||
+					(deltaY < 0 && scrollDistance > 0)) {
+					scrollDistance = 0;
+				}
+				
+				scrollDistance += deltaY;
+				if (Math.abs(scrollDistance) > SCROLL_THRESHOLD) {
+					if (deltaY > 0 && isBottomNavVisible) {
+						hideBottomNav();
+						scrollDistance = 0;
+					} else if (deltaY < 0 && !isBottomNavVisible) {
+						showBottomNav();
+						scrollDistance = 0;
+					}
+				}
+			});
+	}
+	
+	/**
+	 * Removes the scroll change listener from the provided {@link NestedScrollView}.
+	 * This method sets the scroll change listener to {@code null}, effectively
+	 * detaching the listener that was previously attached via
+	 * {@link #setupNestedScrollListener(NestedScrollView)}. Call this method to
+	 * prevent memory leaks or unwanted scroll-triggered UI changes when the
+	 * associated fragment or activity is being destroyed.
+	 *
+	 * @param nestedScrollView The {@link NestedScrollView} from which to remove
+	 *                         the scroll change listener. Must not be {@code null}.
+	 * @see #setupNestedScrollListener(NestedScrollView)
+	 * @see NestedScrollView#setOnScrollChangeListener(android.view.View.OnScrollChangeListener)
+	 */
+	public void cleanupScrollListener(NestedScrollView nestedScrollView) {
+		if (nestedScrollView != null) {
+			nestedScrollView.setOnScrollChangeListener(
+				(NestedScrollView.OnScrollChangeListener) null
+			);
+		}
+	}
+	
+	/**
+	 * Animates the bottom navigation bar out of view if it is currently visible.
+	 * This method checks the {@code isBottomNavVisible} flag and returns early if
+	 * the navigation is already hidden. The animation translates the view downward
+	 * by its own height over 100ms using an accelerating interpolator for a
+	 * smooth fade-out effect.
+	 *
+	 * <p><strong>Animation details:</strong>
+	 * <ul>
+	 * <li>Translation Y: moves from 0 to view height</li>
+	 * <li>Duration: 100 milliseconds</li>
+	 * <li>Interpolator: {@link AccelerateInterpolator} (starts slow, ends fast)</li>
+	 * <li>Layer: enabled for hardware acceleration during animation</li>
+	 * </ul>
+	 *
+	 * @see #showBottomNav()
+	 * @see android.view.ViewPropertyAnimator
+	 */
+	private void hideBottomNav() {
+		if (!isBottomNavVisible) return;
+		
+		binding.bottomTabNavigation.animate().cancel();
+		binding.bottomTabNavigation.animate()
+			.translationY(binding.bottomTabNavigation.getHeight())
+			.setDuration(100)
+			.withLayer()
+			.setInterpolator(new AccelerateInterpolator())
+			.start();
+		isBottomNavVisible = false;
+	}
+	
+	/**
+	 * Animates the bottom navigation bar into view if it is currently hidden.
+	 * This method checks the {@code isBottomNavVisible} flag and returns early if
+	 * the navigation is already visible. The animation translates the view upward
+	 * from its hidden position (bottom) back to 0 over 100ms using a decelerating
+	 * interpolator for a smooth fade-in effect.
+	 *
+	 * <p><strong>Animation details:</strong>
+	 * <ul>
+	 * <li>Translation Y: moves from view height to 0</li>
+	 * <li>Duration: 100 milliseconds</li>
+	 * <li>Interpolator: {@link DecelerateInterpolator} (starts fast, ends slow)</li>
+	 * <li>Layer: enabled for hardware acceleration during animation</li>
+	 * </ul>
+	 *
+	 * @see #hideBottomNav()
+	 * @see android.view.ViewPropertyAnimator
+	 */
+	private void showBottomNav() {
+		if (isBottomNavVisible) return;
+		
+		binding.bottomTabNavigation.animate().cancel();
+		binding.bottomTabNavigation.animate()
+			.translationY(0)
+			.setDuration(100)
+			.withLayer()
+			.setInterpolator(new DecelerateInterpolator())
+			.start();
+		isBottomNavVisible = true;
 	}
 }

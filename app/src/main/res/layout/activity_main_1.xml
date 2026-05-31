@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -11,14 +11,14 @@
     android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/bottomTabNavigation"
+    android:clickable="true"
     tools:layout="@layout/frag_homepage_1" />
 
   <com.github.dangiashish.StyledCardView
     android:id="@+id/bottomTabNavigation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
     android:layout_marginTop="@dimen/_10"
     app:background_ColorType="gradient_linear"
     app:background_Gradient_Angle="45"
@@ -49,4 +49,4 @@
       layout="@layout/activity_main_1_tab_1" />
   </com.github.dangiashish.StyledCardView>
 
-</RelativeLayout>
+</FrameLayout>
