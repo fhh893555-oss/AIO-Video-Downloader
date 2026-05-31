@@ -93,20 +93,23 @@ public final class AppConfigsHelper {
 	
 	/**
 	 * Fetches the download engine configuration from the remote PocketBase server.
-	 * This method queries the "ytdlpChannel" collection for a record containing
-	 * the active download engine and NewPipe availability status.
+	 * This method queries the collection specified by {@link #POCKETBASE_FIELD_DOWNLOAD_ENGINE}
+	 * for records containing the active download engine and NewPipe availability status.
 	 *
 	 * <p><strong>Request details:</strong>
-	 * GET request to {@code /api/collections/ytdlpChannel/records?fields=downloadEngine}
+	 * GET request to {@code /api/collections/{collection}/records?fields=activeEngine,isNewPipeDown}
 	 * with desktop User-Agent header. The response expects an "items" array containing
 	 * the configuration object with fields defined by {@link #POCKETBASE_FIELD_ACTIVE_ENGINE}
-	 * and {@link #POCKETBASE_FIELD_IS_NEWPIPE_DOWN}.
+	 * and {@link #POCKETBASE_FIELD_IS_NEWPIPE_DOWN}. The request URL is logged for debugging.
 	 *
 	 * @param deviceId The unique device identifier sent in the X-Device-Id header.
 	 * @return A {@link DownloadEngineConfig} object populated with remote values,
 	 * or {@code null} if the request fails, response is empty, or an error occurs.
 	 * @see DownloadEngineConfig
 	 * @see PocketBaseClient#API_ENDPOINT
+	 * @see #POCKETBASE_FIELD_DOWNLOAD_ENGINE
+	 * @see #POCKETBASE_FIELD_ACTIVE_ENGINE
+	 * @see #POCKETBASE_FIELD_IS_NEWPIPE_DOWN
 	 */
 	@Nullable
 	private static DownloadEngineConfig getDownloadEngineConfigFromServer(@NotNull String deviceId) {
