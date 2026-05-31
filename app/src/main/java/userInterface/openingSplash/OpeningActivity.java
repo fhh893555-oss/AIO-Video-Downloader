@@ -202,7 +202,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 	 *
 	 * <p><strong>Execution flow:</strong>
 	 * <ol>
-	 * <li>Delays execution by 1000ms to allow the opening screen to be visible.</li>
+	 * <li>Delays execution by 500ms to allow the opening screen to be visible.</li>
 	 * <li>Executes {@link #getLatestUpdateInfo()} in background thread.</li>
 	 * <li>On main thread, evaluates whether an update is available via
 	 *     {@link AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)}.</li>
@@ -230,7 +230,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 						proceedToNextScreen();
 					}
 				});
-			}), 1000);
+			}), 500);
 	}
 	
 	/**
