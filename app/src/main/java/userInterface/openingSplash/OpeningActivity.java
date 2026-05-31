@@ -25,7 +25,9 @@ import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsHelper;
 import dataRepo.appConfigs.AppConfigsRepo;
+import dataRepo.userDetails.AppUserRepo;
 import userInterface.appUpdater.AppUpdaterActivity;
 import userInterface.appUpdater.AppUpdaterUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
@@ -135,7 +137,28 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 		
 		applyGradientToTitle();
 		loadVersionInfo();
+		syncDownloadEngineConfig();
 		checkUpdatesAndNavigate();
+	}
+	
+	/**
+	 * Synchronizes the local download engine configuration with the remote server.
+	 * This method retrieves the current user's device ID from {@link AppUserRepo}
+	 * and the local application configuration from {@link AppConfigsRepo}, then
+	 * delegates to {@link AppConfigsHelper#syncDownloadEngineConfig(String, AppConfigs)}
+	 * to perform the actual sync operation.
+	 *
+	 * <p>Configuration data synced typically includes download concurrency limits,
+	 * speed restrictions, Wi-Fi-only preferences, and auto-resume settings.
+	 *
+	 * @see AppUserRepo#getUser()
+	 * @see AppConfigsRepo#getConfig()
+	 * @see AppConfigsHelper#syncDownloadEngineConfig(String, AppConfigs)
+	 */
+	private static void syncDownloadEngineConfig() {
+		String userDeviceId = AppUserRepo.getUser().userDeviceId;
+		AppConfigs appConfigs = AppConfigsRepo.getConfig();
+		AppConfigsHelper.syncDownloadEngineConfig(userDeviceId, appConfigs);
 	}
 	
 	/**

@@ -27,17 +27,21 @@ public final class AppConfigsHelper {
 	
 	public static void syncDownloadEngineConfig(String deviceId, AppConfigs appConfigs) {
 		ThreadTask.executeInBackground(() -> {
-			DownloadEngineConfig engineConfig = getDownloadEngineConfigFromServer(deviceId);
-			if (engineConfig == null) return;
-			
-			String activeEngine = engineConfig.getActiveDownloadEngine();
-			Boolean isNewPipeDown = engineConfig.isNewPipeLibraryDown();
-			
-			if (isNewPipeDown) logger.debug("Newpipe extractor is broken");
-			logger.debug("Active Download Engine: " + activeEngine);
-			
-			appConfigs.useYtdlpAsDefaultDownloader = !NEWPIPE_ENGINE.equals(activeEngine);
-			appConfigs.isNewPipeUnavailable = isNewPipeDown;
+			try {
+				DownloadEngineConfig engineConfig = getDownloadEngineConfigFromServer(deviceId);
+				if (engineConfig == null) return;
+				
+				String activeEngine = engineConfig.getActiveDownloadEngine();
+				Boolean isNewPipeDown = engineConfig.isNewPipeLibraryDown();
+				
+				if (isNewPipeDown) logger.debug("Newpipe extractor is broken");
+				logger.debug("Active Download Engine: " + activeEngine);
+				
+				appConfigs.useYtdlpAsDefaultDownloader = !NEWPIPE_ENGINE.equals(activeEngine);
+				appConfigs.isNewPipeUnavailable = isNewPipeDown;
+			} catch (Exception error) {
+				logger.error("Error syncing download engine: ", error);
+			}
 		});
 	}
 	
@@ -80,26 +84,81 @@ public final class AppConfigsHelper {
 		return null;
 	}
 	
+	/**
+	 * Configuration class that manages the active download engine selection and
+	 * availability status for the application. This nested static class stores
+	 * which download engine is currently active (e.g., yt-dlp or NewPipe) and
+	 * whether the NewPipe library is currently unavailable or down.
+	 *
+	 * <p><strong>Fields:</strong>
+	 * <ul>
+	 * <li>{@code activeDownloadEngine} - Current engine (default: {@link #YTDLP_ENGINE}).</li>
+	 * <li>{@code isNewPipeDown} - True if NewPipe is unavailable.</li>
+	 * </ul>
+	 *
+	 * <p>Default engine is yt-dlp. The getter for {@code activeDownloadEngine}
+	 * returns {@link #YTDLP_ENGINE} as a fallback if the stored value is null.
+	 *
+	 * @see #YTDLP_ENGINE
+	 * @see #NEWPIPE_ENGINE
+	 */
 	public static final class DownloadEngineConfig {
 		private String activeDownloadEngine = YTDLP_ENGINE;
 		private Boolean isNewPipeDown = false;
 		
+		/**
+		 * Returns whether the NewPipe extraction library is currently unavailable or down.
+		 * This flag is used to determine if the app should fall back to the alternative
+		 * download engine (yt-dlp) when NewPipe fails to respond or is temporarily disabled.
+		 *
+		 * @return {@code true} if the NewPipe library is down, {@code false} otherwise.
+		 * @see #setNewPipeDown(Boolean)
+		 */
 		public Boolean isNewPipeLibraryDown() {
 			return isNewPipeDown;
 		}
 		
+		/**
+		 * Sets the availability status of the NewPipe extraction library. This method
+		 * should be called when the library fails to respond or when it becomes
+		 * available again after a failure.
+		 *
+		 * @param newPipeDown {@code true} to mark the library as down/unavailable,
+		 *                    {@code false} to mark it as available.
+		 * @see #isNewPipeLibraryDown()
+		 */
 		public void setNewPipeDown(Boolean newPipeDown) {
 			isNewPipeDown = newPipeDown;
 		}
 		
+		/**
+		 * Returns the currently active download engine identifier. The default value
+		 * is {@link #YTDLP_ENGINE}. If the stored engine value is {@code null},
+		 * this method returns the default engine as a fallback to ensure system stability.
+		 *
+		 * @return The active download engine identifier (e.g., "yt-dlp" or "newpipe").
+		 *         Never returns {@code null}.
+		 * @see #setActiveDownloadEngine(String)
+		 * @see #YTDLP_ENGINE
+		 * @see #NEWPIPE_ENGINE
+		 */
 		public String getActiveDownloadEngine() {
 			return activeDownloadEngine == null ?
 				YTDLP_ENGINE : activeDownloadEngine;
 		}
 		
+		/**
+		 * Sets the active download engine to be used for video/audio extraction.
+		 * The provided identifier should match one of the predefined engine constants
+		 * such as {@link #YTDLP_ENGINE} or {@link #NEWPIPE_ENGINE}.
+		 *
+		 * @param activeDownloadEngine The engine identifier to activate (e.g., "yt-dlp").
+		 * @see #getActiveDownloadEngine()
+		 * @see #YTDLP_ENGINE
+		 * @see #NEWPIPE_ENGINE
+		 */
 		public void setActiveDownloadEngine(String activeDownloadEngine) {
 			this.activeDownloadEngine = activeDownloadEngine;
 		}
-		
 	}
 }
