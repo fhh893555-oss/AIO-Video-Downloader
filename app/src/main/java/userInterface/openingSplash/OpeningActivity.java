@@ -24,11 +24,13 @@ import coreUtils.library.process.ThreadTask;
 import coreUtils.library.process.VersionInfo;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.TextViewsUtils;
+import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
 import userInterface.appUpdater.AppUpdaterActivity;
 import userInterface.appUpdater.AppUpdaterUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.languagePicker.LanguageActivity;
+import userInterface.mainScreen.MainActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 /**
@@ -317,23 +319,19 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 	@NonNull
 	private Intent getDestinationIntent() {
 		Intent destinationIntent;
-		boolean isLocaleConfigured = AppConfigsRepo.getConfig().isLocaleConfigured;
+		AppConfigs appConfig = AppConfigsRepo.getConfig();
+		boolean isTermsAccepted = appConfig.isTermsConditionsAgreed;
+		boolean isLocaleConfigured = appConfig.isLocaleConfigured;
 		
 		Class<? extends BaseActivity<? extends ViewBinding>> nextActivityToOpen =
-			isLocaleConfigured ? TermsPolicyActivity.class : LanguageActivity.class;
+			isTermsAccepted ? LanguageActivity.class : TermsPolicyActivity.class;
 		
-		boolean isTermsActivitySelected = false;
-		if (!AppConfigsRepo.getConfig().isTermsConditionsAgreed) {
-			nextActivityToOpen = TermsPolicyActivity.class;
-			isTermsActivitySelected = true;
-		}
+		if (isLocaleConfigured) nextActivityToOpen = MainActivity.class;
 		
 		destinationIntent = new Intent(this, nextActivityToOpen);
-		if (isTermsActivitySelected) {
-			destinationIntent.getShortExtra(
-				TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
-				TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);
-		}
+		destinationIntent.getShortExtra(
+			TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
+			TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);
 		
 		return destinationIntent;
 	}

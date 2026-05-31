@@ -16,6 +16,7 @@ import coreUtils.library.views.StylizedToastView;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
+import userInterface.mainScreen.MainActivity;
 import userInterface.openingSplash.OpeningActivity;
 
 /**
@@ -245,7 +246,7 @@ public final class TermsPolicyActivity
 	 * <p><strong>Behavior matrix:</strong>
 	 * <ul>
 	 * <li>If checkbox is checked AND launched from opening screen → opens
-	 *     {@link OpeningActivity} to continue the startup flow.</li>
+	 *     {@link MainActivity} to continue the startup flow.</li>
 	 * <li>If checkbox is checked AND NOT launched from opening screen → simulates
 	 *     a back button press to return to previous screen.</li>
 	 * <li>If checkbox is NOT checked → shows an error toast, triggers haptic
@@ -265,8 +266,7 @@ public final class TermsPolicyActivity
 			config.save();
 			
 			if (config.isTermsConditionsAgreed && isLaunchedFromOpeningScreen()) {
-				//todo: open main activity.
-				Intent intent = new Intent(this, OpeningActivity.class);
+				Intent intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
 				ActivityAnimator.animActivityFade(this);
 				finish();
@@ -275,7 +275,7 @@ public final class TermsPolicyActivity
 			} else {
 				String toastMessage = StringHelper.getText(R.string.hint_you_must_accept_the_terms);
 				StylizedToastView.showError(this, toastMessage);
-				vibrate(50);
+				vibrate();
 				finish();
 			}
 		});

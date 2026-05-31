@@ -50,8 +50,8 @@
       android:maxLines="1"
       android:text="@string/title_home"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage,TextContrastCheck" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
   </LinearLayout>
 
   <LinearLayout
@@ -92,8 +92,8 @@
       android:maxLines="1"
       android:text="@string/title_musics"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
 
   <LinearLayout
@@ -135,8 +135,8 @@
       android:maxLines="1"
       android:text="@string/title_movies"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
 
   <LinearLayout
@@ -177,8 +177,8 @@
       android:maxLines="1"
       android:text="@string/title_games"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
 
   <LinearLayout
@@ -220,8 +220,8 @@
       android:maxLines="1"
       android:text="@string/title_browser"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
 
   <LinearLayout
@@ -263,7 +263,7 @@
       android:maxLines="1"
       android:text="@string/title_all_files"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/smaller_text_size"
-      tools:ignore="SpUsage" />
+      android:textSize="@dimen/small_text_size"
+      tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
 </LinearLayout>
