@@ -1,4 +1,7 @@
 package userInterface.intentHandler;
 
-public class IntentHandlerViewModel {
+import androidx.lifecycle.ViewModel;
+
+public class IntentHandlerViewModel extends ViewModel {
+
 }
