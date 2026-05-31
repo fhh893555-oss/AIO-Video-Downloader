@@ -110,8 +110,9 @@ public final class AppConfigsHelper {
 	 */
 	@Nullable
 	private static DownloadEngineConfig getDownloadEngineConfigFromServer(@NotNull String deviceId) {
-		String path = "/api/collections/ytdlpChannel/records?fields=" +
-			POCKETBASE_FIELD_DOWNLOAD_ENGINE;
+		String path = "/api/collections/" + POCKETBASE_FIELD_DOWNLOAD_ENGINE + "/records?fields=" +
+			POCKETBASE_FIELD_ACTIVE_ENGINE + "," + POCKETBASE_FIELD_IS_NEWPIPE_DOWN;
+		logger.debug("Pocketbase request url: " + PocketBaseClient.API_ENDPOINT + path);
 		
 		int desktopHttpUserAgent = R.string.code_browser_default_desktop_http_user_agent;
 		Request request = new Request.Builder()

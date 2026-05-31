@@ -1095,9 +1095,23 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "10:2924840571534618895",
+      "lastPropertyId": "1:7571172560413656404",
+      "name": "WebHistoryInfo",
+      "properties": [
+        {
+          "id": "1:7571172560413656404",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "9:1686675606944043669",
+  "lastEntityId": "10:2924840571534618895",
   "lastIndexId": "13:7167463063313784109",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
