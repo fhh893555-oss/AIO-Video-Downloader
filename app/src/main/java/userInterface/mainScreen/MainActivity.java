@@ -1,15 +1,21 @@
 package userInterface.mainScreen;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.nextgen.R;
 import com.nextgen.databinding.ActivityMain1Binding;
 import com.nextgen.databinding.ActivityMain1Tab1Binding;
+
+import org.jetbrains.annotations.NotNull;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseFragment;
@@ -44,8 +50,8 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	}
 	
 	private void initFragmentNavigator() {
-		FragmentManager supportFragmentManager = getSupportFragmentManager();
-		fragNavigator = new FragNavigator(supportFragmentManager, R.id.fragmentContainer);
+		FragmentManager frgManager = getSupportFragmentManager();
+		fragNavigator = new FragNavigator(frgManager, R.id.fragmentContainer);
 	}
 	
 	private void loadHomepage() {
@@ -57,38 +63,48 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		ActivityMain1Tab1Binding bottomTabs = binding.bottomTabs;
 		bottomTabs.btnHomeTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnHomeTab, NAVIGATION_TAB.HOME_TAB));
+				bottomTabs.btnHomeTab, bottomTabs.imgHomeTab,
+				bottomTabs.tvHomeTab, NavigationTabs.HOME_TAB));
 		
 		bottomTabs.btnMusicTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnMusicTab, NAVIGATION_TAB.MUSIC_TAB));
+				bottomTabs.btnMusicTab, bottomTabs.imgMusicTab,
+				bottomTabs.tvMusicsTab, NavigationTabs.MUSIC_TAB));
 		
 		bottomTabs.btnMoviesTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnMoviesTab, NAVIGATION_TAB.MOVIES_TABS));
+				bottomTabs.btnMoviesTab, bottomTabs.imgMoviesTab,
+				bottomTabs.tvMoviesTab, NavigationTabs.MOVIES_TABS));
 		
 		bottomTabs.btnGamesTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnGamesTab, NAVIGATION_TAB.GAMES_TAB));
+				bottomTabs.btnGamesTab, bottomTabs.imgGamesTab,
+				bottomTabs.tvGamesTab, NavigationTabs.GAMES_TAB));
 		
 		bottomTabs.btnBrowserTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnBrowserTab, NAVIGATION_TAB.HOME_TAB));
+				bottomTabs.btnBrowserTab, bottomTabs.imgBrowserTab,
+				bottomTabs.tvBrowserTab, NavigationTabs.HOME_TAB));
 		
 		bottomTabs.btnFilesTab.setOnClickListener(view ->
 			switchTab(new HomepageFragment(),
-				bottomTabs.btnFilesTab, NAVIGATION_TAB.HOME_TAB));
+				bottomTabs.btnFilesTab, bottomTabs.imgFilesTab,
+				bottomTabs.tvFilesTab, NavigationTabs.HOME_TAB));
 	}
 	
 	private void switchTab(@NonNull BaseFragment<?> fragment,
-	                       @NonNull View activeTab,
-	                       @NonNull NAVIGATION_TAB activeTabEnum) {
+	                       @NonNull View btnTab,
+	                       @NotNull ImageView imgTab,
+	                       @NotNull TextView tvTab,
+	                       @NonNull NavigationTabs activeTabEnum) {
 		fragNavigator.navigateTo(fragment, false);
 		mainViewModel.setCurrentTabs(activeTabEnum);
-		updateTabUI(activeTab);
+		updateTabUI(btnTab, imgTab, tvTab);
 	}
 	
-	private void updateTabUI(View activeTab) {
+	private void updateTabUI(@NotNull View activeBtnTab,
+	                         @NotNull ImageView activeImgTab,
+	                         @NotNull TextView activeTvTab) {
 		ActivityMain1Tab1Binding bottomTabs = binding.bottomTabs;
 		bottomTabs.btnHomeTab.setSelected(false);
 		bottomTabs.btnMusicTab.setSelected(false);
@@ -96,10 +112,22 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		bottomTabs.btnGamesTab.setSelected(false);
 		bottomTabs.btnBrowserTab.setSelected(false);
 		bottomTabs.btnFilesTab.setSelected(false);
-		activeTab.setSelected(true);
+		
+		Typeface regularFont = ResourcesCompat
+			.getFont(this, R.font.font_family_regular);
+		
+		Typeface semiBoldFont = ResourcesCompat
+			.getFont(this, R.font.font_family_semibold);
+		
+		bottomTabs.tvHomeTab.setTypeface(regularFont);
+		bottomTabs.tvMusicsTab.setTypeface(regularFont);
+		bottomTabs.tvMoviesTab.setTypeface(regularFont);
+		bottomTabs.tvGamesTab.setTypeface(regularFont);
+		bottomTabs.tvBrowserTab.setTypeface(regularFont);
+		bottomTabs.tvFilesTab.setTypeface(regularFont);
+		
+		activeTvTab.setTypeface(semiBoldFont);
+		activeBtnTab.setSelected(true);
 	}
 	
-	public enum NAVIGATION_TAB {
-		HOME_TAB, MUSIC_TAB, MOVIES_TABS, GAMES_TAB, BROWSER_TABS, DOWNLOADS_TAB
-	}
 }
