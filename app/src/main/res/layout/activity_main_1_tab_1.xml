@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/bottomTabs"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/_3"
+  android:baselineAligned="false"
+  android:orientation="horizontal"
+  tools:ignore="ContentDescription,HardcodedText,ImageContrastCheck,
+    RtlHardcoded,SmallSp,SpeakableTextPresentCheck,TouchTargetSizeCheck,UseAppTint,
+    UseCompatTextViewDrawableXml,UselessLeaf">
+
+  <LinearLayout
+    android:id="@+id/btnHomeTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_2"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgHomeTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:src="@drawable/ic_home_tab"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvHomeTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_semibold"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_home"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage,TextContrastCheck" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnMusicTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_0"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgMusicTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:src="@drawable/ic_queue_music"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvMusicsTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_regular"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_musics"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnMoviesTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_0"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgMoviesTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:padding="1.5dp"
+      android:src="@drawable/ic_movie_speaker"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvMoviesTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_regular"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_movies"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnGamesTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_0"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgGamesTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:src="@drawable/ic_game_joystick"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvGamesTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_regular"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_games"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnBrowserTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_0"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgBrowserTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:padding="1dp"
+      android:src="@drawable/ic_browser_pointer"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvBrowserTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_regular"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_browser"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/btnFilesTab"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_0"
+    android:layout_marginTop="@dimen/_2"
+    android:layout_marginRight="@dimen/_2"
+    android:layout_marginBottom="@dimen/_2"
+    android:layout_weight="1"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="TouchTargetSizeCheck">
+
+    <ImageView
+      android:id="@+id/imgFilesTab"
+      android:layout_width="@dimen/_18"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_5"
+      android:adjustViewBounds="true"
+      android:importantForAccessibility="no"
+      android:padding="1dp"
+      android:src="@drawable/ic_cloud_download"
+      android:tint="@color/color_text_primary"
+      tools:ignore="ImageContrastCheck" />
+
+    <TextView
+      android:id="@+id/tvFilesTab"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/_5"
+      android:ellipsize="end"
+      android:fontFamily="@font/font_family_regular"
+      android:gravity="center"
+      android:maxLines="1"
+      android:text="@string/title_all_files"
+      android:textColor="@color/color_text_primary"
+      android:textSize="@dimen/smaller_text_size"
+      tools:ignore="SpUsage" />
+  </LinearLayout>
+</LinearLayout>

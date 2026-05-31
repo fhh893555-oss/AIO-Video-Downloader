@@ -162,4 +162,10 @@
   <string name="label_crash_feature_title_community">Improve for Everyone</string>
   <string name="text_crash_feature_desc_community">Your reports directly help our team identify bugs and ensure long-term stability for all Tube AIO users.</string>
   <string name="label_dont_close_app">Don\'t Close The App</string>
+  <string name="title_home">Home</string>
+  <string name="title_musics">Music</string>
+  <string name="title_movies">Movies</string>
+  <string name="title_games">Games</string>
+  <string name="title_browser">Browser</string>
+  <string name="title_all_files">All Files</string>
 </resources>

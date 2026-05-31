@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/img_bg_activity_v2">
+
+  <androidx.fragment.app.FragmentContainerView
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/bottom_tab_nav_container"
+    tools:layout="@layout/frag_homepage_1" />
+
+  <com.github.dangiashish.StyledCardView
+    android:id="@+id/bottom_tab_nav_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginLeft="@dimen/_5"
+    android:layout_marginTop="@dimen/_5"
+    android:layout_marginRight="@dimen/_5"
+    android:layout_marginBottom="@dimen/_5"
+    android:orientation="vertical"
+    app:background_Color="@color/color_cardview_bg"
+    app:background_ColorType="solid"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="@dimen/radius_corder"
+    app:stroke_Color="@color/color_cardview_stroke"
+    app:stroke_Width="0.6dp">
+
+    <include
+      android:id="@+id/bottom_tabs"
+      layout="@layout/activity_main_1_tab_1" />
+  </com.github.dangiashish.StyledCardView>
+
+</RelativeLayout>

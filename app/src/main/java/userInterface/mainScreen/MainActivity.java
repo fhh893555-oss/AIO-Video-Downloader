@@ -1,13 +1,13 @@
-package userInterface.homeScreen;
+package userInterface.mainScreen;
 
 import android.view.LayoutInflater;
 
-import com.nextgen.databinding.ActivityHome1Binding;
+import com.nextgen.databinding.ActivityMain1Binding;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 
-public final class HomeActivity extends BaseActivity<ActivityHome1Binding> {
+public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
@@ -15,8 +15,8 @@ public final class HomeActivity extends BaseActivity<ActivityHome1Binding> {
 		return true;
 	}
 	
-	@Override protected ActivityHome1Binding inflateBinding(LayoutInflater inflater) {
-		return ActivityHome1Binding.inflate(inflater);
+	@Override protected ActivityMain1Binding inflateBinding(LayoutInflater inflater) {
+		return ActivityMain1Binding.inflate(inflater);
 	}
 	
 	@Override protected void onLoadedLayout() {
