@@ -22,7 +22,7 @@ import coreUtils.library.views.GridLayoutSpacing;
 import coreUtils.library.views.TextViewsUtils;
 import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsRepo;
-import userInterface.mainScreen.MainActivity;
+import userInterface.homeScreen.HomeActivity;
 
 /**
  * Activity that allows users to select their preferred language for the application.
@@ -45,7 +45,7 @@ import userInterface.mainScreen.MainActivity;
  * <p><strong>Navigation flow:</strong>
  * Upon language selection or skip, the activity saves the configuration,
  * applies the locale change (if a language was selected), and navigates to
- * {@link MainActivity} with intent flags that clear the activity back stack.
+ * {@link HomeActivity} with intent flags that clear the activity back stack.
  * A fade animation is applied during the transition.
  *
  * <p><strong>Layout:</strong>
@@ -328,7 +328,7 @@ public class LanguageActivity extends
 	
 	/**
 	 * Navigates to the main activity and finishes the current language selection screen.
-	 * This method constructs an intent targeting {@link MainActivity}, adds flags to
+	 * This method constructs an intent targeting {@link HomeActivity}, adds flags to
 	 * clear the activity back stack, starts the activity with a fade transition animation,
 	 * and closes the current activity.
 	 *
@@ -349,7 +349,7 @@ public class LanguageActivity extends
 	 * @see ActivityAnimator#animActivityFade(BaseActivity)
 	 */
 	private void openNextActivity() {
-		Intent intent = new Intent(LanguageActivity.this, MainActivity.class);
+		Intent intent = new Intent(LanguageActivity.this, HomeActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 		ActivityAnimator.animActivityFade(LanguageActivity.this);

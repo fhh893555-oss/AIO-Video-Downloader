@@ -50,7 +50,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name="userInterface.mainScreen.MainActivity" />
+    <activity android:name="userInterface.homeScreen.HomeActivity" />
     <activity android:name="userInterface.openingSplash.OpeningActivity" />
     <activity android:name="userInterface.languagePicker.LanguageActivity" />
     <activity android:name="userInterface.termsConsPolicy.TermsPolicyActivity" />

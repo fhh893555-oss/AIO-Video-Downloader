@@ -1,4 +1,4 @@
-package userInterface.mainScreen;
+package userInterface.homeScreen;
 
 import android.view.LayoutInflater;
 
@@ -7,7 +7,7 @@ import com.nextgen.databinding.ActivityMain1Binding;
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 
-public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
+public final class HomeActivity extends BaseActivity<ActivityMain1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
