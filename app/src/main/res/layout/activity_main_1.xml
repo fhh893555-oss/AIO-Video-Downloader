@@ -8,7 +8,7 @@
   android:background="@drawable/img_bg_activity_v2">
 
   <androidx.fragment.app.FragmentContainerView
-    android:id="@+id/fragment_container"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/bottomTabNavigation"
@@ -45,7 +45,7 @@
     app:stroke_Width="1dp">
 
     <include
-      android:id="@+id/bottom_tabs"
+      android:id="@+id/bottomTabs"
       layout="@layout/activity_main_1_tab_1" />
   </com.github.dangiashish.StyledCardView>
 
