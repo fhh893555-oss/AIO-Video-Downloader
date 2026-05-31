@@ -107,6 +107,7 @@ dependencies {
 
     implementation libs.objectbox.android
     implementation libs.androidx.documentfile
+    implementation libs.autolink
 
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
 

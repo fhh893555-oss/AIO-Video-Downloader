@@ -50,6 +50,24 @@
       </intent-filter>
     </activity>
 
+    <activity
+      android:name="userInterface.intentHandler.IntentHandlerActivity"
+      android:clearTaskOnLaunch="true"
+      android:excludeFromRecents="true"
+      android:exported="true"
+      android:launchMode="singleTop"
+      android:noHistory="true"
+      android:resizeableActivity="true"
+      android:taskAffinity=""
+      android:theme="@style/style.transparent_activity"
+      android:windowSoftInputMode="adjustResize">
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+    </activity>
+
     <activity android:name="userInterface.homeScreen.HomeActivity" />
     <activity android:name="userInterface.openingSplash.OpeningActivity" />
     <activity android:name="userInterface.languagePicker.LanguageActivity" />
