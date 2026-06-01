@@ -5,7 +5,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/img_bg_activity_v2">
+  android:background="@drawable/img_bg_activity_v2"
+  android:fitsSystemWindows="true">
 
   <ImageView
     android:id="@+id/ivTopImage"
@@ -324,8 +325,8 @@
       android:id="@+id/bottomContainer"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingBottom="@dimen/_15"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/_15">
 
       <RelativeLayout
         android:id="@+id/btnReportCrash"
