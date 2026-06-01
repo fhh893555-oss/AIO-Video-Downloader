@@ -168,4 +168,6 @@
   <string name="title_games">Games</string>
   <string name="title_browser">Browser</string>
   <string name="title_all_files">All Files</string>
+  <string name="label_sample_channel_name">Tech4Eva</string>
+  <string name="label_sample_video_title">Aj Pahir Jeeny Ki Tamana Hai (New Version)</string>
 </resources>
