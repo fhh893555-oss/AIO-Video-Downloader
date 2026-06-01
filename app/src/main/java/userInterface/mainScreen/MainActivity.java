@@ -5,11 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -65,6 +69,8 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	private boolean isBottomNavVisible = true;
 	private int scrollDistance = 0;
 	private static final int SCROLL_THRESHOLD = 20;
+	private int navigationBarHeight = 0;
+	private int statusBarHeight = 0;
 	
 	/**
 	 * Determines whether the activity's screen orientation should be locked.
@@ -127,6 +133,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 * @see #loadHomepage()
 	 */
 	@Override protected void onLoadedLayout() {
+		adjustWindowPadding();
 		initMainViewModel();
 		initFragmentNavigator();
 		initBottomTabButtons();
@@ -157,6 +164,40 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	protected void onPause() {
 		super.onPause();
 		scrollDistance = 0;
+	}
+	
+	/**
+	 * Adjusts the bottom margin of the bottom tab navigation view to accommodate
+	 * the system navigation bar height. This method attaches a window insets listener
+	 * to the bottom navigation view, extracts the navigation bar height from the
+	 * insets, and applies it as a bottom margin to prevent UI elements from being
+	 * obscured by gesture navigation handles or the traditional navigation bar.
+	 *
+	 * <p><strong>Insets handling:</strong>
+	 * The listener extracts the navigation bar insets using
+	 * {@link WindowInsetsCompat.Type#navigationBars()}. The bottom margin is
+	 * dynamically updated whenever the insets change (e.g., orientation change,
+	 * keyboard visibility toggle, or navigation mode switch).
+	 *
+	 * <p>The layout parameters are cast to {@link FrameLayout.LayoutParams} based on
+	 * the assumption that the bottom navigation view is hosted within a FrameLayout
+	 * (common for CoordinatorLayout or ConstraintLayout with appropriate constraints).
+	 *
+	 * @see ViewCompat#setOnApplyWindowInsetsListener(View, OnApplyWindowInsetsListener)
+	 * @see WindowInsetsCompat#getInsets(int)
+	 */
+	private void adjustWindowPadding() {
+		ViewCompat.setOnApplyWindowInsetsListener(
+			binding.bottomTabNavigation, (view, insets) -> {
+				int typeMask = WindowInsetsCompat.Type.navigationBars();
+				navigationBarHeight = insets.getInsets(typeMask).bottom;
+				statusBarHeight = insets.getInsets(typeMask).top;
+				
+				FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+				params.bottomMargin = navigationBarHeight;
+				view.setLayoutParams(params);
+				return insets;
+			});
 	}
 	
 	/**
@@ -205,7 +246,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 * to set the initial screen.
 	 *
 	 * @see #initBottomTabButtons()
-	 * @see android.view.View#callOnClick()
+	 * @see View#callOnClick()
 	 */
 	private void loadHomepage() {
 		ActivityMain1Tab1Binding bottomTabs = binding.bottomTabs;
@@ -364,7 +405,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 *                         Must not be {@code null}.
 	 * @see #hideBottomNav()
 	 * @see #showBottomNav()
-	 * @see NestedScrollView#setOnScrollChangeListener(android.view.View.OnScrollChangeListener)
+	 * @see NestedScrollView#setOnScrollChangeListener(View.OnScrollChangeListener)
 	 */
 	public void setupNestedScrollListener(@NonNull NestedScrollView nestedScrollView) {
 		nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
@@ -390,6 +431,55 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	}
 	
 	/**
+	 * Applies edge-to-edge insets to a NestedScrollView by adding padding for the
+	 * status bar and navigation bar, plus extra spacing. This method attaches a
+	 * window insets listener that dynamically adjusts the scroll view's top and
+	 * bottom padding when system insets change (e.g., orientation rotation or
+	 * navigation mode changes).
+	 *
+	 * <p><strong>Padding calculation:</strong>
+	 * <ul>
+	 * <li>Top padding = status bar height + 5dp extra spacing.</li>
+	 * <li>Bottom padding = navigation bar height + 5dp extra spacing.</li>
+	 * <li>Left and right padding remain unchanged.</li>
+	 * </ul>
+	 *
+	 * <p>Clip-to-padding is disabled via {@link NestedScrollView#setClipToPadding(boolean)}
+	 * to ensure the scrollable content renders correctly with the applied padding.
+	 * The 5dp extra spacing prevents content from visually touching the status bar
+	 * or navigation bar areas.
+	 *
+	 * @param scrollView The NestedScrollView to apply edge-to-edge insets to.
+	 *                   Must not be null.
+	 * @see ViewCompat#setOnApplyWindowInsetsListener(View, OnApplyWindowInsetsListener)
+	 * @see WindowInsetsCompat.Type#statusBars()
+	 * @see WindowInsetsCompat.Type#navigationBars()
+	 */
+	public void applyEdgeToEdgeScrolling(NestedScrollView scrollView) {
+		ViewCompat.setOnApplyWindowInsetsListener(scrollView, (view, insets) -> {
+			int typeMask = WindowInsetsCompat.Type.statusBars();
+			int navigationBars = WindowInsetsCompat.Type.navigationBars();
+			
+			int statusBarHeight = insets.getInsets(typeMask).top;
+			int navigationBarHeight = insets.getInsets(navigationBars).bottom;
+			
+			int extraTopPadding = (int) (5 * getResources().getDisplayMetrics().density);
+			int extraBottomPadding = (int) (5 * getResources().getDisplayMetrics().density);
+			
+			view.setPadding(
+				view.getPaddingLeft(),
+				statusBarHeight + extraTopPadding,
+				view.getPaddingRight(),
+				navigationBarHeight + extraBottomPadding
+			);
+			
+			((NestedScrollView) view).setClipToPadding(false);
+			
+			return insets;
+		});
+	}
+	
+	/**
 	 * Removes the scroll change listener from the provided {@link NestedScrollView}.
 	 * This method sets the scroll change listener to {@code null}, effectively
 	 * detaching the listener that was previously attached via
@@ -400,7 +490,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 * @param nestedScrollView The {@link NestedScrollView} from which to remove
 	 *                         the scroll change listener. Must not be {@code null}.
 	 * @see #setupNestedScrollListener(NestedScrollView)
-	 * @see NestedScrollView#setOnScrollChangeListener(android.view.View.OnScrollChangeListener)
+	 * @see NestedScrollView#setOnScrollChangeListener(View.OnScrollChangeListener)
 	 */
 	public void cleanupScrollListener(NestedScrollView nestedScrollView) {
 		if (nestedScrollView != null) {
@@ -432,8 +522,9 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		if (!isBottomNavVisible) return;
 		
 		binding.bottomTabNavigation.animate().cancel();
+		int navigationTabHeight = binding.bottomTabNavigation.getHeight();
 		binding.bottomTabNavigation.animate()
-			.translationY(binding.bottomTabNavigation.getHeight())
+			.translationY(navigationTabHeight + navigationBarHeight)
 			.setDuration(100)
 			.withLayer()
 			.setInterpolator(new AccelerateInterpolator())

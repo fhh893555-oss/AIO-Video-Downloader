@@ -14,6 +14,13 @@
     android:clickable="true"
     tools:layout="@layout/frag_homepage_1" />
 
+  <View
+    android:id="@+id/topDivider"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_15"
+    android:layout_gravity="top|center_horizontal"
+    android:background="@drawable/bg_shadow_border_2" />
+
   <com.github.dangiashish.StyledCardView
     android:id="@+id/bottomTabNavigation"
     android:layout_width="match_parent"
@@ -48,5 +55,12 @@
       android:id="@+id/bottomTabs"
       layout="@layout/activity_main_1_tab_1" />
   </com.github.dangiashish.StyledCardView>
+
+  <View
+    android:id="@+id/bottomDivider"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_15"
+    android:layout_gravity="bottom|center_horizontal"
+    android:background="@drawable/bg_shadow_border" />
 
 </FrameLayout>
