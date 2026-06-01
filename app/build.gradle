@@ -81,6 +81,7 @@ dependencies {
     implementation libs.styled.cardview
     implementation libs.androidx.recyclerview
     implementation libs.androidx.coordinatorlayout
+    implementation libs.range.seekbar
 
     implementation libs.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.livedata
