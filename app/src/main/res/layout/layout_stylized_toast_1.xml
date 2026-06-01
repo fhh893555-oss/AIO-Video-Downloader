@@ -32,8 +32,7 @@
 
   <LinearLayout
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/_60"
+    android:layout_height="@dimen/_40"
     android:orientation="horizontal">
 
     <ImageView
