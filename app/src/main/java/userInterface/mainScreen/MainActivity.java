@@ -189,9 +189,11 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	private void adjustWindowPadding() {
 		ViewCompat.setOnApplyWindowInsetsListener(
 			binding.bottomTabNavigation, (view, insets) -> {
-				int typeMask = WindowInsetsCompat.Type.navigationBars();
-				navigationBarHeight = insets.getInsets(typeMask).bottom;
-				statusBarHeight = insets.getInsets(typeMask).top;
+				int navigationBars = WindowInsetsCompat.Type.navigationBars();
+				int statusBars = WindowInsetsCompat.Type.statusBars();
+				
+				navigationBarHeight = insets.getInsets(navigationBars).bottom;
+				statusBarHeight = insets.getInsets(statusBars).top;
 				
 				FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
 				params.bottomMargin = navigationBarHeight;
@@ -457,10 +459,10 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 */
 	public void applyEdgeToEdgeScrolling(NestedScrollView scrollView) {
 		ViewCompat.setOnApplyWindowInsetsListener(scrollView, (view, insets) -> {
-			int typeMask = WindowInsetsCompat.Type.statusBars();
+			int statusBars = WindowInsetsCompat.Type.statusBars();
 			int navigationBars = WindowInsetsCompat.Type.navigationBars();
 			
-			int statusBarHeight = insets.getInsets(typeMask).top;
+			int statusBarHeight = insets.getInsets(statusBars).top;
 			int navigationBarHeight = insets.getInsets(navigationBars).bottom;
 			
 			int extraTopPadding = (int) (5 * getResources().getDisplayMetrics().density);
@@ -474,7 +476,6 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 			);
 			
 			((NestedScrollView) view).setClipToPadding(false);
-			
 			return insets;
 		});
 	}
