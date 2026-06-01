@@ -21,40 +21,78 @@
     android:layout_gravity="top|center_horizontal"
     android:background="@drawable/bg_shadow_border_2" />
 
-  <com.github.dangiashish.StyledCardView
-    android:id="@+id/bottomTabNavigation"
+  <LinearLayout
+    android:id="@+id/bottomNavContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:layout_marginTop="@dimen/_10"
-    app:background_ColorType="gradient_linear"
-    app:background_Gradient_Angle="45"
-    app:background_Gradient_Color0="@color/color_card"
-    app:background_Gradient_Color1="@color/color_surface"
-    app:background_Type="fill_stroke"
-    app:cornerRadius="@dimen/default_radius"
-    app:shadow0_Outer_Alpha=".1"
-    app:shadow0_Outer_Angle="-45"
-    app:shadow0_Outer_Blur="@dimen/_5"
-    app:shadow0_Outer_Color="@color/color_primary_variant"
-    app:shadow0_Outer_Distance="@dimen/_5"
-    app:shadow1_Outer_Alpha="0.1"
-    app:shadow1_Outer_Angle="360"
-    app:shadow1_Outer_Blur="@dimen/_5"
-    app:shadow1_Outer_Color="@color/color_secondary"
-    app:shadow1_Outer_Distance="@dimen/_2"
-    app:shadow_Outer_Area="@dimen/_10"
-    app:stroke_Alpha=".3"
-    app:stroke_ColorType="gradient_sweep"
-    app:stroke_Gradient_Angle="-45"
-    app:stroke_Gradient_Color0="@color/color_primary"
-    app:stroke_Gradient_Color1="@color/color_primary_variant"
-    app:stroke_Width="1dp">
+    android:orientation="vertical">
 
-    <include
-      android:id="@+id/bottomTabs"
-      layout="@layout/activity_main_1_tab_1" />
-  </com.github.dangiashish.StyledCardView>
+    <com.github.dangiashish.StyledCardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="-15dp"
+      app:background_ColorType="gradient_linear"
+      app:background_Gradient_Angle="45"
+      app:background_Gradient_Color0="@color/color_card"
+      app:background_Gradient_Color1="@color/color_surface"
+      app:background_Type="fill_stroke"
+      app:cornerRadius="@dimen/default_radius"
+      app:shadow0_Outer_Alpha=".1"
+      app:shadow0_Outer_Angle="-45"
+      app:shadow0_Outer_Blur="@dimen/_5"
+      app:shadow0_Outer_Color="@color/color_primary_variant"
+      app:shadow0_Outer_Distance="@dimen/_5"
+      app:shadow1_Outer_Alpha="0.1"
+      app:shadow1_Outer_Angle="360"
+      app:shadow1_Outer_Blur="@dimen/_5"
+      app:shadow1_Outer_Color="@color/color_secondary"
+      app:shadow1_Outer_Distance="@dimen/_2"
+      app:shadow_Outer_Area="@dimen/_10"
+      app:stroke_Alpha=".3"
+      app:stroke_ColorType="gradient_sweep"
+      app:stroke_Gradient_Angle="-45"
+      app:stroke_Gradient_Color0="@color/color_primary"
+      app:stroke_Gradient_Color1="@color/color_primary_variant"
+      app:stroke_Width="1dp">
+
+      <include
+        android:id="@+id/bottomMiniPlayer"
+        layout="@layout/activity_main_1_min_player_1" />
+    </com.github.dangiashish.StyledCardView>
+
+    <com.github.dangiashish.StyledCardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:background_ColorType="gradient_linear"
+      app:background_Gradient_Angle="45"
+      app:background_Gradient_Color0="@color/color_card"
+      app:background_Gradient_Color1="@color/color_surface"
+      app:background_Type="fill_stroke"
+      app:cornerRadius="@dimen/default_radius"
+      app:shadow0_Outer_Alpha=".1"
+      app:shadow0_Outer_Angle="-45"
+      app:shadow0_Outer_Blur="@dimen/_5"
+      app:shadow0_Outer_Color="@color/color_primary_variant"
+      app:shadow0_Outer_Distance="@dimen/_5"
+      app:shadow1_Outer_Alpha="0.1"
+      app:shadow1_Outer_Angle="360"
+      app:shadow1_Outer_Blur="@dimen/_5"
+      app:shadow1_Outer_Color="@color/color_secondary"
+      app:shadow1_Outer_Distance="@dimen/_2"
+      app:shadow_Outer_Area="@dimen/_10"
+      app:stroke_Alpha=".3"
+      app:stroke_ColorType="gradient_sweep"
+      app:stroke_Gradient_Angle="-45"
+      app:stroke_Gradient_Color0="@color/color_primary"
+      app:stroke_Gradient_Color1="@color/color_primary_variant"
+      app:stroke_Width="1dp">
+
+      <include
+        android:id="@+id/bottomTabs"
+        layout="@layout/activity_main_1_tab_1" />
+    </com.github.dangiashish.StyledCardView>
+  </LinearLayout>
 
   <View
     android:id="@+id/bottomDivider"

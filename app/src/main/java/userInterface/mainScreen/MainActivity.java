@@ -188,7 +188,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 */
 	private void adjustWindowPadding() {
 		ViewCompat.setOnApplyWindowInsetsListener(
-			binding.bottomTabNavigation, (view, insets) -> {
+			binding.bottomNavContainer, (view, insets) -> {
 				int navigationBars = WindowInsetsCompat.Type.navigationBars();
 				int statusBars = WindowInsetsCompat.Type.statusBars();
 				
@@ -333,10 +333,10 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	                       @NotNull ImageView imgTab,
 	                       @NotNull TextView tvTab,
 	                       @NonNull NavigationTabs activeTabEnum) {
-		binding.bottomTabNavigation.animate().cancel();
+		binding.bottomNavContainer.animate().cancel();
 		scrollDistance = 0;
 		isBottomNavVisible = true;
-		binding.bottomTabNavigation.setTranslationY(0);
+		binding.bottomNavContainer.setTranslationY(0);
 		
 		fragNavigator.navigateTo(fragment, false);
 		mainViewModel.setCurrentTabs(activeTabEnum);
@@ -522,9 +522,9 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	private void hideBottomNav() {
 		if (!isBottomNavVisible) return;
 		
-		binding.bottomTabNavigation.animate().cancel();
-		int navigationTabHeight = binding.bottomTabNavigation.getHeight();
-		binding.bottomTabNavigation.animate()
+		binding.bottomNavContainer.animate().cancel();
+		int navigationTabHeight = binding.bottomNavContainer.getHeight();
+		binding.bottomNavContainer.animate()
 			.translationY(navigationTabHeight + navigationBarHeight)
 			.setDuration(100)
 			.withLayer()
@@ -554,8 +554,8 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	private void showBottomNav() {
 		if (isBottomNavVisible) return;
 		
-		binding.bottomTabNavigation.animate().cancel();
-		binding.bottomTabNavigation.animate()
+		binding.bottomNavContainer.animate().cancel();
+		binding.bottomNavContainer.animate()
 			.translationY(0)
 			.setDuration(100)
 			.withLayer()
