@@ -19,6 +19,8 @@ public class VideoSeekBar extends View {
 	
 	private final Paint trackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint thumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private boolean isDragging = false;
+	private float dragOffsetX = 0f;
 	
 	private final RectF trackRect = new RectF();
 	
@@ -217,23 +219,68 @@ public class VideoSeekBar extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
-		switch (event.getAction()) {
+		float startX = thumbRadius + thumbPadding;
+		float endX = getWidth() - thumbRadius - thumbPadding;
+		float thumbX = startX + ((endX - startX) * progress);
+		
+		switch (event.getActionMasked()) {
 			
-			case MotionEvent.ACTION_DOWN:
-			case MotionEvent.ACTION_MOVE:
+			case MotionEvent.ACTION_DOWN: {
 				
+				float dx = Math.abs(event.getX() - thumbX);
+				
+				// Allow thumb grab with some tolerance.
+				if (dx <= thumbRadius * 2f) {
+					
+					isDragging = true;
+					
+					dragOffsetX = event.getX() - thumbX;
+					
+					getParent().requestDisallowInterceptTouchEvent(true);
+					
+					return true;
+				}
+				
+				// Click anywhere on track.
 				updateProgressFromTouch(event.getX());
 				
 				if (listener != null) {
 					listener.onProgressChanged(progress);
 				}
 				
+				invalidate();
+				
 				return true;
+			}
+			
+			case MotionEvent.ACTION_MOVE: {
+				
+				if (!isDragging) {
+					return true;
+				}
+				
+				float x = event.getX() - dragOffsetX;
+				
+				updateProgressFromTouch(x);
+				
+				if (listener != null) {
+					listener.onProgressChanged(progress);
+				}
+				
+				return true;
+			}
 			
 			case MotionEvent.ACTION_UP:
-			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_CANCEL: {
+				
+				isDragging = false;
+				
+				getParent().requestDisallowInterceptTouchEvent(false);
+				
 				performClick();
+				
 				return true;
+			}
 		}
 		
 		return super.onTouchEvent(event);
@@ -249,8 +296,9 @@ public class VideoSeekBar extends View {
 		float startX = thumbRadius + thumbPadding;
 		float endX = getWidth() - thumbRadius - thumbPadding;
 		
+		x = Math.max(startX, Math.min(endX, x));
+		
 		progress = (x - startX) / (endX - startX);
-		progress = Math.max(0f, Math.min(1f, progress));
 		
 		invalidate();
 	}
