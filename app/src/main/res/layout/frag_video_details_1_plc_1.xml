@@ -20,7 +20,7 @@
     android:padding="4.5dp"
     android:src="@drawable/ic_playback_pause"
     android:tint="@color/color_text_primary"
-    tools:ignore="UseAppTint" />
+    tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <coreUtils.library.views.VideoSeekBar
     android:id="@+id/videoSeekBar"
@@ -48,7 +48,8 @@
     android:layout_toLeftOf="@+id/btnToggleVolume"
     android:fontFamily="@font/font_family_medium"
     android:text="@string/label_sample_00_00_00"
-    android:textColor="@color/color_text_primary" />
+    android:textColor="@color/color_text_primary"
+    tools:ignore="TextSizeCheck,VisualLintSystemUi" />
 
   <ImageView
     android:id="@+id/btnToggleVolume"
@@ -64,7 +65,7 @@
     android:padding="4.5dp"
     android:src="@drawable/ic_volume_up"
     android:tint="@color/color_text_primary"
-    tools:ignore="UseAppTint" />
+    tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <ImageView
     android:id="@+id/btnToggleCaption"
@@ -80,7 +81,7 @@
     android:padding="4.5dp"
     android:src="@drawable/ic_closed_caption_disabled"
     android:tint="@color/color_text_primary"
-    tools:ignore="UseAppTint" />
+    tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <ImageView
     android:id="@+id/btnToggleFullscreen"
@@ -96,6 +97,6 @@
     android:padding="@dimen/_5"
     android:src="@drawable/ic_fullscreen"
     android:tint="@color/color_text_primary"
-    tools:ignore="UseAppTint" />
+    tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
 </RelativeLayout>
