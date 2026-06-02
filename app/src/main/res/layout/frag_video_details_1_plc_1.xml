@@ -37,6 +37,7 @@
     app:vsb_thumbSize="@dimen/_15"
     app:vsb_trackColor="#222222"
     app:vsb_trackHeight="@dimen/_5"
+    app:vsb_thumbPadding="@dimen/_5"
     />
 
   <TextView

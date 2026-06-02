@@ -27,6 +27,7 @@ public class VideoSeekBar extends View {
 	
 	private float trackHeight;
 	private float thumbRadius;
+	private float thumbPadding;
 	
 	private int trackColor;
 	private int bufferColor;
@@ -54,6 +55,7 @@ public class VideoSeekBar extends View {
 		
 		trackHeight = dp(8);
 		thumbRadius = dp(12);
+		thumbPadding = dp(8);
 		
 		trackColor = Color.parseColor("#222222");
 		bufferColor = Color.parseColor("#666666");
@@ -78,6 +80,11 @@ public class VideoSeekBar extends View {
 			);
 			
 			thumbRadius = thumbSize / 2f;
+			
+			thumbPadding = ta.getDimension(
+				R.styleable.VideoSeekBar_vsb_thumbPadding,
+				thumbPadding
+			);
 			
 			trackColor = ta.getColor(
 				R.styleable.VideoSeekBar_vsb_trackColor,
@@ -116,8 +123,8 @@ public class VideoSeekBar extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		
 		int desiredHeight = (int) Math.max(
-			dp(36),
-			thumbRadius * 2 + dp(8)
+			dp(40),
+			thumbRadius * 2 + dp(12)
 		);
 		
 		int width = MeasureSpec.getSize(widthMeasureSpec);
@@ -132,8 +139,8 @@ public class VideoSeekBar extends View {
 		
 		float centerY = getHeight() / 2f;
 		
-		float startX = thumbRadius;
-		float endX = getWidth() - thumbRadius;
+		float startX = thumbRadius + thumbPadding;
+		float endX = getWidth() - thumbRadius - thumbPadding;
 		
 		float radius = trackHeight / 2f;
 		
@@ -239,23 +246,17 @@ public class VideoSeekBar extends View {
 	
 	private void updateProgressFromTouch(float x) {
 		
-		float startX = thumbRadius;
-		float endX = getWidth() - thumbRadius;
+		float startX = thumbRadius + thumbPadding;
+		float endX = getWidth() - thumbRadius - thumbPadding;
 		
 		progress = (x - startX) / (endX - startX);
-		
 		progress = Math.max(0f, Math.min(1f, progress));
 		
 		invalidate();
 	}
 	
 	public void setProgress(float progress) {
-		
-		this.progress = Math.max(
-			0f,
-			Math.min(1f, progress)
-		);
-		
+		this.progress = Math.max(0f, Math.min(1f, progress));
 		invalidate();
 	}
 	
@@ -264,12 +265,7 @@ public class VideoSeekBar extends View {
 	}
 	
 	public void setBufferProgress(float bufferProgress) {
-		
-		this.bufferProgress = Math.max(
-			0f,
-			Math.min(1f, bufferProgress)
-		);
-		
+		this.bufferProgress = Math.max(0f, Math.min(1f, bufferProgress));
 		invalidate();
 	}
 	

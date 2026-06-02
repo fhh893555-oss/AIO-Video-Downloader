@@ -11,6 +11,7 @@
     <attr name="vsb_progressColor" format="color" />
 
     <attr name="vsb_thumbColor" format="color" />
+    <attr name="vsb_thumbPadding" format="dimension"/>
 
   </declare-styleable>
 
