@@ -23,6 +23,8 @@ public class VideoSeekBar extends View {
 	private float dragOffsetX = 0f;
 	
 	private final RectF trackRect = new RectF();
+	private final RectF bufferRect = new RectF();
+	private final RectF progressRect = new RectF();
 	
 	private float progress = 0f;
 	private float bufferProgress = 0f;
@@ -66,49 +68,48 @@ public class VideoSeekBar extends View {
 		
 		if (attrs != null) {
 			
-			TypedArray ta = getContext().obtainStyledAttributes(
+			try (TypedArray ta = getContext().obtainStyledAttributes(
 				attrs,
 				R.styleable.VideoSeekBar
-			);
-			
-			trackHeight = ta.getDimension(
-				R.styleable.VideoSeekBar_vsb_trackHeight,
-				trackHeight
-			);
-			
-			float thumbSize = ta.getDimension(
-				R.styleable.VideoSeekBar_vsb_thumbSize,
-				dp(24)
-			);
-			
-			thumbRadius = thumbSize / 2f;
-			
-			thumbPadding = ta.getDimension(
-				R.styleable.VideoSeekBar_vsb_thumbPadding,
-				thumbPadding
-			);
-			
-			trackColor = ta.getColor(
-				R.styleable.VideoSeekBar_vsb_trackColor,
-				trackColor
-			);
-			
-			bufferColor = ta.getColor(
-				R.styleable.VideoSeekBar_vsb_bufferColor,
-				bufferColor
-			);
-			
-			progressColor = ta.getColor(
-				R.styleable.VideoSeekBar_vsb_progressColor,
-				progressColor
-			);
-			
-			thumbColor = ta.getColor(
-				R.styleable.VideoSeekBar_vsb_thumbColor,
-				thumbColor
-			);
-			
-			ta.recycle();
+			)) {
+				
+				trackHeight = ta.getDimension(
+					R.styleable.VideoSeekBar_vsb_trackHeight,
+					trackHeight
+				);
+				
+				float thumbSize = ta.getDimension(
+					R.styleable.VideoSeekBar_vsb_thumbSize,
+					dp(24)
+				);
+				
+				thumbRadius = thumbSize / 2f;
+				
+				thumbPadding = ta.getDimension(
+					R.styleable.VideoSeekBar_vsb_thumbPadding,
+					thumbPadding
+				);
+				
+				trackColor = ta.getColor(
+					R.styleable.VideoSeekBar_vsb_trackColor,
+					trackColor
+				);
+				
+				bufferColor = ta.getColor(
+					R.styleable.VideoSeekBar_vsb_bufferColor,
+					bufferColor
+				);
+				
+				progressColor = ta.getColor(
+					R.styleable.VideoSeekBar_vsb_progressColor,
+					progressColor
+				);
+				
+				thumbColor = ta.getColor(
+					R.styleable.VideoSeekBar_vsb_thumbColor,
+					thumbColor
+				);
+			}
 		}
 		
 		thumbPaint.setShadowLayer(
@@ -153,7 +154,6 @@ public class VideoSeekBar extends View {
 			centerY + trackHeight / 2f
 		);
 		
-		// Base Track
 		trackPaint.setColor(trackColor);
 		
 		canvas.drawRoundRect(
@@ -163,12 +163,11 @@ public class VideoSeekBar extends View {
 			trackPaint
 		);
 		
-		// Buffer Progress
 		if (bufferProgress > 0f) {
 			
 			trackPaint.setColor(bufferColor);
 			
-			RectF bufferRect = new RectF(
+			bufferRect.set(
 				trackRect.left,
 				trackRect.top,
 				trackRect.left + (trackRect.width() * bufferProgress),
@@ -188,7 +187,7 @@ public class VideoSeekBar extends View {
 			
 			trackPaint.setColor(progressColor);
 			
-			RectF progressRect = new RectF(
+			progressRect.set(
 				trackRect.left,
 				trackRect.top,
 				trackRect.left + (trackRect.width() * progress),
@@ -229,7 +228,6 @@ public class VideoSeekBar extends View {
 				
 				float dx = Math.abs(event.getX() - thumbX);
 				
-				// Allow thumb grab with some tolerance.
 				if (dx <= thumbRadius * 2f) {
 					
 					isDragging = true;
@@ -241,7 +239,6 @@ public class VideoSeekBar extends View {
 					return true;
 				}
 				
-				// Click anywhere on track.
 				updateProgressFromTouch(event.getX());
 				
 				if (listener != null) {
