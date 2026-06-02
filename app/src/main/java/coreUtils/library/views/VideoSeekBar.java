@@ -19,7 +19,6 @@ public class VideoSeekBar extends View {
 	
 	private final Paint trackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint thumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-	private final Paint accentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	
 	private final RectF trackRect = new RectF();
 	
@@ -28,15 +27,11 @@ public class VideoSeekBar extends View {
 	
 	private float trackHeight;
 	private float thumbRadius;
-	private float accentRadius;
 	
 	private int trackColor;
 	private int bufferColor;
 	private int progressColor;
 	private int thumbColor;
-	private int accentColor;
-	
-	private boolean showAccentDot;
 	
 	private OnProgressChangedListener listener;
 	
@@ -63,11 +58,7 @@ public class VideoSeekBar extends View {
 		trackColor = Color.parseColor("#222222");
 		bufferColor = Color.parseColor("#666666");
 		progressColor = Color.WHITE;
-		
 		thumbColor = Color.WHITE;
-		accentColor = Color.parseColor("#00BFFF");
-		
-		showAccentDot = true;
 		
 		if (attrs != null) {
 			
@@ -108,20 +99,8 @@ public class VideoSeekBar extends View {
 				thumbColor
 			);
 			
-			accentColor = ta.getColor(
-				R.styleable.VideoSeekBar_vsb_accentColor,
-				accentColor
-			);
-			
-			showAccentDot = ta.getBoolean(
-				R.styleable.VideoSeekBar_vsb_showAccentDot,
-				showAccentDot
-			);
-			
 			ta.recycle();
 		}
-		
-		accentRadius = thumbRadius * 0.30f;
 		
 		thumbPaint.setShadowLayer(
 			dp(3),
@@ -226,19 +205,6 @@ public class VideoSeekBar extends View {
 			thumbRadius,
 			thumbPaint
 		);
-		
-		// Accent Dot
-		if (showAccentDot) {
-			
-			accentPaint.setColor(accentColor);
-			
-			canvas.drawCircle(
-				thumbX - thumbRadius + dp(2),
-				centerY,
-				accentRadius,
-				accentPaint
-			);
-		}
 	}
 	
 	@Override
@@ -278,13 +244,7 @@ public class VideoSeekBar extends View {
 		
 		progress = (x - startX) / (endX - startX);
 		
-		if (progress < 0f) {
-			progress = 0f;
-		}
-		
-		if (progress > 1f) {
-			progress = 1f;
-		}
+		progress = Math.max(0f, Math.min(1f, progress));
 		
 		invalidate();
 	}
@@ -317,9 +277,7 @@ public class VideoSeekBar extends View {
 		return bufferProgress;
 	}
 	
-	public void setOnProgressChangedListener(
-		OnProgressChangedListener listener
-	) {
+	public void setOnProgressChangedListener(OnProgressChangedListener listener) {
 		this.listener = listener;
 	}
 	

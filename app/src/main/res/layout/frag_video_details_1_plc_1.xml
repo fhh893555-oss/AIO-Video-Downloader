@@ -31,15 +31,12 @@
     android:layout_toRightOf="@+id/btnTogglePlayback"
     android:max="100"
     android:min="0"
-    android:progress="40"
-    app:vsb_accentColor="#00BFFF"
     app:vsb_bufferColor="#666666"
     app:vsb_progressColor="#00BFFF"
-    app:vsb_showAccentDot="true"
     app:vsb_thumbColor="#FFFFFF"
-    app:vsb_thumbSize="15dp"
+    app:vsb_thumbSize="@dimen/_15"
     app:vsb_trackColor="#222222"
-    app:vsb_trackHeight="6dp"
+    app:vsb_trackHeight="@dimen/_5"
     />
 
   <TextView
