@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/video_item_detail"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/transparent"
+  android:focusableInTouchMode="true">
+
+  <FrameLayout
+    android:id="@+id/topContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+      android:id="@+id/imgVideoThumbnail"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:importantForAccessibility="no"
+      android:scaleType="centerCrop"
+      android:src="@drawable/bg_media_placeholder" />
+
+
+
+    <FrameLayout
+      android:id="@+id/playerPlaceholder"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+  </FrameLayout>
+</LinearLayout>

@@ -6,4 +6,14 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <include
+      android:id="@+id/demo"
+      layout="@layout/frag_video_details_1_plc_1" />
+  </RelativeLayout>
+
 </androidx.core.widget.NestedScrollView>
