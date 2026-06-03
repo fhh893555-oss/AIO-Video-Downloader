@@ -172,4 +172,6 @@
   <string name="label_sample_video_title">Aaj Pahir Jeeny Ki Tamana Hai (New Version) | New Viral 1080P Music Trending Song</string>
   <string name="label_channel_name">Channel Name</string>
   <string name="label_100k_subscribers">100K Subscribers</string>
+  <string name="label_720p">720P</string>
+  <string name="label_live">Live</string>
 </resources>
