@@ -39,4 +39,9 @@
 
   <item name="tag_download_id" type="id" />
   <item name="tag_download_ui_manager" type="id" />
+
+  <style name="CircularImageView">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">50%</item>
+  </style>
 </resources>

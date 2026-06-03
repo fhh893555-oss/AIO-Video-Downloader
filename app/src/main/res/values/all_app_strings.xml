@@ -169,5 +169,7 @@
   <string name="title_browser">Browser</string>
   <string name="title_all_files">All Files</string>
   <string name="label_sample_channel_name">Tech4Eva</string>
-  <string name="label_sample_video_title">Aj Pahir Jeeny Ki Tamana Hai (New Version)</string>
+  <string name="label_sample_video_title">Aaj Pahir Jeeny Ki Tamana Hai (New Version) | New Viral 1080P Music Trending Song</string>
+  <string name="label_channel_name">Channel Name</string>
+  <string name="label_100k_subscribers">100K Subscribers</string>
 </resources>

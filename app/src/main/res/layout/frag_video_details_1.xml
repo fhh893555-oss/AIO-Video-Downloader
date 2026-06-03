@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/video_item_detail"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/transparent"
-  android:focusableInTouchMode="true">
+  android:focusableInTouchMode="true"
+  android:orientation="vertical"
+  tools:ignore="SpeakableTextPresentCheck">
 
-  <FrameLayout
-    android:id="@+id/topContainer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+  <include
+    android:id="@+id/playerTop"
+    layout="@layout/frag_video_details_1_plc_0" />
 
-    <ImageView
-      android:id="@+id/imgVideoThumbnail"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:importantForAccessibility="no"
-      android:scaleType="centerCrop"
-      android:src="@drawable/bg_media_placeholder" />
+  <include
+    android:id="@+id/playerTitleDetails"
+    layout="@layout/frag_video_details_1_plc_2" />
 
+  <include
+    android:id="@+id/playerVideoDetails"
+    layout="@layout/frag_video_details_1_plc_3" />
 
-
-    <FrameLayout
-      android:id="@+id/playerPlaceholder"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
-  </FrameLayout>
 </LinearLayout>

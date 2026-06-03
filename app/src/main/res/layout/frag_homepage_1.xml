@@ -12,8 +12,9 @@
     android:layout_gravity="center_vertical">
 
     <include
-      android:id="@+id/demo"
-      layout="@layout/frag_video_details_1_plc_1" />
+      android:id="@+id/playerTop"
+      layout="@layout/frag_video_details_1_plc_0" />
+
   </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

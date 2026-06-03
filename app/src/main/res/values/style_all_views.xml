@@ -28,6 +28,7 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:singleLine">true</item>
     <item name="android:maxLines">1</item>
+    <item name="android:ellipsize">end</item>
     <item name="android:layout_marginTop">@dimen/_5</item>
     <item name="android:layout_marginBottom">@dimen/_5</item>
     <item name="android:layout_marginLeft">@dimen/_5</item>

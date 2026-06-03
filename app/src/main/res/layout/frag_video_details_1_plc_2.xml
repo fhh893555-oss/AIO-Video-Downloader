@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginLeft="@dimen/_5"
+  android:layout_marginRight="@dimen/_0"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/tvVideoTitle"
+    style="@style/style_textviews"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:drawableRight="@drawable/ic_arrow_right"
+    android:drawableTint="@color/color_text_primary"
+    android:fontFamily="@font/font_family_medium"
+    android:gravity="left|center_vertical"
+    android:maxLines="1"
+    android:minHeight="@dimen/_32"
+    android:minLines="1"
+    android:paddingTop="@dimen/_0"
+    android:paddingBottom="@dimen/_0"
+    android:singleLine="false"
+    android:text="@string/label_sample_video_title"
+    android:textColor="@color/color_text_primary"
+    android:textSize="@dimen/message_text_size"
+    tools:ignore="SpUsage,TextSizeCheck,UseCompatTextViewDrawableXml,VisualLintSystemUi,TouchTargetSizeCheck" />
+</RelativeLayout>
