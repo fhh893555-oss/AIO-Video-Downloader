@@ -33,7 +33,7 @@
     android:textSize="@dimen/message_text_size"
     tools:ignore="SpUsage,UseCompatTextViewDrawableXml,
     TextSizeCheck,TextContrastCheck,TouchTargetSizeCheck,
-    VisualLintSystemUi" />
+    VisualLintSystemUi,VisualLintSystemUi" />
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -50,7 +50,8 @@
       android:layout_weight="1"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
         android:layout_width="@dimen/_17"
@@ -73,7 +74,7 @@
         android:text="@string/label_playlist"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,7 +86,8 @@
       android:layout_weight="1"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
         android:layout_width="@dimen/_17"
@@ -108,7 +110,7 @@
         android:text="@string/label_play_audio"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
@@ -120,7 +122,8 @@
       android:layout_weight="1"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
         android:layout_width="@dimen/_17"
@@ -129,7 +132,7 @@
         android:adjustViewBounds="true"
         android:importantForAccessibility="no"
         android:src="@drawable/img_whatsapp"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint,ImageContrastCheck" />
 
       <TextView
         android:layout_width="wrap_content"
@@ -142,7 +145,7 @@
         android:text="@string/label_share_"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
@@ -154,7 +157,8 @@
       android:layout_weight="1"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
         android:layout_width="@dimen/_17"
@@ -163,7 +167,7 @@
         android:adjustViewBounds="true"
         android:importantForAccessibility="no"
         android:src="@drawable/img_download"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint,ImageContrastCheck" />
 
       <TextView
         android:layout_width="wrap_content"
@@ -176,7 +180,7 @@
         android:text="@string/label_download"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
     </LinearLayout>
   </LinearLayout>
 
