@@ -59,7 +59,7 @@
 
     <include
       android:id="@+id/layoutQualityBadge"
-      layout="@layout/frag_video_details_1_plc_4"
+      layout="@layout/frag_video_details_1_plc_2"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="top|right"

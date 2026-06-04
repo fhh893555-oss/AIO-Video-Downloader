@@ -15,11 +15,10 @@
     layout="@layout/frag_video_details_1_plc_0" />
 
   <include
-    android:id="@+id/playerTitleDetails"
-    layout="@layout/frag_video_details_1_plc_2" />
-
-  <include
     android:id="@+id/playerVideoDetails"
-    layout="@layout/frag_video_details_1_plc_3" />
+    layout="@layout/frag_video_details_1_plc_3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="-10dp" />
 
 </LinearLayout>
