@@ -44,10 +44,11 @@
     <LinearLayout
       android:id="@+id/btnSaveToPlaylist"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
       android:layout_weight="1"
+      android:paddingTop="2.5dp"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
       android:orientation="vertical"
@@ -80,7 +81,8 @@
     <LinearLayout
       android:id="@+id/btnBackgroundPlay"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:paddingTop="2.5dp"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
       android:layout_weight="1"
@@ -116,7 +118,8 @@
     <LinearLayout
       android:id="@+id/btnWhatsapp"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:paddingTop="2.5dp"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
       android:layout_weight="1"
@@ -151,7 +154,8 @@
     <LinearLayout
       android:id="@+id/btnDownload"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:paddingTop="2.5dp"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
       android:layout_weight="1"

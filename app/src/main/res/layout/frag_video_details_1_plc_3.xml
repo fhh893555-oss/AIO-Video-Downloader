@@ -118,7 +118,7 @@
             android:fontFamily="@font/font_family_medium"
             android:textColor="@color/color_text_primary"
             android:textSize="@dimen/message_text_size"
-            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck"
+            tools:ignore="SpUsage,TextSizeCheck"
             tools:text="@string/label_channel_name" />
 
           <TextView
@@ -133,7 +133,7 @@
             android:fontFamily="@font/font_family_regular"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
-            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck,TextContrastCheck"
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck"
             tools:text="@string/label_100k_subscribers" />
         </LinearLayout>
       </LinearLayout>
@@ -157,7 +157,7 @@
           android:lines="1"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
-          tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck"
+          tools:ignore="SpUsage,TextSizeCheck"
           tools:text="2,816,821,505 views" />
 
         <LinearLayout
@@ -179,7 +179,7 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_thumb_up"
             android:tint="@color/color_text_hint"
-            tools:ignore="RtlHardcoded,UseAppTint,ImageContrastCheck" />
+            tools:ignore="UseAppTint,ImageContrastCheck" />
 
           <TextView
             android:id="@+id/tvVideoLikes"
@@ -192,7 +192,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
-            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck,TextContrastCheck"
+            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck"
             tools:text="10K" />
         </LinearLayout>
       </LinearLayout>
