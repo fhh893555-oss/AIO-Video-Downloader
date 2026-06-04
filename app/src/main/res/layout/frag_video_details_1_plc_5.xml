@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+  <ImageView
+    android:id="@+id/btnBack"
+    android:layout_width="@dimen/_50"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_10"
+    android:adjustViewBounds="true"
+    android:background="@drawable/bg_button_negative"
+    android:clickable="true"
+    android:focusable="true"
+    android:src="@drawable/img_arrow_back"
+    tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+  <TextView
+    android:id="@+id/tvVideoTitle"
+    style="@style/style_textviews"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_marginBottom="@dimen/_0"
+    android:layout_toRightOf="@+id/btnBack"
+    android:fontFamily="@font/font_family_bold"
+    android:shadowColor="@color/color_background"
+    android:shadowDx="1"
+    android:shadowDy="1"
+    android:shadowRadius=".1"
+    android:text="@string/label_sample_video_title"
+    android:textColor="@color/color_text_primary"
+    android:textSize="@dimen/title_text_size"
+    tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
+
+</RelativeLayout>

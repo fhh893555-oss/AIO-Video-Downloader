@@ -30,13 +30,13 @@
   app:stroke_Width="1dp">
 
   <FrameLayout
-    android:id="@+id/topContainer"
+    android:id="@+id/layoutMediaPreview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="UselessParent">
 
     <ImageView
-      android:id="@+id/imgVideoThumbnail"
+      android:id="@+id/imgThumbnail"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:importantForAccessibility="no"
@@ -46,19 +46,19 @@
       tools:ignore="ImageContrastCheck" />
 
     <FrameLayout
-      android:id="@+id/playerPlaceholder"
+      android:id="@+id/playerContainer"
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
 
     <include
-      android:id="@+id/playerController"
+      android:id="@+id/layoutPlaybackControls"
       layout="@layout/frag_video_details_1_plc_1"
       android:layout_width="match_parent"
       android:layout_height="@dimen/_35"
       android:layout_gravity="bottom" />
 
     <include
-      android:id="@+id/playerResQualityController"
+      android:id="@+id/layoutQualityBadge"
       layout="@layout/frag_video_details_1_plc_4"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

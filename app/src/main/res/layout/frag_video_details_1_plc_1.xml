@@ -8,7 +8,7 @@
   android:background="@color/color_background">
 
   <ImageView
-    android:id="@+id/btnTogglePlayback"
+    android:id="@+id/btnPlaybackToggle"
     android:layout_width="@dimen/_30"
     android:layout_height="match_parent"
     android:layout_alignParentLeft="true"
@@ -24,12 +24,12 @@
     tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <coreUtils.library.views.VideoSeekBar
-    android:id="@+id/videoSeekBar"
+    android:id="@+id/seekPlaybackProgress"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_toLeftOf="@+id/tvPlaybackProgress"
-    android:layout_toRightOf="@+id/btnTogglePlayback"
+    android:layout_toLeftOf="@+id/tvPlaybackTime"
+    android:layout_toRightOf="@+id/btnPlaybackToggle"
     android:max="100"
     android:min="0"
     app:vsb_bufferColor="#666666"
@@ -41,24 +41,24 @@
     app:vsb_trackHeight="@dimen/_6" />
 
   <TextView
-    android:id="@+id/tvPlaybackProgress"
+    android:id="@+id/tvPlaybackTime"
     style="@style/style_textviews"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_toLeftOf="@+id/btnToggleVolume"
+    android:layout_toLeftOf="@+id/btnVolumeToggle"
     android:fontFamily="@font/font_family_medium"
     android:text="@string/label_sample_00_00_00"
     android:textColor="@color/color_text_primary"
     tools:ignore="TextSizeCheck,VisualLintSystemUi" />
 
   <ImageView
-    android:id="@+id/btnToggleVolume"
+    android:id="@+id/btnVolumeToggle"
     android:layout_width="@dimen/_30"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
     android:layout_marginRight="@dimen/_5"
-    android:layout_toLeftOf="@+id/btnToggleCaption"
+    android:layout_toLeftOf="@+id/btnCaptionsToggle"
     android:adjustViewBounds="true"
     android:background="@drawable/bg_button_negative"
     android:clickable="true"
@@ -69,12 +69,12 @@
     tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <ImageView
-    android:id="@+id/btnToggleCaption"
+    android:id="@+id/btnCaptionsToggle"
     android:layout_width="@dimen/_30"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
     android:layout_marginRight="@dimen/_5"
-    android:layout_toLeftOf="@+id/btnToggleFullscreen"
+    android:layout_toLeftOf="@+id/btnFullscreenToggle"
     android:adjustViewBounds="true"
     android:background="@drawable/bg_button_negative"
     android:clickable="true"
@@ -85,7 +85,7 @@
     tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
   <ImageView
-    android:id="@+id/btnToggleFullscreen"
+    android:id="@+id/btnFullscreenToggle"
     android:layout_width="@dimen/_30"
     android:layout_height="match_parent"
     android:layout_alignParentRight="true"
