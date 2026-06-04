@@ -15,7 +15,7 @@
     layout="@layout/frag_video_details_1_plc_0" />
 
   <include
-    android:id="@+id/playerVideoDetails"
+    android:id="@+id/videoDetails"
     layout="@layout/frag_video_details_1_plc_3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

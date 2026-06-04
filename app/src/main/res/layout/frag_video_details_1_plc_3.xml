@@ -61,7 +61,7 @@
       android:singleLine="false"
       android:text="@string/label_sample_video_title"
       android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/message_text_size"
+      android:textSize="@dimen/sub_heading_text_size_v2"
       tools:ignore="SpUsage,TextSizeCheck,UseCompatTextViewDrawableXml,
       VisualLintSystemUi,TouchTargetSizeCheck,VisualLintSystemUi" />
 
@@ -119,7 +119,7 @@
             android:fontFamily="@font/font_family_medium"
             android:textColor="@color/color_text_primary"
             android:textSize="@dimen/message_text_size"
-            tools:ignore="RtlHardcoded,SpUsage"
+            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck"
             tools:text="@string/label_channel_name" />
 
           <TextView
@@ -134,7 +134,7 @@
             android:fontFamily="@font/font_family_regular"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
-            tools:ignore="RtlHardcoded,SpUsage"
+            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck,TextContrastCheck"
             tools:text="@string/label_100k_subscribers" />
         </LinearLayout>
       </LinearLayout>
@@ -158,7 +158,7 @@
           android:lines="1"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
-          tools:ignore="RtlHardcoded,SpUsage"
+          tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck"
           tools:text="2,816,821,505 views" />
 
         <LinearLayout
@@ -180,7 +180,7 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_thumb_up"
             android:tint="@color/color_text_hint"
-            tools:ignore="RtlHardcoded,UseAppTint" />
+            tools:ignore="RtlHardcoded,UseAppTint,ImageContrastCheck" />
 
           <TextView
             android:id="@+id/tvVideoLikes"
@@ -193,7 +193,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
-            tools:ignore="RtlHardcoded,SpUsage"
+            tools:ignore="RtlHardcoded,SpUsage,TextSizeCheck,TextContrastCheck"
             tools:text="10K" />
         </LinearLayout>
       </LinearLayout>
