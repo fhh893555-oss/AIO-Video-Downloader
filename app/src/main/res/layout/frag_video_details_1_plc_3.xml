@@ -80,7 +80,7 @@
       android:layout_marginLeft="@dimen/_10"
       android:layout_marginTop="@dimen/_0"
       android:layout_marginRight="@dimen/_10"
-      android:layout_marginBottom="@dimen/_10"
+      android:layout_marginBottom="@dimen/_0"
       android:baselineAligned="false">
 
       <LinearLayout
@@ -198,6 +198,25 @@
         </LinearLayout>
       </LinearLayout>
     </RelativeLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/_1"
+      android:layout_marginLeft="@dimen/_10"
+      android:layout_marginTop="@dimen/_5"
+      android:layout_marginRight="@dimen/_10"
+      android:layout_marginBottom="@dimen/_5"
+      android:background="@color/color_divider_light" />
+
+    <include
+      android:id="@+id/shareBtnContainer"
+      layout="@layout/frag_video_details_1_plc_4"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/_10"
+      android:layout_marginTop="@dimen/_2"
+      android:layout_marginRight="@dimen/_10"
+      android:layout_marginBottom="@dimen/_10" />
 
   </LinearLayout>
 </com.github.dangiashish.StyledCardView>

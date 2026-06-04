@@ -6,15 +6,23 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <RelativeLayout
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:layout_marginTop="@dimen/_30"
+    android:orientation="vertical">
 
     <include
       android:id="@+id/playerTop"
       layout="@layout/frag_video_details_1_plc_0" />
 
-  </RelativeLayout>
+    <include
+      android:id="@+id/videoDetails"
+      layout="@layout/frag_video_details_1_plc_3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="-10dp" />
+
+  </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

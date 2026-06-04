@@ -174,4 +174,9 @@
   <string name="label_100k_subscribers">100K Subscribers</string>
   <string name="label_720p">720P</string>
   <string name="label_live">Live</string>
+  <string name="label_subscribe">Subscribe</string>
+  <string name="label_playlist">Playlist</string>
+  <string name="label_play_audio">Play Audio</string>
+  <string name="label_share_">Share…</string>
+  <string name="label_download">Download</string>
 </resources>
