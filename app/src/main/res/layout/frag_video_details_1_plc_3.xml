@@ -24,11 +24,12 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical">
 
-      <com.google.android.material.imageview.ShapeableImageView
+      <ImageView
         android:id="@+id/detail_sub_channel_thumbnail_view"
         android:layout_width="@dimen/_38"
         android:layout_height="@dimen/_38"
         android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_person_avatar"
         app:shapeAppearance="@style/CircularImageView" />
@@ -90,7 +91,7 @@
       android:lines="1"
       android:textColor="@color/color_text_primary"
       android:textSize="@dimen/message_text_size"
-      tools:ignore="RtlHardcoded"
+      tools:ignore="RtlHardcoded,SpUsage"
       tools:text="2,816,821,505 views" />
 
     <LinearLayout

@@ -58,7 +58,7 @@
       android:layout_gravity="bottom" />
 
     <include
-      android:id="@+id/playerController"
+      android:id="@+id/playerResQualityController"
       layout="@layout/frag_video_details_1_plc_4"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
