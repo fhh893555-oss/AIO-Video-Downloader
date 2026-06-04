@@ -58,11 +58,11 @@
       android:paddingTop="@dimen/_0"
       android:paddingBottom="@dimen/_0"
       android:singleLine="false"
-      android:text="@string/label_sample_video_title"
       android:textColor="@color/color_text_primary"
       android:textSize="@dimen/sub_heading_text_size_v2"
       tools:ignore="SpUsage,TextSizeCheck,UseCompatTextViewDrawableXml,
-      VisualLintSystemUi,TouchTargetSizeCheck,VisualLintSystemUi" />
+      VisualLintSystemUi,TouchTargetSizeCheck,VisualLintSystemUi"
+      android:text="@string/label_sample_video_title" />
 
     <View
       android:layout_width="match_parent"
@@ -98,8 +98,8 @@
           android:adjustViewBounds="true"
           android:importantForAccessibility="no"
           android:scaleType="centerCrop"
-          android:src="@drawable/ic_person_avatar"
-          app:shapeAppearance="@style/CircularImageView" />
+          app:shapeAppearance="@style/CircularImageView"
+          tools:src="@drawable/ic_person_avatar" />
 
         <LinearLayout
           android:layout_width="match_parent"
@@ -119,7 +119,7 @@
             android:textColor="@color/color_text_primary"
             android:textSize="@dimen/message_text_size"
             tools:ignore="SpUsage,TextSizeCheck"
-            tools:text="@string/label_channel_name" />
+            android:text="@string/label_channel_name" />
 
           <TextView
             android:id="@+id/tvSubscriptions"
@@ -134,7 +134,7 @@
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
             tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck"
-            tools:text="@string/label_100k_subscribers" />
+            android:text="@string/label_100k_subscribers" />
         </LinearLayout>
       </LinearLayout>
 
@@ -158,7 +158,7 @@
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck"
-          tools:text="2,816,821,505 views" />
+          android:text="@string/label_sample_video_views" />
 
         <LinearLayout
           android:layout_width="wrap_content"
@@ -192,8 +192,8 @@
             android:gravity="center_vertical"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
-            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck"
-            tools:text="10K" />
+            tools:ignore="HardcodedText,SpUsage,TextContrastCheck,TextSizeCheck"
+            android:text="10K" />
         </LinearLayout>
       </LinearLayout>
     </RelativeLayout>
