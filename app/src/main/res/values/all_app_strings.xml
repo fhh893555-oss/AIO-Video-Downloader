@@ -177,7 +177,9 @@
   <string name="label_subscribe">Subscribe</string>
   <string name="label_playlist">Playlist</string>
   <string name="label_play_audio">Play Audio</string>
-  <string name="label_share_">Share…</string>
+  <string name="label_share_link">Share Link</string>
   <string name="label_download">Download</string>
   <string name="label_sample_video_views">2,816,821,505 views</string>
+  <string name="label_play_next_video">Play Next</string>
+  <string name="label_related_videos">Related Videos</string>
 </resources>

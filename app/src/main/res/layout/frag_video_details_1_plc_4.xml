@@ -14,7 +14,7 @@
     android:layout_gravity="center_vertical"
     android:layout_marginLeft="@dimen/_0"
     android:layout_marginTop="@dimen/_0"
-    android:layout_marginRight="@dimen/_10"
+    android:layout_marginRight="@dimen/_5"
     android:layout_marginBottom="@dimen/_0"
     android:background="@drawable/bg_button_accent"
     android:clickable="true"
@@ -145,7 +145,7 @@
         android:fontFamily="@font/font_family_regular"
         android:gravity="center"
         android:maxLines="1"
-        android:text="@string/label_share_"
+        android:text="@string/label_share_link"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
         tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
