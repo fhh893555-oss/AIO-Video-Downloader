@@ -12,24 +12,6 @@
     android:layout_marginTop="@dimen/_30"
     android:orientation="vertical">
 
-    <include
-      android:id="@+id/playerTop"
-      layout="@layout/activity_video_details_1_plc_0" />
-
-    <include
-      android:id="@+id/videoDetails"
-      layout="@layout/activity_video_details_1_plc_3"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="-10dp" />
-
-    <include
-      android:id="@+id/relatedVideos"
-      layout="@layout/activity_video_details_1_plc_5"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="-10dp" />
-
   </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

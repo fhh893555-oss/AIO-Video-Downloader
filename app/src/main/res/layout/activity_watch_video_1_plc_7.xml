@@ -8,8 +8,8 @@
   android:background="?attr/selectableItemBackground"
   android:clickable="true"
   android:focusable="true"
-  android:padding="@dimen/_5"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  android:padding="@dimen/_5">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -19,8 +19,8 @@
       android:id="@+id/cvThumbnail"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:background_ColorType="solid"
       app:background_Color="@color/color_background"
+      app:background_ColorType="solid"
       app:cornerRadius="@dimen/default_radius"
       app:stroke_Width="@dimen/_0">
 
