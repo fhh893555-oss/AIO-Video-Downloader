@@ -25,7 +25,7 @@
       app:stroke_Width="@dimen/_0">
 
       <ImageView
-        android:id="@+id/ivThumbnail"
+        android:id="@+id/imgThumbnail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100"
         android:adjustViewBounds="true"
