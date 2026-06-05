@@ -34,6 +34,7 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.languagePicker.LanguageActivity;
 import userInterface.mainScreen.MainActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
+import userInterface.watchVideo.WatchVideoActivity;
 
 /**
  * Opening screen activity that serves as the launch entry point for the application.
@@ -351,7 +352,8 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 		
 		if (isLocaleConfigured) nextActivityToOpen = MainActivity.class;
 		
-		destinationIntent = new Intent(this, nextActivityToOpen);
+		// destinationIntent = new Intent(this, nextActivityToOpen);
+		destinationIntent = new Intent(this, WatchVideoActivity.class);
 		destinationIntent.getShortExtra(
 			TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
 			TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);

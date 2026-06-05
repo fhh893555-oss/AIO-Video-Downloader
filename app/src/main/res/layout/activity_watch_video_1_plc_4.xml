@@ -58,7 +58,7 @@
       android:paddingTop="@dimen/_0"
       android:paddingBottom="@dimen/_0"
       android:singleLine="false"
-      android:text="@string/label_sample_video_title"
+      tools:text="@string/label_sample_video_title"
       android:textColor="@color/color_text_primary"
       android:textSize="@dimen/sub_heading_text_size_v2"
       tools:ignore="SpUsage,TextSizeCheck,UseCompatTextViewDrawableXml,
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_0"
             android:fontFamily="@font/font_family_medium"
-            android:text="@string/label_channel_name"
+            tools:text="@string/label_channel_name"
             android:textColor="@color/color_text_primary"
             android:textSize="@dimen/message_text_size"
             tools:ignore="SpUsage,TextSizeCheck" />
@@ -131,7 +131,7 @@
             android:layout_marginRight="@dimen/_0"
             android:layout_marginBottom="@dimen/_0"
             android:fontFamily="@font/font_family_regular"
-            android:text="@string/label_100k_subscribers"
+            tools:text="@string/label_100k_subscribers"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
             tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
@@ -155,7 +155,7 @@
           android:layout_margin="@dimen/_0"
           android:fontFamily="@font/font_family_medium"
           android:lines="1"
-          android:text="@string/label_sample_video_views"
+          tools:text="@string/label_sample_video_views"
           android:textColor="@color/color_text_primary"
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck" />
@@ -190,7 +190,7 @@
             android:layout_margin="@dimen/_0"
             android:fontFamily="@font/font_family_regular"
             android:gravity="center_vertical"
-            android:text="10K"
+            tools:text="10K"
             android:textColor="@color/color_text_hint"
             android:textSize="@dimen/small_text_size_x2"
             tools:ignore="HardcodedText,SpUsage,TextContrastCheck,TextSizeCheck" />

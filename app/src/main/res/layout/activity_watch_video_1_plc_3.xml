@@ -46,7 +46,7 @@
     android:paddingTop="@dimen/_5"
     android:paddingRight="@dimen/_5"
     android:paddingBottom="@dimen/_5"
-    android:text="@string/label_720p"
+    tools:text="@string/label_720p"
     android:textColor="@color/color_text_primary"
     android:textSize="@dimen/small_text_size"
     tools:ignore="SpUsage,UseCompatTextViewDrawableXml,

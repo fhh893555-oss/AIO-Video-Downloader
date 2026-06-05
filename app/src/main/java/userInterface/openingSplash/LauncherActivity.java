@@ -107,11 +107,27 @@ public class LauncherActivity extends AppCompatActivity {
 		}
 	}
 	
+	/**
+	 * Forces an application crash by intentionally accessing an array index out of bounds.
+	 * This method is strictly for testing purposes only, specifically to verify crash
+	 * reporting mechanisms, error handling logic, or analytics tracking of unexpected exceptions.
+	 * The method suppresses expected warnings about the array access violation and the
+	 * data flow issue since the crash is deliberate.
+	 */
+	@SuppressWarnings({"MismatchedReadAndWriteOfArray", "DataFlowIssue"})
 	private static void makeAppCrash() {
 		String[] all = new String[10];
-		String string = all[11];
+		String string = all[11];  // Deliberate ArrayIndexOutOfBoundsException
 	}
 	
+	/**
+	 * Launches the FeedbackActivity in a new task stack specifically for debug testing.
+	 * This test method clears the activity stack and applies custom fade animations
+	 * before transitioning to the feedback screen. After starting the intent, the
+	 * current activity is finished to simulate a clean navigation flow. This approach
+	 * is intended for testing user feedback flows, deep linking scenarios, or
+	 * activity lifecycle behaviors without preserving previous activities in the back stack.
+	 */
 	private void debugTestLaunch() {
 		Intent intent = new Intent(this, FeedbackActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
