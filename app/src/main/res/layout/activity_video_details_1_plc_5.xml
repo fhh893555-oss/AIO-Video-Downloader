@@ -101,7 +101,7 @@
         android:layout_marginBottom="@dimen/_0"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        tools:listitem="@layout/frag_video_details_1_plc_6" />
+        tools:listitem="@layout/activity_video_details_1_plc_6" />
 
       <View
         android:layout_width="match_parent"

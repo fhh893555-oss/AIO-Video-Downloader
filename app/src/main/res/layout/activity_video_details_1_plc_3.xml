@@ -209,7 +209,7 @@
 
     <include
       android:id="@+id/shareBtnContainer"
-      layout="@layout/frag_video_details_1_plc_4"
+      layout="@layout/activity_video_details_1_plc_4"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/_10"

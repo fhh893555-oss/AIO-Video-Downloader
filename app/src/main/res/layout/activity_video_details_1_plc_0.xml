@@ -52,21 +52,21 @@
 
     <include
       android:id="@+id/layoutQuickControlsOverlay"
-      layout="@layout/frag_video_details_1_plc_7"
+      layout="@layout/activity_video_details_1_plc_7"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="center" />
 
     <include
       android:id="@+id/layoutPlaybackControls"
-      layout="@layout/frag_video_details_1_plc_1"
+      layout="@layout/activity_video_details_1_plc_1"
       android:layout_width="match_parent"
       android:layout_height="@dimen/_35"
       android:layout_gravity="bottom" />
 
     <include
       android:id="@+id/layoutQualityBadge"
-      layout="@layout/frag_video_details_1_plc_2"
+      layout="@layout/activity_video_details_1_plc_2"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="top|right"
