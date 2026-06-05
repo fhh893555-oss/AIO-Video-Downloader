@@ -86,27 +86,35 @@
         TextSizeCheck,VisualLintSystemUi,TouchTargetSizeCheck" />
     </RelativeLayout>
 
-    <View
+    <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="@dimen/_1"
-      android:layout_marginLeft="@dimen/_10"
-      android:layout_marginTop="@dimen/_5"
-      android:layout_marginRight="@dimen/_10"
-      android:layout_marginBottom="@dimen/_5"
-      android:background="@color/color_divider_light" />
+      android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/relatedVideosList"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginLeft="@dimen/_5"
-      android:layout_marginTop="@dimen/_0"
-      android:layout_marginRight="@dimen/_5"
-      android:layout_marginBottom="@dimen/_10"
-      app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-      app:spanCount="2"
-      tools:listitem="@layout/frag_video_details_1_plc_6" />
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/relatedVideosList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/_5"
+        android:layout_marginTop="@dimen/_0"
+        android:layout_marginRight="@dimen/_5"
+        android:layout_marginBottom="@dimen/_0"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/frag_video_details_1_plc_6" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_5"
+        android:layout_gravity="top|center_horizontal"
+        android:background="@drawable/bg_shadow_border_2" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_10"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/bg_shadow_border" />
+    </FrameLayout>
 
   </LinearLayout>
 </com.github.dangiashish.StyledCardView>
