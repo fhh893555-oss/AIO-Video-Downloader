@@ -53,7 +53,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/_0"
-        android:layout_toLeftOf="@+id/btnPlayNext"
+        android:layout_toLeftOf="@+id/btnTogglePlayNext"
         android:fontFamily="@font/font_family_semibold"
         android:gravity="center_vertical"
         android:text="@string/label_related_videos"
@@ -62,7 +62,7 @@
         tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
 
       <TextView
-        android:id="@+id/btnPlayNext"
+        android:id="@+id/btnTogglePlayNext"
         style="@style/style_textviews"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_28"

@@ -48,10 +48,10 @@
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
       android:layout_weight="1"
-      android:paddingTop="2.5dp"
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
       android:orientation="vertical"
+      android:paddingTop="2.5dp"
       tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
@@ -75,13 +75,13 @@
         android:text="@string/label_playlist"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,
+        VisualLintSystemUi,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
       android:id="@+id/btnBackgroundPlay"
       android:layout_width="0dp"
-      android:paddingTop="2.5dp"
       android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
@@ -89,6 +89,7 @@
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
       android:orientation="vertical"
+      android:paddingTop="2.5dp"
       tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
@@ -112,13 +113,13 @@
         android:text="@string/label_play_audio"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,
+        VisualLintSystemUi,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
       android:id="@+id/btnWhatsapp"
       android:layout_width="0dp"
-      android:paddingTop="2.5dp"
       android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
@@ -126,6 +127,7 @@
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
       android:orientation="vertical"
+      android:paddingTop="2.5dp"
       tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
@@ -148,13 +150,13 @@
         android:text="@string/label_share_link"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,
+        VisualLintSystemUi,VisualLintSystemUi" />
     </LinearLayout>
 
     <LinearLayout
       android:id="@+id/btnDownload"
       android:layout_width="0dp"
-      android:paddingTop="2.5dp"
       android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:layout_marginRight="@dimen/_5"
@@ -162,6 +164,7 @@
       android:background="@drawable/bg_button_negative"
       android:clickable="true"
       android:orientation="vertical"
+      android:paddingTop="2.5dp"
       tools:ignore="TouchTargetSizeCheck">
 
       <ImageView
@@ -184,7 +187,8 @@
         android:text="@string/label_download"
         android:textColor="@color/color_text_primary"
         android:textSize="@dimen/smaller_text_size"
-        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,VisualLintSystemUi" />
+        tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck,
+        VisualLintSystemUi,VisualLintSystemUi" />
     </LinearLayout>
   </LinearLayout>
 
