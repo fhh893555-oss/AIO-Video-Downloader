@@ -182,4 +182,22 @@
   <string name="label_sample_video_views">2,816,821,505 views</string>
   <string name="label_play_next_video">Play Next</string>
   <string name="label_related_videos">Related Videos</string>
+
+  <!-- Player -->
+  <string name="player_notification_channel_name">Playback</string>
+  <string name="player_notification_channel_desc">Media playback controls and notifications</string>
+  <string name="player_notification_play">Play</string>
+  <string name="player_notification_pause">Pause</string>
+  <string name="player_notification_next">Next</string>
+  <string name="player_notification_previous">Previous</string>
+  <string name="player_notification_close">Close</string>
+  <string name="player_error_playback">Playback error</string>
+  <string name="player_error_no_streams">No playable streams found</string>
+  <string name="player_loading">Loading…</string>
+  <string name="player_speed">Speed</string>
+  <string name="player_pitch">Pitch</string>
+  <string name="player_queue">Queue</string>
+  <string name="player_segments">Chapters</string>
+  <string name="player_end_screen_title">Up next</string>
+  <string name="player_no_title">Unknown title</string>
 </resources>

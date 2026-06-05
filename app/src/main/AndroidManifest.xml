@@ -78,6 +78,11 @@
     <activity android:name="userInterface.mainScreen.MainActivity" />
     <activity android:name="userInterface.watchVideo.WatchVideoActivity" />
 
+    <service
+      android:name="sysModules.player.service.PlaybackService"
+      android:exported="false"
+      android:foregroundServiceType="mediaPlayback" />
+
     <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="${applicationId}.provider"
