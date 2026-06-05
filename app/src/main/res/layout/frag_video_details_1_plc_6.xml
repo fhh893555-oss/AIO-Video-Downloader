@@ -20,7 +20,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:background_ColorType="solid"
-      app:background_Solid_Color="@color/color_background"
+      app:background_Color="@color/color_background"
       app:cornerRadius="@dimen/default_radius"
       app:stroke_Width="@dimen/_0">
 
