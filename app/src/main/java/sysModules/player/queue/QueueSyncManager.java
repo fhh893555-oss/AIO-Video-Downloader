@@ -1,10 +1,13 @@
 package sysModules.player.queue;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.MediaMetadata;
 
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 
@@ -76,18 +79,40 @@ public class QueueSyncManager implements QueueListener {
         if (item == null) return;
 
         loading = true;
+        long seek = seekToPosition > 0 ? seekToPosition : item.getRecoveryPosition();
+        if (seek == PlayQueueItem.RECOVERY_UNSET) seek = 0;
+
+        if (item.isLocalItem()) {
+            handleLocalItem(item, seek);
+        } else {
+            fetchAndLoad(item, seek);
+        }
+    }
+
+    private void handleLocalItem(@NonNull PlayQueueItem item, long seek) {
+        mainHandler.post(() -> {
+            if (queue == null || queue.isDisposed()) return;
+            loading = false;
+            MediaItem mediaItem = new MediaItem.Builder()
+                    .setUri(Uri.parse(item.getUrl()))
+                    .setMediaId(item.getUrl())
+                    .setMediaMetadata(new MediaMetadata.Builder()
+                            .setTitle(item.getTitle())
+                            .setArtist(item.getUploader())
+                            .build())
+                    .build();
+            engine.load(mediaItem, seek);
+        });
+    }
+
+    private void fetchAndLoad(@NonNull PlayQueueItem item, long seek) {
         item.fetchStreamInfo(new PlayQueueItem.StreamCallback() {
             @Override
             public void onSuccess(StreamInfo info) {
                 mainHandler.post(() -> {
                     if (queue == null || queue.isDisposed()) return;
                     loading = false;
-                    long seek = seekToPosition > 0 ? seekToPosition : item.getRecoveryPosition();
-                    if (seek != PlayQueueItem.RECOVERY_UNSET && seek > 0) {
-                        engine.load(info, seek);
-                    } else {
-                        engine.load(info, 0);
-                    }
+                    engine.load(info, seek);
                 });
             }
 
@@ -98,8 +123,7 @@ public class QueueSyncManager implements QueueListener {
                     logger.e("Failed to load stream: " + item.getUrl(), error);
                     item.setError(error);
                     if (queue != null) {
-                        int oldIndex = queue.getIndex();
-                        int newIndex = queue.error();
+                        queue.error();
                         engine.onPlayerError(new Exception("Failed to load stream " + item.getTitle(), error));
                     }
                 });

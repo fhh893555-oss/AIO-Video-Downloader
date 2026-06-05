@@ -9,6 +9,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayQueueItem implements Serializable {
@@ -40,6 +41,25 @@ public class PlayQueueItem implements Serializable {
         this(item.getName(), item.getUrl(), item.getServiceId(), item.getDuration(),
                 item.getThumbnails(), item.getUploaderName(),
                 item.getUploaderUrl(), item.getStreamType());
+    }
+
+    public PlayQueueItem(@NonNull android.net.Uri uri,
+                          @NonNull String title,
+                          @Nullable String uploader,
+                          long duration) {
+        this.title = title;
+        this.url = uri.toString();
+        this.serviceId = -1;
+        this.duration = duration;
+        this.thumbnails = Collections.emptyList();
+        this.uploader = uploader != null ? uploader : EMPTY_STRING;
+        this.uploaderUrl = null;
+        this.streamType = StreamType.VIDEO_STREAM;
+        this.recoveryPosition = RECOVERY_UNSET;
+    }
+
+    public boolean isLocalItem() {
+        return serviceId < 0;
     }
 
     public PlayQueueItem(@Nullable String name, @Nullable String url,

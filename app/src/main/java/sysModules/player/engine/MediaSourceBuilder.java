@@ -1,11 +1,14 @@
 package sysModules.player.engine;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
+import androidx.media3.common.util.UnstableApi;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
@@ -21,10 +24,18 @@ import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
 
+@OptIn(markerClass = UnstableApi.class)
 public final class MediaSourceBuilder {
     private static final LoggerUtils logger = LoggerUtils.from(MediaSourceBuilder.class);
 
     private MediaSourceBuilder() {}
+	
+	@NonNull
+    public static MediaSource fromUri(@NonNull Uri uri,
+                                       @NonNull DataSource.Factory dataSourceFactory) {
+        return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(MediaItem.fromUri(uri));
+    }
 
     @Nullable
     public static MediaSource fromStreamInfo(@NonNull Context context,

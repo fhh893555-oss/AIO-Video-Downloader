@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.media3.common.C;
+import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
 import androidx.media3.common.Tracks;
@@ -116,6 +117,22 @@ public final class MediaEngine implements Player.Listener {
             exoPlayer.setMediaSource(mediaSource, startPosition > 0 ? startPosition : C.TIME_UNSET);
         } else {
             exoPlayer.setMediaSource(mediaSource);
+            if (startPosition > 0) exoPlayer.seekTo(startPosition);
+        }
+
+        exoPlayer.prepare();
+        setState(PlaybackState.Phase.BUFFERING);
+        notifyMetadataChanged();
+    }
+
+    public void load(@NonNull MediaItem mediaItem, long startPosition) {
+        this.currentInfo = null;
+        ensurePlayerReady();
+
+        if (currentItem != null && startPosition > 0) {
+            exoPlayer.setMediaItem(mediaItem, startPosition);
+        } else {
+            exoPlayer.setMediaItem(mediaItem);
             if (startPosition > 0) exoPlayer.seekTo(startPosition);
         }
 
@@ -435,7 +452,7 @@ public final class MediaEngine implements Player.Listener {
     }
 
     private void notifyMetadataChanged() {
-        if (currentItem == null || currentInfo == null) return;
+        if (currentItem == null) return;
         for (EngineCallbacks cb : callbacks) {
             cb.onMetadataChanged(currentItem, currentInfo);
         }
