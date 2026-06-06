@@ -120,7 +120,7 @@ public class PlaybackService extends Service {
     }
 
     private void stopPlayback() {
-        audioFocus.abandonFocus();
+        audioFocus.dispose();
         engine.stop();
         if (serviceStarted) {
             stopForeground(true);
@@ -144,7 +144,7 @@ public class PlaybackService extends Service {
         engine.removeCallback(notification);
         notification.stop();
         sessionManager.release();
-        audioFocus.abandonFocus();
+        audioFocus.dispose();
         queueManager.unbind();
         engine.release();
         if (serviceStarted) {
