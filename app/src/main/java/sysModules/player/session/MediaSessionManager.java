@@ -18,7 +18,7 @@ import coreUtils.library.process.LoggerUtils;
 import sysModules.player.engine.MediaEngine;
 import sysModules.player.queue.PlayQueueItem;
 
-public final class MediaSessionManager {
+@SuppressWarnings("deprecation") public final class MediaSessionManager {
     private static final LoggerUtils logger = LoggerUtils.from(MediaSessionManager.class);
 
     private final Context context;
@@ -32,9 +32,7 @@ public final class MediaSessionManager {
         this.context = context.getApplicationContext();
         this.engine = engine;
     }
-
-    // ─── Lifecycle ──────────────────────────────────────────────────────────
-
+    
     public void connect() {
         release();
         mediaSession = new MediaSessionCompat(context, "TubeAIOPlayback");
@@ -102,12 +100,11 @@ public final class MediaSessionManager {
         logger.debug("MediaSession released");
     }
 
-    // ─── Metadata provider (called by connector on track change) ────────────
-
-    @Nullable
     private MediaMetadataCompat buildMetadata(@NonNull Player player) {
         PlayQueueItem currentItem = engine.getCurrentItem();
-        if (currentItem == null) return null;
+        if (currentItem == null) {
+            return new MediaMetadataCompat.Builder().build();
+        }
 
         MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentItem.getTitle())
@@ -118,14 +115,10 @@ public final class MediaSessionManager {
         List<Image> thumbnails = currentItem.getThumbnails();
         if (!thumbnails.isEmpty()) {
             String artUrl = thumbnails.get(0).getUrl();
-            if (artUrl != null) {
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, artUrl);
-                builder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, artUrl);
-            }
+            builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, artUrl);
+            builder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, artUrl);
         }
-
         return builder.build();
     }
-
-
+    
 }
