@@ -17,6 +17,7 @@ import sysModules.player.notification.PlaybackNotification;
 import sysModules.player.queue.PlayQueue;
 import sysModules.player.queue.QueueSyncManager;
 import sysModules.player.session.MediaSessionManager;
+import sysModules.player.session.PlayQueueNavigator;
 
 public class PlaybackService extends Service {
     private static final LoggerUtils logger = LoggerUtils.from(PlaybackService.class);
@@ -25,6 +26,7 @@ public class PlaybackService extends Service {
     private QueueSyncManager queueManager;
     private AudioFocusHelper audioFocus;
     private MediaSessionManager sessionManager;
+    private PlayQueueNavigator queueNavigator;
     private PlaybackNotification notification;
     private PlayerType playerType;
     private boolean serviceStarted;
@@ -35,7 +37,7 @@ public class PlaybackService extends Service {
         engine = new MediaEngine(this);
         queueManager = new QueueSyncManager(engine);
         audioFocus = new AudioFocusHelper(this, engine);
-        sessionManager = new MediaSessionManager(this);
+        sessionManager = new MediaSessionManager(this, engine);
         notification = new PlaybackNotification(this);
         playerType = PlayerType.MAIN;
 
@@ -91,8 +93,19 @@ public class PlaybackService extends Service {
 
     public void loadAndPlay(@NonNull PlayQueue queue, long startPosition) {
         sessionManager.connect();
-        notification.setSessionToken(sessionManager.getSessionToken());
+        sessionManager.setPlayer(engine.getExoPlayer());
 
+        if (queueNavigator != null) {
+            queueNavigator.dispose();
+            queueNavigator = null;
+        }
+        if (sessionManager.getMediaSession() != null) {
+            queueNavigator = new PlayQueueNavigator(
+                    sessionManager.getMediaSession(), queue, engine);
+            sessionManager.setQueueNavigator(queueNavigator);
+        }
+
+        notification.setSessionToken(sessionManager.getSessionToken());
         ensureForeground();
         notification.start();
 
@@ -128,6 +141,10 @@ public class PlaybackService extends Service {
         }
         notification.stop();
         sessionManager.release();
+        if (queueNavigator != null) {
+            queueNavigator.dispose();
+            queueNavigator = null;
+        }
         logger.debug("Playback stopped");
     }
 
@@ -144,6 +161,10 @@ public class PlaybackService extends Service {
         engine.removeCallback(notification);
         notification.stop();
         sessionManager.release();
+        if (queueNavigator != null) {
+            queueNavigator.dispose();
+            queueNavigator = null;
+        }
         audioFocus.dispose();
         queueManager.unbind();
         engine.release();

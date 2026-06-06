@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
-import android.support.v4.media.session.MediaSessionCompat;
+import androidx.media.session.MediaSessionCompat;
 
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.text.CueGroup;
