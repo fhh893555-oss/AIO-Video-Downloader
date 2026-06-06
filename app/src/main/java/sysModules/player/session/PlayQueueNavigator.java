@@ -2,12 +2,19 @@ package sysModules.player.session;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 
 import androidx.annotation.NonNull;
-
+import androidx.annotation.Nullable;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
+import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_QUEUE_ITEM;
+
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
 import org.schabi.newpipe.extractor.Image;
 
@@ -22,7 +29,8 @@ import sysModules.player.queue.PlayQueue;
 import sysModules.player.queue.PlayQueueItem;
 import sysModules.player.queue.QueueListener;
 
-public final class PlayQueueNavigator implements QueueListener {
+public final class PlayQueueNavigator
+        implements MediaSessionConnector.QueueNavigator, QueueListener {
     private static final LoggerUtils logger = LoggerUtils.from(PlayQueueNavigator.class);
     private static final int MAX_QUEUE_SIZE = 10;
 
@@ -40,16 +48,49 @@ public final class PlayQueueNavigator implements QueueListener {
         publishFloatingQueueWindow();
     }
 
-    public void onSkipToQueueItem(int index) {
-        playQueue.setIndex(index);
+    // ─── QueueNavigator ─────────────────────────────────────────────────────
+
+    @Override
+    public long getSupportedQueueNavigatorActions(@Nullable Player player) {
+        return ACTION_SKIP_TO_NEXT | ACTION_SKIP_TO_PREVIOUS | ACTION_SKIP_TO_QUEUE_ITEM;
     }
 
-    public void onSkipToNext() {
+    @Override
+    public void onTimelineChanged(@NonNull Player player) {
+        publishFloatingQueueWindow();
+    }
+
+    @Override
+    public void onCurrentMediaItemIndexChanged(@NonNull Player player) {
+        publishFloatingQueueWindow();
+    }
+
+    @Override
+    public long getActiveQueueItemId(@Nullable Player player) {
+        return playQueue.getIndex();
+    }
+
+    @Override
+    public void onSkipToPrevious(@NonNull Player player) {
+        engine.playPrevious();
+    }
+
+    @Override
+    public void onSkipToQueueItem(@NonNull Player player, long id) {
+        playQueue.setIndex((int) id);
+    }
+
+    @Override
+    public void onSkipToNext(@NonNull Player player) {
         engine.playNext();
     }
 
-    public void onSkipToPrevious() {
-        engine.playPrevious();
+    @Override
+    public boolean onCommand(@NonNull Player player,
+                            @NonNull String command,
+                            @Nullable Bundle extras,
+                            @Nullable ResultReceiver cb) {
+        return false;
     }
 
     public void dispose() {

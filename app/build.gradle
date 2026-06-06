@@ -98,6 +98,10 @@ dependencies {
     implementation libs.exoplayer.hls
     implementation libs.exoplayer.dash
     implementation libs.exoplayer.ui
+    implementation libs.exoplayer.database
+    implementation libs.exoplayer.datasource
+    implementation libs.exoplayer.smoothstreaming
+    implementation libs.exoplayer.mediasession
     implementation libs.androidx.media
 
     implementation libs.mp4.iso.parser

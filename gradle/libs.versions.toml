@@ -53,6 +53,10 @@ exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", versi
 exoplayer-hls = { module = "com.google.android.exoplayer:exoplayer-hls", version.ref = "exoplayer2" }
 exoplayer-dash = { module = "com.google.android.exoplayer:exoplayer-dash", version.ref = "exoplayer2" }
 exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer2" }
+exoplayer-database = { module = "com.google.android.exoplayer:exoplayer-database", version.ref = "exoplayer2" }
+exoplayer-datasource = { module = "com.google.android.exoplayer:exoplayer-datasource", version.ref = "exoplayer2" }
+exoplayer-smoothstreaming = { module = "com.google.android.exoplayer:exoplayer-smoothstreaming", version.ref = "exoplayer2" }
+exoplayer-mediasession = { module = "com.google.android.exoplayer:extension-mediasession", version.ref = "exoplayer2" }
 androidx-media = { module = "androidx.media:media", version.ref = "androidx_media" }
 
 mp4-iso-parser = { module = "com.googlecode.mp4parser:isoparser", version.ref = "mp4_iso_parser" }
