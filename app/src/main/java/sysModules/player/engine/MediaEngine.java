@@ -1,6 +1,8 @@
 package sysModules.player.engine;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.audiofx.AudioEffect;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -14,6 +16,7 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
@@ -35,7 +38,7 @@ import sysModules.player.resolver.AudioPlaybackResolver;
 import sysModules.player.resolver.PlayerDataSource;
 import sysModules.player.resolver.VideoPlaybackResolver;
 
-public final class MediaEngine implements Player.EventListener {
+public final class MediaEngine implements Player.EventListener, AnalyticsListener {
     private static final LoggerUtils logger = LoggerUtils.from(MediaEngine.class);
 
     public static final int PROGRESS_LOOP_INTERVAL_MILLIS = 1000;
@@ -65,6 +68,7 @@ public final class MediaEngine implements Player.EventListener {
     private final List<EngineCallbacks> callbacks = new CopyOnWriteArrayList<>();
 
     private boolean progressLoopRunning;
+    private int audioSessionId;
 
     public MediaEngine(@NonNull Context context) {
         this.context = context.getApplicationContext();
@@ -143,7 +147,9 @@ public final class MediaEngine implements Player.EventListener {
     public void release() {
         stopProgressLoop();
         if (exoPlayer != null) {
+            notifyAudioSessionUpdate(false);
             exoPlayer.removeListener(this);
+            exoPlayer.removeAnalyticsListener(this);
             exoPlayer.release();
             exoPlayer = null;
         }
@@ -391,6 +397,7 @@ public final class MediaEngine implements Player.EventListener {
                     .setLoadControl(loadController)
                     .build();
             exoPlayer.addListener(this);
+            exoPlayer.addAnalyticsListener(this);
             exoPlayer.setPlayWhenReady(true);
             exoPlayer.setHandleAudioBecomingNoisy(true);
         }
@@ -460,6 +467,16 @@ public final class MediaEngine implements Player.EventListener {
 
     public void onPlayerError(@NonNull Throwable error) {
         notifyError(error, true);
+    }
+
+    private void notifyAudioSessionUpdate(boolean active) {
+        if (audioSessionId == 0) return;
+        Intent intent = new Intent(active
+                ? AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION
+                : AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
+        intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
+        intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.getPackageName());
+        context.sendBroadcast(intent);
     }
 
     // ─── Progress loop ─────────────────────────────────────────────────────
@@ -553,6 +570,14 @@ public final class MediaEngine implements Player.EventListener {
     @Override
     public void onPlaybackParametersChanged(@NonNull PlaybackParameters params) {
         notifyProgress();
+    }
+
+    // ─── AnalyticsListener (audio session for equalizers) ──────────────────
+
+    @Override
+    public void onAudioSessionIdChanged(@NonNull EventTime eventTime, int audioSessionId) {
+        this.audioSessionId = audioSessionId;
+        notifyAudioSessionUpdate(true);
     }
 
     public Context getContext() {

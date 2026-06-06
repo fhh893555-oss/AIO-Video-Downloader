@@ -1,5 +1,8 @@
 package sysModules.player.engine;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -20,7 +23,7 @@ import coreUtils.library.process.LoggerUtils;
  * <ul>
  * <li>GAIN → Restores full volume, resumes playback if paused due to loss.</li>
  * <li>LOSS / LOSS_TRANSIENT → Pauses playback, tracks state for potential resumption.</li>
- * <li>LOSS_TRANSIENT_CAN_DUCK → Lowers volume to 30% (ducking).</li>
+ * <li>LOSS_TRANSIENT_CAN_DUCK → Lowers volume to 20% (ducking).</li>
  * </ul>
  *
  * <p>This class uses the modern {@link AudioFocusRequest} API (introduced in
@@ -35,7 +38,8 @@ import coreUtils.library.process.LoggerUtils;
 public final class AudioFocusHelper {
 	private static final LoggerUtils logger = LoggerUtils.from(AudioFocusHelper.class);
 	
-	private static final float DUCK_VOLUME = 0.3f;
+	private static final float DUCK_VOLUME = 0.2f;
+	private static final int DUCK_DURATION_MS = 1500;
 	
 	private final MediaEngine engine;
 	private final AudioManager audioManager;
@@ -75,7 +79,7 @@ public final class AudioFocusHelper {
 	 * currently playing, records that playback was active, and resets ducking.
 	 *
 	 * <p><strong>AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK</strong> – Reduces volume to
-	 * {@link #DUCK_VOLUME} (30%) if not already ducked.
+	 * {@link #DUCK_VOLUME} (20%) if not already ducked.
 	 *
 	 * @return The configured {@link AudioManager.OnAudioFocusChangeListener} instance.
 	 */
@@ -85,7 +89,7 @@ public final class AudioFocusHelper {
 				case AudioManager.AUDIOFOCUS_GAIN:
 					hasFocus = true;
 					if (isDucked) {
-						engine.setVolume(1.0f);
+						animateVolume(DUCK_VOLUME, 1.0f);
 						isDucked = false;
 					}
 					if (wasPlayingBeforeLoss && !engine.isPlaying()) {
@@ -144,6 +148,7 @@ public final class AudioFocusHelper {
 		try {
 			focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
 				.setOnAudioFocusChangeListener(focusChangeListener)
+				.setWillPauseWhenDucked(true)
 				.setAcceptsDelayedFocusGain(true)
 				.setAudioAttributes(buildAudioAttributes())
 				.build();
@@ -155,6 +160,40 @@ public final class AudioFocusHelper {
 			logger.error("Failed to request audio focus: " + error.getMessage());
 			return false;
 		}
+	}
+	
+	/**
+	 * Smoothly animates the playback volume from one level to another over
+	 * {@link #DUCK_DURATION_MS} milliseconds using a {@link ValueAnimator}.
+	 * The animation immediately sets the start volume and interpolates toward
+	 * the target volume, providing a seamless audio transition when focus is
+	 * regained after ducking.
+	 *
+	 * @param from Volume level to animate from (0.0 – 1.0).
+	 * @param to   Volume level to animate to (0.0 – 1.0).
+	 */
+	private void animateVolume(final float from, final float to) {
+		ValueAnimator animator = ValueAnimator.ofFloat(from, to);
+		animator.setDuration(DUCK_DURATION_MS);
+		animator.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(final Animator animation) {
+				engine.setVolume(from);
+			}
+			
+			@Override
+			public void onAnimationEnd(final Animator animation) {
+				engine.setVolume(to);
+			}
+			
+			@Override
+			public void onAnimationCancel(final Animator animation) {
+				engine.setVolume(to);
+			}
+		});
+		animator.addUpdateListener(
+			animation -> engine.setVolume((float) animation.getAnimatedValue()));
+		animator.start();
 	}
 	
 	/**
@@ -212,6 +251,15 @@ public final class AudioFocusHelper {
 	}
 	
 	/**
+	 * Releases all resources held by this helper. Calls {@link #abandonFocus()} to
+	 * release audio focus, resets internal state flags, and prepares for cleanup.
+	 * Should be called when the associated player engine is being destroyed.
+	 */
+	public void dispose() {
+		abandonFocus();
+	}
+	
+	/**
 	 * Returns whether the application currently holds audio focus. Focus is typically
 	 * requested via {@link #requestFocus()} before starting media playback and
 	 * abandoned via {@link #abandonFocus()} when playback stops.
@@ -228,10 +276,10 @@ public final class AudioFocusHelper {
 	 * Returns whether the engine is currently in a ducked state (reduced volume).
 	 * Ducking occurs when another app requests transient focus that can be shared,
 	 * such as voice navigation or notifications, requiring the media volume to
-	 * be temporarily lowered (typically to 30% of normal volume).
+	 * be temporarily lowered (typically to 20% of normal volume).
 	 *
 	 * <p>When ducking is active, the engine's volume is reduced via
-	 * {@link MediaEngine#setVolume(float)} with {@link #DUCK_VOLUME} (0.3f).
+	 * {@link MediaEngine#setVolume(float)} with {@link #DUCK_VOLUME} (0.2f).
 	 * Ducking is automatically cleared when focus is regained.
 	 *
 	 * @return {@code true} if the engine volume is currently ducked, {@code false}

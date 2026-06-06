@@ -170,4 +170,28 @@ public class PlaybackService extends Service {
     public void setPlayerType(@NonNull PlayerType playerType) {
         this.playerType = playerType;
     }
+
+    // ─── Mute (coordinates engine + audio focus) ──────────────────────────
+
+    public void mute() {
+        engine.setMuted(true);
+        audioFocus.abandonFocus();
+    }
+
+    public void unmute() {
+        engine.setMuted(false);
+        audioFocus.requestFocus();
+    }
+
+    public void toggleMute() {
+        if (engine.isMuted()) {
+            unmute();
+        } else {
+            mute();
+        }
+    }
+
+    public boolean isMuted() {
+        return engine.isMuted();
+    }
 }
