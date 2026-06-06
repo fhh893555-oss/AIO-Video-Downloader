@@ -7,11 +7,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media.MediaMetadataCompat;
-import androidx.media.session.MediaSessionCompat;
-import androidx.media.session.PlaybackStateCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -33,6 +32,7 @@ public final class MediaSessionManager implements Player.Listener {
     @Nullable private MediaSessionCompat mediaSession;
     @Nullable private Player player;
     @Nullable private PlayQueueNavigator queueNavigator;
+    @Nullable private Runnable closeCallback;
 
     public MediaSessionManager(@NonNull Context context, @NonNull MediaEngine engine) {
         this.context = context.getApplicationContext();
@@ -65,6 +65,10 @@ public final class MediaSessionManager implements Player.Listener {
 
     public void setQueueNavigator(@Nullable PlayQueueNavigator navigator) {
         this.queueNavigator = navigator;
+    }
+
+    public void setCloseCallback(@Nullable Runnable callback) {
+        this.closeCallback = callback;
     }
 
     public void handleMediaButtonIntent(@NonNull Intent intent) {
@@ -256,7 +260,11 @@ public final class MediaSessionManager implements Player.Listener {
         @Override
         public void onCustomAction(@NonNull String action, @Nullable Bundle extras) {
             if ("ACTION_CLOSE".equals(action)) {
-                engine.stop();
+                if (closeCallback != null) {
+                    closeCallback.run();
+                } else {
+                    engine.stop();
+                }
             }
         }
     }

@@ -94,6 +94,7 @@ public class PlaybackService extends Service {
     public void loadAndPlay(@NonNull PlayQueue queue, long startPosition) {
         sessionManager.connect();
         sessionManager.setPlayer(engine.getExoPlayer());
+        sessionManager.setCloseCallback(this::closePlayer);
 
         if (queueNavigator != null) {
             queueNavigator.dispose();
