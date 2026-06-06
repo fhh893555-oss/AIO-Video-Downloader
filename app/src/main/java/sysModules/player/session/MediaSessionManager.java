@@ -1,43 +1,41 @@
 package sysModules.player.session;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.session.MediaSession;
+import androidx.media.session.MediaSessionCompat;
 
 import coreUtils.library.process.LoggerUtils;
 
 public final class MediaSessionManager {
     private static final LoggerUtils logger = LoggerUtils.from(MediaSessionManager.class);
 
-    private final Context context;
-    @Nullable private MediaSession mediaSession;
+    private final android.content.Context context;
+    @Nullable private MediaSessionCompat mediaSession;
 
-    public MediaSessionManager(@NonNull Context context) {
+    public MediaSessionManager(@NonNull android.content.Context context) {
         this.context = context.getApplicationContext();
     }
 
-    public void connect(@NonNull androidx.media3.common.Player player) {
+    public void connect() {
         release();
-        mediaSession = new MediaSession.Builder(context, player)
-                .setId("TubeAIOPlayback")
-                .build();
+        mediaSession = new MediaSessionCompat(context, "TubeAIOPlayback");
+        mediaSession.setActive(true);
         logger.d("MediaSession connected");
     }
 
     @Nullable
-    public MediaSession getMediaSession() {
+    public MediaSessionCompat getMediaSession() {
         return mediaSession;
     }
 
     @Nullable
-    public androidx.media.session.MediaSessionCompat.Token getSessionToken() {
-        return mediaSession != null ? mediaSession.getSessionCompatToken() : null;
+    public MediaSessionCompat.Token getSessionToken() {
+        return mediaSession != null ? mediaSession.getSessionToken() : null;
     }
 
     public void release() {
         if (mediaSession != null) {
+            mediaSession.setActive(false);
             mediaSession.release();
             mediaSession = null;
             logger.d("MediaSession released");

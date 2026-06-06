@@ -6,8 +6,8 @@ import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaMetadata;
+
+import com.google.android.exoplayer2.MediaItem;
 
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 
@@ -96,10 +96,6 @@ public class QueueSyncManager implements QueueListener {
             MediaItem mediaItem = new MediaItem.Builder()
                     .setUri(Uri.parse(item.getUrl()))
                     .setMediaId(item.getUrl())
-                    .setMediaMetadata(new MediaMetadata.Builder()
-                            .setTitle(item.getTitle())
-                            .setArtist(item.getUploader())
-                            .build())
                     .build();
             engine.load(mediaItem, seek);
         });

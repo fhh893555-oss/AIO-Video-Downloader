@@ -1,36 +1,31 @@
 package sysModules.player.engine;
 
-import android.content.Context;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaMetadata;
-import androidx.media3.common.util.UnstableApi;
-import androidx.media3.datasource.DataSource;
-import androidx.media3.exoplayer.dash.DashMediaSource;
-import androidx.media3.exoplayer.hls.HlsMediaSource;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
 
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
-import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
 import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
 
-@OptIn(markerClass = UnstableApi.class)
 public final class MediaSourceBuilder {
     private static final LoggerUtils logger = LoggerUtils.from(MediaSourceBuilder.class);
 
     private MediaSourceBuilder() {}
-	
-	@NonNull
+
+    @NonNull
     public static MediaSource fromUri(@NonNull Uri uri,
                                        @NonNull DataSource.Factory dataSourceFactory) {
         return new ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -38,8 +33,7 @@ public final class MediaSourceBuilder {
     }
 
     @Nullable
-    public static MediaSource fromStreamInfo(@NonNull Context context,
-                                              @NonNull StreamInfo info,
+    public static MediaSource fromStreamInfo(@NonNull StreamInfo info,
                                               @NonNull DataSource.Factory dataSourceFactory,
                                               boolean preferAudioOnly) {
         if (preferAudioOnly) {
@@ -102,14 +96,6 @@ public final class MediaSourceBuilder {
         return new MediaItem.Builder()
                 .setUri(url)
                 .setMediaId(info.getUrl())
-                .setMediaMetadata(new MediaMetadata.Builder()
-                        .setTitle(info.getName())
-                        .setArtist(info.getUploaderName())
-                        .setArtworkUri(
-                                !info.getThumbnails().isEmpty()
-                                        ? android.net.Uri.parse(info.getThumbnails().get(0).getUrl())
-                                        : null)
-                        .build())
                 .build();
     }
 }

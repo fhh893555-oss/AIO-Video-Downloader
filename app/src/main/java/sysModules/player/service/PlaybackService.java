@@ -90,7 +90,7 @@ public class PlaybackService extends Service {
     }
 
     public void loadAndPlay(@NonNull PlayQueue queue, long startPosition) {
-        sessionManager.connect(engine.getExoPlayer());
+        sessionManager.connect();
         notification.setSessionToken(sessionManager.getSessionToken());
 
         ensureForeground();

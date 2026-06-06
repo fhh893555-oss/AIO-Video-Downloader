@@ -6,20 +6,21 @@ import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
-import androidx.media3.common.C;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.PlaybackException;
-import androidx.media3.common.Player;
-import androidx.media3.common.Tracks;
-import androidx.media3.common.VideoSize;
-import androidx.media3.common.text.Cue;
-import androidx.media3.common.util.UnstableApi;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
-import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.ui.AspectRatioFrameLayout;
+
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 
@@ -34,44 +35,35 @@ import sysModules.player.resolver.AudioPlaybackResolver;
 import sysModules.player.resolver.PlayerDataSource;
 import sysModules.player.resolver.VideoPlaybackResolver;
 
-@OptIn(markerClass = UnstableApi.class)
-public final class MediaEngine implements Player.Listener {
+public final class MediaEngine implements Player.EventListener {
     private static final LoggerUtils logger = LoggerUtils.from(MediaEngine.class);
 
-    // Constants
     public static final int PROGRESS_LOOP_INTERVAL_MILLIS = 1000;
     private static final float MUTED_VOLUME = 0f;
     private static final float NORMAL_VOLUME = 1f;
 
-    // Context
     private final Context context;
     private final Handler mainHandler;
 
-    // ExoPlayer
-    private ExoPlayer exoPlayer;
+    private SimpleExoPlayer exoPlayer;
     private DefaultTrackSelector trackSelector;
     private DefaultRenderersFactory renderFactory;
     private LoadController loadController;
     private PlayerDataSource dataSource;
 
-    // Resolvers
     private final VideoPlaybackResolver videoResolver;
     private final AudioPlaybackResolver audioResolver;
 
-    // State
     private PlaybackState.Phase currentPhase = PlaybackState.Phase.PREFLIGHT;
     private RepeatMode repeatMode = RepeatMode.NONE;
     private boolean muted;
     private boolean audioOnly;
 
-    // Current playback info
     @Nullable private PlayQueueItem currentItem;
     @Nullable private StreamInfo currentInfo;
 
-    // Callbacks
     private final List<EngineCallbacks> callbacks = new CopyOnWriteArrayList<>();
 
-    // Progress loop
     private boolean progressLoopRunning;
 
     public MediaEngine(@NonNull Context context) {
@@ -103,7 +95,7 @@ public final class MediaEngine implements Player.Listener {
     public void load(@NonNull StreamInfo info, long startPosition) {
         this.currentInfo = info;
 
-        androidx.media3.exoplayer.source.MediaSource mediaSource =
+        MediaSource mediaSource =
                 MediaSourceBuilder.fromStreamInfo(context, info, dataSource, audioOnly);
 
         if (mediaSource == null) {
@@ -220,30 +212,23 @@ public final class MediaEngine implements Player.Listener {
 
     public void setPlaybackSpeed(float speed) {
         if (exoPlayer != null) {
-            androidx.media3.common.PlaybackParameters params =
-                    exoPlayer.getPlaybackParameters();
-            exoPlayer.setPlaybackParameters(
-                    new androidx.media3.common.PlaybackParameters(
-                            speed, params.pitch));
+            PlaybackParameters params = exoPlayer.getPlaybackParameters();
+            exoPlayer.setPlaybackParameters(new PlaybackParameters(speed, params.pitch));
             notifyProgress();
         }
     }
 
     public void setPlaybackPitch(float pitch) {
         if (exoPlayer != null) {
-            androidx.media3.common.PlaybackParameters params =
-                    exoPlayer.getPlaybackParameters();
-            exoPlayer.setPlaybackParameters(
-                    new androidx.media3.common.PlaybackParameters(
-                            params.speed, pitch));
+            PlaybackParameters params = exoPlayer.getPlaybackParameters();
+            exoPlayer.setPlaybackParameters(new PlaybackParameters(params.speed, pitch));
             notifyProgress();
         }
     }
 
     public void setPlaybackParameters(float speed, float pitch) {
         if (exoPlayer != null) {
-            exoPlayer.setPlaybackParameters(
-                    new androidx.media3.common.PlaybackParameters(speed, pitch));
+            exoPlayer.setPlaybackParameters(new PlaybackParameters(speed, pitch));
             notifyProgress();
         }
     }
@@ -326,8 +311,8 @@ public final class MediaEngine implements Player.Listener {
             }
         }
     }
-	
-	public void setAudioTrack(int streamIndex) {
+
+    public void setAudioTrack(int streamIndex) {
         if (trackSelector != null) {
             MappingTrackSelector.MappedTrackInfo info = trackSelector.getCurrentMappedTrackInfo();
             if (info != null) {
@@ -401,7 +386,7 @@ public final class MediaEngine implements Player.Listener {
 
     private void ensurePlayerReady() {
         if (exoPlayer == null) {
-            exoPlayer = new ExoPlayer.Builder(context, renderFactory)
+            exoPlayer = new SimpleExoPlayer.Builder(context, renderFactory)
                     .setTrackSelector(trackSelector)
                     .setLoadControl(loadController)
                     .build();
@@ -411,7 +396,7 @@ public final class MediaEngine implements Player.Listener {
         }
     }
 
-    public ExoPlayer getExoPlayer() {
+    public SimpleExoPlayer getExoPlayer() {
         ensurePlayerReady();
         return exoPlayer;
     }
@@ -419,7 +404,7 @@ public final class MediaEngine implements Player.Listener {
     private void setState(PlaybackState.Phase newPhase) {
         if (currentPhase == newPhase) return;
         if (!currentPhase.canTransitionTo(newPhase)) {
-            logger.warning("Invalid state transition: " + currentPhase + " → " + newPhase);
+            logger.w("Invalid state transition: " + currentPhase + " → " + newPhase);
         }
         currentPhase = newPhase;
         for (EngineCallbacks cb : callbacks) {
@@ -499,10 +484,10 @@ public final class MediaEngine implements Player.Listener {
         }
     };
 
-    // ─── ExoPlayer.Listener ─────────────────────────────────────────────────
+    // ─── Player.EventListener ──────────────────────────────────────────────
 
     @Override
-    public void onPlaybackStateChanged(int playbackState) {
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         switch (playbackState) {
             case Player.STATE_IDLE:
                 setState(PlaybackState.Phase.PREFLIGHT);
@@ -511,7 +496,7 @@ public final class MediaEngine implements Player.Listener {
                 setState(PlaybackState.Phase.BUFFERING);
                 break;
             case Player.STATE_READY:
-                if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
+                if (playWhenReady) {
                     setState(PlaybackState.Phase.PLAYING);
                 } else {
                     setState(PlaybackState.Phase.PAUSED);
@@ -524,16 +509,6 @@ public final class MediaEngine implements Player.Listener {
     }
 
     @Override
-    public void onIsPlayingChanged(boolean isPlaying) {
-        if (isPlaying) {
-            setState(PlaybackState.Phase.PLAYING);
-        }
-        for (EngineCallbacks cb : callbacks) {
-            cb.onIsPlayingChanged(isPlaying);
-        }
-    }
-
-    @Override
     public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
         for (EngineCallbacks cb : callbacks) {
             cb.onPlayWhenReadyChanged(playWhenReady, reason);
@@ -541,23 +516,30 @@ public final class MediaEngine implements Player.Listener {
     }
 
     @Override
-    public void onPlayerError(@NonNull PlaybackException error) {
-        logger.error("Player error: " + error.getMessage(), error);
+    public void onIsPlayingChanged(boolean isPlaying) {
+        for (EngineCallbacks cb : callbacks) {
+            cb.onIsPlayingChanged(isPlaying);
+        }
+    }
+
+    @Override
+    public void onPlayerError(@NonNull ExoPlaybackException error) {
+        logger.e("Player error: " + error.getMessage());
         notifyError(error, true);
         setState(PlaybackState.Phase.BLOCKED);
     }
 
     @Override
-    public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
+    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
         for (EngineCallbacks cb : callbacks) {
-            cb.onVideoSizeChanged(videoSize.width, videoSize.height);
+            cb.onVideoSizeChanged(width, height);
         }
     }
 
     @Override
-    public void onTracksChanged(@NonNull Tracks tracks) {
+    public void onTracksChanged(@NonNull TrackGroupArray trackGroups, @NonNull TrackSelectionArray trackSelections) {
         for (EngineCallbacks cb : callbacks) {
-            cb.onTracksChanged(tracks);
+            cb.onTracksChanged(trackGroups, trackSelections);
         }
     }
 
@@ -569,16 +551,8 @@ public final class MediaEngine implements Player.Listener {
     }
 
     @Override
-    public void onPlaybackParametersChanged(
-            @NonNull androidx.media3.common.PlaybackParameters params) {
+    public void onPlaybackParametersChanged(@NonNull PlaybackParameters params) {
         notifyProgress();
-    }
-
-    @Override
-    public void onEvents(@NonNull Player player, @NonNull Player.Events events) {
-        if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) {
-            notifyMetadataChanged();
-        }
     }
 
     public Context getContext() {

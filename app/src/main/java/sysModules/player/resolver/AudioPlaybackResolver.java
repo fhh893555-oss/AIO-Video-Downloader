@@ -1,14 +1,12 @@
 package sysModules.player.resolver;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaMetadata;
-import androidx.media3.datasource.DataSource;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
 
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
@@ -27,7 +25,7 @@ public final class AudioPlaybackResolver {
     }
 
     @Nullable
-    public MediaSource resolve(@NonNull Context context, @NonNull StreamInfo info) {
+    public MediaSource resolve(@NonNull StreamInfo info) {
         List<AudioStream> audioStreams = info.getAudioStreams();
         if (audioStreams.isEmpty()) {
             logger.w("No audio streams available for " + info.getName());
@@ -40,10 +38,6 @@ public final class AudioPlaybackResolver {
         MediaItem mediaItem = new MediaItem.Builder()
                 .setUri(selected.getUrl())
                 .setMediaId(info.getUrl())
-                .setMediaMetadata(new MediaMetadata.Builder()
-                        .setTitle(info.getName())
-                        .setArtist(info.getUploaderName())
-                        .build())
                 .build();
 
         return new ProgressiveMediaSource.Factory(dataSourceFactory)

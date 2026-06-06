@@ -152,7 +152,7 @@ public final class AudioFocusHelper {
 			hasFocus = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
 			return hasFocus;
 		} catch (Exception error) {
-			logger.error("Failed to request audio focus", error);
+			logger.error("Failed to request audio focus: " + error.getMessage());
 			return false;
 		}
 	}
@@ -207,7 +207,7 @@ public final class AudioFocusHelper {
 				isDucked = false;
 			}
 		} catch (Exception error) {
-			logger.error("Failed to abandon audio focus", error);
+			logger.error("Failed to abandon audio focus: " + error.getMessage());
 		}
 	}
 	

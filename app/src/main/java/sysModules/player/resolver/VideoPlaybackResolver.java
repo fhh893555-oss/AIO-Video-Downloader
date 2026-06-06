@@ -4,15 +4,14 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaMetadata;
-import androidx.media3.datasource.DataSource;
-import androidx.media3.exoplayer.dash.DashMediaSource;
-import androidx.media3.exoplayer.hls.HlsMediaSource;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 
-import org.schabi.newpipe.extractor.stream.AudioStream;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
+
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.VideoStream;
@@ -84,11 +83,7 @@ public final class VideoPlaybackResolver {
 
         MediaItem.Builder builder = new MediaItem.Builder()
                 .setUri(selected.getUrl())
-                .setMediaId(info.getUrl())
-                .setMediaMetadata(new MediaMetadata.Builder()
-                        .setTitle(info.getName())
-                        .setArtist(info.getUploaderName())
-                        .build());
+                .setMediaId(info.getUrl());
 
         if (selected.getFormat() != null) {
             String mimeType = selected.getFormat().mimeType;

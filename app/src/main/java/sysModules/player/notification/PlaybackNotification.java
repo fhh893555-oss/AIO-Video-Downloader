@@ -9,8 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
-import androidx.media3.common.text.Cue;
-import androidx.media3.common.Tracks;
+import androidx.media.session.MediaSessionCompat;
+
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
 import com.nextgen.R;
 
@@ -28,7 +31,7 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     private final Context context;
     private final NotificationManager notificationManager;
-    @Nullable private androidx.media.session.MediaSessionCompat.Token sessionToken;
+    @Nullable private MediaSessionCompat.Token sessionToken;
     private boolean started;
     private boolean isPlaying;
 
@@ -42,7 +45,7 @@ public final class PlaybackNotification implements EngineCallbacks {
         createChannel();
     }
 
-    public void setSessionToken(@Nullable androidx.media.session.MediaSessionCompat.Token token) {
+    public void setSessionToken(@Nullable MediaSessionCompat.Token token) {
         this.sessionToken = token;
     }
 
@@ -169,7 +172,8 @@ public final class PlaybackNotification implements EngineCallbacks {
     }
 
     @Override
-    public void onTracksChanged(@NonNull Tracks tracks) {
+    public void onTracksChanged(@NonNull TrackGroupArray trackGroups,
+                                 @NonNull TrackSelectionArray trackSelections) {
     }
 
     @Override

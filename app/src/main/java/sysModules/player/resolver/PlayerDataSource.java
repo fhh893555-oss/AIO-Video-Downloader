@@ -3,11 +3,12 @@ package sysModules.player.resolver;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.media3.datasource.DataSource;
-import androidx.media3.datasource.DefaultHttpDataSource;
-import androidx.media3.datasource.cache.CacheDataSource;
-import androidx.media3.datasource.cache.NoOpCacheEvictor;
-import androidx.media3.datasource.cache.SimpleCache;
+
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
 
@@ -22,7 +23,7 @@ public final class PlayerDataSource implements DataSource.Factory {
                 .setReadTimeoutMs(60_000)
                 .setAllowCrossProtocolRedirects(true);
 
-        File cacheDir = new File(context.getCacheDir(), "media3_cache");
+        File cacheDir = new File(context.getCacheDir(), "exo_cache");
         cache = new SimpleCache(cacheDir, new NoOpCacheEvictor());
     }
 
