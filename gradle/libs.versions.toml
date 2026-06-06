@@ -15,6 +15,7 @@ exoplayer2 = "2.19.1"
 mp4_iso_parser = "1.1.22"
 objectbox = "5.4.2"
 okhttp_sse = "5.3.2"
+preference = "1.2.1"
 retrofit = "3.0.0"
 documentfile = "1.1.0"
 jsoup = "1.22.2"
@@ -31,6 +32,7 @@ desugar-jdk-libs-nio = { module = "com.android.tools:desugar_jdk_libs_nio", vers
 
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 styled-cardview = { module = "com.github.dangiashish:StyledCardView", version.ref = "styled_cardview" }
 
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle_view_model" }
