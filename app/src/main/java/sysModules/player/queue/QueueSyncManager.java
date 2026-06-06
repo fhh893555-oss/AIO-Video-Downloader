@@ -58,7 +58,7 @@ public class QueueSyncManager implements QueueListener {
                 break;
             case ERROR:
                 QueueEvent.ErrorEvent ee = (QueueEvent.ErrorEvent) event;
-                logger.e("Queue error at index " + ee.getErrorIndex());
+                logger.error("Queue error at index " + ee.getErrorIndex());
                 if (queue != null) {
                     PlayQueueItem item = queue.getItem();
                     if (item != null && item.getError() != null) {
@@ -116,7 +116,7 @@ public class QueueSyncManager implements QueueListener {
             public void onError(Throwable error) {
                 mainHandler.post(() -> {
                     loading = false;
-                    logger.e("Failed to load stream: " + item.getUrl(), error);
+                    logger.error("Failed to load stream: " + item.getUrl(), error);
                     item.setError(error);
                     if (queue != null) {
                         queue.error();

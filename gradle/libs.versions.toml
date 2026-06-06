@@ -1,6 +1,7 @@
 [versions]
 agp = "9.2.1"
 appcompat = "1.7.1"
+androidx_media = "1.8.0"
 styled_cardview = "1.0.0"
 converter_gson = "3.0.0"
 desugar_jdk_libs_nio = "2.1.5"
@@ -50,6 +51,8 @@ exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", versi
 exoplayer-hls = { module = "com.google.android.exoplayer:exoplayer-hls", version.ref = "exoplayer2" }
 exoplayer-dash = { module = "com.google.android.exoplayer:exoplayer-dash", version.ref = "exoplayer2" }
 exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer2" }
+androidx-media = { module = "androidx.media:media", version.ref = "androidx_media" }
+
 mp4-iso-parser = { module = "com.googlecode.mp4parser:isoparser", version.ref = "mp4_iso_parser" }
 
 objectbox-android = { module = "io.objectbox:objectbox-android", version.ref = "objectbox" }

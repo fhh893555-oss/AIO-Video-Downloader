@@ -42,7 +42,7 @@ public class PlaybackService extends Service {
         engine.addCallback(notification);
 
         ServiceBridge.getInstance().init(this, engine, queueManager, playerType);
-        logger.d("PlaybackService created");
+        logger.debug("PlaybackService created");
     }
 
     @Override
@@ -105,7 +105,7 @@ public class PlaybackService extends Service {
             startForeground(NotificationConstants.NOTIFICATION_ID,
                     buildPlaceholderNotification());
             serviceStarted = true;
-            logger.d("Service moved to foreground");
+            logger.debug("Service moved to foreground");
         }
     }
 
@@ -128,7 +128,7 @@ public class PlaybackService extends Service {
         }
         notification.stop();
         sessionManager.release();
-        logger.d("Playback stopped");
+        logger.debug("Playback stopped");
     }
 
     private void closePlayer() {
@@ -139,7 +139,7 @@ public class PlaybackService extends Service {
 
     @Override
     public void onDestroy() {
-        logger.d("PlaybackService destroyed");
+        logger.debug("PlaybackService destroyed");
         ServiceBridge.getInstance().clear();
         engine.removeCallback(notification);
         notification.stop();

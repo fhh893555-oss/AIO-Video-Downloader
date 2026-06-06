@@ -408,7 +408,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     private void setState(PlaybackState.Phase newPhase) {
         if (currentPhase == newPhase) return;
         if (!currentPhase.canTransitionTo(newPhase)) {
-            logger.w("Invalid state transition: " + currentPhase + " → " + newPhase);
+            logger.warning("Invalid state transition: " + currentPhase + " → " + newPhase);
         }
         currentPhase = newPhase;
         for (EngineCallbacks cb : callbacks) {
@@ -538,7 +538,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
 
     @Override
     public void onPlayerError(@NonNull ExoPlaybackException error) {
-        logger.e("Player error: " + error.getMessage());
+        logger.error("Player error: " + error.getMessage());
         notifyError(error, true);
         setState(PlaybackState.Phase.BLOCKED);
     }

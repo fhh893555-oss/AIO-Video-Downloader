@@ -78,7 +78,7 @@ public final class MediaSourceBuilder {
                                                  @NonNull DataSource.Factory dataSourceFactory) {
         List<AudioStream> audioStreams = info.getAudioStreams();
         if (audioStreams.isEmpty()) {
-            logger.w("No audio streams available");
+            logger.warning("No audio streams available");
             return null;
         }
         AudioStream selected = audioStreams.get(0);

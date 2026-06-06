@@ -20,7 +20,7 @@ public final class MediaSessionManager {
         release();
         mediaSession = new MediaSessionCompat(context, "TubeAIOPlayback");
         mediaSession.setActive(true);
-        logger.d("MediaSession connected");
+        logger.debug("MediaSession connected");
     }
 
     @Nullable
@@ -38,7 +38,7 @@ public final class MediaSessionManager {
             mediaSession.setActive(false);
             mediaSession.release();
             mediaSession = null;
-            logger.d("MediaSession released");
+            logger.debug("MediaSession released");
         }
     }
 }

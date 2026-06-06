@@ -97,6 +97,8 @@ dependencies {
     implementation libs.exoplayer.hls
     implementation libs.exoplayer.dash
     implementation libs.exoplayer.ui
+    implementation libs.androidx.media
+
     implementation libs.mp4.iso.parser
 
     implementation libs.lottie

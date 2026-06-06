@@ -165,7 +165,7 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     @Override
     public void onError(@NonNull Throwable error, boolean recoverable) {
-        logger.e("Playback error: " + error.getMessage());
+        logger.error("Playback error: " + error.getMessage());
     }
 
     @Override

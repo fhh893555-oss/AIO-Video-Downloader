@@ -68,7 +68,7 @@ public final class VideoPlaybackResolver {
         List<VideoStream> videoOnlyStreams = info.getVideoOnlyStreams();
 
         if (videoStreams.isEmpty() && videoOnlyStreams.isEmpty()) {
-            logger.w("No video streams available for " + info.getName());
+            logger.warning("No video streams available for " + info.getName());
             return null;
         }
 

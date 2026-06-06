@@ -77,7 +77,7 @@ abstract class AbstractInfoPlayQueue<T extends ListInfo<? extends InfoItem>>
     }
 
     protected void onFetchError(@NonNull Throwable e) {
-        logger.e("Error fetching more items, marking as complete", e);
+        logger.error("Error fetching more items, marking as complete", e);
         isComplete = true;
         notifyChange();
     }

@@ -28,7 +28,7 @@ public final class AudioPlaybackResolver {
     public MediaSource resolve(@NonNull StreamInfo info) {
         List<AudioStream> audioStreams = info.getAudioStreams();
         if (audioStreams.isEmpty()) {
-            logger.w("No audio streams available for " + info.getName());
+            logger.warning("No audio streams available for " + info.getName());
             return null;
         }
 

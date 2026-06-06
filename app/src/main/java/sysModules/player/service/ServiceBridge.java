@@ -35,7 +35,7 @@ public final class ServiceBridge {
         this.queueManager = queueManager;
         this.playerType = playerType;
         this.initialized = true;
-        logger.d("ServiceBridge initialized: " + playerType);
+        logger.debug("ServiceBridge initialized: " + playerType);
     }
 
     public synchronized void clear() {
@@ -44,7 +44,7 @@ public final class ServiceBridge {
         queueManager = null;
         playerType = null;
         initialized = false;
-        logger.d("ServiceBridge cleared");
+        logger.debug("ServiceBridge cleared");
     }
 
     public synchronized boolean isInitialized() {
