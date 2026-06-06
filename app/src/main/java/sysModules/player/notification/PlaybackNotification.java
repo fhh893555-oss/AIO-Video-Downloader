@@ -11,15 +11,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
 import androidx.media.session.MediaSessionCompat;
 
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.text.Cue;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.Tracks;
+import com.google.android.exoplayer2.text.CueGroup;
 
 import com.nextgen.R;
 
 import org.schabi.newpipe.extractor.stream.StreamInfo;
-
-import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.engine.EngineCallbacks;
@@ -172,12 +169,11 @@ public final class PlaybackNotification implements EngineCallbacks {
     }
 
     @Override
-    public void onTracksChanged(@NonNull TrackGroupArray trackGroups,
-                                 @NonNull TrackSelectionArray trackSelections) {
+    public void onTracksChanged(@NonNull Tracks tracks) {
     }
 
     @Override
-    public void onCues(@NonNull List<Cue> cues) {
+    public void onCues(@NonNull CueGroup cueGroup) {
     }
 
     @Override

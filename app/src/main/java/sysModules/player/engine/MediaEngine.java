@@ -18,11 +18,8 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.text.Cue;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.Tracks;
+import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 
 import org.schabi.newpipe.extractor.stream.StreamInfo;
@@ -38,7 +35,7 @@ import sysModules.player.resolver.AudioPlaybackResolver;
 import sysModules.player.resolver.PlayerDataSource;
 import sysModules.player.resolver.VideoPlaybackResolver;
 
-public final class MediaEngine implements Player.EventListener, AnalyticsListener {
+public final class MediaEngine implements Player.Listener, AnalyticsListener {
     private static final LoggerUtils logger = LoggerUtils.from(MediaEngine.class);
 
     public static final int PROGRESS_LOOP_INTERVAL_MILLIS = 1000;
@@ -501,10 +498,10 @@ public final class MediaEngine implements Player.EventListener, AnalyticsListene
         }
     };
 
-    // ─── Player.EventListener ──────────────────────────────────────────────
+    // ─── Player.Listener ───────────────────────────────────────────────────
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+    public void onPlaybackStateChanged(int playbackState) {
         switch (playbackState) {
             case Player.STATE_IDLE:
                 setState(PlaybackState.Phase.PREFLIGHT);
@@ -513,7 +510,7 @@ public final class MediaEngine implements Player.EventListener, AnalyticsListene
                 setState(PlaybackState.Phase.BUFFERING);
                 break;
             case Player.STATE_READY:
-                if (playWhenReady) {
+                if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
                     setState(PlaybackState.Phase.PLAYING);
                 } else {
                     setState(PlaybackState.Phase.PAUSED);
@@ -554,16 +551,16 @@ public final class MediaEngine implements Player.EventListener, AnalyticsListene
     }
 
     @Override
-    public void onTracksChanged(@NonNull TrackGroupArray trackGroups, @NonNull TrackSelectionArray trackSelections) {
+    public void onTracksChanged(@NonNull Tracks tracks) {
         for (EngineCallbacks cb : callbacks) {
-            cb.onTracksChanged(trackGroups, trackSelections);
+            cb.onTracksChanged(tracks);
         }
     }
 
     @Override
-    public void onCues(@NonNull List<Cue> cues) {
+    public void onCues(@NonNull CueGroup cueGroup) {
         for (EngineCallbacks cb : callbacks) {
-            cb.onCues(cues);
+            cb.onCues(cueGroup);
         }
     }
 
