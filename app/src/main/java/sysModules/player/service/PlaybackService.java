@@ -197,6 +197,19 @@ public class PlaybackService extends Service implements PlaybackListener {
 			case NotificationConstants.ACTION_CLOSE:
 				closePlayer();
 				break;
+			case NotificationConstants.ACTION_LOAD_AND_PLAY:
+				if (intent.hasExtra(NotificationConstants.EXTRA_PLAY_QUEUE)) {
+					try {
+						Object extra = intent.getSerializableExtra(
+							NotificationConstants.EXTRA_PLAY_QUEUE);
+						if (extra instanceof PlayQueue) {
+							loadAndPlay((PlayQueue) extra);
+						}
+					} catch (ClassCastException e) {
+						logger.error("Invalid play queue extra", e);
+					}
+				}
+				break;
 		}
 	}
 	

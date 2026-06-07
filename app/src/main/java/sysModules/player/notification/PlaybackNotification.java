@@ -3,7 +3,11 @@ package sysModules.player.notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +20,14 @@ import com.google.android.exoplayer2.text.CueGroup;
 
 import com.nextgen.R;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.engine.EngineCallbacks;
@@ -28,17 +39,22 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     private final Context context;
     private final NotificationManager notificationManager;
+    private final Handler mainHandler;
+    private final ExecutorService imageLoader;
     @Nullable private MediaSessionCompat.Token sessionToken;
     private boolean started;
     private boolean isPlaying;
 
     @Nullable private String currentTitle;
     @Nullable private String currentUploader;
+    @Nullable private Bitmap currentAlbumArt;
 
     public PlaybackNotification(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.notificationManager = (NotificationManager)
                 this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        this.mainHandler = new Handler(Looper.getMainLooper());
+        this.imageLoader = Executors.newSingleThreadExecutor();
         createChannel();
     }
 
@@ -53,6 +69,7 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     public void stop() {
         started = false;
+        imageLoader.shutdownNow();
         notificationManager.cancel(NotificationConstants.NOTIFICATION_ID);
     }
 
@@ -76,6 +93,11 @@ public final class PlaybackNotification implements EngineCallbacks {
             builder.setStyle(new MediaStyle()
                     .setMediaSession(sessionToken)
                     .setShowActionsInCompactView(0, 1, 2));
+        }
+
+        Bitmap art = currentAlbumArt;
+        if (art != null) {
+            builder.setLargeIcon(art);
         }
 
         builder.addAction(buildPreviousAction());
@@ -138,6 +160,31 @@ public final class PlaybackNotification implements EngineCallbacks {
                 NotificationActions.close(context));
     }
 
+    /**
+     * Loads album art bitmap from a URL in a background thread.
+     * Updates the notification when the image is loaded.
+     */
+    private void loadAlbumArt(@NonNull String imageUrl) {
+        imageLoader.execute(() -> {
+            try {
+                InputStream in = new URL(imageUrl).openStream();
+                Bitmap raw = BitmapFactory.decodeStream(in);
+                in.close();
+                if (raw != null) {
+                    final Bitmap scaled = Bitmap.createScaledBitmap(raw, 128, 128, true);
+                    mainHandler.post(() -> {
+                        currentAlbumArt = scaled;
+                        if (started) {
+                            showNotification(isPlaying);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                logger.debug("Failed to load album art: " + e.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onStateChanged(@NonNull PlaybackState.Phase phase) {
         isPlaying = phase == PlaybackState.Phase.PLAYING
@@ -155,6 +202,15 @@ public final class PlaybackNotification implements EngineCallbacks {
     public void onMetadataChanged(@NonNull PlayQueueItem item, @Nullable StreamInfo info) {
         currentTitle = item.getTitle();
         currentUploader = item.getUploader();
+        currentAlbumArt = null;
+
+        // Load album art from thumbnails
+        List<Image> thumbnails = item.getThumbnails();
+        if (!thumbnails.isEmpty()) {
+            String artUrl = thumbnails.get(thumbnails.size() - 1).getUrl();
+            loadAlbumArt(artUrl);
+        }
+
         if (started) {
             showNotification(isPlaying);
         }

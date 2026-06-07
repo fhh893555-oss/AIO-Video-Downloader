@@ -1,5 +1,6 @@
 package userInterface.mainScreen;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
@@ -28,6 +30,11 @@ import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
+import sysModules.player.model.PlayerType;
+import sysModules.player.notification.NotificationConstants;
+import sysModules.player.queue.PlayQueueItem;
+import sysModules.player.queue.SinglePlayQueue;
+import sysModules.player.service.PlaybackService;
 import userInterface.fragmentsUIs.homepage.HomepageFragment;
 
 /**
@@ -564,7 +571,40 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		isBottomNavVisible = true;
 	}
 	
+	/**
+	 * Demo method that plays audio in the background from a YouTube URL.
+	 * This creates a single-item play queue, starts the PlaybackService
+	 * as a foreground service, and loads the queue for background audio playback
+	 * with notification and lock screen controls.
+	 *
+	 * <p>The album art is automatically extracted from YouTube thumbnails and
+	 * displayed in the notification and lock screen.</p>
+	 */
 	private void startPlayingAudioInBackground() {
-		String videoUrl = "https://youtu.be/qPSHP1SqGn8";
+		String videoUrl = "https://youtu.be/AcEXjRmen6Y";
+
+		// Create a PlayQueueItem from the URL
+		// Service ID 0 = YouTube
+		PlayQueueItem queueItem = new PlayQueueItem(
+				videoUrl,          // title (will be overridden when StreamInfo loads)
+				videoUrl,          // url
+				0,                 // serviceId (YouTube)
+				0,                 // duration (unknown until resolved)
+				java.util.Collections.emptyList(),  // thumbnails (loaded later)
+				"",                // uploader (loaded later)
+				null,              // uploaderUrl
+				org.schabi.newpipe.extractor.stream.StreamType.VIDEO_STREAM
+		);
+
+		SinglePlayQueue queue = new SinglePlayQueue(queueItem);
+
+		// Start the playback service with the queue
+		Intent intent = new Intent(this, PlaybackService.class);
+		intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
+		intent.putExtra(NotificationConstants.EXTRA_PLAY_QUEUE, queue);
+		intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
+
+		ContextCompat.startForegroundService(this, intent);
+		logger.debug("Starting audio playback for: " + videoUrl);
 	}
 }

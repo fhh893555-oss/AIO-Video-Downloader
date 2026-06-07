@@ -17,6 +17,7 @@ public final class NotificationConstants {
     public static final String ACTION_PREVIOUS = "sysModules.player.action.PREVIOUS";
     public static final String ACTION_STOP = "sysModules.player.action.STOP";
     public static final String ACTION_CLOSE = "sysModules.player.action.CLOSE";
+    public static final String ACTION_LOAD_AND_PLAY = "sysModules.player.action.LOAD_AND_PLAY";
 
     public static final String EXTRA_PLAY_QUEUE = "sysModules.player.extra.PLAY_QUEUE";
     public static final String EXTRA_PLAYER_TYPE = "sysModules.player.extra.PLAYER_TYPE";
