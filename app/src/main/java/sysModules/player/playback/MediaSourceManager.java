@@ -229,14 +229,22 @@ public class MediaSourceManager {
 
     private boolean isPlaybackReady() {
         if (playlist.size() != playQueue.size()) {
+            logger.debug("isPlaybackReady: size mismatch playlist=" + playlist.size()
+                    + " queue=" + playQueue.size());
             return false;
         }
         final ManagedMediaSource mediaSource = playlist.get(playQueue.getIndex());
         final PlayQueueItem playQueueItem = playQueue.getItem();
         if (mediaSource == null || playQueueItem == null) {
+            logger.debug("isPlaybackReady: null source=" + (mediaSource == null)
+                    + " item=" + (playQueueItem == null));
             return false;
         }
-        return mediaSource.isStreamEqual(playQueueItem);
+        final boolean equal = mediaSource.isStreamEqual(playQueueItem);
+        logger.debug("isPlaybackReady: sourceType="
+                + mediaSource.getClass().getSimpleName()
+                + " isStreamEqual=" + equal);
+        return equal;
     }
 
     private void maybeBlock() {

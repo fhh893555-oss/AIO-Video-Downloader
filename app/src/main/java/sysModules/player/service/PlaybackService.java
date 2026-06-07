@@ -637,8 +637,9 @@ public class PlaybackService extends Service implements PlaybackListener {
 
 	@Override
 	public void onPlaybackUnblock(@NonNull final com.google.android.exoplayer2.source.MediaSource mediaSource) {
-		logger.debug("onPlaybackUnblock() called");
-		engine.setMediaSourceAndPrepare(mediaSource);
+        logger.debug("onPlaybackUnblock() called");
+        engine.setMediaSourceAndPrepare(mediaSource);
+        engine.play();
 	}
 
 	@Override
