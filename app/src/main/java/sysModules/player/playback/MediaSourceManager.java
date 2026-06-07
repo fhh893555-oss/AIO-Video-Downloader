@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -99,6 +101,7 @@ public class MediaSourceManager {
     private final ManagedMediaSourcePlaylist playlist;
     private volatile boolean isBlocked;
     private volatile boolean disposed;
+    private final Map<Integer, ManagedMediaSource> resolvedSources = new ConcurrentHashMap<>();
 
     public MediaSourceManager(@NonNull final PlaybackListener listener,
                               @NonNull final PlayQueue playQueue) {
@@ -233,18 +236,20 @@ public class MediaSourceManager {
                     + " queue=" + playQueue.size());
             return false;
         }
-        final ManagedMediaSource mediaSource = playlist.get(playQueue.getIndex());
-        final PlayQueueItem playQueueItem = playQueue.getItem();
-        if (mediaSource == null || playQueueItem == null) {
-            logger.debug("isPlaybackReady: null source=" + (mediaSource == null)
-                    + " item=" + (playQueueItem == null));
+        final int currentIndex = playQueue.getIndex();
+        final ManagedMediaSource resolved = resolvedSources.get(currentIndex);
+        if (resolved == null) {
+            logger.debug("isPlaybackReady: no resolved source for index " + currentIndex);
             return false;
         }
-        final boolean equal = mediaSource.isStreamEqual(playQueueItem);
-        logger.debug("isPlaybackReady: sourceType="
-                + mediaSource.getClass().getSimpleName()
-                + " isStreamEqual=" + equal);
-        return equal;
+        final PlayQueueItem playQueueItem = playQueue.getItem();
+        if (playQueueItem == null) {
+            logger.debug("isPlaybackReady: queue item is null");
+            return false;
+        }
+        logger.debug("isPlaybackReady: sourceType=" + resolved.getClass().getSimpleName()
+                + " index=" + currentIndex + " ready=true");
+        return true;
     }
 
     private void maybeBlock() {
@@ -398,6 +403,7 @@ public class MediaSourceManager {
         loadingItems.remove(item);
         final Integer storedIndex = loadingIndices.remove(item);
         final int itemIndex = storedIndex != null ? storedIndex : playQueue.indexOf(item);
+        resolvedSources.put(itemIndex, mediaSource);
         logger.debug("onMediaSourceReceived: item=" + item.getTitle()
                 + " sourceType=" + mediaSource.getClass().getSimpleName()
                 + " itemIndex=" + itemIndex
