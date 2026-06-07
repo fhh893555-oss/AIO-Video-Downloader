@@ -140,7 +140,8 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     @Override
     public void onStateChanged(@NonNull PlaybackState.Phase phase) {
-        isPlaying = phase == PlaybackState.Phase.PLAYING;
+        isPlaying = phase == PlaybackState.Phase.PLAYING
+                || phase == PlaybackState.Phase.BUFFERING;
         if (started) {
             showNotification(isPlaying);
         }

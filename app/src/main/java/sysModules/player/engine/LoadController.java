@@ -36,7 +36,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 @SuppressWarnings("ALL")
 public final class LoadController extends DefaultLoadControl {
 	
-	private boolean preloadingEnabled = true;
+	private volatile boolean preloadingEnabled = true;
 	
 	/**
 	 * Disables preloading for the currently playing track. When preloading is

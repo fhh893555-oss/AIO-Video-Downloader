@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import sysModules.player.model.QueueEvent;
 
@@ -20,10 +21,10 @@ public abstract class PlayQueue implements Serializable {
     protected final List<Integer> history;
     protected transient List<QueueListener> listeners;
     protected transient Handler mainHandler;
-    protected int index;
+    protected volatile int index;
     protected int originalIndex;
-    protected boolean shuffled;
-    protected boolean disposed;
+    protected volatile boolean shuffled;
+    protected volatile boolean disposed;
 
     protected PlayQueue(int initialIndex, @NonNull List<PlayQueueItem> initialItems) {
         this.streams = new ArrayList<>(initialItems);
@@ -33,7 +34,7 @@ public abstract class PlayQueue implements Serializable {
         this.originalIndex = this.index;
         this.shuffled = false;
         this.disposed = true;
-        this.listeners = new ArrayList<>();
+        this.listeners = new CopyOnWriteArrayList<>();
         this.mainHandler = new Handler(Looper.getMainLooper());
         if (!streams.isEmpty() && index >= 0 && index < streams.size()) {
             history.add(index);
@@ -42,13 +43,16 @@ public abstract class PlayQueue implements Serializable {
 
     public synchronized void init() {
         disposed = false;
-        if (listeners == null) listeners = new ArrayList<>();
+        if (listeners == null) listeners = new CopyOnWriteArrayList<>();
         if (mainHandler == null) mainHandler = new Handler(Looper.getMainLooper());
         broadcast(new QueueEvent.InitEvent());
     }
 
     public synchronized void dispose() {
         disposed = true;
+        if (mainHandler != null) {
+            mainHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     public boolean isDisposed() { return disposed; }
@@ -65,7 +69,7 @@ public abstract class PlayQueue implements Serializable {
         if (disposed || listeners == null) return;
         mainHandler.post(() -> {
             if (disposed) return;
-            for (QueueListener l : new ArrayList<>(listeners)) {
+            for (QueueListener l : listeners) {
                 l.onQueueChanged(e);
             }
         });
@@ -136,6 +140,8 @@ public abstract class PlayQueue implements Serializable {
 
     public synchronized void move(int fromIndex, int toIndex) {
         if (fromIndex == toIndex) return;
+        if (fromIndex < 0 || fromIndex >= streams.size()) return;
+        if (toIndex < 0 || toIndex >= streams.size()) return;
         PlayQueueItem item = streams.remove(fromIndex);
         streams.add(toIndex, item);
         if (index == fromIndex) {
@@ -150,9 +156,10 @@ public abstract class PlayQueue implements Serializable {
 
     public synchronized void shuffle() {
         if (streams.size() <= 2) return;
+        PlayQueueItem current = getItem();
+        if (current == null) return;
         backup.clear();
         backup.addAll(streams);
-        PlayQueueItem current = getItem();
         List<PlayQueueItem> toShuffle = new ArrayList<>(streams);
         toShuffle.remove(current);
         Collections.shuffle(toShuffle, new Random());

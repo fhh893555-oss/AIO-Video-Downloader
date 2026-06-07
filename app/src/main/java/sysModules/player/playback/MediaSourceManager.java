@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import coreUtils.library.process.LoggerUtils;
@@ -89,7 +90,9 @@ public class MediaSourceManager {
     // ─── Loader management (replaces CompositeDisposable) ────────────────
     private final Set<PlayQueueItem> loadingItems =
             Collections.synchronizedSet(new HashSet<>());
-    private final List<Thread> loaderThreads = new ArrayList<>();
+    private final java.util.concurrent.ConcurrentHashMap<PlayQueueItem, Integer> loadingIndices =
+            new java.util.concurrent.ConcurrentHashMap<>();
+    private final List<Thread> loaderThreads = new CopyOnWriteArrayList<>();
 
     // ─── State ───────────────────────────────────────────────────────────
     @NonNull
@@ -114,6 +117,10 @@ public class MediaSourceManager {
         mainHandler.removeCallbacks(debouncedLoadRunnable);
         mainHandler.removeCallbacks(edgeCheckRunnable);
         cancelAllLoaders();
+        // Cancel any pending fetch threads in the queue items
+        for (PlayQueueItem item : playQueue.getStreams()) {
+            item.cancelFetch();
+        }
         playQueue.removeListener(queueListener);
     }
 
@@ -282,6 +289,7 @@ public class MediaSourceManager {
         if (!loadingItems.contains(item) && isCorrectionNeeded(item)) {
             logger.debug("Loading item: " + item.getTitle());
             loadingItems.add(item);
+            loadingIndices.put(item, playQueue.indexOf(item));
 
             final Thread loaderThread = new Thread(() -> {
                 item.fetchStreamInfo(new PlayQueueItem.StreamCallback() {
@@ -339,8 +347,8 @@ public class MediaSourceManager {
     private void onMediaSourceReceived(@NonNull final PlayQueueItem item,
                                        @NonNull final ManagedMediaSource mediaSource) {
         loadingItems.remove(item);
-
-        final int itemIndex = playQueue.indexOf(item);
+        final Integer storedIndex = loadingIndices.remove(item);
+        final int itemIndex = storedIndex != null ? storedIndex : playQueue.indexOf(item);
         if (isCorrectionNeeded(item)) {
             logger.debug("Updating index " + itemIndex + " with " + item.getTitle());
             playlist.update(itemIndex, mediaSource, mainHandler, this::maybeSynchronizePlayer);
@@ -377,29 +385,24 @@ public class MediaSourceManager {
     }
 
     private void cancelAllLoaders() {
-        synchronized (loaderThreads) {
-            for (final Thread t : loaderThreads) {
-                t.interrupt();
-            }
-            loaderThreads.clear();
+        for (final Thread t : loaderThreads) {
+            t.interrupt();
         }
+        loaderThreads.clear();
         loadingItems.clear();
+        loadingIndices.clear();
     }
 
     // ─── Playlist helpers ────────────────────────────────────────────────
 
     private void resetSources() {
-        // Note: playlist is reassigned in the constructor but here we just clear the old one
-        // by replacing it — the ConcatenatingMediaSource is replaced by creating a new playlist
-        // This is safe because maybeBlock() is called before any unblock
-        playlist.update(0, PlaceholderMediaSource.COPY);
-        // Actually, for a full reset we need to replace the entire playlist reference.
-        // But since ManagedMediaSourcePlaylist wraps a ConcatenatingMediaSource that the
-        // player is already referencing via getParentMediaSource(), we can't replace it.
-        // Instead, we clear it by removing all and re-expanding. But ConcatenatingMediaSource
-        // doesn't support clear(). The approach used by NewPipe is to create a new playlist
-        // and set the new parent source on the player via onPlaybackUnblock.
-        // So we just do nothing here — the unblock will set the new source.
+        // Clear the playlist by removing all sources and re-expanding with placeholders.
+        // We can't replace the playlist reference since the player already holds
+        // getParentMediaSource(). Instead, clear it and re-populate.
+        while (playlist.size() > 0) {
+            playlist.remove(0);
+        }
+        populateSources();
     }
 
     private void populateSources() {
@@ -418,16 +421,17 @@ public class MediaSourceManager {
 
         final int leftBound = Math.max(0, currentIndex - WINDOW_SIZE);
         final int rightLimit = currentIndex + WINDOW_SIZE + 1;
-        final int rightBound = Math.min(playQueue.size(), rightLimit);
 
         final List<PlayQueueItem> allStreams = playQueue.getStreams();
+        final int rightBound = Math.min(allStreams.size(), rightLimit);
+
         final Set<PlayQueueItem> neighbors = new HashSet<>(
                 allStreams.subList(leftBound, rightBound));
 
         // Round-robin for small queues
-        final int excess = rightLimit - playQueue.size();
-        if (excess >= 0) {
-            neighbors.addAll(allStreams.subList(0, Math.min(playQueue.size(), excess)));
+        final int excess = rightLimit - allStreams.size();
+        if (excess > 0) {
+            neighbors.addAll(allStreams.subList(0, Math.min(allStreams.size(), excess)));
         }
         neighbors.remove(currentItem);
 

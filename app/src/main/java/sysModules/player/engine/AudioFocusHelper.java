@@ -21,9 +21,9 @@ import coreUtils.library.process.LoggerUtils;
  *
  * <p><strong>Focus change handling:</strong>
  * <ul>
- * <li>GAIN → Restores full volume, resumes playback if paused due to loss.</li>
- * <li>LOSS / LOSS_TRANSIENT → Pauses playback, tracks state for potential resumption.</li>
- * <li>LOSS_TRANSIENT_CAN_DUCK → Lowers volume to 20% (ducking).</li>
+ * <li>GAIN -> Restores full volume, resumes playback if paused due to loss.</li>
+ * <li>LOSS / LOSS_TRANSIENT -> Pauses playback, tracks state for potential resumption.</li>
+ * <li>LOSS_TRANSIENT_CAN_DUCK -> Lowers volume to 20% (ducking).</li>
  * </ul>
  *
  * <p>This class uses the modern {@link AudioFocusRequest} API (introduced in
@@ -37,19 +37,20 @@ import coreUtils.library.process.LoggerUtils;
  */
 public final class AudioFocusHelper {
 	private static final LoggerUtils logger = LoggerUtils.from(AudioFocusHelper.class);
-	
+
 	private static final float DUCK_VOLUME = 0.2f;
 	private static final int DUCK_DURATION_MS = 1500;
-	
+
 	private final MediaEngine engine;
 	private final AudioManager audioManager;
 	private final AudioManager.OnAudioFocusChangeListener focusChangeListener;
 	private AudioFocusRequest focusRequest;
-	
-	private boolean hasFocus;
-	private boolean wasPlayingBeforeLoss;
-	private boolean isDucked;
-	
+
+	private volatile boolean hasFocus;
+	private volatile boolean wasPlayingBeforeLoss;
+	private volatile boolean isDucked;
+	private volatile ValueAnimator duckAnimator;
+
 	/**
 	 * Constructs an AudioFocusHelper instance associated with the given media engine.
 	 * The helper automatically creates an audio focus change listener and retains
@@ -67,21 +68,10 @@ public final class AudioFocusHelper {
 			context.getApplicationContext(), AudioManager.class);
 		this.focusChangeListener = createListener();
 	}
-	
+
 	/**
 	 * Creates and returns the audio focus change listener that reacts to focus
-	 * events from the system. The listener handles three types of focus changes:
-	 *
-	 * <p><strong>AUDIOFOCUS_GAIN</strong> – Restores volume if ducked, resumes
-	 * playback if it was paused due to focus loss, and resets loss tracking.
-	 *
-	 * <p><strong>AUDIOFOCUS_LOSS / LOSS_TRANSIENT</strong> – Pauses playback if
-	 * currently playing, records that playback was active, and resets ducking.
-	 *
-	 * <p><strong>AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK</strong> – Reduces volume to
-	 * {@link #DUCK_VOLUME} (20%) if not already ducked.
-	 *
-	 * @return The configured {@link AudioManager.OnAudioFocusChangeListener} instance.
+	 * events from the system.
 	 */
 	private AudioManager.OnAudioFocusChangeListener createListener() {
 		return change -> {
@@ -118,41 +108,22 @@ public final class AudioFocusHelper {
 			}
 		};
 	}
-	
+
 	/**
-	 * Requests permanent audio focus for media playback. This method builds an
-	 * {@link AudioFocusRequest} with gain type {@link AudioManager#AUDIOFOCUS_GAIN}
-	 * and configures it to accept delayed focus gains. The request includes audio
-	 * attributes indicating media usage with music content type.
-	 *
-	 * <p><strong>Request behavior:</strong>
-	 * <ul>
-	 * <li>Focus gain type: AUDIOFOCUS_GAIN (expected to hold focus indefinitely).</li>
-	 * <li>Delayed focus gain is accepted via {@code setAcceptsDelayedFocusGain(true)}.</li>
-	 * <li>Audio attributes are set to {@code USAGE_MEDIA} and {@code CONTENT_TYPE_MUSIC}.</li>
-	 * <li>The focus change listener is attached to handle focus events.</li>
-	 * </ul>
-	 *
-	 * <p>If the request is granted, the {@code hasFocus} flag is set to {@code true}.
-	 * If the {@link AudioManager} is unavailable or an exception occurs, the method
-	 * returns {@code false} and logs the error.
+	 * Requests permanent audio focus for media playback.
 	 *
 	 * @return {@code true} if audio focus was successfully granted,
 	 * {@code false} otherwise.
-	 * @see AudioFocusRequest.Builder
-	 * @see AudioManager#requestAudioFocus(AudioFocusRequest)
-	 * @see #abandonFocus()
 	 */
 	public boolean requestFocus() {
 		if (audioManager == null) return false;
 		try {
 			focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
 				.setOnAudioFocusChangeListener(focusChangeListener)
-				.setWillPauseWhenDucked(true)
 				.setAcceptsDelayedFocusGain(true)
 				.setAudioAttributes(buildAudioAttributes())
 				.build();
-			
+
 			int result = audioManager.requestAudioFocus(focusRequest);
 			hasFocus = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
 			return hasFocus;
@@ -161,86 +132,60 @@ public final class AudioFocusHelper {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * Smoothly animates the playback volume from one level to another over
-	 * {@link #DUCK_DURATION_MS} milliseconds using a {@link ValueAnimator}.
-	 * The animation immediately sets the start volume and interpolates toward
-	 * the target volume, providing a seamless audio transition when focus is
-	 * regained after ducking.
+	 * Smoothly animates the playback volume from one level to another.
+	 * Cancels any in-progress duck animation first.
 	 *
-	 * @param from Volume level to animate from (0.0 – 1.0).
-	 * @param to   Volume level to animate to (0.0 – 1.0).
+	 * @param from Volume level to animate from (0.0 - 1.0).
+	 * @param to   Volume level to animate to (0.0 - 1.0).
 	 */
 	private void animateVolume(final float from, final float to) {
-		ValueAnimator animator = ValueAnimator.ofFloat(from, to);
-		animator.setDuration(DUCK_DURATION_MS);
-		animator.addListener(new AnimatorListenerAdapter() {
+		if (duckAnimator != null && duckAnimator.isRunning()) {
+			duckAnimator.cancel();
+		}
+		duckAnimator = ValueAnimator.ofFloat(from, to);
+		duckAnimator.setDuration(DUCK_DURATION_MS);
+		duckAnimator.addListener(new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationStart(final Animator animation) {
 				engine.setVolume(from);
 			}
-			
+
 			@Override
 			public void onAnimationEnd(final Animator animation) {
 				engine.setVolume(to);
 			}
-			
+
 			@Override
 			public void onAnimationCancel(final Animator animation) {
 				engine.setVolume(to);
 			}
 		});
-		animator.addUpdateListener(
+		duckAnimator.addUpdateListener(
 			animation -> engine.setVolume((float) animation.getAnimatedValue()));
-		animator.start();
+		duckAnimator.start();
 	}
-	
-	/**
-	 * Builds and returns the audio attributes for media playback focus requests.
-	 * The attributes specify that the audio stream is used for media playback
-	 * and contains music content. This classification helps the system make
-	 * appropriate focus management decisions when multiple apps request focus.
-	 *
-	 * @return An {@link AudioAttributes} instance with usage set to
-	 * {@link AudioAttributes#USAGE_MEDIA} and content type set to
-	 * {@link AudioAttributes#CONTENT_TYPE_MUSIC}.
-	 * @see AudioAttributes.Builder
-	 */
+
 	private static AudioAttributes buildAudioAttributes() {
 		return new AudioAttributes.Builder()
 			.setUsage(AudioAttributes.USAGE_MEDIA)
 			.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
 			.build();
 	}
-	
+
 	/**
-	 * Releases the previously requested audio focus. This method should be called
-	 * when playback stops or the app no longer needs exclusive audio focus (e.g.,
-	 * when the user navigates away from the player or the engine is destroyed).
-	 *
-	 * <p><strong>Cleanup performed:</strong>
-	 * <ul>
-	 * <li>Abandons the audio focus request via
-	 *     {@link AudioManager#abandonAudioFocusRequest(AudioFocusRequest)}.</li>
-	 * <li>Resets the {@code hasFocus} flag to {@code false}.</li>
-	 * <li>Clears the {@code wasPlayingBeforeLoss} state flag.</li>
-	 * <li>If ducking was active, restores volume to 100% and resets the ducked flag.</li>
-	 * </ul>
-	 *
-	 * <p>If the {@link AudioManager} instance is unavailable or an exception occurs
-	 * during focus abandonment, the error is logged but not rethrown.
-	 *
-	 * @see AudioManager#abandonAudioFocusRequest(AudioFocusRequest)
-	 * @see #requestFocus()
+	 * Releases the previously requested audio focus. Safe to call even if
+	 * focus was never requested.
 	 */
 	public void abandonFocus() {
 		if (audioManager == null) return;
+		if (focusRequest == null) return;
 		try {
 			audioManager.abandonAudioFocusRequest(focusRequest);
 			hasFocus = false;
 			wasPlayingBeforeLoss = false;
-			
+
 			if (isDucked) {
 				engine.setVolume(1.0f);
 				isDucked = false;
@@ -249,45 +194,18 @@ public final class AudioFocusHelper {
 			logger.error("Failed to abandon audio focus: " + error.getMessage());
 		}
 	}
-	
+
 	/**
-	 * Releases all resources held by this helper. Calls {@link #abandonFocus()} to
-	 * release audio focus, resets internal state flags, and prepares for cleanup.
-	 * Should be called when the associated player engine is being destroyed.
+	 * Releases all resources held by this helper.
 	 */
 	public void dispose() {
 		abandonFocus();
+		if (duckAnimator != null) {
+			duckAnimator.cancel();
+			duckAnimator = null;
+		}
 	}
-	
-	/**
-	 * Returns whether the application currently holds audio focus. Focus is typically
-	 * requested via {@link #requestFocus()} before starting media playback and
-	 * abandoned via {@link #abandonFocus()} when playback stops.
-	 *
-	 * @return {@code true} if audio focus is currently held, {@code false} otherwise.
-	 * @see #requestFocus()
-	 * @see #abandonFocus()
-	 */
-	public boolean hasFocus() {
-		return hasFocus;
-	}
-	
-	/**
-	 * Returns whether the engine is currently in a ducked state (reduced volume).
-	 * Ducking occurs when another app requests transient focus that can be shared,
-	 * such as voice navigation or notifications, requiring the media volume to
-	 * be temporarily lowered (typically to 20% of normal volume).
-	 *
-	 * <p>When ducking is active, the engine's volume is reduced via
-	 * {@link MediaEngine#setVolume(float)} with {@link #DUCK_VOLUME} (0.2f).
-	 * Ducking is automatically cleared when focus is regained.
-	 *
-	 * @return {@code true} if the engine volume is currently ducked, {@code false}
-	 * if playing at full volume or no ducking is active.
-	 * @see #DUCK_VOLUME
-	 * @see AudioManager#AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK
-	 */
-	public boolean isDucked() {
-		return isDucked;
-	}
+
+	public boolean hasFocus() { return hasFocus; }
+	public boolean isDucked() { return isDucked; }
 }

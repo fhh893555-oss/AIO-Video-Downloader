@@ -552,7 +552,7 @@ public final class YoutubeHttpDataSource extends BaseDataSource implements HttpD
                     || httpURLConnectionResponseCode == HttpURLConnection.HTTP_SEE_OTHER)) {
                 httpURLConnection.disconnect();
                 final boolean shouldKeepPost = keepPostFor302Redirects
-                        && responseCode == HttpURLConnection.HTTP_MOVED_TEMP;
+                        && httpURLConnectionResponseCode == HttpURLConnection.HTTP_MOVED_TEMP;
                 if (!shouldKeepPost) {
                     httpMethod = DataSpec.HTTP_METHOD_GET;
                     httpBody = null;
@@ -650,9 +650,9 @@ public final class YoutubeHttpDataSource extends BaseDataSource implements HttpD
         httpURLConnection.setFixedLengthStreamingMode(POST_BODY.length);
         httpURLConnection.connect();
 
-        final OutputStream os = httpURLConnection.getOutputStream();
-        os.write(POST_BODY);
-        os.close();
+        try (final OutputStream os = httpURLConnection.getOutputStream()) {
+            os.write(POST_BODY);
+        }
 
         return httpURLConnection;
     }
@@ -908,7 +908,7 @@ public final class YoutubeHttpDataSource extends BaseDataSource implements HttpD
         @NonNull
         @Override
         public Collection<List<String>> values() {
-            final java.util.List<List<String>> filteredValues = new java.util.ArrayList<>();
+            final List<List<String>> filteredValues = new java.util.ArrayList<>();
             for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
                 if (entry.getKey() != null) {
                     filteredValues.add(entry.getValue());

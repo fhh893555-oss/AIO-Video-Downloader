@@ -131,9 +131,9 @@ import sysModules.player.mediaitem.MediaItemTag;
 	private final PlayerDataSource dataSource;
 	private final Config config;
 	
-	@Nullable private String playbackQuality;
-	@Nullable private String audioTrack;
-	@Nullable private SourceType streamSourceType;
+	@Nullable private volatile String playbackQuality;
+	@Nullable private volatile String audioTrack;
+	@Nullable private volatile SourceType streamSourceType;
 	
 	/**
 	 * Resolves {@link StreamInfo} objects into playable ExoPlayer {@link MediaSource}
@@ -321,11 +321,11 @@ import sysModules.player.mediaitem.MediaItemTag;
 			config.preferVideoOnly(), config.getDefaultVideoFormat(),
 			config.showHigherResolutions(), info.getServiceId());
 		
-		int audioIndex = getAudioFormatIndex(info.getAudioStreams(),
-			config.getPreferredAudioLanguage(), info.getServiceId());
-		
 		final List<AudioStream> allAudio = getFilteredAudioStreams(
 			info.getAudioStreams(), info.getServiceId());
+		
+		int audioIndex = getAudioFormatIndex(allAudio,
+			config.getPreferredAudioLanguage());
 		
 		if (allVideos.isEmpty() && allAudio.isEmpty()) {
 			logger.warning("No playable streams for " + info.getName());
@@ -807,10 +807,8 @@ import sysModules.player.mediaitem.MediaItemTag;
 	 * @see #getFilteredAudioStreams(List, int)
 	 * @see #getAudioTrackComparator(String, MediaFormat, boolean, boolean, boolean)
 	 */
-	private int getAudioFormatIndex(@Nullable List<AudioStream> audioStreams,
-	                                @Nullable String preferredLanguage,
-	                                final int serviceId) {
-		final List<AudioStream> filtered = getFilteredAudioStreams(audioStreams, serviceId);
+	private int getAudioFormatIndex(@NonNull List<AudioStream> filtered,
+	                                @Nullable String preferredLanguage) {
 		if (filtered.isEmpty()) return -1;
 		
 		final Comparator<AudioStream> comparator = getAudioTrackComparator(

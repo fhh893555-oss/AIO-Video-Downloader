@@ -41,6 +41,7 @@ public class FailedMediaSource extends BaseMediaSource implements ManagedMediaSo
     private final Exception error;
     private final long retryTimestamp;
     private final MediaItem mediaItem;
+    private final MediaSource silenceSource;
 
     /**
      * @param playQueueItem  the queue item that failed
@@ -56,6 +57,9 @@ public class FailedMediaSource extends BaseMediaSource implements ManagedMediaSo
         this.mediaItem = ExceptionTag.of(playQueueItem, List.of(error))
                 .withExtras(this)
                 .asMediaItem();
+        this.silenceSource = new SilenceMediaSource.Factory()
+                .setDurationUs(SILENCE_DURATION_US)
+                .createMediaSource();
     }
 
     /** Creates a failed source for a known extraction error (never retries). */
@@ -129,10 +133,7 @@ public class FailedMediaSource extends BaseMediaSource implements ManagedMediaSo
     public MediaPeriod createPeriod(final MediaPeriodId id,
                                     final Allocator allocator,
                                     final long startPositionUs) {
-        return new SilenceMediaSource.Factory()
-                .setDurationUs(SILENCE_DURATION_US)
-                .createMediaSource()
-                .createPeriod(null, null, 0);
+        return silenceSource.createPeriod(id, allocator, startPositionUs);
     }
 
     @Override

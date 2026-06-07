@@ -21,7 +21,7 @@ public final class SurfaceHolderCallback implements SurfaceHolder.Callback {
     private PlaceholderSurface placeholderSurface;
 
     public SurfaceHolderCallback(final Context context, final Player player) {
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.player = player;
     }
 

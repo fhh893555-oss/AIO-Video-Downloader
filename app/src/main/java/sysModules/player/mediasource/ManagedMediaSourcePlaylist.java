@@ -7,8 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.ShuffleOrder;
-
-import sysModules.player.mediaitem.MediaItemTag;
+import com.google.android.exoplayer2.source.MediaSource;
 
 /**
  * Manages a {@link ConcatenatingMediaSource} of {@link ManagedMediaSource} instances,
@@ -42,10 +41,9 @@ public class ManagedMediaSourcePlaylist {
         if (index < 0 || index >= size()) {
             return null;
         }
-        final Object tag = MediaItemTag.from(
-                internalSource.getMediaSource(index).getMediaItem());
-        if (tag instanceof ManagedMediaSource) {
-            return (ManagedMediaSource) tag;
+        final MediaSource source = internalSource.getMediaSource(index);
+        if (source instanceof ManagedMediaSource) {
+            return (ManagedMediaSource) source;
         }
         return null;
     }

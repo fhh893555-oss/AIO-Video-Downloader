@@ -563,4 +563,8 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 			.start();
 		isBottomNavVisible = true;
 	}
+	
+	private void startPlayingAudioInBackground() {
+		String videoUrl = "https://youtu.be/qPSHP1SqGn8";
+	}
 }

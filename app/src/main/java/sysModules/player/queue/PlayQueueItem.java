@@ -97,13 +97,26 @@ public class PlayQueueItem implements Serializable {
     public boolean isAutoQueued() { return autoQueued; }
     public void setAutoQueued(boolean autoQueued) { this.autoQueued = autoQueued; }
 
+    private transient volatile Thread fetchThread;
+
+    public void cancelFetch() {
+        synchronized (this) {
+            Thread t = fetchThread;
+            if (t != null) {
+                t.interrupt();
+                fetchThread = null;
+            }
+        }
+    }
+
     public interface StreamCallback {
         void onSuccess(StreamInfo info);
         void onError(Throwable error);
     }
 
     public void fetchStreamInfo(@NonNull StreamCallback callback) {
-        new Thread(() -> {
+        cancelFetch();
+        Thread t = new Thread(() -> {
             try {
                 org.schabi.newpipe.extractor.StreamingService service = null;
                 for (org.schabi.newpipe.extractor.StreamingService s : org.schabi.newpipe.extractor.ServiceList.all()) {
@@ -117,12 +130,16 @@ public class PlayQueueItem implements Serializable {
                     return;
                 }
                 StreamInfo info = StreamInfo.getInfo(service, url);
+                fetchThread = null;
                 callback.onSuccess(info);
-            } catch (Throwable t) {
-                error = t;
-                callback.onError(t);
+            } catch (Throwable t2) {
+                error = t2;
+                fetchThread = null;
+                callback.onError(t2);
             }
-        }).start();
+        }, "PlayQueueItem-fetch-" + title);
+        fetchThread = t;
+        t.start();
     }
 
     @Override

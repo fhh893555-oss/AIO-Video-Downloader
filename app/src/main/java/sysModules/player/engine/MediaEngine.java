@@ -33,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.model.PlaybackState;
 import sysModules.player.model.RepeatMode;
+import sysModules.player.queue.PlayQueue;
 import sysModules.player.queue.PlayQueueItem;
 import sysModules.player.helper.CustomRenderersFactory;
 import sysModules.player.resolver.AudioPlaybackResolver;
@@ -57,6 +58,8 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
 
     private final VideoPlaybackResolver videoResolver;
     private final AudioPlaybackResolver audioResolver;
+
+    @Nullable private PlayQueue playQueue;
 
     private static final VideoPlaybackResolver.Config DEFAULT_CONFIG =
             new VideoPlaybackResolver.Config() {
@@ -140,6 +143,10 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         callbacks.remove(cb);
     }
 
+    public void setPlayQueue(@Nullable PlayQueue queue) {
+        this.playQueue = queue;
+    }
+
     // ─── Playback lifecycle ─────────────────────────────────────────────────
 
     public void load(@NonNull StreamInfo info, long startPosition) {
@@ -198,6 +205,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
      */
     @Nullable
     public MediaSource resolveSource(@NonNull StreamInfo info) {
+        if (dataSource == null || exoPlayer == null) return null;
         if (audioOnly) {
             return audioResolver.resolve(info);
         } else {
@@ -244,6 +252,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         }
         currentItem = null;
         currentInfo = null;
+        callbacks.clear();
     }
 
     // ─── Playback controls ─────────────────────────────────────────────────
@@ -277,11 +286,15 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     }
 
     public void playPrevious() {
+        if (playQueue == null) return;
         setState(PlaybackState.Phase.BUFFERING);
+        playQueue.previous();
     }
 
     public void playNext() {
+        if (playQueue == null) return;
         setState(PlaybackState.Phase.BUFFERING);
+        playQueue.offsetIndex(1);
     }
 
     public void fastForward() {
@@ -334,6 +347,9 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         }
         return 1.0f;
     }
+
+    public boolean isAudioOnly() { return audioOnly; }
+    public void setAudioOnly(boolean audioOnly) { this.audioOnly = audioOnly; }
 
     public boolean isMuted() { return muted; }
 

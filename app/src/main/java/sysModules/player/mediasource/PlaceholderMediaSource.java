@@ -44,7 +44,7 @@ public final class PlaceholderMediaSource extends CompositeMediaSource<Void>
     public MediaPeriod createPeriod(final MediaPeriodId id,
                                     final Allocator allocator,
                                     final long startPositionUs) {
-        return null;
+        throw new IllegalStateException("PlaceholderMediaSource should never be played directly");
     }
 
     @Override

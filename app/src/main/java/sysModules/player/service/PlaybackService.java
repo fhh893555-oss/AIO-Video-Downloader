@@ -8,17 +8,20 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.os.HandlerCompat;
 
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.engine.AudioFocusHelper;
 import sysModules.player.engine.MediaEngine;
 import sysModules.player.helper.LockManager;
+import sysModules.player.helper.SerializedCache;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.notification.PlaybackNotification;
 import sysModules.player.queue.PlayQueue;
 import sysModules.player.playback.MediaSourceManager;
 import sysModules.player.playback.PlaybackListener;
+import sysModules.player.queue.QueueSyncManager;
 import sysModules.player.session.MediaSessionManager;
 import sysModules.player.session.PlayQueueNavigator;
 
@@ -124,8 +127,15 @@ public class PlaybackService extends Service implements PlaybackListener {
 			}
 			
 			if (intent.hasExtra(NotificationConstants.EXTRA_PLAYER_TYPE)) {
-				playerType = (PlayerType) intent.getSerializableExtra(
-					NotificationConstants.EXTRA_PLAYER_TYPE);
+				try {
+					Object extra = intent.getSerializableExtra(
+						NotificationConstants.EXTRA_PLAYER_TYPE);
+					if (extra instanceof PlayerType) {
+						playerType = (PlayerType) extra;
+					}
+				} catch (ClassCastException e) {
+					logger.error("Invalid player type extra", e);
+				}
 			}
 		}
 		return START_STICKY;
@@ -219,7 +229,10 @@ public class PlaybackService extends Service implements PlaybackListener {
 		sessionManager.connect();
 		sessionManager.setPlayer(engine.getExoPlayer());
 		sessionManager.setCloseCallback(this::closePlayer);
-		
+
+		// Wire the queue to the engine so playNext()/playPrevious() work
+		engine.setPlayQueue(queue);
+
 		if (queueNavigator != null) {
 			queueNavigator.dispose();
 			queueNavigator = null;
@@ -370,10 +383,16 @@ public class PlaybackService extends Service implements PlaybackListener {
 	 */
 	private void closePlayer() {
 		stopPlayback();
+		// Persist the queue before shutting down so it can be restored later
+		final PlayQueue queue = getQueue();
+		if (queue != null) {
+			SerializedCache.writePlayQueue(this, queue);
+		}
 		if (sourceManager != null) {
 			sourceManager.dispose();
 			sourceManager = null;
 		}
+		engine.setPlayQueue(null);
 		stopSelf();
 	}
 	
@@ -563,6 +582,17 @@ public class PlaybackService extends Service implements PlaybackListener {
 	@Override
 	public void onPlaybackBlock() {
 		logger.debug("onPlaybackBlock() called");
+		// Save current position before stopping so we can resume later
+		if (engine.getCurrentItem() != null && engine.getExoPlayer() != null) {
+			long position = engine.getCurrentPosition();
+			final PlayQueue queue = getQueue();
+			if (queue != null) {
+				int idx = queue.indexOf(engine.getCurrentItem());
+				if (idx >= 0 && position > 0) {
+					queue.setRecovery(idx, position);
+				}
+			}
+		}
 		engine.setCurrentItem(null);
 		engine.stop();
 	}
@@ -581,7 +611,7 @@ public class PlaybackService extends Service implements PlaybackListener {
 
 		engine.setCurrentItem(item);
 
-		final sysModules.player.queue.PlayQueue queue = sourceManager != null
+		final PlayQueue queue = sourceManager != null
 				? getQueue() : null;
 		if (queue == null) return;
 
@@ -620,7 +650,7 @@ public class PlaybackService extends Service implements PlaybackListener {
 	}
 
 	@Nullable
-	private sysModules.player.queue.PlayQueue getQueue() {
+	private PlayQueue getQueue() {
 		return sourceManager != null ? sourceManager.getPlayQueue() : null;
 	}
 }

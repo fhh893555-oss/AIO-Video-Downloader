@@ -357,12 +357,15 @@ public final class PlaybackResolver {
 
         // Non-URI DASH content: parse manifest string
         try {
+            final String manifestUrl = stream.getManifestUrl();
+            final String contentStr = stream.getContent();
+            if (manifestUrl == null || contentStr == null) return null;
             final DashManifest dashManifest = new DashManifestParser().parse(
-                    Uri.parse(stream.getManifestUrl()),
+                    Uri.parse(manifestUrl),
                     new ByteArrayInputStream(
-                            stream.getContent().getBytes(StandardCharsets.UTF_8)));
+                            contentStr.getBytes(StandardCharsets.UTF_8)));
             final MediaItem.Builder builder = new MediaItem.Builder()
-                    .setUri(Uri.parse(stream.getManifestUrl()))
+                    .setUri(Uri.parse(manifestUrl))
                     .setCustomCacheKey(cacheKey);
             if (tag != null) builder.setTag(tag);
             return new DashMediaSource.Factory(dataSourceFactory)

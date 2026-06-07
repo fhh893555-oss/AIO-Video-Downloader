@@ -12,19 +12,21 @@ import org.schabi.newpipe.extractor.stream.StreamType;
 import java.util.Collections;
 import java.util.List;
 
+import sysModules.player.queue.PlayQueueItem;
+
 /**
  * A {@link MediaItemTag} for streams that failed to load. Carries metadata from an
- * underlying {@link sysModules.player.queue.PlayQueueItem} and the list of errors
+ * underlying {@link PlayQueueItem} and the list of errors
  * that caused the failure. Used by {@link sysModules.player.mediasource.FailedMediaSource}
  * to attach error information to the media item during playback.
  */
 public final class ExceptionTag {
 
-    @NonNull private final sysModules.player.queue.PlayQueueItem item;
+    @NonNull private final PlayQueueItem item;
     @NonNull private final List<Exception> errors;
     @Nullable private final Object extras;
 
-    private ExceptionTag(@NonNull final sysModules.player.queue.PlayQueueItem item,
+    private ExceptionTag(@NonNull final PlayQueueItem item,
                          @NonNull final List<Exception> errors,
                          @Nullable final Object extras) {
         this.item = item;
@@ -33,7 +35,7 @@ public final class ExceptionTag {
     }
 
     @NonNull
-    public static ExceptionTag of(@NonNull final sysModules.player.queue.PlayQueueItem playQueueItem,
+    public static ExceptionTag of(@NonNull final PlayQueueItem playQueueItem,
                                   @NonNull final List<Exception> errors) {
         return new ExceptionTag(playQueueItem, errors, null);
     }
@@ -41,7 +43,7 @@ public final class ExceptionTag {
     // ─── Getters ──────────────────────────────────────────────────────────
 
     @NonNull
-    public sysModules.player.queue.PlayQueueItem getStream() {
+    public PlayQueueItem getStream() {
         return item;
     }
 
