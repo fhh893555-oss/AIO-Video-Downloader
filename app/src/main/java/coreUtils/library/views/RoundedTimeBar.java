@@ -11,8 +11,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
-import androidx.media3.common.util.UnstableApi;
-import androidx.media3.ui.DefaultTimeBar;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 
 /**
  * A custom time bar with rounded corners that extends ExoPlayer's DefaultTimeBar.
@@ -63,7 +62,6 @@ import androidx.media3.ui.DefaultTimeBar;
  * @see Path
  * @see Canvas#clipPath(Path)
  */
-@UnstableApi
 public class RoundedTimeBar extends DefaultTimeBar {
 	
 	private final Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

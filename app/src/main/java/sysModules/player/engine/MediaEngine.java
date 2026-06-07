@@ -11,19 +11,21 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.video.VideoSize;
 
+import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
@@ -77,6 +79,32 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
                 }
             };
 
+    private static final VideoPlaybackResolver.Config DEFAULT_CONFIG =
+            new VideoPlaybackResolver.Config() {
+                @Nullable
+                @Override
+                public MediaFormat getDefaultVideoFormat() {
+                    return null;
+                }
+
+                @Nullable
+                @Override
+                public MediaFormat getDefaultAudioFormat() {
+                    return null;
+                }
+
+                @Override
+                public boolean showHigherResolutions() {
+                    return true;
+                }
+
+                @Nullable
+                @Override
+                public String getPreferredAudioLanguage() {
+                    return null;
+                }
+            };
+
     private PlaybackState.Phase currentPhase = PlaybackState.Phase.PREFLIGHT;
     private RepeatMode repeatMode = RepeatMode.NONE;
     private boolean muted;
@@ -100,7 +128,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         this.renderFactory = new DefaultRenderersFactory(this.context)
                 .setEnableDecoderFallback(true);
 
-        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_QUALITY_RESOLVER);
+        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_QUALITY_RESOLVER, DEFAULT_CONFIG);
         this.audioResolver = new AudioPlaybackResolver(dataSource);
     }
 
@@ -573,16 +601,16 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     }
 
     @Override
-    public void onPlayerError(@NonNull ExoPlaybackException error) {
+    public void onPlayerError(@NonNull PlaybackException error) {
         logger.error("Player error: " + error.getMessage());
         notifyError(error, true);
         setState(PlaybackState.Phase.BLOCKED);
     }
 
     @Override
-    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+    public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
         for (EngineCallbacks cb : callbacks) {
-            cb.onVideoSizeChanged(width, height);
+            cb.onVideoSizeChanged(videoSize.width, videoSize.height);
         }
     }
 

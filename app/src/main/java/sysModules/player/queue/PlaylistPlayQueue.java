@@ -48,7 +48,18 @@ public final class PlaylistPlayQueue extends AbstractInfoPlayQueue<PlaylistInfo>
         } else if (nextPage != null) {
             runOnBackground(() -> {
                 try {
-                    var result = PlaylistInfo.getMoreItems(serviceId, baseUrl, nextPage);
+                    org.schabi.newpipe.extractor.StreamingService service = null;
+                    for (org.schabi.newpipe.extractor.StreamingService s : org.schabi.newpipe.extractor.ServiceList.all()) {
+                        if (s.getServiceId() == serviceId) {
+                            service = s;
+                            break;
+                        }
+                    }
+                    if (service == null) {
+                        onFetchError(new IllegalArgumentException("Unknown service: " + serviceId));
+                        return;
+                    }
+                    var result = PlaylistInfo.getMoreItems(service, baseUrl, nextPage);
                     onMoreFetched(result);
                 } catch (Exception e) {
                     onFetchError(e);

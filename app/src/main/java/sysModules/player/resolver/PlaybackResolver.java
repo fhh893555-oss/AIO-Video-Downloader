@@ -202,7 +202,7 @@ public final class PlaybackResolver {
                                     stream.getContent(), itag, streamInfo.getDuration());
                     return buildDashFromManifest(dataSourceFactory, manifestString,
                             stream, cacheKey, tag);
-                } catch (final CreationException | IOException e) {
+                } catch (final CreationException e) {
                     logger.warning("YouTube DASH manifest generation failed, "
                             + "falling back to progressive: " + e.getMessage());
                     // fall through to progressive fallback
@@ -221,7 +221,7 @@ public final class PlaybackResolver {
                                 stream.getContent(), itag, streamInfo.getDuration());
                 return buildDashFromManifest(dataSourceFactory, manifestString,
                         stream, cacheKey, tag);
-            } catch (final CreationException | IOException e) {
+            } catch (final CreationException e) {
                 logger.error("YouTube OTF DASH manifest generation failed: "
                         + e.getMessage());
                 return null;

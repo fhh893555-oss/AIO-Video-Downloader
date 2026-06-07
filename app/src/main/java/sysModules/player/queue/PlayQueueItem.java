@@ -105,7 +105,18 @@ public class PlayQueueItem implements Serializable {
     public void fetchStreamInfo(@NonNull StreamCallback callback) {
         new Thread(() -> {
             try {
-                StreamInfo info = StreamInfo.getInfo(serviceId, url);
+                org.schabi.newpipe.extractor.StreamingService service = null;
+                for (org.schabi.newpipe.extractor.StreamingService s : org.schabi.newpipe.extractor.ServiceList.all()) {
+                    if (s.getServiceId() == serviceId) {
+                        service = s;
+                        break;
+                    }
+                }
+                if (service == null) {
+                    callback.onError(new IllegalArgumentException("Unknown service: " + serviceId));
+                    return;
+                }
+                StreamInfo info = StreamInfo.getInfo(service, url);
                 callback.onSuccess(info);
             } catch (Throwable t) {
                 error = t;
