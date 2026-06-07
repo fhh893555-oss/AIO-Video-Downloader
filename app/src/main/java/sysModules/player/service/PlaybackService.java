@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.PowerManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,7 @@ import androidx.core.app.NotificationCompat;
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.engine.AudioFocusHelper;
 import sysModules.player.engine.MediaEngine;
+import sysModules.player.helper.LockManager;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.notification.PlaybackNotification;
@@ -52,7 +52,6 @@ import sysModules.player.session.PlayQueueNavigator;
  */
 public class PlaybackService extends Service implements PlaybackListener {
 	private static final LoggerUtils logger = LoggerUtils.from(PlaybackService.class);
-	private static final String WAKE_LOCK_TAG = "tubeaio:player:wakelock";
 	
 	private MediaEngine engine;
 	private MediaSourceManager sourceManager;
@@ -62,7 +61,7 @@ public class PlaybackService extends Service implements PlaybackListener {
 	private PlaybackNotification notification;
 	private PlayerType playerType;
 	private boolean serviceStarted;
-	private PowerManager.WakeLock wakeLock;
+	private LockManager lockManager;
 	
 	/**
 	 * Called when the service is first created. This method initializes all core
@@ -93,11 +92,9 @@ public class PlaybackService extends Service implements PlaybackListener {
 		sessionManager = new MediaSessionManager(this, engine);
 		notification = new PlaybackNotification(this);
 		playerType = PlayerType.MAIN;
+		lockManager = new LockManager(this);
 		
 		engine.addCallback(notification);
-		
-		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
 		
 		logger.debug("PlaybackService created");
 	}
@@ -308,8 +305,8 @@ public class PlaybackService extends Service implements PlaybackListener {
 	 * @see #releaseWakeLock()
 	 */
 	private void acquireWakeLock() {
-		if (wakeLock != null && !wakeLock.isHeld()) {
-			wakeLock.acquire(30 * 60 * 1000L);
+		if (lockManager != null && !lockManager.isHeld()) {
+			lockManager.acquireWifiAndCpu();
 		}
 	}
 	
@@ -321,8 +318,8 @@ public class PlaybackService extends Service implements PlaybackListener {
 	 * @see android.os.PowerManager.WakeLock#release()
 	 */
 	private void releaseWakeLock() {
-		if (wakeLock != null && wakeLock.isHeld()) {
-			wakeLock.release();
+		if (lockManager != null && lockManager.isHeld()) {
+			lockManager.releaseWifiAndCpu();
 		}
 	}
 	

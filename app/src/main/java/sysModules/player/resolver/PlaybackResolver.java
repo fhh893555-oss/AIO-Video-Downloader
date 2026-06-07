@@ -15,6 +15,8 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 
+import sysModules.player.datasource.YoutubeDashLiveManifestParser;
+
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.services.youtube.ItagItem;
@@ -54,6 +56,7 @@ public final class PlaybackResolver {
         try {
             if (!info.getDashMpdUrl().isEmpty()) {
                 return new DashMediaSource.Factory(dataSourceFactory)
+                        .setManifestParser(new YoutubeDashLiveManifestParser())
                         .createMediaSource(new MediaItem.Builder()
                                 .setUri(Uri.parse(info.getDashMpdUrl()))
                                 .setLiveConfiguration(

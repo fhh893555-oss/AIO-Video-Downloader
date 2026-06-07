@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -35,6 +34,7 @@ import coreUtils.library.process.LoggerUtils;
 import sysModules.player.model.PlaybackState;
 import sysModules.player.model.RepeatMode;
 import sysModules.player.queue.PlayQueueItem;
+import sysModules.player.helper.CustomRenderersFactory;
 import sysModules.player.resolver.AudioPlaybackResolver;
 import sysModules.player.resolver.PlayerDataSource;
 import sysModules.player.resolver.VideoPlaybackResolver;
@@ -51,7 +51,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
 
     private SimpleExoPlayer exoPlayer;
     private DefaultTrackSelector trackSelector;
-    private DefaultRenderersFactory renderFactory;
+    private CustomRenderersFactory renderFactory;
     private LoadController loadController;
     private PlayerDataSource dataSource;
 
@@ -124,11 +124,10 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         this.loadController = new LoadController();
 
         this.trackSelector = new DefaultTrackSelector(this.context);
-        this.renderFactory = new DefaultRenderersFactory(this.context)
-                .setEnableDecoderFallback(true);
+        this.renderFactory = new CustomRenderersFactory(this.context);
 
-        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_CONFIG);
-        this.audioResolver = new AudioPlaybackResolver(dataSource);
+        this.videoResolver = new VideoPlaybackResolver(dataSource.getCacheDataSourceFactory(), DEFAULT_CONFIG);
+        this.audioResolver = new AudioPlaybackResolver(dataSource.getCacheDataSourceFactory());
     }
 
     // ─── Callbacks ───────────────────────────────────────────────────────────
