@@ -145,6 +145,9 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		initFragmentNavigator();
 		initBottomTabButtons();
 		loadHomepage();
+		
+		
+		startPlayingAudioInBackground();
 		binding.fragmentContainer.setOnClickListener(view -> {
 			if (isBottomNavVisible) {
 				hideBottomNav();
