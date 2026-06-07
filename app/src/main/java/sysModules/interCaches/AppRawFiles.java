@@ -14,84 +14,75 @@ import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
 
 /**
- * A singleton utility class responsible for preloading and caching {@link LottieComposition}
- * objects from raw resources.
+ * Utility class that preloads and caches all Lottie animation compositions from
+ * the application's raw resources. This class follows a singleton pattern and
+ * loads compositions in parallel to minimize startup time. Once loaded,
+ * compositions are kept in memory for reuse across the application.
  *
- * <p>This class manages the asynchronous, parallel loading of various Lottie animations
- * used throughout the application to ensure smooth UI transitions and prevent
- * frame drops during runtime resource initialization.</p>
- *
- * <p>Key features include:</p>
+ * <p><strong>Core responsibilities:</strong>
  * <ul>
- *   <li>Parallel loading using an {@link ExecutorService}.</li>
- *   <li>Thread-safe singleton access via {@link #getInstance()}.</li>
- *   <li>Centralized access to common animations such as loading states, success
- *       indicators, and empty states.</li>
+ * <li>Preloads Lottie animations from raw resources (JSON animation files).</li>
+ * <li>Uses parallel loading with a thread pool based on available CPU cores.</li>
+ * <li>Provides type-safe getters for each animation composition.</li>
+ * <li>Prevents duplicate loading with a loaded state flag.</li>
+ * <li>Logs loading performance metrics for monitoring.</li>
  * </ul>
  *
- * @author [Your Name/Organization]
- * @version 1.0
+ * <p>Usage: Call {@link #loadAllCompositions()} during app initialization,
+ * then retrieve compositions via getters like {@link #getLayoutLoadComposition()}.
+ *
+ * @see LottieComposition
+ * @see LottieCompositionFactory
+ * @see #loadAllCompositions()
  */
 public final class AppRawFiles {
 	
-	/**
-	 * Logger instance for this class, used to track the progress of Lottie resource loading
-	 * and log any errors encountered during the parallel initialization process.
-	 */
 	private static final LoggerUtils logger = LoggerUtils.from(AppRawFiles.class);
-	
-	/**
-	 * The single shared instance of {@link AppRawFiles} used for managing and
-	 * accessing cached Lottie animation compositions throughout the application.
-	 */
 	private static final AppRawFiles instance = new AppRawFiles();
-	
-	/**
-	 * Indicates whether all Lottie animation resources have been successfully
-	 * loaded into memory. This flag is used to prevent redundant loading operations
-	 * and to ensure thread-safe checks across the application.
-	 */
 	private volatile boolean isLoadedAllComposition = false;
-	
-	/**
-	 * Cached Lottie composition for the initial layout loading animation.
-	 * This animation is typically displayed when the main UI or a specific layout container
-	 * is being prepared for the first time.
-	 *
-	 * @see #getLayoutLoadComposition()
-	 */
 	private volatile LottieComposition layoutLoadComposition,
 		waitingLoadingComposition, noResultEmptyComposition,
 		openActiveTasksComposition, downloadReadyComposition,
 		successfulDownloadComposition, circleLoadingComposition,
-		audioVisualizingV1Composition, audioVisualizingComposition,
+		audioVisualizingComposition2, audioVisualizingComposition,
 		emptyGhostComposition, newVersionUpdateComposition,
 		loginRequiredComposition, premiumUserComposition,
 		upgradeBoxComposition;
 	
 	/**
-	 * Private constructor to prevent instantiation from outside the class.
-	 * This class follows the Singleton pattern and should be accessed via {@link #getInstance()}.
+	 * Private constructor to enforce the singleton pattern. Prevents external
+	 * instantiation of the {@link AppRawFiles} utility class. All functionality
+	 * is exposed through static methods, and the singleton instance is created
+	 * eagerly at class initialization.
+	 *
+	 * @see #getInstance()
 	 */
 	private AppRawFiles() {}
 	
 	/**
-	 * Returns the singleton instance of the {@code AppRawFiles} class.
-	 * Use this method to access the cached Lottie compositions and loading management.
+	 * Returns the singleton instance of the AppRawFiles utility class. The instance
+	 * is created eagerly during class loading, ensuring thread safety without
+	 * additional synchronization overhead.
 	 *
-	 * @return the global instance of {@link AppRawFiles}.
+	 * @return The singleton {@link AppRawFiles} instance.
 	 */
 	public static AppRawFiles getInstance() {
 		return instance;
 	}
 	
 	/**
-	 * Asynchronously loads all Lottie animation compositions into memory.
-	 * <p>
-	 * This method checks if the compositions are already loaded; if not, it initiates a
-	 * background task to load the raw animation resources in parallel using an executor service.
-	 * Progress is tracked via callbacks, and a log message is generated upon successful completion.
-	 * </p>
+	 * Loads all Lottie animation compositions from the app's raw resources into
+	 * memory. This method is idempotent; if compositions have already been loaded,
+	 * it returns immediately with a debug log message. Loading is performed
+	 * asynchronously on a background thread via {@link ThreadTask}.
+	 *
+	 * <p>After loading completes (successfully or partially), the result task
+	 * logs a debug message indicating that compositions are loaded. Individual
+	 * composition loading progress and errors are handled within
+	 * {@link #loadSync(ThreadTask.ProgressCallback)}.
+	 *
+	 * @see #loadSync(ThreadTask.ProgressCallback)
+	 * @see ThreadTask
 	 */
 	public static void loadAllCompositions() {
 		if (instance.isLoadedAllComposition) {
@@ -99,49 +90,58 @@ public final class AppRawFiles {
 			return;
 		}
 		
-		ThreadTask<Boolean, LottieComposition> loadAllCompositionsTask = new ThreadTask<>();
-		loadAllCompositionsTask.setBackgroundTask(progressCallback -> {
+		ThreadTask<Boolean, LottieComposition> bulkLoadJob = new ThreadTask<>();
+		bulkLoadJob.setBackgroundTask(progressCallback -> {
 			instance.loadSync(progressCallback);
 			return true;
 		});
 		
-		loadAllCompositionsTask.setResultTask(result ->
+		bulkLoadJob.setResultTask(result ->
 			logger.debug("All compositions loaded into memory."));
-		
-		loadAllCompositionsTask.start();
+		bulkLoadJob.start();
 	}
 	
 	/**
-	 * Synchronously loads all defined Lottie animation resources into memory using parallel execution.
+	 * Synchronously loads all Lottie animation compositions from raw resources
+	 * using a parallel thread pool. This method divides the loading work across
+	 * multiple threads based on available CPU cores, significantly reducing
+	 * total loading time compared to sequential loading.
 	 *
-	 * <p>This method utilizes a fixed thread pool based on the system's available processors to
-	 * decode multiple Lottie compositions simultaneously. It uses a {@link CountDownLatch}
-	 * to ensure that the method blocks until all resources have either completed loading or failed.</p>
+	 * <p><strong>Loading behavior:</strong>
+	 * <ul>
+	 * <li>Uses a fixed thread pool with size = max(2, availableProcessors()).</li>
+	 * <li>Each composition is loaded via {@link LottieCompositionFactory#fromRawResSync}.</li>
+	 * <li>Progress callbacks are invoked as each composition completes loading.</li>
+	 * <li>Errors are logged per resource without failing the entire batch.</li>
+	 * <li>A {@link CountDownLatch} ensures all compositions load before returning.</li>
+	 * </ul>
 	 *
-	 * @param progressCallback An optional callback to receive updates as each individual
-	 *                         {@link LottieComposition} finishes loading.
+	 * <p>After all compositions are loaded, {@code isLoadedAllComposition} is set
+	 * to true, and total loading time is logged for performance monitoring.
+	 *
+	 * @param progressCallback Optional callback to receive each loaded composition
+	 *                         as it becomes available. May be {@code null}.
+	 * @see LottieCompositionFactory#fromRawResSync(android.content.Context, int)
 	 */
 	private void loadSync(ThreadTask.ProgressCallback<LottieComposition> progressCallback) {
 		if (isLoadedAllComposition) return;
 		long startTime = System.currentTimeMillis();
 		
 		ResourceMapping[] mappings = {
-			new ResourceMapping(R.raw.animation_layout_load, comp -> layoutLoadComposition = comp),
-			new ResourceMapping(R.raw.animation_no_result, comp -> noResultEmptyComposition = comp),
-			new ResourceMapping(R.raw.animation_waiting_loading, comp -> waitingLoadingComposition = comp),
-			new ResourceMapping(R.raw.animation_active_tasks, comp -> openActiveTasksComposition = comp),
-			new ResourceMapping(R.raw.animation_videos_found, comp -> downloadReadyComposition = comp),
-			new ResourceMapping(R.raw.animation_successful, comp -> successfulDownloadComposition = comp),
-			new ResourceMapping(R.raw.animation_circle_loading, comp -> circleLoadingComposition = comp),
-			new ResourceMapping(R.raw.animation_audio_visualizing_v1, comp -> audioVisualizingV1Composition
-				= comp),
-			new ResourceMapping(R.raw.animation_audio_visualizing, comp -> audioVisualizingComposition =
-				comp),
-			new ResourceMapping(R.raw.animation_empty_ghost, comp -> emptyGhostComposition = comp),
-			new ResourceMapping(R.raw.animation_new_app_version, comp -> newVersionUpdateComposition = comp),
-			new ResourceMapping(R.raw.animation_login_required, comp -> loginRequiredComposition = comp),
-			new ResourceMapping(R.raw.animation_premium_user, comp -> premiumUserComposition = comp),
-			new ResourceMapping(R.raw.animation_upgrade_box, comp -> upgradeBoxComposition = comp)
+			new ResourceMapping(R.raw.animation_layout_load, c -> layoutLoadComposition = c),
+			new ResourceMapping(R.raw.animation_no_result, c -> noResultEmptyComposition = c),
+			new ResourceMapping(R.raw.animation_waiting_loading, c -> waitingLoadingComposition = c),
+			new ResourceMapping(R.raw.animation_active_tasks, c -> openActiveTasksComposition = c),
+			new ResourceMapping(R.raw.animation_videos_found, c -> downloadReadyComposition = c),
+			new ResourceMapping(R.raw.animation_successful, c -> successfulDownloadComposition = c),
+			new ResourceMapping(R.raw.animation_circle_loading, c -> circleLoadingComposition = c),
+			new ResourceMapping(R.raw.animation_audio_visualizing2, c -> audioVisualizingComposition2 = c),
+			new ResourceMapping(R.raw.animation_audio_visualizing, c -> audioVisualizingComposition = c),
+			new ResourceMapping(R.raw.animation_empty_ghost, c -> emptyGhostComposition = c),
+			new ResourceMapping(R.raw.animation_new_app_version, c -> newVersionUpdateComposition = c),
+			new ResourceMapping(R.raw.animation_login_required, c -> loginRequiredComposition = c),
+			new ResourceMapping(R.raw.animation_premium_user, c -> premiumUserComposition = c),
+			new ResourceMapping(R.raw.animation_upgrade_box, c -> upgradeBoxComposition = c)
 		};
 		
 		int threadCount = Math.max(2, Runtime.getRuntime().availableProcessors());
@@ -164,7 +164,8 @@ public final class AppRawFiles {
 								mapping.resId, result.getException());
 						}
 					} catch (Exception error) {
-						logger.error("Unexpected error loading Lottie resource: " + mapping.resId, error);
+						logger.error("Unexpected error loading Lottie resource: " +
+							mapping.resId, error);
 					} finally {
 						latch.countDown();
 					}
@@ -182,16 +183,21 @@ public final class AppRawFiles {
 			
 			isLoadedAllComposition = true;
 			long endTime = System.currentTimeMillis();
-			logger.debug("Parallel Lottie loading finished in " + (endTime - startTime) + " ms");
+			logger.debug("Parallel Lottie loading finished in " +
+				(endTime - startTime) + " ms");
 		}
 	}
 	
 	/**
-	 * A helper class that pairs a raw resource ID with a specific callback to store
-	 * the loaded {@link LottieComposition}.
-	 * <p>
-	 * This is used to map animation resources to their corresponding fields in
-	 * {@link AppRawFiles} during the bulk loading process.
+	 * Internal helper class that maps a raw resource ID to a composition setter
+	 * callback. This allows the parallel loading system to associate each loaded
+	 * composition with the appropriate field in the {@link AppRawFiles} instance.
+	 *
+	 * <p>Instances of this class are used in {@link #loadSync(ThreadTask.ProgressCallback)}
+	 * to define which resource ID should be stored in which composition field.
+	 *
+	 * @see AppRawFiles#loadSync(ThreadTask.ProgressCallback)
+	 * @see CompositionSetter
 	 */
 	private static class ResourceMapping {
 		final int resId;
@@ -204,141 +210,225 @@ public final class AppRawFiles {
 	}
 	
 	/**
-	 * Functional interface used to map a loaded {@link LottieComposition} to its
-	 * corresponding member variable within {@link AppRawFiles}.
-	 * <p>
-	 * This is used during the bulk loading process to decouple the loading logic
-	 * from the assignment of the resulting composition.
+	 * Functional interface for setting a loaded {@link LottieComposition} into
+	 * a specific field of the {@link AppRawFiles} instance. Implementations
+	 * are lambda expressions that assign the composition to a class field.
+	 *
+	 * <p><strong>Example usage:</strong>
+	 * <pre>
+	 * new ResourceMapping(R.raw.animation_example, comp -> exampleComposition = comp)
+	 * </pre>
+	 *
+	 * @see ResourceMapping
+	 * @see AppRawFiles#loadSync(ThreadTask.ProgressCallback)
 	 */
 	private interface CompositionSetter {
 		void set(LottieComposition composition);
 	}
 	
 	/**
-	 * Gets the preloaded Lottie composition for the layout loading animation.
-	 * This animation is typically used as a placeholder while the main layout or UI components
-	 * are being prepared.
+	 * Returns the loaded Lottie composition for layout loading animations (e.g.,
+	 * a skeleton loader or shimmer effect). This animation is displayed while
+	 * the app is preparing the initial UI or loading content from the network.
 	 *
-	 * @return the {@link LottieComposition} for the animation_layout_load resource,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for layout load animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getLayoutLoadComposition() {return layoutLoadComposition;}
+	public LottieComposition getLayoutLoadComposition() {
+		return layoutLoadComposition;
+	}
 	
 	/**
-	 * Gets the cached Lottie composition for the waiting/loading animation.
+	 * Returns the loaded Lottie composition for waiting/loading animations (e.g.,
+	 * a spinner or hourglass). This animation is shown when the app is waiting
+	 * for a response from a network request or background operation.
 	 *
-	 * @return The {@link LottieComposition} for {@code R.raw.animation_waiting_loading},
-	 * or {@code null} if it has not been loaded yet.
+	 * @return The {@link LottieComposition} for waiting loading animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getWaitingLoadingComposition() {return waitingLoadingComposition;}
+	public LottieComposition getWaitingLoadingComposition() {
+		return waitingLoadingComposition;
+	}
 	
 	/**
-	 * Gets the preloaded Lottie composition for the "no result" or empty state animation.
-	 * This animation is typically displayed when a search or list returns no data.
+	 * Returns the loaded Lottie composition for empty result animations (e.g.,
+	 * a magnifying glass or empty folder). This animation is displayed when
+	 * a search yields no results or when a content list is empty.
 	 *
-	 * @return the {@link LottieComposition} for the animation_no_result resource,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for no result empty animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getNoResultEmptyComposition() {return noResultEmptyComposition;}
+	public LottieComposition getNoResultEmptyComposition() {
+		return noResultEmptyComposition;
+	}
 	
 	/**
-	 * Gets the preloaded Lottie composition for the active tasks' animation.
-	 * This animation is typically used to represent ongoing or pending background tasks.
+	 * Returns the loaded Lottie composition for open active tasks animations (e.g.,
+	 * a task list icon or activity indicator). This animation is displayed when
+	 * there are ongoing or pending background tasks, such as active downloads.
 	 *
-	 * @return The {@link LottieComposition} for the active tasks animation,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for open active tasks animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getOpenActiveTasksComposition() {return openActiveTasksComposition;}
+	public LottieComposition getOpenActiveTasksComposition() {
+		return openActiveTasksComposition;
+	}
 	
 	/**
-	 * Retrieves the cached Lottie composition for the "download ready" or "videos found" animation.
-	 * This animation is typically used when media has been successfully scanned and is available for
-	 * download.
+	 * Returns the loaded Lottie composition for download ready animations (e.g.,
+	 * a checkmark or success indicator). This animation is shown when a download
+	 * is complete and ready for playback or file system access.
 	 *
-	 * @return The preloaded {@link LottieComposition} corresponding to {@code R.raw.animation_videos_found}.
+	 * @return The {@link LottieComposition} for download ready animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #getSuccessfulDownloadComposition()
 	 */
-	public LottieComposition getDownloadReadyComposition() {return downloadReadyComposition;}
+	public LottieComposition getDownloadReadyComposition() {
+		return downloadReadyComposition;
+	}
 	
 	/**
-	 * Returns the cached Lottie composition for the successful download animation.
-	 * This animation is typically displayed when a download task completes successfully.
+	 * Returns the loaded Lottie composition for successful download animations
+	 * (e.g., a celebratory burst or confirmation animation). This animation is
+	 * shown when a download completes successfully, providing positive feedback.
 	 *
-	 * @return The {@link LottieComposition} for the success state, or {@code null} if not yet loaded.
+	 * @return The {@link LottieComposition} for successful download animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #getDownloadReadyComposition()
 	 */
-	public LottieComposition getSuccessfulDownloadComposition() {return successfulDownloadComposition;}
+	public LottieComposition getSuccessfulDownloadComposition() {
+		return successfulDownloadComposition;
+	}
 	
 	/**
-	 * Gets the preloaded Lottie composition for the circle loading animation.
-	 * This animation is typically used to indicate a background process or indeterminate loading state.
+	 * Returns the loaded Lottie composition for circular loading animations (e.g.,
+	 * a spinning progress indicator). This animation is commonly displayed during
+	 * data fetching, network requests, or background processing operations.
 	 *
-	 * @return The {@link LottieComposition} for the circle loading animation,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for circle loading animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getCircleLoadingComposition() {return circleLoadingComposition;}
+	public LottieComposition getCircleLoadingComposition() {
+		return circleLoadingComposition;
+	}
 	
 	/**
-	 * Gets the cached Lottie composition for the version 1 audio visualization animation.
-	 * This composition is loaded from {@code R.raw.animation_audio_visualizing_v1}.
+	 * Returns the loaded Lottie composition for the second version of audio
+	 * visualizing animations (e.g., an animated equalizer or waveform). This
+	 * composition provides an alternative visual style for music playback screens.
 	 *
-	 * @return The {@link LottieComposition} for audio visualizing V1, or {@code null} if not yet loaded.
+	 * @return The {@link LottieComposition} for audio visualizing v2 animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #getAudioVisualizingComposition()
 	 */
-	public LottieComposition getAudioVisualizingV1Composition() {return audioVisualizingV1Composition;}
+	public LottieComposition getAudioVisualizingComposition2() {
+		return audioVisualizingComposition2;
+	}
 	
 	/**
-	 * Returns the cached Lottie composition for the audio visualizing animation.
+	 * Returns the loaded Lottie composition for audio visualizing animations (e.g.,
+	 * an animated equalizer, waveform, or music spectrum display). This animation
+	 * is typically shown during audio playback to provide visual feedback.
 	 *
-	 * @return the {@link LottieComposition} for audio visualization, or {@code null} if not yet loaded.
+	 * @return The {@link LottieComposition} for audio visualizing animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #getAudioVisualizingComposition2()
 	 */
-	public LottieComposition getAudioVisualizingComposition() {return audioVisualizingComposition;}
+	public LottieComposition getAudioVisualizingComposition() {
+		return audioVisualizingComposition;
+	}
 	
 	/**
-	 * Retrieves the cached Lottie composition for the empty ghost animation.
-	 * This animation is typically used to represent empty states or "no results" scenarios.
+	 * Returns the loaded Lottie composition for empty state animations (e.g., a
+	 * ghost character indicating no content is available). This animation is
+	 * typically displayed in empty lists, search results, or placeholder screens.
 	 *
-	 * @return the {@link LottieComposition} for the empty ghost resource, or {@code null}
-	 * if it has not been loaded yet.
+	 * @return The {@link LottieComposition} for empty ghost animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getEmptyGhostComposition() {return emptyGhostComposition;}
+	public LottieComposition getEmptyGhostComposition() {
+		return emptyGhostComposition;
+	}
 	
 	/**
-	 * Retrieves the cached Lottie composition for the new version update animation.
-	 * This animation is associated with the {@code R.raw.animation_new_app_version} resource.
+	 * Returns the loaded Lottie composition for new app version update animations.
+	 * This animation is displayed when a newer version of the application is
+	 * available, drawing user attention to the update prompt.
 	 *
-	 * @return The {@link LottieComposition} used to indicate that a new version of the app is available,
-	 * or {@code null} if the resource has not yet been loaded.
+	 * @return The {@link LottieComposition} for new version update animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getNewVersionUpdateComposition() {return newVersionUpdateComposition;}
+	public LottieComposition getNewVersionUpdateComposition() {
+		return newVersionUpdateComposition;
+	}
 	
 	/**
-	 * Gets the cached Lottie composition for the "login required" animation.
-	 * This animation is typically used to prompt users to sign in to access specific features.
+	 * Returns the loaded Lottie composition for login required animations (e.g.,
+	 * a lock icon or sign-in prompt). This animation is shown to unauthenticated
+	 * users when they attempt to access premium or account-bound features.
 	 *
-	 * @return The {@link LottieComposition} for the login required state,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for login required animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getLoginRequiredComposition() {return loginRequiredComposition;}
+	public LottieComposition getLoginRequiredComposition() {
+		return loginRequiredComposition;
+	}
 	
 	/**
-	 * Gets the cached Lottie composition for the premium user animation.
-	 * This animation is typically displayed to indicate premium status or features.
+	 * Returns the loaded Lottie composition for premium user animations (e.g.,
+	 * crown icon, premium badge, or upgrade prompts). This composition is typically
+	 * displayed when the user has an active premium subscription.
 	 *
-	 * @return The {@link LottieComposition} for the premium user resource,
-	 * or {@code null} if it hasn't been loaded yet.
+	 * @return The {@link LottieComposition} for premium user animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getPremiumUserComposition() {return premiumUserComposition;}
+	public LottieComposition getPremiumUserComposition() {
+		return premiumUserComposition;
+	}
 	
 	/**
-	 * Retrieves the cached Lottie composition for the upgrade box animation.
+	 * Returns the loaded Lottie composition for upgrade box animations (e.g.,
+	 * promotional banners or feature upgrade prompts). This animation is shown
+	 * to free users to encourage premium subscription upgrades.
 	 *
-	 * @return the {@link LottieComposition} for the upgrade box, or {@code null} if not yet loaded.
+	 * @return The {@link LottieComposition} for upgrade box animations, or
+	 * {@code null} if not yet loaded.
+	 * @see #loadAllCompositions()
+	 * @see #isLoadedAllComposition()
 	 */
-	public LottieComposition getUpgradeBoxComposition() {return upgradeBoxComposition;}
+	public LottieComposition getUpgradeBoxComposition() {
+		return upgradeBoxComposition;
+	}
 	
 	/**
-	 * Checks whether all Lottie compositions have been successfully loaded into memory.
+	 * Checks whether all Lottie compositions have been fully loaded into memory.
+	 * This method can be used to determine if animations are ready for display
+	 * without causing delays or showing placeholders.
 	 *
-	 * @return {@code true} if all animation resources are loaded and ready for use;
-	 * {@code false} otherwise.
+	 * @return {@code true} if all compositions are loaded, {@code false} otherwise.
+	 * @see #loadAllCompositions()
 	 */
 	public boolean isLoadedAllComposition() {
 		return isLoadedAllComposition;
