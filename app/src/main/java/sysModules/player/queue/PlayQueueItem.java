@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.schabi.newpipe.extractor.Image;
+import org.schabi.newpipe.extractor.ServiceList;
+import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -32,6 +34,7 @@ public class PlayQueueItem implements Serializable {
 		this(info.getName(), info.getUrl(), info.getServiceId(), info.getDuration(),
 			info.getThumbnails(), info.getUploaderName(),
 			info.getUploaderUrl(), info.getStreamType());
+		this.setStreamInfo(info);
 		if (info.getStartPosition() > 0) {
 			setRecoveryPosition(info.getStartPosition() * 1000);
 		}
@@ -115,6 +118,12 @@ public class PlayQueueItem implements Serializable {
 	public void setAutoQueued(boolean autoQueued) {this.autoQueued = autoQueued;}
 	
 	private transient volatile Thread fetchThread;
+	private transient StreamInfo streamInfo;
+
+	@Nullable
+	public StreamInfo getStreamInfo() {return streamInfo;}
+
+	public void setStreamInfo(@Nullable StreamInfo info) {this.streamInfo = info;}
 	
 	public void cancelFetch() {
 		synchronized (this) {
@@ -132,12 +141,17 @@ public class PlayQueueItem implements Serializable {
 	}
 	
 	public void fetchStreamInfo(@NonNull StreamCallback callback) {
+		// Return cached info immediately if already fetched
+		final StreamInfo cached = streamInfo;
+		if (cached != null) {
+			callback.onSuccess(cached);
+			return;
+		}
 		cancelFetch();
 		Thread t = new Thread(() -> {
 			try {
-				org.schabi.newpipe.extractor.StreamingService service = null;
-				for (org.schabi.newpipe.extractor.StreamingService s :
-					org.schabi.newpipe.extractor.ServiceList.all()) {
+				StreamingService service = null;
+				for (StreamingService s : ServiceList.all()) {
 					if (s.getServiceId() == serviceId) {
 						service = s;
 						break;
@@ -148,6 +162,7 @@ public class PlayQueueItem implements Serializable {
 					return;
 				}
 				StreamInfo info = StreamInfo.getInfo(service, url);
+				streamInfo = info;
 				fetchThread = null;
 				callback.onSuccess(info);
 			} catch (Throwable t2) {
@@ -173,7 +188,7 @@ public class PlayQueueItem implements Serializable {
 		return 31 * serviceId + url.hashCode();
 	}
 	
-	@Override
+	@NonNull @Override
 	public String toString() {
 		return title + " (" + url + ")";
 	}

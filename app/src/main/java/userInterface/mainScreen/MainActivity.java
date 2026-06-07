@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.OnApplyWindowInsetsListener;
@@ -26,14 +25,14 @@ import com.nextgen.databinding.ActivityMain1Binding;
 import com.nextgen.databinding.ActivityMain1Tab1Binding;
 
 import org.jetbrains.annotations.NotNull;
+import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
-
-import java.util.Collections;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.ThreadTask;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.queue.PendingPlaybackQueue;
@@ -150,7 +149,6 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		initFragmentNavigator();
 		initBottomTabButtons();
 		loadHomepage();
-		
 		
 		startPlayingAudioInBackground();
 		binding.fragmentContainer.setOnClickListener(view -> {
@@ -589,32 +587,40 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 * displayed in the notification and lock screen.</p>
 	 */
 	private void startPlayingAudioInBackground() {
-		String videoUrl = "https://youtu.be/AcEXjRmen6Y";
-
-		// Create a PlayQueueItem from the URL
-		// Service ID 0 = YouTube
-		PlayQueueItem queueItem = new PlayQueueItem(
-				videoUrl,          // title (will be overridden when StreamInfo loads)
-				videoUrl,          // url
-				0,                 // serviceId (YouTube)
-				0,                 // duration (unknown until resolved)
-				Collections.emptyList(),  // thumbnails (loaded later)
-				"",                // uploader (loaded later)
-				null,              // uploaderUrl
-				StreamType.AUDIO_STREAM
-		);
-
-		SinglePlayQueue queue = new SinglePlayQueue(queueItem);
-
-		// Use static holder to pass queue (avoids Serializable issues with Image)
-		PendingPlaybackQueue.set(queue);
-
-		// Start the playback service
-		Intent intent = new Intent(this, PlaybackService.class);
-		intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
-		intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
-
-		ContextCompat.startForegroundService(this, intent);
-		logger.debug("Starting audio playback for: " + videoUrl);
+		ThreadTask.executeInBackground(new ThreadTask.BackgroundTaskNoResult() {
+			@Override public void runInBackground() {
+				try {
+					logger.debug("Starting background playback");
+					String videoUrl = "https://youtu.be/AcEXjRmen6Y";
+					
+					// Create a PlayQueueItem from the URL
+					// Service ID 0 = YouTube
+					StreamInfo info = StreamInfo.getInfo(videoUrl);
+					info.setStreamType(StreamType.AUDIO_STREAM);
+					PlayQueueItem queueItem = new PlayQueueItem(info);
+					
+					SinglePlayQueue queue = new SinglePlayQueue(queueItem);
+					
+					// Use static holder to pass queue (avoids Serializable issues with Image)
+					PendingPlaybackQueue.set(queue);
+					ThreadTask.executeOnMainThread(new ThreadTask.UITask() {
+						@Override public void runOnUIThread() {
+							
+							// Start the playback service
+							Intent intent = new Intent(MainActivity.this, PlaybackService.class);
+							intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
+							intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
+							
+							ContextCompat.startForegroundService(MainActivity.this, intent);
+							logger.debug("Starting audio playback for: " + videoUrl);
+							
+						}
+					});
+					
+				}catch (Exception error){
+					logger.error("Error in parsing video info:", error);
+				}
+			}
+		});
 	}
 }
