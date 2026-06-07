@@ -34,12 +34,25 @@ import org.schabi.newpipe.extractor.stream.VideoStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import coreUtils.library.process.LoggerUtils;
 
 public final class PlaybackResolver {
     private static final LoggerUtils logger = LoggerUtils.from(PlaybackResolver.class);
-    private static final long LIVE_STREAM_EDGE_GAP_MILLIS = 60_000L;
+
+    /**
+     * Target offset for live streams. NewPipe uses 10 seconds to stay close to the
+     * real-time edge while allowing enough buffer to avoid rebuffering.
+     */
+    private static final long LIVE_STREAM_EDGE_GAP_MILLIS = 10_000L;
+
+    /**
+     * Coefficient for HLS live playlist stuck detection. NewPipe uses 15 (vs default 5)
+     * to give low-latency live streams more tolerance before declaring stuck.
+     */
+    private static final double HLS_PLAYLIST_STUCK_TARGET_DURATION_COEFFICIENT = 15;
 
     private PlaybackResolver() {}
 
@@ -47,7 +60,7 @@ public final class PlaybackResolver {
 
     @Nullable
     public static MediaSource maybeBuildLiveMediaSource(
-            @NonNull final DataSource.Factory dataSourceFactory,
+            @NonNull final PlayerDataSource dataSource,
             @NonNull final StreamInfo info) {
         if (!isLiveStream(info.getStreamType())) {
             return null;
@@ -55,18 +68,27 @@ public final class PlaybackResolver {
 
         try {
             if (!info.getDashMpdUrl().isEmpty()) {
-                return new DashMediaSource.Factory(dataSourceFactory)
-                        .setManifestParser(new YoutubeDashLiveManifestParser())
-                        .createMediaSource(new MediaItem.Builder()
-                                .setUri(Uri.parse(info.getDashMpdUrl()))
-                                .setLiveConfiguration(
-                                        new MediaItem.LiveConfiguration.Builder()
-                                                .setTargetOffsetMs(LIVE_STREAM_EDGE_GAP_MILLIS)
-                                                .build())
-                                .build());
+                // Use cacheless factory for live streams (no disk caching)
+                final DataSource.Factory liveFactory = dataSource.getCachelessDataSourceFactory();
+                final DashMediaSource.Factory dashFactory = new DashMediaSource.Factory(liveFactory);
+
+                // Only apply YouTube live DASH parser for YouTube streams
+                if (info.getService() == ServiceList.YouTube) {
+                    dashFactory.setManifestParser(new YoutubeDashLiveManifestParser());
+                }
+
+                return dashFactory.createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(info.getDashMpdUrl()))
+                        .setLiveConfiguration(
+                                new MediaItem.LiveConfiguration.Builder()
+                                        .setTargetOffsetMs(LIVE_STREAM_EDGE_GAP_MILLIS)
+                                        .build())
+                        .build());
             }
             if (!info.getHlsUrl().isEmpty()) {
-                return new HlsMediaSource.Factory(dataSourceFactory)
+                final DataSource.Factory liveFactory = dataSource.getCachelessDataSourceFactory();
+                return new HlsMediaSource.Factory(liveFactory)
+                        .setAllowChunklessPreparation(true)
                         .createMediaSource(new MediaItem.Builder()
                                 .setUri(Uri.parse(info.getHlsUrl()))
                                 .setLiveConfiguration(
@@ -120,21 +142,43 @@ public final class PlaybackResolver {
             }
         }
 
+        // Fallback: hash the content URL to avoid cache collisions when
+        // resolution, bitrate, and format are all unknown
+        final String content = resolveContent(stream);
+        if (content != null && key.toString().endsWith(" ")) {
+            key.append(sha1Hex(content));
+        }
+
         return key.toString();
+    }
+
+    @NonNull
+    private static String sha1Hex(@NonNull final String input) {
+        try {
+            final MessageDigest md = MessageDigest.getInstance("SHA-1");
+            final byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            final StringBuilder hex = new StringBuilder(40);
+            for (byte b : digest) {
+                hex.append(String.format("%02x", b));
+            }
+            return hex.toString();
+        } catch (final NoSuchAlgorithmException e) {
+            return String.valueOf(input.hashCode());
+        }
     }
 
     // ─── MediaSource building ────────────────────────────────────────────
 
     @Nullable
     public static MediaSource buildMediaSource(
-            @NonNull final DataSource.Factory dataSourceFactory,
+            @NonNull final PlayerDataSource dataSource,
             @NonNull final Stream stream,
             @NonNull final StreamInfo streamInfo,
             @NonNull final String cacheKey,
             @Nullable final Object tag) {
         if (streamInfo.getService() == ServiceList.YouTube) {
             final MediaSource youtubeSource = buildYoutubeMediaSource(
-                    dataSourceFactory, stream, streamInfo, cacheKey, tag);
+                    dataSource, stream, streamInfo, cacheKey, tag);
             if (youtubeSource != null) {
                 return youtubeSource;
             }
@@ -154,16 +198,17 @@ public final class PlaybackResolver {
 
         switch (deliveryMethod) {
             case DASH:
-                return buildDashSource(dataSourceFactory, stream, cacheKey, tag);
+                return buildDashSource(dataSource.getCacheDataSourceFactory(),
+                        stream, cacheKey, tag);
             case HLS:
-                return new HlsMediaSource.Factory(dataSourceFactory)
+                return new HlsMediaSource.Factory(dataSource.getCacheDataSourceFactory())
                         .createMediaSource(mediaItem);
             case SS:
-                return new SsMediaSource.Factory(dataSourceFactory)
+                return new SsMediaSource.Factory(dataSource.getCacheDataSourceFactory())
                         .createMediaSource(mediaItem);
             case PROGRESSIVE_HTTP:
             default:
-                return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                return new ProgressiveMediaSource.Factory(dataSource.getCacheDataSourceFactory())
                         .createMediaSource(mediaItem);
         }
     }
@@ -180,7 +225,7 @@ public final class PlaybackResolver {
 
     @Nullable
     private static MediaSource buildYoutubeMediaSource(
-            @NonNull final DataSource.Factory dataSourceFactory,
+            @NonNull final PlayerDataSource dataSource,
             @NonNull final Stream stream,
             @NonNull final StreamInfo streamInfo,
             @NonNull final String cacheKey,
@@ -193,8 +238,10 @@ public final class PlaybackResolver {
                         .fromPostLiveStreamDvrStreamingUrl(stream.getContent(),
                                 itag, itag.getTargetDurationSec(),
                                 streamInfo.getDuration());
-                return buildDashFromManifest(dataSourceFactory, manifestString,
-                        stream, cacheKey, tag);
+                // YouTube DASH: range=true, rn=true
+                return buildDashFromManifest(
+                        dataSource.getYouTubeDashDataSourceFactory(),
+                        manifestString, stream, cacheKey, tag);
             } catch (final CreationException e) {
                 logger.error("YouTube post-live DVR manifest generation failed: "
                         + e.getMessage());
@@ -217,15 +264,20 @@ public final class PlaybackResolver {
                     final String manifestString = YoutubeProgressiveDashManifestCreator
                             .fromProgressiveStreamingUrl(
                                     stream.getContent(), itag, streamInfo.getDuration());
-                    return buildDashFromManifest(dataSourceFactory, manifestString,
-                            stream, cacheKey, tag);
+                    // YouTube DASH: range=true, rn=true
+                    return buildDashFromManifest(
+                            dataSource.getYouTubeDashDataSourceFactory(),
+                            manifestString, stream, cacheKey, tag);
                 } catch (final CreationException e) {
                     logger.warning("YouTube DASH manifest generation failed, "
                             + "falling back to progressive: " + e.getMessage());
                     // fall through to progressive fallback
                 }
             }
-            return buildProgressiveSource(dataSourceFactory, stream, cacheKey, tag);
+            // YouTube legacy progressive: range=false, rn=true
+            return buildProgressiveSource(
+                    dataSource.getYouTubeProgressiveDataSourceFactory(),
+                    stream, cacheKey, tag);
         }
 
         if (deliveryMethod == DeliveryMethod.DASH) {
@@ -236,8 +288,10 @@ public final class PlaybackResolver {
                 final String manifestString = YoutubeOtfDashManifestCreator
                         .fromOtfStreamingUrl(
                                 stream.getContent(), itag, streamInfo.getDuration());
-                return buildDashFromManifest(dataSourceFactory, manifestString,
-                        stream, cacheKey, tag);
+                // YouTube DASH: range=true, rn=true
+                return buildDashFromManifest(
+                        dataSource.getYouTubeDashDataSourceFactory(),
+                        manifestString, stream, cacheKey, tag);
             } catch (final CreationException e) {
                 logger.error("YouTube OTF DASH manifest generation failed: "
                         + e.getMessage());
@@ -252,7 +306,8 @@ public final class PlaybackResolver {
                     .setUri(Uri.parse(content))
                     .setCustomCacheKey(cacheKey);
             if (tag != null) builder.setTag(tag);
-            return new HlsMediaSource.Factory(dataSourceFactory)
+            // YouTube HLS: range=false, rn=false
+            return new HlsMediaSource.Factory(dataSource.getYouTubeHlsDataSourceFactory())
                     .createMediaSource(builder.build());
         }
 

@@ -126,8 +126,8 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         this.trackSelector = new DefaultTrackSelector(this.context);
         this.renderFactory = new CustomRenderersFactory(this.context);
 
-        this.videoResolver = new VideoPlaybackResolver(dataSource.getCacheDataSourceFactory(), DEFAULT_CONFIG);
-        this.audioResolver = new AudioPlaybackResolver(dataSource.getCacheDataSourceFactory());
+        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_CONFIG);
+        this.audioResolver = new AudioPlaybackResolver(dataSource);
     }
 
     // ─── Callbacks ───────────────────────────────────────────────────────────

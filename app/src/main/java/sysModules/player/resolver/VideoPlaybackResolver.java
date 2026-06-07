@@ -10,7 +10,6 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
-import com.google.android.exoplayer2.upstream.DataSource;
 
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
@@ -129,7 +128,7 @@ import sysModules.player.mediaitem.MediaItemTag;
 	
 	private static final String ENGLISH_LANGUAGE = "eng";
 	
-	private final DataSource.Factory dataSourceFactory;
+	private final PlayerDataSource dataSource;
 	private final Config config;
 	
 	@Nullable private String playbackQuality;
@@ -153,14 +152,14 @@ import sysModules.player.mediaitem.MediaItemTag;
 	 * <li>Adds subtitle sources to the final media source.</li>
 	 * </ul>
 	 *
-	 * @param dataSourceFactory Factory for creating data sources for stream loading.
-	 * @param config            Configuration object containing user preferences.
+	 * @param dataSource Data source provider with YouTube-specific factory variants.
+	 * @param config     Configuration object containing user preferences.
 	 * @see #resolve(StreamInfo)
 	 * @see Config
 	 */
-	public VideoPlaybackResolver(@NonNull DataSource.Factory dataSourceFactory,
+	public VideoPlaybackResolver(@NonNull PlayerDataSource dataSource,
 	                             @NonNull Config config) {
-		this.dataSourceFactory = dataSourceFactory;
+		this.dataSource = dataSource;
 		this.config = config;
 	}
 	
@@ -309,7 +308,7 @@ import sysModules.player.mediaitem.MediaItemTag;
 	@Nullable
 	public MediaSource resolve(@NonNull StreamInfo info) {
 		final MediaSource liveSource = PlaybackResolver.maybeBuildLiveMediaSource(
-			dataSourceFactory, info);
+			dataSource, info);
 		if (liveSource != null) {
 			streamSourceType = SourceType.LIVE_STREAM;
 			return liveSource;
@@ -357,7 +356,7 @@ import sysModules.player.mediaitem.MediaItemTag;
 		if (selectedVideo != null) {
 			final String cacheKey = PlaybackResolver.cacheKeyOf(info, selectedVideo);
 			final MediaSource videoSource = PlaybackResolver.buildMediaSource(
-				dataSourceFactory, selectedVideo, info, cacheKey, tag);
+				dataSource, selectedVideo, info, cacheKey, tag);
 			if (videoSource != null) {
 				sources.add(videoSource);
 			}
@@ -368,7 +367,7 @@ import sysModules.player.mediaitem.MediaItemTag;
 		if (selectedAudio != null && (selectedVideo == null || needsSeparateAudio)) {
 			final String cacheKey = PlaybackResolver.cacheKeyOf(info, selectedAudio);
 			final MediaSource audioSource = PlaybackResolver.buildMediaSource(
-				dataSourceFactory, selectedAudio, info, cacheKey, tag);
+				dataSource, selectedAudio, info, cacheKey, tag);
 			if (audioSource != null) {
 				sources.add(audioSource);
 			}
@@ -1040,9 +1039,9 @@ import sysModules.player.mediaitem.MediaItemTag;
 					.setLanguage(subtitle.getLanguageTag())
 					.build();
 			
-			final MediaSource textSource = new SingleSampleMediaSource
-				.Factory(dataSourceFactory)
-				.createMediaSource(config, C.TIME_UNSET);
+		final MediaSource textSource = new SingleSampleMediaSource
+			.Factory(dataSource.getCacheDataSourceFactory())
+			.createMediaSource(config, C.TIME_UNSET);
 			sources.add(textSource);
 		}
 	}

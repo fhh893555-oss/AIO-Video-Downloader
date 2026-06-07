@@ -17,40 +17,44 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import sysModules.player.datasource.YoutubeHttpDataSource;
 
 /**
- * Provides {@link DataSource.Factory} instances for all content types.
- * Caches manifest creator instances and the {@link SimpleCache} for the player.
+ * Provides {@link DataSource.Factory} instances for all content types, with
+ * separate factory variants for YouTube streams requiring different URL
+ * parameter configurations ({@code range}, {@code rn}).
  *
- * <p>For YouTube streams, {@link YoutubeHttpDataSource.Factory} is used by default.
- * For other services, a standard {@link DefaultHttpDataSource.Factory} is used.</p>
+ * <p>YouTube streams require specific HTTP data source configurations:
+ * <ul>
+ *   <li>HLS: no range, no rn</li>
+ *   <li>DASH (OTF, progressive-to-DASH, post-live DVR): range=true, rn=true</li>
+ *   <li>Legacy progressive: range=false, rn=true</li>
+ * </ul>
+ *
+ * <p>For non-YouTube services, a standard {@link DefaultHttpDataSource.Factory}
+ * is used with disk caching.</p>
  */
 public final class PlayerDataSource {
     private static final long MAX_CACHE_BYTES = 200L * 1024 * 1024;
     private static final int CONNECT_TIMEOUT_MS = 30_000;
     private static final int READ_TIMEOUT_MS = 60_000;
 
-    private final Context context;
     private final DefaultHttpDataSource.Factory defaultHttpFactory;
-    private final YoutubeHttpDataSource.Factory youTubeHttpFactory;
     private final CacheDataSource.Factory cacheFactory;
     private final SimpleCache cache;
-    private final Map<Integer, YoutubeHttpDataSource.Factory> youTubeStreamHttpFactories;
+
+    // YouTube-specific cached factories (with different range/rn parameters)
+    private final CacheDataSource.Factory ytHlsCacheFactory;
+    private final CacheDataSource.Factory ytDashCacheFactory;
+    private final CacheDataSource.Factory ytProgressiveDashCacheFactory;
+
+    // Cacheless factory for live streams
+    private final DefaultHttpDataSource.Factory cachelessFactory;
 
     public PlayerDataSource(@NonNull Context context) {
-        this.context = context.getApplicationContext();
-
         defaultHttpFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent(getUserAgent(context))
-                .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
-                .setReadTimeoutMs(READ_TIMEOUT_MS)
-                .setAllowCrossProtocolRedirects(true);
-
-        youTubeHttpFactory = new YoutubeHttpDataSource.Factory()
                 .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
                 .setReadTimeoutMs(READ_TIMEOUT_MS)
                 .setAllowCrossProtocolRedirects(true);
@@ -58,62 +62,90 @@ public final class PlayerDataSource {
         File cacheDir = new File(context.getCacheDir(), "exo_player_cache");
         cache = new SimpleCache(cacheDir, new LeastRecentlyUsedCacheEvictor(MAX_CACHE_BYTES));
 
+        // Generic cached factory (for non-YouTube sources)
         cacheFactory = new CacheDataSource.Factory()
                 .setCache(cache)
                 .setUpstreamDataSourceFactory(defaultHttpFactory)
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
 
-        youTubeStreamHttpFactories = new HashMap<>();
+        // YouTube HLS: range=false, rn=false
+        ytHlsCacheFactory = new CacheDataSource.Factory()
+                .setCache(cache)
+                .setUpstreamDataSourceFactory(new YoutubeHttpDataSource.Factory()
+                        .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
+                        .setReadTimeoutMs(READ_TIMEOUT_MS)
+                        .setAllowCrossProtocolRedirects(true))
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
+        // YouTube DASH (OTF, progressive-to-DASH, post-live DVR): range=true, rn=true
+        ytDashCacheFactory = new CacheDataSource.Factory()
+                .setCache(cache)
+                .setUpstreamDataSourceFactory(new YoutubeHttpDataSource.Factory()
+                        .setRangeParameterEnabled(true)
+                        .setRnParameterEnabled(true)
+                        .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
+                        .setReadTimeoutMs(READ_TIMEOUT_MS)
+                        .setAllowCrossProtocolRedirects(true))
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
+        // YouTube legacy progressive: range=false, rn=true
+        ytProgressiveDashCacheFactory = new CacheDataSource.Factory()
+                .setCache(cache)
+                .setUpstreamDataSourceFactory(new YoutubeHttpDataSource.Factory()
+                        .setRnParameterEnabled(true)
+                        .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
+                        .setReadTimeoutMs(READ_TIMEOUT_MS)
+                        .setAllowCrossProtocolRedirects(true))
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
+        // Cacheless factory for live streams (no caching)
+        cachelessFactory = new DefaultHttpDataSource.Factory()
+                .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
+                .setReadTimeoutMs(READ_TIMEOUT_MS)
+                .setAllowCrossProtocolRedirects(true);
     }
 
-    // ─── DataSource.Factory instances ─────────────────────────────────────
+    // ─── Generic factories ───────────────────────────────────────────────
 
-    /**
-     * Default factory with caching. Used for non-YouTube progressive/DASH/HLS/SS sources.
-     */
+    /** Cached factory for non-YouTube progressive/DASH/HLS/SS sources. */
     @NonNull
     public DataSource.Factory getCacheDataSourceFactory() {
         return cacheFactory;
     }
 
-    /**
-     * Raw HTTP factory without caching. Used for manifests and non-URI content.
-     */
+    /** Raw HTTP factory without caching. Used for manifests and non-URI content. */
     @NonNull
     public DataSource.Factory getHttpDataSourceFactory() {
         return defaultHttpFactory;
     }
 
-    /**
-     * YouTube-specific HTTP factory with URL spoofing. Does not include caching.
-     * Used by {@code PlaybackResolver} for YouTube stream resolution.
-     */
+    /** Cacheless HTTP factory. Used for live streams. */
     @NonNull
-    public YoutubeHttpDataSource.Factory getYouTubeHttpFactory() {
-        return youTubeHttpFactory;
+    public DataSource.Factory getCachelessDataSourceFactory() {
+        return cachelessFactory;
     }
 
-    /**
-     * Returns a cached {@link YoutubeHttpDataSource.Factory} for a specific YouTube
-     * stream service ID. Creates one if it doesn't exist yet.
-     *
-     * @param serviceId the NewPipe service ID (e.g. YouTube = 0)
-     * @return the YouTube HTTP factory for this service
-     */
+    // ─── YouTube-specific factories ──────────────────────────────────────
+
+    /** YouTube HLS: range=false, rn=false. Cached. */
     @NonNull
-    public YoutubeHttpDataSource.Factory getYouTubeStreamHttpFactory(final int serviceId) {
-        YoutubeHttpDataSource.Factory factory = youTubeStreamHttpFactories.get(serviceId);
-        if (factory == null) {
-            factory = new YoutubeHttpDataSource.Factory()
-                    .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
-                    .setReadTimeoutMs(READ_TIMEOUT_MS)
-                    .setAllowCrossProtocolRedirects(true);
-            youTubeStreamHttpFactories.put(serviceId, factory);
-        }
-        return factory;
+    public DataSource.Factory getYouTubeHlsDataSourceFactory() {
+        return ytHlsCacheFactory;
     }
 
-    // ─── MediaSource factory helpers ──────────────────────────────────────
+    /** YouTube DASH (OTF, progressive-to-DASH, post-live DVR): range=true, rn=true. Cached. */
+    @NonNull
+    public DataSource.Factory getYouTubeDashDataSourceFactory() {
+        return ytDashCacheFactory;
+    }
+
+    /** YouTube legacy progressive: range=false, rn=true. Cached. */
+    @NonNull
+    public DataSource.Factory getYouTubeProgressiveDataSourceFactory() {
+        return ytProgressiveDashCacheFactory;
+    }
+
+    // ─── MediaSource builders ────────────────────────────────────────────
 
     @NonNull
     public MediaSource buildProgressiveSource(@NonNull final android.net.Uri uri,
@@ -166,7 +198,6 @@ public final class PlayerDataSource {
     // ─── Lifecycle ────────────────────────────────────────────────────────
 
     public void release() {
-        youTubeStreamHttpFactories.clear();
         try {
             cache.release();
         } catch (Exception ignored) {}

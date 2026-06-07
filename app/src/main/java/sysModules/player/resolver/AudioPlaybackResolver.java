@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.upstream.DataSource;
 
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
@@ -32,10 +31,10 @@ import sysModules.player.mediaitem.MediaItemTag;
             248, 271, 272, 302, 303, 308, 313, 315
     );
 
-    private final DataSource.Factory dataSourceFactory;
+    private final PlayerDataSource dataSource;
 
-    public AudioPlaybackResolver(@NonNull DataSource.Factory dataSourceFactory) {
-        this.dataSourceFactory = dataSourceFactory;
+    public AudioPlaybackResolver(@NonNull PlayerDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Nullable
@@ -62,7 +61,7 @@ import sysModules.player.mediaitem.MediaItemTag;
                 selectedAudio != null ? 0 : -1, null, selectedAudio,
                 Collections.emptyList(), audioStreams);
 
-        return PlaybackResolver.buildMediaSource(dataSourceFactory, playStream,
+        return PlaybackResolver.buildMediaSource(dataSource, playStream,
                 info, cacheKey, tag);
     }
 
