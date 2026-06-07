@@ -26,6 +26,9 @@ import com.nextgen.databinding.ActivityMain1Binding;
 import com.nextgen.databinding.ActivityMain1Tab1Binding;
 
 import org.jetbrains.annotations.NotNull;
+import org.schabi.newpipe.extractor.stream.StreamType;
+
+import java.util.Collections;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseFragment;
@@ -33,6 +36,7 @@ import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
+import sysModules.player.queue.PendingPlaybackQueue;
 import sysModules.player.queue.PlayQueueItem;
 import sysModules.player.queue.SinglePlayQueue;
 import sysModules.player.service.PlaybackService;
@@ -594,10 +598,10 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 				videoUrl,          // url
 				0,                 // serviceId (YouTube)
 				0,                 // duration (unknown until resolved)
-				java.util.Collections.emptyList(),  // thumbnails (loaded later)
+				Collections.emptyList(),  // thumbnails (loaded later)
 				"",                // uploader (loaded later)
 				null,              // uploaderUrl
-				org.schabi.newpipe.extractor.stream.StreamType.VIDEO_STREAM
+				StreamType.AUDIO_STREAM
 		);
 
 		SinglePlayQueue queue = new SinglePlayQueue(queueItem);
@@ -612,27 +616,5 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 
 		ContextCompat.startForegroundService(this, intent);
 		logger.debug("Starting audio playback for: " + videoUrl);
-	}
-
-	/**
-	 * Static holder for passing a PlayQueue to the PlaybackService without
-	 * relying on Intent serialization (which fails for non-Serializable
-	 * NewPipe Image objects).
-	 */
-	public static final class PendingPlaybackQueue {
-		private static volatile SinglePlayQueue pending;
-
-		private PendingPlaybackQueue() {}
-
-		public static void set(@NonNull SinglePlayQueue queue) {
-			pending = queue;
-		}
-
-		@Nullable
-		public static SinglePlayQueue consume() {
-			SinglePlayQueue q = pending;
-			pending = null;
-			return q;
-		}
 	}
 }

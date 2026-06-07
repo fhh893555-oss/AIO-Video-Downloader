@@ -18,6 +18,7 @@ import sysModules.player.helper.SerializedCache;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.notification.PlaybackNotification;
+import sysModules.player.queue.PendingPlaybackQueue;
 import sysModules.player.queue.PlayQueue;
 import sysModules.player.playback.MediaSourceManager;
 import sysModules.player.playback.PlaybackListener;
@@ -215,8 +216,7 @@ public class PlaybackService extends Service implements PlaybackListener {
 					}
 				}
 				if (queue == null) {
-					queue = userInterface.mainScreen.MainActivity
-						.PendingPlaybackQueue.consume();
+					queue = PendingPlaybackQueue.consume();
 					logger.debug("Consumed from PendingPlaybackQueue: " +
 						(queue != null ? queue.size() + " items" : "null"));
 				}
