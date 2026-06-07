@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.video.VideoSize;
 
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
-import org.schabi.newpipe.extractor.stream.VideoStream;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -59,26 +58,6 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     private final VideoPlaybackResolver videoResolver;
     private final AudioPlaybackResolver audioResolver;
 
-    private static final VideoPlaybackResolver.QualityResolver DEFAULT_QUALITY_RESOLVER =
-            new VideoPlaybackResolver.QualityResolver() {
-                @Override
-                public int getDefaultResolutionIndex(@NonNull List<VideoStream> sortedVideos) {
-                    return 0;
-                }
-
-                @Override
-                public int getOverrideResolutionIndex(
-                        @NonNull List<VideoStream> sortedVideos,
-                        @NonNull String playbackQuality) {
-                    for (int i = 0; i < sortedVideos.size(); i++) {
-                        if (playbackQuality.equals(sortedVideos.get(i).getResolution())) {
-                            return i;
-                        }
-                    }
-                    return 0;
-                }
-            };
-
     private static final VideoPlaybackResolver.Config DEFAULT_CONFIG =
             new VideoPlaybackResolver.Config() {
                 @Nullable
@@ -102,6 +81,26 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
                 @Override
                 public String getPreferredAudioLanguage() {
                     return null;
+                }
+
+                @Override
+                public boolean limitDataUsage() {
+                    return false;
+                }
+
+                @Override
+                public boolean preferVideoOnly() {
+                    return false;
+                }
+
+                @Override
+                public boolean preferOriginalAudio() {
+                    return false;
+                }
+
+                @Override
+                public boolean preferDescriptiveAudio() {
+                    return false;
                 }
             };
 
@@ -128,7 +127,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         this.renderFactory = new DefaultRenderersFactory(this.context)
                 .setEnableDecoderFallback(true);
 
-        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_QUALITY_RESOLVER, DEFAULT_CONFIG);
+        this.videoResolver = new VideoPlaybackResolver(dataSource, DEFAULT_CONFIG);
         this.audioResolver = new AudioPlaybackResolver(dataSource);
     }
 

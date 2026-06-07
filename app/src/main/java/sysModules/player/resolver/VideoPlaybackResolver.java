@@ -16,6 +16,7 @@ import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.services.youtube.ItagItem;
 import org.schabi.newpipe.extractor.stream.AudioStream;
+import org.schabi.newpipe.extractor.stream.AudioTrackType;
 import org.schabi.newpipe.extractor.stream.DeliveryMethod;
 import org.schabi.newpipe.extractor.stream.Stream;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,11 +56,20 @@ import sysModules.player.mediaitem.MediaItemTag;
     private static final List<MediaFormat> AUDIO_FORMAT_EFFICIENCY_RANKING =
             List.of(MediaFormat.MP3, MediaFormat.M4A, MediaFormat.WEBMA);
 
+    private static final List<AudioTrackType> AUDIO_TRACK_TYPE_RANKING =
+            List.of(AudioTrackType.ORIGINAL, AudioTrackType.DUBBED,
+                    AudioTrackType.DESCRIPTIVE, AudioTrackType.SECONDARY);
+
+    private static final List<AudioTrackType> AUDIO_TRACK_TYPE_RANKING_DESCRIPTIVE =
+            List.of(AudioTrackType.DESCRIPTIVE, AudioTrackType.DUBBED,
+                    AudioTrackType.ORIGINAL, AudioTrackType.SECONDARY);
+
     private static final Set<String> HIGH_RESOLUTION_LIST =
             Set.of("1440p", "2160p");
 
+    private static final String ENGLISH_LANGUAGE = "eng";
+
     private final DataSource.Factory dataSourceFactory;
-    private final QualityResolver qualityResolver;
     private final Config config;
 
     @Nullable private String playbackQuality;
@@ -66,10 +77,8 @@ import sysModules.player.mediaitem.MediaItemTag;
     @Nullable private SourceType streamSourceType;
 
     public VideoPlaybackResolver(@NonNull DataSource.Factory dataSourceFactory,
-                                  @NonNull QualityResolver qualityResolver,
                                   @NonNull Config config) {
         this.dataSourceFactory = dataSourceFactory;
-        this.qualityResolver = qualityResolver;
         this.config = config;
     }
 
@@ -78,12 +87,10 @@ import sysModules.player.mediaitem.MediaItemTag;
         @Nullable MediaFormat getDefaultAudioFormat();
         boolean showHigherResolutions();
         @Nullable String getPreferredAudioLanguage();
-    }
-
-    public interface QualityResolver {
-        int getDefaultResolutionIndex(@NonNull List<VideoStream> sortedVideos);
-        int getOverrideResolutionIndex(@NonNull List<VideoStream> sortedVideos,
-                                       @NonNull String playbackQuality);
+        boolean limitDataUsage();
+        boolean preferVideoOnly();
+        boolean preferOriginalAudio();
+        boolean preferDescriptiveAudio();
     }
 
     public enum SourceType {
@@ -130,7 +137,7 @@ import sysModules.player.mediaitem.MediaItemTag;
 
         final List<VideoStream> allVideos = getSortedStreamVideosList(
                 info.getVideoStreams(), info.getVideoOnlyStreams(),
-                false, config.getDefaultVideoFormat(),
+                config.preferVideoOnly(), config.getDefaultVideoFormat(),
                 config.showHigherResolutions(), info.getServiceId());
 
         int audioIndex = getAudioFormatIndex(info.getAudioStreams(),
@@ -148,9 +155,10 @@ import sysModules.player.mediaitem.MediaItemTag;
         if (allVideos.isEmpty()) {
             videoIndex = -1;
         } else if (playbackQuality == null) {
-            videoIndex = qualityResolver.getDefaultResolutionIndex(allVideos);
+            videoIndex = getDefaultResolutionIndex(allVideos, config.getDefaultVideoFormat());
         } else {
-            videoIndex = qualityResolver.getOverrideResolutionIndex(allVideos, playbackQuality);
+            videoIndex = getOverrideResolutionIndex(allVideos, playbackQuality,
+                    config.getDefaultVideoFormat());
         }
 
         final VideoStream selectedVideo = (videoIndex >= 0 && videoIndex < allVideos.size())
@@ -273,6 +281,116 @@ import sysModules.player.mediaitem.MediaItemTag;
         }
     }
 
+    // ─── 5-phase resolution index selection ──────────────────────────────
+
+    private static int parseResolutionValue(@NonNull final String resolution) {
+        // Extract base height before 'p' — "1080p60" → 1080, "720p" → 720
+        try {
+            final int pIndex = resolution.indexOf('p');
+            if (pIndex > 0) {
+                return Integer.parseInt(resolution.substring(0, pIndex)
+                        .replaceAll("[^\\d]", ""));
+            }
+            return Integer.parseInt(resolution.replaceAll("[^\\d]", ""));
+        } catch (final NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    @NonNull
+    private static String stripRefreshRate(@NonNull final String resolution) {
+        return resolution.replaceAll("p\\d+$", "p");
+    }
+
+    private static int getDefaultResolutionIndex(
+            @NonNull final List<VideoStream> sortedVideos,
+            @Nullable final MediaFormat defaultFormat) {
+        if (sortedVideos.isEmpty()) return 0;
+        return 0;
+    }
+
+    private static int getOverrideResolutionIndex(
+            @NonNull final List<VideoStream> sortedVideos,
+            @NonNull final String playbackQuality,
+            @Nullable final MediaFormat defaultFormat) {
+        if (sortedVideos.isEmpty()) return 0;
+
+        final String qualityResolution = parseResolutionString(playbackQuality);
+        final MediaFormat qualityFormat = parseFormatFromQuality(playbackQuality);
+
+        // Phase 1: exact resolution + format match
+        for (int i = 0; i < sortedVideos.size(); i++) {
+            final VideoStream vs = sortedVideos.get(i);
+            if (vs.getResolution().equals(playbackQuality)) {
+                return i;
+            }
+        }
+
+        // Phase 2: format match + resolution ignoring refresh rate
+        if (qualityFormat != null) {
+            final String strippedQuality = stripRefreshRate(qualityResolution);
+            for (int i = 0; i < sortedVideos.size(); i++) {
+                final VideoStream vs = sortedVideos.get(i);
+                if (vs.getFormat() == qualityFormat
+                        && stripRefreshRate(vs.getResolution()).equals(strippedQuality)) {
+                    return i;
+                }
+            }
+        }
+
+        // Phase 3: resolution match only
+        final int qualityResValue = parseResolutionValue(qualityResolution);
+        for (int i = 0; i < sortedVideos.size(); i++) {
+            final VideoStream vs = sortedVideos.get(i);
+            if (parseResolutionValue(vs.getResolution()) == qualityResValue) {
+                return i;
+            }
+        }
+
+        // Phase 4: resolution ignoring refresh rate
+        final String strippedQualityRes = stripRefreshRate(qualityResolution);
+        for (int i = 0; i < sortedVideos.size(); i++) {
+            final VideoStream vs = sortedVideos.get(i);
+            if (stripRefreshRate(vs.getResolution()).equals(strippedQualityRes)) {
+                return i;
+            }
+        }
+
+        // Phase 5: closest lower resolution ignoring refresh rate
+        int closestIndex = 0;
+        int closestDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < sortedVideos.size(); i++) {
+            final VideoStream vs = sortedVideos.get(i);
+            final int vsRes = parseResolutionValue(vs.getResolution());
+            if (vsRes <= qualityResValue) {
+                final int diff = qualityResValue - vsRes;
+                if (diff < closestDiff) {
+                    closestDiff = diff;
+                    closestIndex = i;
+                }
+            }
+        }
+        return closestIndex;
+    }
+
+    @NonNull
+    private static String parseResolutionString(@NonNull final String quality) {
+        return quality.replaceAll("\\s*\\(.*\\)$", "").trim();
+    }
+
+    @Nullable
+    private static MediaFormat parseFormatFromQuality(@NonNull final String quality) {
+        final int idx = quality.indexOf('(');
+        if (idx < 0) return null;
+        final String formatPart = quality.substring(idx + 1, quality.indexOf(')', idx)).trim();
+        for (final MediaFormat fmt : MediaFormat.values()) {
+            if (fmt.getName() != null && fmt.getName().equalsIgnoreCase(formatPart)) {
+                return fmt;
+            }
+        }
+        return null;
+    }
+
     // ─── Audio stream filtering & selection ──────────────────────────────
 
     @NonNull
@@ -312,18 +430,10 @@ import sysModules.player.mediaitem.MediaItemTag;
         final List<AudioStream> filtered = getFilteredAudioStreams(audioStreams, serviceId);
         if (filtered.isEmpty()) return -1;
 
-        if (preferredLanguage != null) {
-            for (int i = 0; i < filtered.size(); i++) {
-                final AudioStream s = filtered.get(i);
-                if (s.getAudioLocale() != null
-                        && s.getAudioLocale().getISO3Language().equals(preferredLanguage)) {
-                    return i;
-                }
-            }
-        }
-
-        final MediaFormat defaultFormat = config.getDefaultAudioFormat();
-        final Comparator<AudioStream> comparator = getAudioFormatComparator(defaultFormat, false);
+        final Comparator<AudioStream> comparator = getAudioTrackComparator(
+                preferredLanguage, config.getDefaultAudioFormat(),
+                config.preferOriginalAudio(), config.preferDescriptiveAudio(),
+                config.limitDataUsage());
         int bestIndex = 0;
         AudioStream best = filtered.get(0);
         for (int i = 1; i < filtered.size(); i++) {
@@ -336,25 +446,84 @@ import sysModules.player.mediaitem.MediaItemTag;
         return bestIndex;
     }
 
-    private static Comparator<AudioStream> getAudioFormatComparator(
-            @Nullable final MediaFormat defaultFormat, final boolean limitDataUsage) {
+    private static Comparator<AudioStream> getAudioTrackComparator(
+            @Nullable final String preferredLanguage,
+            @Nullable final MediaFormat defaultFormat,
+            final boolean preferOriginalAudio,
+            final boolean preferDescriptiveAudio,
+            final boolean limitDataUsage) {
+
         final List<MediaFormat> formatRanking = limitDataUsage
                 ? AUDIO_FORMAT_EFFICIENCY_RANKING
                 : AUDIO_FORMAT_QUALITY_RANKING;
 
-        final Comparator<AudioStream> bitrateComparator =
-                Comparator.comparingInt(AudioStream::getAverageBitrate);
+        final List<AudioTrackType> trackTypeRanking = preferDescriptiveAudio
+                ? AUDIO_TRACK_TYPE_RANKING_DESCRIPTIVE
+                : AUDIO_TRACK_TYPE_RANKING;
 
-        return Comparator.comparing(AudioStream::getFormat, (o1, o2) -> {
-            if (defaultFormat != null) {
-                return Boolean.compare(o1 == defaultFormat, o2 == defaultFormat);
+        return (a, b) -> {
+            // 1) preferOriginalAudio: ORIGINAL always wins
+            if (preferOriginalAudio) {
+                final boolean aIsOriginal = a.getAudioTrackType() == AudioTrackType.ORIGINAL;
+                final boolean bIsOriginal = b.getAudioTrackType() == AudioTrackType.ORIGINAL;
+                if (aIsOriginal != bIsOriginal) {
+                    return aIsOriginal ? 1 : -1;
+                }
             }
-            return 0;
-        }).thenComparing(bitrateComparator)
-                .thenComparingInt(s -> formatRanking.indexOf(s.getFormat()));
+
+            // 2) Language match
+            final int aLangScore = languageScore(a, preferredLanguage);
+            final int bLangScore = languageScore(b, preferredLanguage);
+            if (aLangScore != bLangScore) {
+                return Integer.compare(aLangScore, bLangScore);
+            }
+
+            // 3) Track type ranking
+            final int aTypeIdx = trackTypeRanking.indexOf(a.getAudioTrackType());
+            final int bTypeIdx = trackTypeRanking.indexOf(b.getAudioTrackType());
+            if (aTypeIdx != bTypeIdx) {
+                return Integer.compare(aTypeIdx, bTypeIdx);
+            }
+
+            // 4) Default format preference
+            if (defaultFormat != null) {
+                final boolean aIsDefault = a.getFormat() == defaultFormat;
+                final boolean bIsDefault = b.getFormat() == defaultFormat;
+                if (aIsDefault != bIsDefault) {
+                    return aIsDefault ? 1 : -1;
+                }
+            }
+
+            // 5) Bitrate
+            final int bitrateCompare = Integer.compare(
+                    a.getAverageBitrate(), b.getAverageBitrate());
+            if (bitrateCompare != 0) {
+                return limitDataUsage ? -bitrateCompare : bitrateCompare;
+            }
+
+            // 6) Format quality ranking
+            return Integer.compare(
+                    formatRanking.indexOf(a.getFormat()),
+                    formatRanking.indexOf(b.getFormat()));
+        };
     }
 
-    // ─── Utils ───────────────────────────────────────────────────────────
+    private static int languageScore(@NonNull final AudioStream stream,
+                                      @Nullable final String preferredLanguage) {
+        final Locale locale = stream.getAudioLocale();
+        if (locale == null) return 0;
+
+        if (preferredLanguage != null) {
+            if (preferredLanguage.equals(locale.getISO3Language())) return 5;
+            if (preferredLanguage.length() == 2
+                    && preferredLanguage.equals(locale.getLanguage())) return 5;
+        }
+
+        if (ENGLISH_LANGUAGE.equals(locale.getISO3Language())) return 3;
+
+        return 1;
+    }
+    
 
     private static boolean isSupportedItag(@Nullable final ItagItem itag) {
         return itag == null || SUPPORTED_ITAG_IDS.contains(itag.id);
@@ -367,8 +536,6 @@ import sysModules.player.mediaitem.MediaItemTag;
         }
         return stream.getUrl();
     }
-
-    // ─── Subtitle sources ────────────────────────────────────────────────
 
     private void addSubtitleSources(@NonNull StreamInfo info,
                                      @NonNull List<MediaSource> sources) {

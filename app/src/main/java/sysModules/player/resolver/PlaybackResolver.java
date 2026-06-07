@@ -20,6 +20,7 @@ import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.services.youtube.ItagItem;
 import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.CreationException;
 import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.YoutubeOtfDashManifestCreator;
+import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.YoutubePostLiveStreamDvrDashManifestCreator;
 import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.YoutubeProgressiveDashManifestCreator;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.DeliveryMethod;
@@ -182,7 +183,20 @@ public final class PlaybackResolver {
             @NonNull final String cacheKey,
             @Nullable final Object tag) {
         if (streamInfo.getStreamType() == StreamType.POST_LIVE_STREAM) {
-            return null;
+            try {
+                final ItagItem itag = stream.getItagItem();
+                if (itag == null) return null;
+                final String manifestString = YoutubePostLiveStreamDvrDashManifestCreator
+                        .fromPostLiveStreamDvrStreamingUrl(stream.getContent(),
+                                itag, itag.getTargetDurationSec(),
+                                streamInfo.getDuration());
+                return buildDashFromManifest(dataSourceFactory, manifestString,
+                        stream, cacheKey, tag);
+            } catch (final CreationException e) {
+                logger.error("YouTube post-live DVR manifest generation failed: "
+                        + e.getMessage());
+                return null;
+            }
         }
 
         final DeliveryMethod deliveryMethod = stream.getDeliveryMethod();
