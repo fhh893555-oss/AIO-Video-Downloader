@@ -169,7 +169,8 @@ import sysModules.player.mediaitem.MediaItemTag;
 
         final MediaItemTag tag = new MediaItemTag(
                 info.getServiceId(), videoIndex, audioIndex,
-                selectedVideo, selectedAudio);
+                selectedVideo, selectedAudio,
+                allVideos, allAudio);
 
         if (selectedVideo != null) {
             final String cacheKey = PlaybackResolver.cacheKeyOf(info, selectedVideo);

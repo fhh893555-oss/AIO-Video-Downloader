@@ -59,7 +59,8 @@ public final class AudioPlaybackResolver {
 
         final String cacheKey = PlaybackResolver.cacheKeyOf(info, playStream);
         final MediaItemTag tag = new MediaItemTag(info.getServiceId(), -1,
-                selectedAudio != null ? 0 : -1, null, selectedAudio);
+                selectedAudio != null ? 0 : -1, null, selectedAudio,
+                Collections.emptyList(), audioStreams);
 
         return PlaybackResolver.buildMediaSource(dataSourceFactory, playStream,
                 info, cacheKey, tag);

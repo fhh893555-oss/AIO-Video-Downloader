@@ -7,24 +7,28 @@ import androidx.annotation.NonNull;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
 
 public final class PlayerDataSource implements DataSource.Factory {
+    private static final long MAX_CACHE_BYTES = 200L * 1024 * 1024;
+    private static final int CONNECT_TIMEOUT_MS = 30_000;
+    private static final int READ_TIMEOUT_MS = 60_000;
+
     private final DefaultHttpDataSource.Factory httpFactory;
     private final SimpleCache cache;
 
     public PlayerDataSource(@NonNull Context context) {
         httpFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent(getUserAgent(context))
-                .setConnectTimeoutMs(30_000)
-                .setReadTimeoutMs(60_000)
+                .setConnectTimeoutMs(CONNECT_TIMEOUT_MS)
+                .setReadTimeoutMs(READ_TIMEOUT_MS)
                 .setAllowCrossProtocolRedirects(true);
 
-        File cacheDir = new File(context.getCacheDir(), "exo_cache");
-        cache = new SimpleCache(cacheDir, new NoOpCacheEvictor());
+        File cacheDir = new File(context.getCacheDir(), "exo_player_cache");
+        cache = new SimpleCache(cacheDir, new LeastRecentlyUsedCacheEvictor(MAX_CACHE_BYTES));
     }
 
     @Override
