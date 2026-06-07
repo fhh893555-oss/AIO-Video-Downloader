@@ -198,16 +198,32 @@ public class PlaybackService extends Service implements PlaybackListener {
 				closePlayer();
 				break;
 			case NotificationConstants.ACTION_LOAD_AND_PLAY:
+				logger.debug("ACTION_LOAD_AND_PLAY received");
+				ensureForeground();
+				PlayQueue queue = null;
 				if (intent.hasExtra(NotificationConstants.EXTRA_PLAY_QUEUE)) {
 					try {
 						Object extra = intent.getSerializableExtra(
 							NotificationConstants.EXTRA_PLAY_QUEUE);
+						logger.debug("EXTRA_PLAY_QUEUE type=" +
+							(extra != null ? extra.getClass().getName() : "null"));
 						if (extra instanceof PlayQueue) {
-							loadAndPlay((PlayQueue) extra);
+							queue = (PlayQueue) extra;
 						}
 					} catch (ClassCastException e) {
 						logger.error("Invalid play queue extra", e);
 					}
+				}
+				if (queue == null) {
+					queue = userInterface.mainScreen.MainActivity
+						.PendingPlaybackQueue.consume();
+					logger.debug("Consumed from PendingPlaybackQueue: " +
+						(queue != null ? queue.size() + " items" : "null"));
+				}
+				if (queue != null) {
+					loadAndPlay(queue);
+				} else {
+					logger.error("ACTION_LOAD_AND_PLAY has no queue");
 				}
 				break;
 		}
@@ -239,6 +255,9 @@ public class PlaybackService extends Service implements PlaybackListener {
 	 * @see #closePlayer()
 	 */
 	public void loadAndPlay(@NonNull PlayQueue queue) {
+		logger.debug("loadAndPlay() called, queue.size=" + queue.size()
+				+ " queue.index=" + queue.getIndex()
+				+ " item=" + (queue.getItem() != null ? queue.getItem().getTitle() : "null"));
 		sessionManager.connect();
 		sessionManager.setPlayer(engine.getExoPlayer());
 		sessionManager.setCloseCallback(this::closePlayer);
@@ -268,6 +287,12 @@ public class PlaybackService extends Service implements PlaybackListener {
 		}
 		sourceManager = new MediaSourceManager(this, queue);
 		sourceManager.init();
+
+		// Set the player source early so ConcatenatingMediaSource operations
+		// (addMediaSource/removeMediaSource) are processed correctly.
+		// PlaceholderMediaSource reports an empty timeline, so the player
+		// remains in a waiting state until the real source is resolved.
+		engine.setMediaSourceAndPrepare(sourceManager.getParentMediaSource());
 
 		ServiceBridge.getInstance().init(this, engine, sourceManager, playerType);
 		acquireWakeLock();

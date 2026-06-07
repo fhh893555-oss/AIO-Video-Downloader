@@ -136,10 +136,20 @@ public class MediaSourceManager {
         return playQueue;
     }
 
+    @NonNull
+    public com.google.android.exoplayer2.source.ConcatenatingMediaSource getParentMediaSource() {
+        return playlist.getParentMediaSource();
+    }
+
     // ─── Queue event handling (replaces RxJava Subscriber) ────────────────
 
     private void onPlayQueueChanged(final QueueEvent event) {
         if (disposed) return;
+        logger.debug("onPlayQueueChanged: type=" + event.getType()
+                + " queue.size=" + playQueue.size()
+                + " queue.index=" + playQueue.getIndex()
+                + " queue.isEmpty=" + playQueue.isEmpty()
+                + " queue.isComplete=" + playQueue.isComplete());
 
         if (playQueue.isEmpty() && playQueue.isComplete()) {
             playbackListener.onPlaybackShutdown();
@@ -256,7 +266,12 @@ public class MediaSourceManager {
     }
 
     private synchronized void maybeSynchronizePlayer() {
-        if (isPlayQueueReady() && isPlaybackReady()) {
+        final boolean queueReady = isPlayQueueReady();
+        final boolean playbackReady = isPlaybackReady();
+        logger.debug("maybeSynchronizePlayer: queueReady=" + queueReady
+                + " playbackReady=" + playbackReady
+                + " isBlocked=" + isBlocked);
+        if (queueReady && playbackReady) {
             final boolean wasBlocked = maybeUnblock();
             maybeSync(wasBlocked);
         }
@@ -271,12 +286,20 @@ public class MediaSourceManager {
 
     private void loadImmediate() {
         if (disposed) return;
-        logger.debug("loadImmediate() called");
+        logger.debug("loadImmediate() called, queue.size=" + playQueue.size()
+                + " queue.index=" + playQueue.getIndex()
+                + " playlist.size=" + playlist.size()
+                + " disposed=" + disposed);
         final ItemsToLoad itemsToLoad = getItemsToLoad(playQueue);
-        if (itemsToLoad == null) return;
+        if (itemsToLoad == null) {
+            logger.debug("loadImmediate() itemsToLoad is null, returning");
+            return;
+        }
 
         maybeClearLoaders();
 
+        logger.debug("loadImmediate() loading center: " + itemsToLoad.center.getTitle()
+                + ", neighbors: " + itemsToLoad.neighbors.size());
         maybeLoadItem(itemsToLoad.center);
         for (final PlayQueueItem item : itemsToLoad.neighbors) {
             maybeLoadItem(item);
@@ -284,17 +307,33 @@ public class MediaSourceManager {
     }
 
     private void maybeLoadItem(@NonNull final PlayQueueItem item) {
-        if (playQueue.indexOf(item) >= playlist.size()) return;
+        final int itemIndex = playQueue.indexOf(item);
+        if (itemIndex >= playlist.size()) {
+            logger.debug("maybeLoadItem() index " + itemIndex
+                    + " >= playlist.size " + playlist.size() + ", skipping: " + item.getTitle());
+            return;
+        }
 
-        if (!loadingItems.contains(item) && isCorrectionNeeded(item)) {
+        final boolean alreadyLoading = loadingItems.contains(item);
+        final boolean correctionNeeded = isCorrectionNeeded(item);
+        logger.debug("maybeLoadItem() item=" + item.getTitle()
+                + " index=" + itemIndex
+                + " alreadyLoading=" + alreadyLoading
+                + " correctionNeeded=" + correctionNeeded);
+
+        if (!alreadyLoading && correctionNeeded) {
             logger.debug("Loading item: " + item.getTitle());
             loadingItems.add(item);
-            loadingIndices.put(item, playQueue.indexOf(item));
+            loadingIndices.put(item, itemIndex);
 
             final Thread loaderThread = new Thread(() -> {
+                logger.debug("Loader thread started for: " + item.getTitle()
+                        + " url=" + item.getUrl() + " serviceId=" + item.getServiceId());
                 item.fetchStreamInfo(new PlayQueueItem.StreamCallback() {
                     @Override
                     public void onSuccess(StreamInfo info) {
+                        logger.debug("StreamInfo loaded for: " + item.getTitle()
+                                + " name=" + info.getName());
                         if (disposed) return;
                         final com.google.android.exoplayer2.source.MediaSource resolved =
                                 playbackListener.sourceOf(item, info);
@@ -324,6 +363,8 @@ public class MediaSourceManager {
 
                     @Override
                     public void onError(Throwable error) {
+                        logger.error("StreamInfo load failed for: " + item.getTitle()
+                                + " error=" + error.getMessage(), error);
                         if (disposed) return;
                         mainHandler.post(() -> {
                             final ManagedMediaSource source;
@@ -349,6 +390,10 @@ public class MediaSourceManager {
         loadingItems.remove(item);
         final Integer storedIndex = loadingIndices.remove(item);
         final int itemIndex = storedIndex != null ? storedIndex : playQueue.indexOf(item);
+        logger.debug("onMediaSourceReceived: item=" + item.getTitle()
+                + " sourceType=" + mediaSource.getClass().getSimpleName()
+                + " itemIndex=" + itemIndex
+                + " correctionNeeded=" + isCorrectionNeeded(item));
         if (isCorrectionNeeded(item)) {
             logger.debug("Updating index " + itemIndex + " with " + item.getTitle());
             playlist.update(itemIndex, mediaSource, mainHandler, this::maybeSynchronizePlayer);
@@ -358,8 +403,15 @@ public class MediaSourceManager {
     private boolean isCorrectionNeeded(@NonNull final PlayQueueItem item) {
         final int index = playQueue.indexOf(item);
         final ManagedMediaSource mediaSource = playlist.get(index);
-        return mediaSource != null
-                && mediaSource.shouldBeReplacedWith(item, index != playQueue.getIndex());
+        if (mediaSource == null) {
+            logger.debug("isCorrectionNeeded: no source at index " + index + ", correction IS needed");
+            return true;
+        }
+        final boolean needed = mediaSource.shouldBeReplacedWith(item, index != playQueue.getIndex());
+        logger.debug("isCorrectionNeeded: index=" + index
+                + " sourceType=" + mediaSource.getClass().getSimpleName()
+                + " needed=" + needed);
+        return needed;
     }
 
     private void maybeRenewCurrentIndex() {

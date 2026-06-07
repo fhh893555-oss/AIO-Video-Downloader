@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.OnApplyWindowInsetsListener;
@@ -601,13 +602,37 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 
 		SinglePlayQueue queue = new SinglePlayQueue(queueItem);
 
-		// Start the playback service with the queue
+		// Use static holder to pass queue (avoids Serializable issues with Image)
+		PendingPlaybackQueue.set(queue);
+
+		// Start the playback service
 		Intent intent = new Intent(this, PlaybackService.class);
 		intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
-		intent.putExtra(NotificationConstants.EXTRA_PLAY_QUEUE, queue);
 		intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
 
 		ContextCompat.startForegroundService(this, intent);
 		logger.debug("Starting audio playback for: " + videoUrl);
+	}
+
+	/**
+	 * Static holder for passing a PlayQueue to the PlaybackService without
+	 * relying on Intent serialization (which fails for non-Serializable
+	 * NewPipe Image objects).
+	 */
+	public static final class PendingPlaybackQueue {
+		private static volatile SinglePlayQueue pending;
+
+		private PendingPlaybackQueue() {}
+
+		public static void set(@NonNull SinglePlayQueue queue) {
+			pending = queue;
+		}
+
+		@Nullable
+		public static SinglePlayQueue consume() {
+			SinglePlayQueue q = pending;
+			pending = null;
+			return q;
+		}
 	}
 }
