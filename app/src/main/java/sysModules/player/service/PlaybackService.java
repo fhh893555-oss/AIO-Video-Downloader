@@ -17,7 +17,8 @@ import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.notification.PlaybackNotification;
 import sysModules.player.queue.PlayQueue;
-import sysModules.player.queue.QueueSyncManager;
+import sysModules.player.playback.MediaSourceManager;
+import sysModules.player.playback.PlaybackListener;
 import sysModules.player.session.MediaSessionManager;
 import sysModules.player.session.PlayQueueNavigator;
 
@@ -49,12 +50,12 @@ import sysModules.player.session.PlayQueueNavigator;
  * @see PlaybackNotification
  * @see ServiceBridge
  */
-public class PlaybackService extends Service {
+public class PlaybackService extends Service implements PlaybackListener {
 	private static final LoggerUtils logger = LoggerUtils.from(PlaybackService.class);
 	private static final String WAKE_LOCK_TAG = "tubeaio:player:wakelock";
 	
 	private MediaEngine engine;
-	private QueueSyncManager queueManager;
+	private MediaSourceManager sourceManager;
 	private AudioFocusHelper audioFocus;
 	private MediaSessionManager sessionManager;
 	private PlayQueueNavigator queueNavigator;
@@ -88,7 +89,6 @@ public class PlaybackService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		engine = new MediaEngine(this);
-		queueManager = new QueueSyncManager(engine);
 		audioFocus = new AudioFocusHelper(this, engine);
 		sessionManager = new MediaSessionManager(this, engine);
 		notification = new PlaybackNotification(this);
@@ -99,7 +99,6 @@ public class PlaybackService extends Service {
 		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
 		
-		ServiceBridge.getInstance().init(this, engine, queueManager, playerType);
 		logger.debug("PlaybackService created");
 	}
 	
@@ -239,7 +238,15 @@ public class PlaybackService extends Service {
 		notification.start();
 		
 		audioFocus.requestFocus();
-		queueManager.bind(queue);
+
+		// Dispose old source manager if it exists
+		if (sourceManager != null) {
+			sourceManager.dispose();
+		}
+		sourceManager = new MediaSourceManager(this, queue);
+		sourceManager.init();
+
+		ServiceBridge.getInstance().init(this, engine, sourceManager, playerType);
 		acquireWakeLock();
 	}
 	
@@ -366,7 +373,10 @@ public class PlaybackService extends Service {
 	 */
 	private void closePlayer() {
 		stopPlayback();
-		queueManager.unbind();
+		if (sourceManager != null) {
+			sourceManager.dispose();
+			sourceManager = null;
+		}
 		stopSelf();
 	}
 	
@@ -404,7 +414,10 @@ public class PlaybackService extends Service {
 			queueNavigator = null;
 		}
 		audioFocus.dispose();
-		queueManager.unbind();
+		if (sourceManager != null) {
+			sourceManager.dispose();
+			sourceManager = null;
+		}
 		engine.release();
 		releaseWakeLock();
 		if (serviceStarted) {
@@ -536,5 +549,81 @@ public class PlaybackService extends Service {
 	 */
 	public boolean isMuted() {
 		return engine.isMuted();
+	}
+
+	// ─── PlaybackListener ──────────────────────────────────────────────────
+
+	@Override
+	public boolean isApproachingPlaybackEdge(final long timeToEndMillis) {
+		if (engine.getExoPlayer() == null || !engine.isPlaying()) {
+			return false;
+		}
+		final long position = engine.getCurrentPosition();
+		final long duration = engine.getDuration();
+		return duration - position < timeToEndMillis;
+	}
+
+	@Override
+	public void onPlaybackBlock() {
+		logger.debug("onPlaybackBlock() called");
+		engine.setCurrentItem(null);
+		engine.stop();
+	}
+
+	@Override
+	public void onPlaybackUnblock(@NonNull final com.google.android.exoplayer2.source.MediaSource mediaSource) {
+		logger.debug("onPlaybackUnblock() called");
+		engine.setMediaSourceAndPrepare(mediaSource);
+	}
+
+	@Override
+	public void onPlaybackSynchronize(@NonNull final sysModules.player.queue.PlayQueueItem item,
+									 final boolean wasBlocked) {
+		logger.debug("onPlaybackSynchronize(wasBlocked=" + wasBlocked + ") item=" + item.getTitle());
+		if (engine.getCurrentItem() == item) return;
+
+		engine.setCurrentItem(item);
+
+		final sysModules.player.queue.PlayQueue queue = sourceManager != null
+				? getQueue() : null;
+		if (queue == null) return;
+
+		final int queueIndex = queue.indexOf(item);
+		final int playerIndex = engine.getExoPlayer().getCurrentMediaItemIndex();
+		final long recovery = item.getRecoveryPosition();
+
+		if (wasBlocked || playerIndex != queueIndex || !engine.isPlaying()) {
+			if (recovery != sysModules.player.queue.PlayQueueItem.RECOVERY_UNSET) {
+				engine.getExoPlayer().seekTo(queueIndex, recovery);
+				queue.setRecovery(queueIndex,
+						sysModules.player.queue.PlayQueueItem.RECOVERY_UNSET);
+			} else {
+				engine.getExoPlayer().seekToDefaultPosition(queueIndex);
+			}
+		}
+	}
+
+	@Nullable
+	@Override
+	public com.google.android.exoplayer2.source.MediaSource sourceOf(
+			@NonNull final sysModules.player.queue.PlayQueueItem item,
+			@NonNull final org.schabi.newpipe.extractor.stream.StreamInfo info) {
+		return engine.resolveSource(info);
+	}
+
+	@Override
+	public void onPlaybackShutdown() {
+		logger.debug("onPlaybackShutdown() called");
+		closePlayer();
+	}
+
+	@Override
+	public void onPlayQueueEdited() {
+		// Queue was edited; notification will update on next metadata/progress callback
+	}
+
+	@Nullable
+	private sysModules.player.queue.PlayQueue getQueue() {
+		return sourceManager != null ? sourceManager.getPlayQueue() : null;
 	}
 }

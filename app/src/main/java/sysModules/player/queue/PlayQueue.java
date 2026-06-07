@@ -203,6 +203,15 @@ public abstract class PlayQueue implements Serializable {
         return streams.get(index);
     }
 
+    public synchronized @Nullable PlayQueueItem getItem(int index) {
+        if (streams.isEmpty() || index < 0 || index >= streams.size()) return null;
+        return streams.get(index);
+    }
+
+    public synchronized int indexOf(@NonNull PlayQueueItem item) {
+        return streams.indexOf(item);
+    }
+
     public synchronized @NonNull List<PlayQueueItem> getStreams() {
         return new ArrayList<>(streams);
     }

@@ -188,6 +188,38 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         notifyMetadataChanged();
     }
 
+    /**
+     * Resolves a {@link StreamInfo} into a {@link MediaSource} using the appropriate
+     * resolver (video or audio) without loading it into the player. Used by the
+     * {@link sysModules.player.playback.MediaSourceManager} to resolve streams for
+     * preloaded sources.
+     *
+     * @param info the stream info to resolve
+     * @return the resolved media source, or null if resolution failed
+     */
+    @Nullable
+    public MediaSource resolveSource(@NonNull StreamInfo info) {
+        if (audioOnly) {
+            return audioResolver.resolve(info);
+        } else {
+            return videoResolver.resolve(info);
+        }
+    }
+
+    /**
+     * Sets a media source on the player and prepares it for playback. Used by
+     * the {@link sysModules.player.playback.MediaSourceManager} when unblocking
+     * with a new source.
+     *
+     * @param mediaSource the source to play
+     */
+    public void setMediaSourceAndPrepare(@NonNull MediaSource mediaSource) {
+        ensurePlayerReady();
+        exoPlayer.setMediaSource(mediaSource, false);
+        exoPlayer.prepare();
+        setState(PlaybackState.Phase.BUFFERING);
+    }
+
     public void stop() {
         if (exoPlayer != null) {
             exoPlayer.stop();
