@@ -22,7 +22,7 @@ import java.util.List;
 import coreUtils.library.process.LoggerUtils;
 import sysModules.player.mediaitem.MediaItemTag;
 
-public final class AudioPlaybackResolver {
+@SuppressWarnings("ALL") public final class AudioPlaybackResolver {
     private static final LoggerUtils logger = LoggerUtils.from(AudioPlaybackResolver.class);
 
     private static final List<Integer> SUPPORTED_ITAG_IDS = List.of(
