@@ -3,6 +3,7 @@ package sysModules.player.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.PowerManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,200 +21,224 @@ import sysModules.player.session.MediaSessionManager;
 import sysModules.player.session.PlayQueueNavigator;
 
 public class PlaybackService extends Service {
-    private static final LoggerUtils logger = LoggerUtils.from(PlaybackService.class);
-
-    private MediaEngine engine;
-    private QueueSyncManager queueManager;
-    private AudioFocusHelper audioFocus;
-    private MediaSessionManager sessionManager;
-    private PlayQueueNavigator queueNavigator;
-    private PlaybackNotification notification;
-    private PlayerType playerType;
-    private boolean serviceStarted;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        engine = new MediaEngine(this);
-        queueManager = new QueueSyncManager(engine);
-        audioFocus = new AudioFocusHelper(this, engine);
-        sessionManager = new MediaSessionManager(this, engine);
-        notification = new PlaybackNotification(this);
-        playerType = PlayerType.MAIN;
-
-        engine.addCallback(notification);
-
-        ServiceBridge.getInstance().init(this, engine, queueManager, playerType);
-        logger.debug("PlaybackService created");
-    }
-
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if (intent != null) {
-            String action = intent.getAction();
-            if (action != null) {
-                handleAction(action, intent);
-            }
-
-            if (intent.hasExtra(NotificationConstants.EXTRA_PLAYER_TYPE)) {
-                playerType = (PlayerType) intent.getSerializableExtra(
-                        NotificationConstants.EXTRA_PLAYER_TYPE);
-            }
-        }
-        return START_STICKY;
-    }
-
-    private void handleAction(@NonNull String action, @NonNull Intent intent) {
-        switch (action) {
-            case NotificationConstants.ACTION_PLAY:
-                engine.play();
-                ensureForeground();
-                break;
-            case NotificationConstants.ACTION_PAUSE:
-                engine.pause();
-                break;
-            case NotificationConstants.ACTION_PLAY_PAUSE:
-                engine.playPause();
-                ensureForeground();
-                break;
-            case NotificationConstants.ACTION_NEXT:
-                engine.playNext();
-                break;
-            case NotificationConstants.ACTION_PREVIOUS:
-                engine.playPrevious();
-                break;
-            case NotificationConstants.ACTION_STOP:
-                stopPlayback();
-                break;
-            case NotificationConstants.ACTION_CLOSE:
-                closePlayer();
-                break;
-        }
-    }
-
-    public void loadAndPlay(@NonNull PlayQueue queue, long startPosition) {
-        sessionManager.connect();
-        sessionManager.setPlayer(engine.getExoPlayer());
-        sessionManager.setCloseCallback(this::closePlayer);
-
-        if (queueNavigator != null) {
-            queueNavigator.dispose();
-            queueNavigator = null;
-        }
-        if (sessionManager.getMediaSession() != null) {
-            queueNavigator = new PlayQueueNavigator(
-                    sessionManager.getMediaSession(), queue, engine);
-            sessionManager.setQueueNavigator(queueNavigator);
-        }
-
-        notification.setSessionToken(sessionManager.getSessionToken());
-        ensureForeground();
-        notification.start();
-
-        audioFocus.requestFocus();
-        queueManager.bind(queue);
-    }
-
-    private void ensureForeground() {
-        if (!serviceStarted) {
-            startForeground(NotificationConstants.NOTIFICATION_ID,
-                    buildPlaceholderNotification());
-            serviceStarted = true;
-            logger.debug("Service moved to foreground");
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private android.app.Notification buildPlaceholderNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                this, NotificationConstants.CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_media_play)
-                .setContentTitle(getString(com.nextgen.R.string.player_loading))
-                .setOngoing(true);
-        return builder.build();
-    }
-
-    private void stopPlayback() {
-        audioFocus.dispose();
-        engine.stop();
-        if (serviceStarted) {
-            stopForeground(true);
-            serviceStarted = false;
-        }
-        notification.stop();
-        sessionManager.release();
-        if (queueNavigator != null) {
-            queueNavigator.dispose();
-            queueNavigator = null;
-        }
-        logger.debug("Playback stopped");
-    }
-
-    private void closePlayer() {
-        stopPlayback();
-        queueManager.unbind();
-        stopSelf();
-    }
-
-    @Override
-    public void onDestroy() {
-        logger.debug("PlaybackService destroyed");
-        ServiceBridge.getInstance().clear();
-        engine.removeCallback(notification);
-        notification.stop();
-        sessionManager.release();
-        if (queueNavigator != null) {
-            queueNavigator.dispose();
-            queueNavigator = null;
-        }
-        audioFocus.dispose();
-        queueManager.unbind();
-        engine.release();
-        if (serviceStarted) {
-            stopForeground(true);
-        }
-        super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    public MediaEngine getEngine() {
-        return engine;
-    }
-
-    public PlayerType getPlayerType() {
-        return playerType;
-    }
-
-    public void setPlayerType(@NonNull PlayerType playerType) {
-        this.playerType = playerType;
-    }
-
-    // ─── Mute (coordinates engine + audio focus) ──────────────────────────
-
-    public void mute() {
-        engine.setMuted(true);
-        audioFocus.abandonFocus();
-    }
-
-    public void unmute() {
-        engine.setMuted(false);
-        audioFocus.requestFocus();
-    }
-
-    public void toggleMute() {
-        if (engine.isMuted()) {
-            unmute();
-        } else {
-            mute();
-        }
-    }
-
-    public boolean isMuted() {
-        return engine.isMuted();
-    }
+	private static final LoggerUtils logger = LoggerUtils.from(PlaybackService.class);
+	private static final String WAKE_LOCK_TAG = "tubeaio:player:wakelock";
+	
+	private MediaEngine engine;
+	private QueueSyncManager queueManager;
+	private AudioFocusHelper audioFocus;
+	private MediaSessionManager sessionManager;
+	private PlayQueueNavigator queueNavigator;
+	private PlaybackNotification notification;
+	private PlayerType playerType;
+	private boolean serviceStarted;
+	private PowerManager.WakeLock wakeLock;
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		engine = new MediaEngine(this);
+		queueManager = new QueueSyncManager(engine);
+		audioFocus = new AudioFocusHelper(this, engine);
+		sessionManager = new MediaSessionManager(this, engine);
+		notification = new PlaybackNotification(this);
+		playerType = PlayerType.MAIN;
+		
+		engine.addCallback(notification);
+		
+		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
+		
+		ServiceBridge.getInstance().init(this, engine, queueManager, playerType);
+		logger.debug("PlaybackService created");
+	}
+	
+	@Override
+	public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action != null) {
+				handleAction(action, intent);
+			}
+			
+			if (intent.hasExtra(NotificationConstants.EXTRA_PLAYER_TYPE)) {
+				playerType = (PlayerType) intent.getSerializableExtra(
+					NotificationConstants.EXTRA_PLAYER_TYPE);
+			}
+		}
+		return START_STICKY;
+	}
+	
+	private void handleAction(@NonNull String action, @NonNull Intent intent) {
+		switch (action) {
+			case NotificationConstants.ACTION_PLAY:
+				engine.play();
+				ensureForeground();
+				acquireWakeLock();
+				break;
+			case NotificationConstants.ACTION_PAUSE:
+				engine.pause();
+				releaseWakeLock();
+				break;
+			case NotificationConstants.ACTION_PLAY_PAUSE:
+				engine.playPause();
+				ensureForeground();
+				if (engine.getExoPlayer().getPlayWhenReady()) {
+					acquireWakeLock();
+				} else {
+					releaseWakeLock();
+				}
+				break;
+			case NotificationConstants.ACTION_NEXT:
+				engine.playNext();
+				break;
+			case NotificationConstants.ACTION_PREVIOUS:
+				engine.playPrevious();
+				break;
+			case NotificationConstants.ACTION_STOP:
+				stopPlayback();
+				break;
+			case NotificationConstants.ACTION_CLOSE:
+				closePlayer();
+				break;
+		}
+	}
+	
+	public void loadAndPlay(@NonNull PlayQueue queue) {
+		sessionManager.connect();
+		sessionManager.setPlayer(engine.getExoPlayer());
+		sessionManager.setCloseCallback(this::closePlayer);
+		
+		if (queueNavigator != null) {
+			queueNavigator.dispose();
+			queueNavigator = null;
+		}
+		if (sessionManager.getMediaSession() != null) {
+			queueNavigator = new PlayQueueNavigator(
+				sessionManager.getMediaSession(), queue, engine);
+			sessionManager.setQueueNavigator(queueNavigator);
+		}
+		
+		notification.setSessionToken(sessionManager.getSessionToken());
+		ensureForeground();
+		notification.start();
+		
+		audioFocus.requestFocus();
+		queueManager.bind(queue);
+		acquireWakeLock();
+	}
+	
+	private void ensureForeground() {
+		if (!serviceStarted) {
+			startForeground(NotificationConstants.NOTIFICATION_ID,
+				buildPlaceholderNotification());
+			serviceStarted = true;
+			logger.debug("Service moved to foreground");
+		}
+	}
+	
+	private android.app.Notification buildPlaceholderNotification() {
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(
+			this, NotificationConstants.CHANNEL_ID)
+			.setSmallIcon(android.R.drawable.ic_media_play)
+			.setContentTitle(getString(com.nextgen.R.string.player_loading))
+			.setOngoing(true);
+		return builder.build();
+	}
+	
+	private void acquireWakeLock() {
+		if (wakeLock != null && !wakeLock.isHeld()) {
+			wakeLock.acquire(30 * 60 * 1000L);
+		}
+	}
+	
+	private void releaseWakeLock() {
+		if (wakeLock != null && wakeLock.isHeld()) {
+			wakeLock.release();
+		}
+	}
+	
+	private void stopPlayback() {
+		audioFocus.dispose();
+		engine.stop();
+		releaseWakeLock();
+		if (serviceStarted) {
+			stopForeground(true);
+			serviceStarted = false;
+		}
+		notification.stop();
+		sessionManager.release();
+		if (queueNavigator != null) {
+			queueNavigator.dispose();
+			queueNavigator = null;
+		}
+		logger.debug("Playback stopped");
+	}
+	
+	private void closePlayer() {
+		stopPlayback();
+		queueManager.unbind();
+		stopSelf();
+	}
+	
+	@Override
+	public void onDestroy() {
+		logger.debug("PlaybackService destroyed");
+		ServiceBridge.getInstance().clear();
+		engine.removeCallback(notification);
+		notification.stop();
+		sessionManager.release();
+		if (queueNavigator != null) {
+			queueNavigator.dispose();
+			queueNavigator = null;
+		}
+		audioFocus.dispose();
+		queueManager.unbind();
+		engine.release();
+		releaseWakeLock();
+		if (serviceStarted) {
+			stopForeground(true);
+		}
+		super.onDestroy();
+	}
+	
+	@Nullable
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+	
+	public MediaEngine getEngine() {
+		return engine;
+	}
+	
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+	
+	public void setPlayerType(@NonNull PlayerType playerType) {
+		this.playerType = playerType;
+	}
+	
+	public void mute() {
+		engine.setMuted(true);
+		audioFocus.abandonFocus();
+	}
+	
+	public void unmute() {
+		engine.setMuted(false);
+		audioFocus.requestFocus();
+	}
+	
+	public void toggleMute() {
+		if (engine.isMuted()) {
+			unmute();
+		} else {
+			mute();
+		}
+	}
+	
+	public boolean isMuted() {
+		return engine.isMuted();
+	}
 }
