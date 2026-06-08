@@ -7,6 +7,7 @@ converter_gson = "3.0.0"
 desugar_jdk_libs_nio = "2.1.5"
 ytdlp = "0.18.1"
 newpipe_extractor = "v0.26.2"
+nanojson = "1.10"
 lifecycle_live_data = "2.10.0"
 lifecycle_view_model = "2.10.0"
 lottie = "6.7.1"
@@ -48,6 +49,7 @@ ytdlp = { module = "io.github.junkfood02.youtubedl-android:library", version.ref
 ffmpeg = { module = "io.github.junkfood02.youtubedl-android:ffmpeg", version.ref = "ytdlp" }
 aria2c = { module = "io.github.junkfood02.youtubedl-android:aria2c", version.ref = "ytdlp" }
 newpipe-extractor = { module = "net.newpipe:extractor", version.ref = "newpipe_extractor" }
+nanojson = { module = "com.grack:nanojson", version.ref = "nanojson" }
 
 exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoplayer2" }
 exoplayer-hls = { module = "com.google.android.exoplayer:exoplayer-hls", version.ref = "exoplayer2" }
