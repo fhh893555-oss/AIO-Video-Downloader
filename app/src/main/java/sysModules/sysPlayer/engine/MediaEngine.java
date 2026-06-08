@@ -14,7 +14,6 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
@@ -513,7 +512,6 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         exoPlayer.addAnalyticsListener(this);
         exoPlayer.setPlayWhenReady(true);
         exoPlayer.setHandleAudioBecomingNoisy(true);
-        exoPlayer.setSeekParameters(SeekParameters.EXACT);
     }
 
     @Nullable
@@ -641,6 +639,14 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
                 }
                 break;
             case Player.STATE_ENDED:
+                if (exoPlayer != null) {
+                    long pos = exoPlayer.getCurrentPosition();
+                    long dur = exoPlayer.getDuration();
+                    if (dur > 0 && pos < dur - 1000) {
+                        exoPlayer.seekTo(pos);
+                        break;
+                    }
+                }
                 setState(PlaybackState.Phase.COMPLETED);
                 break;
         }
