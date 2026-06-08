@@ -34,12 +34,12 @@ import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
-import sysModules.player.model.PlayerType;
-import sysModules.player.notification.NotificationConstants;
-import sysModules.player.queue.PendingPlaybackQueue;
-import sysModules.player.queue.PlayQueueItem;
-import sysModules.player.queue.SinglePlayQueue;
-import sysModules.player.service.PlaybackService;
+import sysModules.sysPlayer.model.PlayerType;
+import sysModules.sysPlayer.notification.NotificationConstants;
+import sysModules.sysPlayer.queue.PendingPlaybackQueue;
+import sysModules.sysPlayer.queue.PlayQueueItem;
+import sysModules.sysPlayer.queue.SinglePlayQueue;
+import sysModules.sysPlayer.service.PlaybackService;
 import userInterface.fragmentsUIs.homepage.HomepageFragment;
 
 /**

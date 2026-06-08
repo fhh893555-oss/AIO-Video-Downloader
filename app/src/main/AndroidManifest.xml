@@ -79,7 +79,7 @@
     <activity android:name="userInterface.watchVideo.WatchVideoActivity" />
 
     <service
-      android:name="sysModules.player.service.PlaybackService"
+      android:name="sysModules.sysPlayer.service.PlaybackService"
       android:exported="false"
       android:foregroundServiceType="mediaPlayback" />
 
