@@ -588,39 +588,35 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 	 * displayed in the notification and lock screen.</p>
 	 */
 	private void startPlayingAudioInBackground() {
-		ThreadTask.executeInBackground(new ThreadTask.BackgroundTaskNoResult() {
-			@Override public void runInBackground() {
-				try {
-					logger.debug("Starting background playback");
-					String videoUrl = "https://youtu.be/AcEXjRmen6Y";
+		ThreadTask.executeInBackground(() -> {
+			try {
+				logger.debug("Starting background playback");
+				String videoUrl = "https://www.youtube.com/watch?v=TwFBtV13KQQ";
+				
+				// Create a PlayQueueItem from the URL
+				// Service ID 0 = YouTube
+				StreamInfo info = StreamInfo.getInfo(NewPipe.getService(0), videoUrl);
+				info.setStreamType(StreamType.AUDIO_STREAM);
+				PlayQueueItem queueItem = new PlayQueueItem(info);
+				
+				SinglePlayQueue queue = new SinglePlayQueue(queueItem);
+				
+				// Use static holder to pass queue (avoids Serializable issues with Image)
+				PendingPlaybackQueue.set(queue);
+				ThreadTask.executeOnMainThread(() -> {
 					
-					// Create a PlayQueueItem from the URL
-					// Service ID 0 = YouTube
-					StreamInfo info = StreamInfo.getInfo(NewPipe.getService(0), videoUrl);
-					info.setStreamType(StreamType.AUDIO_STREAM);
-					PlayQueueItem queueItem = new PlayQueueItem(info);
+					// Start the playback service
+					Intent intent = new Intent(MainActivity.this, PlaybackService.class);
+					intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
+					intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
 					
-					SinglePlayQueue queue = new SinglePlayQueue(queueItem);
+					ContextCompat.startForegroundService(MainActivity.this, intent);
+					logger.debug("Starting audio playback for: " + videoUrl);
 					
-					// Use static holder to pass queue (avoids Serializable issues with Image)
-					PendingPlaybackQueue.set(queue);
-					ThreadTask.executeOnMainThread(new ThreadTask.UITask() {
-						@Override public void runOnUIThread() {
-							
-							// Start the playback service
-							Intent intent = new Intent(MainActivity.this, PlaybackService.class);
-							intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
-							intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
-							
-							ContextCompat.startForegroundService(MainActivity.this, intent);
-							logger.debug("Starting audio playback for: " + videoUrl);
-							
-						}
-					});
-					
-				}catch (Exception error){
-					logger.error("Error in parsing video info:", error);
-				}
+				});
+				
+			}catch (Exception error){
+				logger.error("Error in parsing video info:", error);
 			}
 		});
 	}

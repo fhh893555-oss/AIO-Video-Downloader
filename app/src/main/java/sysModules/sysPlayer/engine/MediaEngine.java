@@ -471,22 +471,6 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     // ─── Video ──────────────────────────────────────────────────────────────
 
     public void setResizeMode(@AspectRatioFrameLayout.ResizeMode int mode) {
-        if (exoPlayer != null) {
-            int scalingMode;
-            switch (mode) {
-                case AspectRatioFrameLayout.RESIZE_MODE_FILL:
-                case AspectRatioFrameLayout.RESIZE_MODE_ZOOM:
-                    scalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROP;
-                    break;
-                case AspectRatioFrameLayout.RESIZE_MODE_FIT:
-                case AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH:
-                case AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT:
-                default:
-                    scalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT;
-                    break;
-            }
-            exoPlayer.setVideoScalingMode(scalingMode);
-        }
         notifyProgress();
     }
 
