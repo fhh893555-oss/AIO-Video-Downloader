@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.audiofx.AudioEffect;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +61,8 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     private final AudioPlaybackResolver audioResolver;
 
     @Nullable private PlayQueue playQueue;
+
+    private long lastFalseEndedRecoveryMs;
 
     private static final VideoPlaybackResolver.Config DEFAULT_CONFIG =
             new VideoPlaybackResolver.Config() {
@@ -640,9 +643,17 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
                 break;
             case Player.STATE_ENDED:
                 if (exoPlayer != null) {
+                    long now = SystemClock.elapsedRealtime();
+                    if (now - lastFalseEndedRecoveryMs < 5000) {
+                        setState(PlaybackState.Phase.COMPLETED);
+                        break;
+                    }
                     long pos = exoPlayer.getCurrentPosition();
                     long dur = exoPlayer.getDuration();
                     if (dur > 0 && pos < dur - 1000) {
+                        lastFalseEndedRecoveryMs = now;
+                        exoPlayer.stop();
+                        exoPlayer.prepare();
                         exoPlayer.seekTo(pos);
                         break;
                     }
