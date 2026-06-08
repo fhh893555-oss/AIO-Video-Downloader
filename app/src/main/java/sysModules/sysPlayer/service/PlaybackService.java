@@ -203,6 +203,9 @@ public class PlaybackService extends Service implements PlaybackListener {
 			case NotificationConstants.ACTION_LOAD_AND_PLAY:
 				logger.debug("ACTION_LOAD_AND_PLAY received");
 				ensureForeground();
+				boolean audioOnly = intent.getBooleanExtra(
+					NotificationConstants.EXTRA_AUDIO_ONLY, false);
+				engine.setAudioOnly(audioOnly);
 				PlayQueue queue = null;
 				if (intent.hasExtra(NotificationConstants.EXTRA_PLAY_QUEUE)) {
 					try {

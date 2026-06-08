@@ -29,6 +29,8 @@ import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
+import java.util.Objects;
+
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
@@ -40,6 +42,7 @@ import sysModules.sysPlayer.queue.PendingPlaybackQueue;
 import sysModules.sysPlayer.queue.PlayQueueItem;
 import sysModules.sysPlayer.queue.SinglePlayQueue;
 import sysModules.sysPlayer.service.PlaybackService;
+import sysModules.sysPlayer.service.ServiceBridge;
 import userInterface.fragmentsUIs.homepage.HomepageFragment;
 
 /**
@@ -596,9 +599,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 				// Create a PlayQueueItem from the URL
 				// Service ID 0 = YouTube
 				StreamInfo info = StreamInfo.getInfo(NewPipe.getService(0), videoUrl);
-				info.setStreamType(StreamType.AUDIO_STREAM);
 				PlayQueueItem queueItem = new PlayQueueItem(info);
-				
 				SinglePlayQueue queue = new SinglePlayQueue(queueItem);
 				
 				// Use static holder to pass queue (avoids Serializable issues with Image)
@@ -609,6 +610,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 					Intent intent = new Intent(MainActivity.this, PlaybackService.class);
 					intent.setAction(NotificationConstants.ACTION_LOAD_AND_PLAY);
 					intent.putExtra(NotificationConstants.EXTRA_PLAYER_TYPE, PlayerType.MAIN);
+					intent.putExtra(NotificationConstants.EXTRA_AUDIO_ONLY, true);
 					
 					ContextCompat.startForegroundService(MainActivity.this, intent);
 					logger.debug("Starting audio playback for: " + videoUrl);

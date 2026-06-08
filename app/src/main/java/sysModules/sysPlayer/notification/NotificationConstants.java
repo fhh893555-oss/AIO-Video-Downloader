@@ -23,6 +23,7 @@ public final class NotificationConstants {
     public static final String EXTRA_PLAY_QUEUE = "sysModules.player.extra.PLAY_QUEUE";
     public static final String EXTRA_PLAYER_TYPE = "sysModules.player.extra.PLAYER_TYPE";
     public static final String EXTRA_START_POSITION = "sysModules.player.extra.START_POSITION";
+    public static final String EXTRA_AUDIO_ONLY = "sysModules.player.extra.AUDIO_ONLY";
 
     public static final int NOTIFICATION_ID = 1001;
 
