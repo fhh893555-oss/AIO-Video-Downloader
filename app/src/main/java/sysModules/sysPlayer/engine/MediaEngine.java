@@ -118,6 +118,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     private final List<EngineCallbacks> callbacks = new CopyOnWriteArrayList<>();
 
     private boolean progressLoopRunning;
+    private boolean released;
     private int audioSessionId;
 
     public MediaEngine(@NonNull Context context) {
@@ -235,6 +236,7 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     }
 
     public void release() {
+        released = true;
         stopProgressLoop();
         if (exoPlayer != null) {
             notifyAudioSessionUpdate(false);
@@ -469,6 +471,22 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     // ─── Video ──────────────────────────────────────────────────────────────
 
     public void setResizeMode(@AspectRatioFrameLayout.ResizeMode int mode) {
+        if (exoPlayer != null) {
+            int scalingMode;
+            switch (mode) {
+                case AspectRatioFrameLayout.RESIZE_MODE_FILL:
+                case AspectRatioFrameLayout.RESIZE_MODE_ZOOM:
+                    scalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROP;
+                    break;
+                case AspectRatioFrameLayout.RESIZE_MODE_FIT:
+                case AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH:
+                case AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT:
+                default:
+                    scalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT;
+                    break;
+            }
+            exoPlayer.setVideoScalingMode(scalingMode);
+        }
         notifyProgress();
     }
 
@@ -498,19 +516,21 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     // ─── Internal ───────────────────────────────────────────────────────────
 
     private void ensurePlayerReady() {
-        if (exoPlayer == null) {
-            exoPlayer = new SimpleExoPlayer.Builder(context, renderFactory)
-                    .setTrackSelector(trackSelector)
-                    .setLoadControl(loadController)
-                    .build();
-            exoPlayer.addListener(this);
-            exoPlayer.addAnalyticsListener(this);
-            exoPlayer.setPlayWhenReady(true);
-            exoPlayer.setHandleAudioBecomingNoisy(true);
-        }
+        if (released || exoPlayer != null) return;
+        if (renderFactory == null || trackSelector == null || loadController == null) return;
+        exoPlayer = new SimpleExoPlayer.Builder(context, renderFactory)
+                .setTrackSelector(trackSelector)
+                .setLoadControl(loadController)
+                .build();
+        exoPlayer.addListener(this);
+        exoPlayer.addAnalyticsListener(this);
+        exoPlayer.setPlayWhenReady(true);
+        exoPlayer.setHandleAudioBecomingNoisy(true);
     }
 
+    @Nullable
     public SimpleExoPlayer getExoPlayer() {
+        if (released) return null;
         ensurePlayerReady();
         return exoPlayer;
     }

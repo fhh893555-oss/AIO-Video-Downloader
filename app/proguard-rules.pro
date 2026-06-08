@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# ─── ExoPlayer ───────────────────────────────────────────────────────────
+-keep class com.google.android.exoplayer2.** { *; }
+-keep interface com.google.android.exoplayer2.** { *; }
+
+# ─── MediaSession (AndroidX / Support) ───────────────────────────────────
+-keep class android.support.v4.media.** { *; }
+-keep class androidx.media.** { *; }
+-keep class android.support.v4.media.session.** { *; }
+
+# ─── NewPipe Extractor ───────────────────────────────────────────────────
+-keep class org.schabi.newpipe.extractor.** { *; }
+
+# ─── Player engine model classes (serialization) ─────────────────────────
+-keep class sysModules.sysPlayer.queue.PlayQueue { *; }
+-keep class sysModules.sysPlayer.queue.PlayQueueItem { *; }
+-keep class sysModules.sysPlayer.model.** { *; }

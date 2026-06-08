@@ -147,12 +147,12 @@ public class FailedMediaSource extends BaseMediaSource implements ManagedMediaSo
     @Override
     public boolean shouldBeReplacedWith(@NonNull final PlayQueueItem newIdentity,
                                         final boolean isInterruptable) {
-        return newIdentity != playQueueItem || canRetry();
+        return !newIdentity.isSameItem(playQueueItem) || canRetry();
     }
 
     @Override
     public boolean isStreamEqual(@NonNull final PlayQueueItem stream) {
-        return playQueueItem == stream;
+        return stream.isSameItem(playQueueItem);
     }
 
     // ─── Exception subtypes ───────────────────────────────────────────────

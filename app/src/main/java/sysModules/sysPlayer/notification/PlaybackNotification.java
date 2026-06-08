@@ -24,6 +24,7 @@ import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -167,17 +168,23 @@ public final class PlaybackNotification implements EngineCallbacks {
     private void loadAlbumArt(@NonNull String imageUrl) {
         imageLoader.execute(() -> {
             try {
-                InputStream in = new URL(imageUrl).openStream();
-                Bitmap raw = BitmapFactory.decodeStream(in);
-                in.close();
-                if (raw != null) {
-                    final Bitmap scaled = Bitmap.createScaledBitmap(raw, 128, 128, true);
-                    mainHandler.post(() -> {
-                        currentAlbumArt = scaled;
-                        if (started) {
-                            showNotification(isPlaying);
-                        }
-                    });
+                HttpURLConnection conn = (HttpURLConnection) new URL(imageUrl).openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(10000);
+                conn.setInstanceFollowRedirects(true);
+                try (InputStream in = conn.getInputStream()) {
+                    Bitmap raw = BitmapFactory.decodeStream(in);
+                    if (raw != null) {
+                        final Bitmap scaled = Bitmap.createScaledBitmap(raw, 128, 128, true);
+                        mainHandler.post(() -> {
+                            currentAlbumArt = scaled;
+                            if (started) {
+                                showNotification(isPlaying);
+                            }
+                        });
+                    }
+                } finally {
+                    conn.disconnect();
                 }
             } catch (Exception e) {
                 logger.debug("Failed to load album art: " + e.getMessage());

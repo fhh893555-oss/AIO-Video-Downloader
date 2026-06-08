@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import sysModules.sysPlayer.model.QueueEvent;
 
 public abstract class PlayQueue implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected final List<PlayQueueItem> streams;
     protected final List<PlayQueueItem> backup;
     protected final List<Integer> history;

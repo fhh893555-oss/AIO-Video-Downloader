@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PlayQueueItem implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public static final long RECOVERY_UNSET = Long.MIN_VALUE;
 	private static final String EMPTY_STRING = "";
 	

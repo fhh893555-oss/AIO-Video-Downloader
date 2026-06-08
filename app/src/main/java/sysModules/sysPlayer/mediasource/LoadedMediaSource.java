@@ -53,11 +53,11 @@ public class LoadedMediaSource extends WrappingMediaSource implements ManagedMed
     @Override
     public boolean shouldBeReplacedWith(@NonNull final PlayQueueItem newIdentity,
                                         final boolean isInterruptable) {
-        return newIdentity != stream || (isInterruptable && isExpired());
+        return !newIdentity.isSameItem(stream) || (isInterruptable && isExpired());
     }
 
     @Override
     public boolean isStreamEqual(@NonNull final PlayQueueItem otherStream) {
-        return this.stream == otherStream;
+        return otherStream.isSameItem(this.stream);
     }
 }
