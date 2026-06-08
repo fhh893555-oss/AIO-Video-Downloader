@@ -547,6 +547,10 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
 
     public void setCurrentItem(@Nullable PlayQueueItem item) {
         this.currentItem = item;
+        if (item != null) {
+            this.currentInfo = item.getStreamInfo();
+        }
+        notifyMetadataChanged();
     }
 
     @Nullable
