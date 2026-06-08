@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,6 +94,16 @@ import sysModules.sysPlayer.queue.PlayQueueItem;
 		mediaSession = new MediaSessionCompat(context, "TubeAIOPlayback");
 		mediaSession.setActive(true);
 		sessionConnector = new MediaSessionConnector(mediaSession);
+		sessionConnector.setEnabledPlaybackActions(
+				PlaybackStateCompat.ACTION_PLAY |
+				PlaybackStateCompat.ACTION_PAUSE |
+				PlaybackStateCompat.ACTION_PLAY_PAUSE |
+				PlaybackStateCompat.ACTION_SKIP_TO_NEXT |
+				PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+				PlaybackStateCompat.ACTION_SEEK_TO |
+				PlaybackStateCompat.ACTION_STOP |
+				PlaybackStateCompat.ACTION_FAST_FORWARD |
+				PlaybackStateCompat.ACTION_REWIND);
 		sessionConnector.setMediaMetadataProvider(this::buildMetadata);
 		if (queueNavigator != null) {
 			sessionConnector.setQueueNavigator(queueNavigator);

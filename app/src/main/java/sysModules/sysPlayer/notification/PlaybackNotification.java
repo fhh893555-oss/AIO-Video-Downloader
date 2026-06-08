@@ -38,6 +38,7 @@ import sysModules.sysPlayer.queue.PlayQueueItem;
 
 public final class PlaybackNotification implements EngineCallbacks {
     private static final LoggerUtils logger = LoggerUtils.from(PlaybackNotification.class);
+    private static final long NOTIFICATION_DEBOUNCE_MILLIS = 200L;
 
     private final Context context;
     private final NotificationManager notificationManager;
@@ -51,6 +52,12 @@ public final class PlaybackNotification implements EngineCallbacks {
     @Nullable private String currentTitle;
     @Nullable private String currentUploader;
     @Nullable private Bitmap currentAlbumArt;
+
+    private boolean notificationPending;
+    private final Runnable debouncedShow = () -> {
+        notificationPending = false;
+        showNotification(isPlaying);
+    };
 
     public PlaybackNotification(@NonNull Context context) {
         this.context = context.getApplicationContext();
@@ -83,6 +90,8 @@ public final class PlaybackNotification implements EngineCallbacks {
     }
 
     private void showNotification(boolean playing) {
+        mainHandler.removeCallbacks(debouncedShow);
+        notificationPending = false;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context, NotificationConstants.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_play_arrow)
@@ -95,7 +104,7 @@ public final class PlaybackNotification implements EngineCallbacks {
         if (sessionToken != null) {
             builder.setStyle(new MediaStyle()
                     .setMediaSession(sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2, 3));
+                    .setShowActionsInCompactView(0, 1, 2));
         }
 
         Bitmap art = currentAlbumArt;
@@ -115,6 +124,14 @@ public final class PlaybackNotification implements EngineCallbacks {
         builder.addAction(buildCloseAction());
 
         notificationManager.notify(NotificationConstants.NOTIFICATION_ID, builder.build());
+    }
+
+    private void scheduleNotification() {
+        if (!started) return;
+        if (!notificationPending) {
+            notificationPending = true;
+            mainHandler.postDelayed(debouncedShow, NOTIFICATION_DEBOUNCE_MILLIS);
+        }
     }
 
     private void createChannel() {
@@ -220,9 +237,7 @@ public final class PlaybackNotification implements EngineCallbacks {
     public void onStateChanged(@NonNull PlaybackState.Phase phase) {
         isPlaying = phase == PlaybackState.Phase.PLAYING
                 || phase == PlaybackState.Phase.BUFFERING;
-        if (started) {
-            showNotification(isPlaying);
-        }
+        scheduleNotification();
     }
 
     @Override
@@ -267,9 +282,7 @@ public final class PlaybackNotification implements EngineCallbacks {
     @Override
     public void onIsPlayingChanged(boolean playing) {
         isPlaying = playing;
-        if (started) {
-            showNotification(isPlaying);
-        }
+        scheduleNotification();
     }
 
     @Override
@@ -279,8 +292,6 @@ public final class PlaybackNotification implements EngineCallbacks {
     @Override
     public void onRepeatModeChanged(@NonNull RepeatMode mode) {
         currentRepeatMode = mode;
-        if (started) {
-            showNotification(isPlaying);
-        }
+        scheduleNotification();
     }
 }
