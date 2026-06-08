@@ -25,6 +25,7 @@ import com.nextgen.databinding.ActivityMain1Binding;
 import com.nextgen.databinding.ActivityMain1Tab1Binding;
 
 import org.jetbrains.annotations.NotNull;
+import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
@@ -33,6 +34,7 @@ import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
+import sysModules.player.extractor.YouTubeAudioExtractor;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.queue.PendingPlaybackQueue;
@@ -595,7 +597,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 					
 					// Create a PlayQueueItem from the URL
 					// Service ID 0 = YouTube
-					StreamInfo info = StreamInfo.getInfo(videoUrl);
+					StreamInfo info = YouTubeAudioExtractor.extractAudioInfo(videoUrl);
 					info.setStreamType(StreamType.AUDIO_STREAM);
 					PlayQueueItem queueItem = new PlayQueueItem(info);
 					
