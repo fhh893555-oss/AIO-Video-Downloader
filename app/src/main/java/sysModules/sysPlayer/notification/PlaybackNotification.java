@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 import coreUtils.library.process.LoggerUtils;
 import sysModules.sysPlayer.engine.EngineCallbacks;
 import sysModules.sysPlayer.model.PlaybackState;
+import sysModules.sysPlayer.model.RepeatMode;
 import sysModules.sysPlayer.queue.PlayQueueItem;
 
 public final class PlaybackNotification implements EngineCallbacks {
@@ -45,6 +46,7 @@ public final class PlaybackNotification implements EngineCallbacks {
     @Nullable private MediaSessionCompat.Token sessionToken;
     private boolean started;
     private boolean isPlaying;
+    private RepeatMode currentRepeatMode = RepeatMode.NONE;
 
     @Nullable private String currentTitle;
     @Nullable private String currentUploader;
@@ -83,7 +85,7 @@ public final class PlaybackNotification implements EngineCallbacks {
     private void showNotification(boolean playing) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context, NotificationConstants.CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_media_play)
+                .setSmallIcon(R.drawable.ic_play_arrow)
                 .setContentTitle(currentTitle != null ? currentTitle :
                         context.getString(R.string.player_no_title))
                 .setContentText(currentUploader)
@@ -93,7 +95,7 @@ public final class PlaybackNotification implements EngineCallbacks {
         if (sessionToken != null) {
             builder.setStyle(new MediaStyle()
                     .setMediaSession(sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2));
+                    .setShowActionsInCompactView(0, 1, 2, 3));
         }
 
         Bitmap art = currentAlbumArt;
@@ -101,6 +103,8 @@ public final class PlaybackNotification implements EngineCallbacks {
             builder.setLargeIcon(art);
         }
 
+        // Order: Repeat, Previous, Play/Pause, Next, Cancel
+        builder.addAction(buildRepeatAction());
         builder.addAction(buildPreviousAction());
         if (playing) {
             builder.addAction(buildPauseAction());
@@ -128,37 +132,57 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     private NotificationCompat.Action buildPlayAction() {
         return new NotificationCompat.Action(
-                android.R.drawable.ic_media_play,
+                R.drawable.ic_play_arrow,
                 context.getString(R.string.player_notification_play),
                 NotificationActions.playPause(context));
     }
 
     private NotificationCompat.Action buildPauseAction() {
         return new NotificationCompat.Action(
-                android.R.drawable.ic_media_pause,
+                R.drawable.ic_pause_solid,
                 context.getString(R.string.player_notification_pause),
                 NotificationActions.playPause(context));
     }
 
     private NotificationCompat.Action buildNextAction() {
         return new NotificationCompat.Action(
-                android.R.drawable.ic_media_next,
+                R.drawable.ic_skip_next,
                 context.getString(R.string.player_notification_next),
                 NotificationActions.next(context));
     }
 
     private NotificationCompat.Action buildPreviousAction() {
         return new NotificationCompat.Action(
-                android.R.drawable.ic_media_previous,
+                R.drawable.ic_skip_previous,
                 context.getString(R.string.player_notification_previous),
                 NotificationActions.previous(context));
     }
 
     private NotificationCompat.Action buildCloseAction() {
         return new NotificationCompat.Action(
-                android.R.drawable.ic_menu_close_clear_cancel,
+                R.drawable.ic_close_cross,
                 context.getString(R.string.player_notification_close),
                 NotificationActions.close(context));
+    }
+
+    private NotificationCompat.Action buildRepeatAction() {
+        int icon;
+        switch (currentRepeatMode) {
+            case ONE:
+                icon = R.drawable.ic_repeat_one;
+                break;
+            case ALL:
+                icon = R.drawable.ic_repeat_all;
+                break;
+            case NONE:
+            default:
+                icon = R.drawable.ic_repeat_disable;
+                break;
+        }
+        return new NotificationCompat.Action(
+                icon,
+                context.getString(R.string.player_notification_repeat),
+                NotificationActions.cycleRepeat(context));
     }
 
     /**
@@ -250,5 +274,13 @@ public final class PlaybackNotification implements EngineCallbacks {
 
     @Override
     public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+    }
+
+    @Override
+    public void onRepeatModeChanged(@NonNull RepeatMode mode) {
+        currentRepeatMode = mode;
+        if (started) {
+            showNotification(isPlaying);
+        }
     }
 }

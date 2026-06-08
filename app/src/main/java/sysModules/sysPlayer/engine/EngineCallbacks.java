@@ -9,6 +9,7 @@ import com.google.android.exoplayer2.text.CueGroup;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 
 import sysModules.sysPlayer.model.PlaybackState;
+import sysModules.sysPlayer.model.RepeatMode;
 import sysModules.sysPlayer.queue.PlayQueueItem;
 
 /**
@@ -51,4 +52,5 @@ public interface EngineCallbacks {
 	void onCues(@NonNull CueGroup cueGroup);
 	void onIsPlayingChanged(boolean isPlaying);
 	void onPlayWhenReadyChanged(boolean playWhenReady, int reason);
+	void onRepeatModeChanged(@NonNull RepeatMode mode);
 }

@@ -191,6 +191,7 @@
   <string name="player_notification_next">Next</string>
   <string name="player_notification_previous">Previous</string>
   <string name="player_notification_close">Close</string>
+  <string name="player_notification_repeat">Repeat</string>
   <string name="player_error_playback">Playback error</string>
   <string name="player_error_no_streams">No playable streams found</string>
   <string name="player_loading">Loading…</string>

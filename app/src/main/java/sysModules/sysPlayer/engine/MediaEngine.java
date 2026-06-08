@@ -374,7 +374,9 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
     // ─── Queue integration ──────────────────────────────────────────────────
 
     public void cycleRepeatMode() {
+        notifyProgress();
         repeatMode = repeatMode.cycleNext();
+        notifyRepeatModeChanged();
         if (exoPlayer != null) {
             switch (repeatMode) {
                 case NONE: exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF); break;
@@ -382,11 +384,11 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
                 case ALL:  exoPlayer.setRepeatMode(Player.REPEAT_MODE_ALL); break;
             }
         }
-        notifyProgress();
     }
 
     public void setRepeatMode(@NonNull RepeatMode mode) {
         this.repeatMode = mode;
+        notifyRepeatModeChanged();
         if (exoPlayer != null) {
             switch (mode) {
                 case NONE: exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF); break;
@@ -558,6 +560,12 @@ public final class MediaEngine implements Player.Listener, AnalyticsListener {
         if (currentItem == null) return;
         for (EngineCallbacks cb : callbacks) {
             cb.onMetadataChanged(currentItem, currentInfo);
+        }
+    }
+
+    private void notifyRepeatModeChanged() {
+        for (EngineCallbacks cb : callbacks) {
+            cb.onRepeatModeChanged(repeatMode);
         }
     }
 

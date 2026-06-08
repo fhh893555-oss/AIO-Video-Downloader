@@ -47,6 +47,11 @@ public final class NotificationActions {
                 NotificationConstants.REQUEST_CODE_CLOSE);
     }
 
+    public static PendingIntent cycleRepeat(@NonNull Context context) {
+        return build(context, NotificationConstants.ACTION_CYCLE_REPEAT,
+                NotificationConstants.REQUEST_CODE_CYCLE_REPEAT);
+    }
+
     private static PendingIntent build(@NonNull Context context, @NonNull String action, int requestCode) {
         Intent intent = new Intent(context, PlaybackService.class);
         intent.setAction(action);

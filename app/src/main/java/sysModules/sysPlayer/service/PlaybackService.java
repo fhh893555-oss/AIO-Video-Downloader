@@ -194,9 +194,12 @@ public class PlaybackService extends Service implements PlaybackListener {
 			case NotificationConstants.ACTION_STOP:
 				stopPlayback();
 				break;
-			case NotificationConstants.ACTION_CLOSE:
-				closePlayer();
-				break;
+		case NotificationConstants.ACTION_CLOSE:
+			closePlayer();
+			break;
+		case NotificationConstants.ACTION_CYCLE_REPEAT:
+			engine.cycleRepeatMode();
+			break;
 			case NotificationConstants.ACTION_LOAD_AND_PLAY:
 				logger.debug("ACTION_LOAD_AND_PLAY received");
 				ensureForeground();
@@ -336,7 +339,7 @@ public class PlaybackService extends Service implements PlaybackListener {
 	private Notification buildPlaceholderNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 			this, NotificationConstants.CHANNEL_ID)
-			.setSmallIcon(android.R.drawable.ic_media_play)
+			.setSmallIcon(com.nextgen.R.drawable.ic_play_arrow)
 			.setContentTitle(getString(com.nextgen.R.string.player_loading))
 			.setOngoing(true);
 		return builder.build();
