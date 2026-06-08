@@ -18,6 +18,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfo;
 import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
+import sysModules.newPipeLib.parsers.YtSteamExtractor;
 import sysModules.sysPlayer.engine.MediaEngine;
 import sysModules.sysPlayer.queue.PlayQueueItem;
 
@@ -308,14 +309,8 @@ import sysModules.sysPlayer.queue.PlayQueueItem;
 			.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentItem.getDuration() * 1000L);
 		
 		List<Image> thumbnails = currentItem.getThumbnails();
-		if (thumbnails.isEmpty()) {
-			StreamInfo info = engine.getCurrentInfo();
-			if (info != null) {
-				thumbnails = info.getThumbnails();
-			}
-		}
 		if (!thumbnails.isEmpty()) {
-			String artUrl = thumbnails.get(0).getUrl();
+			String artUrl = YtSteamExtractor.getBestImageQuality(thumbnails);
 			builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, artUrl);
 			builder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, artUrl);
 		}

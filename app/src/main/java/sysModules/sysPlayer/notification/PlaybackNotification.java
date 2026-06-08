@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import coreUtils.library.process.LoggerUtils;
+import sysModules.newPipeLib.parsers.YtSteamExtractor;
 import sysModules.sysPlayer.engine.EngineCallbacks;
 import sysModules.sysPlayer.model.PlaybackState;
 import sysModules.sysPlayer.model.RepeatMode;
@@ -252,11 +253,8 @@ public final class PlaybackNotification implements EngineCallbacks {
 
         // Load album art from thumbnails
         List<Image> thumbnails = item.getThumbnails();
-        if (thumbnails.isEmpty() && info != null) {
-            thumbnails = info.getThumbnails();
-        }
         if (!thumbnails.isEmpty()) {
-            String artUrl = thumbnails.get(thumbnails.size() - 1).getUrl();
+            String artUrl = YtSteamExtractor.getBestImageQuality(thumbnails);
             loadAlbumArt(artUrl);
         }
 

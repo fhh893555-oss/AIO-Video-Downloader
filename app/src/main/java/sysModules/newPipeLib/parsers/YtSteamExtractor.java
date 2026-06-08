@@ -1,8 +1,11 @@
 package sysModules.newPipeLib.parsers;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
+
+import java.util.List;
 
 import coreUtils.library.process.LoggerUtils;
 import sysModules.newPipeLib.cache.YtStreamInfo;
@@ -33,7 +36,38 @@ public final class YtSteamExtractor {
     public static StreamInfo getStreamInfo(String youtubeVideoUrl) {
         return getStreamInfo(youtubeVideoUrl, null);
     }
-
+    
+    /**
+     * Determines the highest quality image URL from a list of images based on surface
+     * area (width * height).
+     * <p>
+     * The method iterates through the provided list to find the image with the largest
+     * dimensions. If no image with a valid area is found, it falls back to the last image
+     * in the list.
+     * </p>
+     *
+     * @param images a list of {@link Image} objects to evaluate
+     * @return the URL of the largest image found, the URL of the last image in the list as
+     * a fallback, or {@code null} if the list is null or empty
+     */
+    public static String getBestImageQuality(List<Image> images) {
+        if (images == null || images.isEmpty()) return null;
+        
+        Image best = null;
+        int maxArea = -1;
+        
+        for (Image image : images) {
+            int area = image.getWidth() * image.getHeight();
+            if (area > maxArea) {
+                maxArea = area;
+                best = image;
+            }
+        }
+        
+        return (best != null && maxArea > 0) ?
+            best.getUrl() : images.get(images.size() - 1).getUrl();
+    }
+    
     public static StreamInfoItem getStreamItemFromUrl(String url) throws Exception {
         StreamInfo info = StreamInfo.getInfo(url);
         StreamInfoItem item = new StreamInfoItem(
