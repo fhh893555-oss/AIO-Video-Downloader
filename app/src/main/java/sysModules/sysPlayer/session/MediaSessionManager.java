@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 
 import org.schabi.newpipe.extractor.Image;
+import org.schabi.newpipe.extractor.stream.StreamInfo;
 
 import java.util.List;
 
@@ -307,6 +308,12 @@ import sysModules.sysPlayer.queue.PlayQueueItem;
 			.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentItem.getDuration() * 1000L);
 		
 		List<Image> thumbnails = currentItem.getThumbnails();
+		if (thumbnails.isEmpty()) {
+			StreamInfo info = engine.getCurrentInfo();
+			if (info != null) {
+				thumbnails = info.getThumbnails();
+			}
+		}
 		if (!thumbnails.isEmpty()) {
 			String artUrl = thumbnails.get(0).getUrl();
 			builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, artUrl);

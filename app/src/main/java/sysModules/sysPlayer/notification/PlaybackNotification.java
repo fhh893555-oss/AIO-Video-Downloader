@@ -252,6 +252,9 @@ public final class PlaybackNotification implements EngineCallbacks {
 
         // Load album art from thumbnails
         List<Image> thumbnails = item.getThumbnails();
+        if (thumbnails.isEmpty() && info != null) {
+            thumbnails = info.getThumbnails();
+        }
         if (!thumbnails.isEmpty()) {
             String artUrl = thumbnails.get(thumbnails.size() - 1).getUrl();
             loadAlbumArt(artUrl);
