@@ -108,7 +108,6 @@ dependencies {
 
     implementation libs.lottie
     implementation libs.jsoup
-    implementation libs.nanojson
     implementation libs.glide
 
     implementation libs.objectbox.android

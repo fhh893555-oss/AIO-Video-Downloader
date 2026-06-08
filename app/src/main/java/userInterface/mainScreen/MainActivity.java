@@ -34,7 +34,6 @@ import coreUtils.base.BaseFragment;
 import coreUtils.library.process.FragNavigator;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.ThreadTask;
-import sysModules.player.extractor.YouTubeAudioExtractor;
 import sysModules.player.model.PlayerType;
 import sysModules.player.notification.NotificationConstants;
 import sysModules.player.queue.PendingPlaybackQueue;
@@ -597,7 +596,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 					
 					// Create a PlayQueueItem from the URL
 					// Service ID 0 = YouTube
-					StreamInfo info = YouTubeAudioExtractor.extractAudioInfo(videoUrl);
+					StreamInfo info = StreamInfo.getInfo(NewPipe.getService(0), videoUrl);
 					info.setStreamType(StreamType.AUDIO_STREAM);
 					PlayQueueItem queueItem = new PlayQueueItem(info);
 					
