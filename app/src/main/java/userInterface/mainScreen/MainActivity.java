@@ -591,7 +591,7 @@ public final class MainActivity extends BaseActivity<ActivityMain1Binding> {
 		ThreadTask.executeInBackground(() -> {
 			try {
 				logger.debug("Starting background playback");
-				String videoUrl = "https://www.youtube.com/watch?v=9mpu0pZfmVA";
+				String videoUrl = "https://youtu.be/ZuoIW4aINak";
 				
 				// Create a PlayQueueItem from the URL
 				// Service ID 0 = YouTube
