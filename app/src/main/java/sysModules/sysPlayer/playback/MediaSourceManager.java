@@ -77,7 +77,7 @@ public class MediaSourceManager {
         public void run() {
             if (disposed) return;
             if (playbackListener.isApproachingPlaybackEdge(PLAYBACK_NEAR_END_GAP_MILLIS)) {
-                loadImmediate();
+                maybeLoadNeighbors();
             }
             mainHandler.postDelayed(this, PROGRESS_UPDATE_INTERVAL_MILLIS);
         }
@@ -316,6 +316,15 @@ public class MediaSourceManager {
         }
     }
 
+    private void maybeLoadNeighbors() {
+        if (disposed) return;
+        final ItemsToLoad itemsToLoad = getItemsToLoad(playQueue);
+        if (itemsToLoad == null) return;
+        for (final PlayQueueItem item : itemsToLoad.neighbors) {
+            maybeLoadItem(item);
+        }
+    }
+
     private void maybeLoadItem(@NonNull final PlayQueueItem item) {
         final int itemIndex = playQueue.indexOf(item);
         if (itemIndex >= playlist.size()) {
@@ -415,6 +424,12 @@ public class MediaSourceManager {
         final int index = playQueue.indexOf(item);
         final ManagedMediaSource mediaSource = playlist.get(index);
         if (mediaSource == null) {
+            final ManagedMediaSource resolved = resolvedSources.get(index);
+            if (resolved != null) {
+                logger.debug("isCorrectionNeeded: restoring from cache at index " + index);
+                playlist.update(index, resolved, mainHandler, this::maybeSynchronizePlayer);
+                return false;
+            }
             logger.debug("isCorrectionNeeded: no source at index " + index + ", correction IS needed");
             return true;
         }
