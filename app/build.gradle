@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'io.objectbox'
 android {
     namespace 'com.nextgen'
-    compileSdkVersion 37
+    compileSdk 36
     ndkVersion "28.0.12916984 rc3"
     buildTypes.release.ndk.debugSymbolLevel = "FULL"
 
@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId "com.nextgen"
         minSdk 30
-        targetSdk 37
+        targetSdk 36
         versionCode 26
         versionName "2026.04.28"
         vectorDrawables.useSupportLibrary = true
@@ -73,6 +73,7 @@ android {
         includeInBundle false
         includeInApk false
     }
+    compileSdkMinor 1
 }
 
 dependencies {
