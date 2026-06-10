@@ -68,8 +68,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="userInterface.DemoActivity" />
-
         <activity android:name="userInterface.openingSplash.OpeningActivity" />
         <activity android:name="userInterface.languagePicker.LanguageActivity" />
         <activity android:name="userInterface.termsConsPolicy.TermsPolicyActivity" />

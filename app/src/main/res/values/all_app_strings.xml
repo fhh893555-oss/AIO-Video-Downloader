@@ -152,7 +152,7 @@
     <string name="subtitle_app_crashed">It look like Tube AIO just crashed.\nWe\'re really sorry about that.</string>
     <string name="btn_yes_report_it">Yes, Report It</string>
     <string name="btn_no_thanks">No Thanks</string>
-    <string name="title_continue_anyway">Continue Anyway</string>
+    <string name="label_continue_anyway">Continue Anyway</string>
     <string name="label_crash_feature_improve">Help Us Improve</string>
     <string name="desc_crash_feature_improve">Would you like to report this issue to our team? Your report helps us fix bugs and improve the app for everyone.</string>
     <string name="label_crash_feature_fix_speed">Fix Issues Faster</string>
