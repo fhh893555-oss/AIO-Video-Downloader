@@ -34,7 +34,7 @@
   <color name="gradient_middle">#26D9FF</color>
   <color name="gradient_end">#FF8A34</color>
 
-  <style name="style.application" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+  <style name="style.application" parent="Theme.Material3.DayNight.NoActionBar">
     <item name="android:statusBarColor">@color/color_surface</item>
     <item name="android:navigationBarColor">@color/color_surface</item>
     <item name="android:windowLightStatusBar">true</item>
@@ -128,7 +128,6 @@
     <item name="android:fontFamily">@font/style_app_fonts</item>
     <item name="android:textViewStyle">@style/style_padding_textview_style</item>
     <item name="android:checkboxStyle">@style/style_padding_textview_style</item>
-    <item name="android:switchStyle">@style/style_padding_textview_style</item>
   </style>
 
   <style name="style_webview_loading" parent="android:Widget.ProgressBar.Horizontal">

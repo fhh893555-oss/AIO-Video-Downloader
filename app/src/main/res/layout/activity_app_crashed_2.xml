@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_error_circle" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -36,7 +36,7 @@
                 tools:ignore="UseAppTint" />
         </FrameLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -46,7 +46,7 @@
             android:textSize="@dimen/title_text_size"
             tools:ignore="SpUsage,TextSizeCheck" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -84,7 +84,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="90dp"
                 android:fontFamily="@font/font_family_regular"
                 android:gravity="top"
                 android:inputType="textMultiLine"
@@ -96,32 +96,36 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/btnCheckCrashLog"
+            style="@style/Widget.Material3.CompoundButton.CheckBox"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:buttonTint="@color/style_color_button_primary"
             android:checked="true"
             android:fontFamily="@font/font_family_medium"
             android:text="@string/label_include_crash_log"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/normal_text_size"
+            app:buttonIconTint="@color/style_color_text_inverse"
+            app:buttonTint="@color/style_color_button_primary"
             tools:ignore="SpUsage,TextSizeCheck,TouchTargetSizeCheck,VisualLintButtonSize" />
 
-        <CheckBox
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/btnCheckDeviceInfo"
+            style="@style/Widget.Material3.CompoundButton.CheckBox"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:buttonTint="@color/style_color_button_primary"
             android:checked="true"
             android:fontFamily="@font/font_family_medium"
             android:text="@string/label_include_device_amp_app_information"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/normal_text_size"
+            app:buttonIconTint="@color/style_color_text_inverse"
+            app:buttonTint="@color/style_color_button_primary"
             tools:ignore="SpUsage,TextSizeCheck,TouchTargetSizeCheck,VisualLintButtonSize" />
 
         <LinearLayout
@@ -132,7 +136,7 @@
             android:layout_marginRight="20dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
@@ -149,17 +153,17 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvCrashId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/font_family_regular"
+                    android:fontFamily="@font/font_family_medium"
                     android:text="Crash ID: #A7F4D2"
                     android:textColor="@color/style_color_text_secondary"
                     android:textSize="@dimen/message_text_size"
                     tools:ignore="HardcodedText,SpUsage,TextSizeCheck" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font_family_light"
@@ -168,7 +172,6 @@
                     android:textSize="@dimen/small_text_size"
                     tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
             </LinearLayout>
-
         </LinearLayout>
 
         <View
@@ -197,7 +200,7 @@
             app:iconGravity="textStart"
             app:iconPadding="10dp"
             app:iconSize="24dp"
-            tools:ignore="SpUsage" />
+            tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRestart"
@@ -208,7 +211,6 @@
             android:layout_marginRight="20dp"
             android:fontFamily="@font/font_family_medium"
             android:text="@string/label_restart_app"
-            android:textAllCaps="false"
             android:textColor="@color/style_color_button_outline"
             android:textSize="@dimen/normal_text_size"
             app:cornerRadius="5dp"
@@ -219,27 +221,29 @@
             app:iconTint="@color/style_color_button_primary"
             app:strokeColor="@color/style_color_button_outline"
             app:strokeWidth="1dp"
-            tools:ignore="SpUsage" />
+            tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtTechnicalDetails"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button_negative"
+            android:clickable="true"
             android:drawableRight="@drawable/ic_arrow_down"
-            android:drawablePadding="8dp"
+            android:drawablePadding="5dp"
             android:drawableTint="@color/style_color_button_primary"
             android:fontFamily="@font/font_family_medium"
             android:gravity="center"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingRight="5dp"
             android:text="@string/label_view_technical_details"
             android:textColor="@color/style_color_button_primary"
             android:textSize="@dimen/normal_text_size"
-            tools:ignore="SpUsage,UseCompatTextViewDrawableXml" />
+            tools:ignore="SpUsage,UseCompatTextViewDrawableXml,TextSizeCheck" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtStacktrace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -247,14 +251,14 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/bg_stacktrace"
-            android:fontFamily="@font/font_family_light"
+            android:fontFamily="@font/font_family_regular"
             android:padding="10dp"
-            android:text="java.lang.NullPointerException..."
             android:textColor="@color/style_color_text_secondary"
             android:textIsSelectable="true"
             android:textSize="@dimen/small_text_size"
             android:visibility="visible"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="HardcodedText,SpUsage,TextSizeCheck"
+            tools:text="java.lang.NullPointerException..." />
 
     </LinearLayout>
 </ScrollView>
