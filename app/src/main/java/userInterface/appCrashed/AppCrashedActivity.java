@@ -1,42 +1,55 @@
 package userInterface.appCrashed;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.nextgen.R;
 import com.nextgen.databinding.ActivityAppCrashed1Binding;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
 import sysModules.crashedHandler.AppCrashedInfo;
+import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.openingSplash.LauncherActivity;
 
+
 /**
- * Displays crash information to the user after an unhandled exception occurs,
- * offering options to report the crash to a server or continue using the app.
- * <p>
- * This activity is typically launched from a custom
- * {@link Thread.UncaughtExceptionHandler} when the application encounters a
- * fatal runtime exception. It receives a serialized {@link AppCrashedInfo}
- * object via an intent extra, which contains diagnostic data such as the
- * stack trace, device identifier, Android version, and application version.
- * The UI presents three user choices: report the crash and continue, continue
- * without reporting, or dismiss with no action.
- * </p>
+ * Activity displayed when the application crashes unexpectedly. This screen
+ * presents crash information to the user, allowing them to send a crash report
+ * to the server, view technical details (stacktrace and device info), and
+ * continue using the app after acknowledging the crash.
+ *
+ * <p><strong>Core responsibilities:</strong>
+ * <ul>
+ * <li>Displays a unique crash ID for user reference and support tracking.</li>
+ * <li>Shows the crash stacktrace in an expandable/collapsible section.</li>
+ * <li>Provides a "Send Report" button to upload crash data to the server.</li>
+ * <li>Provides a "Continue Anyway" button to restart the app normally.</li>
+ * <li>Toggles technical details visibility based on user preference.</li>
+ * </ul>
+ *
+ * <p><strong>Input data:</strong>
+ * The activity expects an {@link AppCrashedInfo} object as an intent extra
+ * with key {@link #CRASHED_INFO_INTENT_KEY}. This object contains the
+ * stacktrace and other crash metadata captured by the global crash handler.
+ *
+ * <p>The activity locks screen orientation to portrait and uses view binding
+ * for type-safe view access. Crash reports are sent asynchronously via
+ * {@link AppCrashedViewModel}.
  *
  * @see BaseActivity
  * @see AppCrashedInfo
- * @see AppCrashedViewModel
- * @see ActivityAppCrashed1Binding
+ * @see GlobalCrashedHandler
  */
 public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Binding> {
 
@@ -79,26 +92,24 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     }
 
     /**
-     * Configures click listeners for UI components after the layout has been
-     * successfully inflated and loaded.
-     * <p>
-     * This method is invoked as part of a custom lifecycle callback (presumably
-     * from a base activity or fragment) after the layout resources have been
-     * fully inflated and attached to the view hierarchy. It delegates to
-     * {@link #setupButtonClicks()} to attach click handlers to buttons or other
-     * interactive elements that require user interaction handling.
-     * </p>
-     * <p>
-     * Placing button click setup in this method ensures that all view references
-     * are fully resolved and ready for event binding, preventing null pointer
-     * exceptions that might occur if called prematurely during
-     * {@link Activity#onCreate(Bundle)} before view inflation completes.
-     * </p>
+     * Performs post-layout initialization after the content view has been inflated.
+     * This method is invoked by the base activity at the end of {@code onCreate()}
+     * and is responsible for populating the crash stacktrace information and
+     * configuring all button click listeners.
      *
+     * <p><strong>Initialization order:</strong>
+     * <ol>
+     * <li>Sets up crash stacktrace display via {@link #setUpCrashStraceInfo()}.</li>
+     * <li>Configures all button click listeners via {@link #setupButtonClicks()}.</li>
+     * </ol>
+     *
+     * @see BaseActivity#onLoadedLayout()
+     * @see #setUpCrashStraceInfo()
      * @see #setupButtonClicks()
      */
     @Override
     protected void onLoadedLayout() {
+        setUpCrashStraceInfo();
         setupButtonClicks();
     }
 
@@ -130,19 +141,95 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
         return viewModelProvider.get(AppCrashedViewModel.class);
     }
 
+    /**
+     * Populates the stacktrace text view with crash information from the intent.
+     * This method retrieves the {@link AppCrashedInfo} object passed from the
+     * crash handler and displays the stack trace in the UI for user review.
+     *
+     * <p>If no crash information is available (e.g., the intent is missing the
+     * expected extra), the method does nothing and the stacktrace view remains
+     * empty. This typically occurs when the activity is launched outside of
+     * the expected crash reporting flow.
+     *
+     * @see #getCrashedInfoFromIntent()
+     * @see AppCrashedInfo#getStackStraceInfo()
+     */
+    private void setUpCrashStraceInfo() {
+        AppCrashedInfo appCrashedInfo = getCrashedInfoFromIntent();
+        if (appCrashedInfo != null) {
+            binding.txtStacktrace.setText(appCrashedInfo.getStackStraceInfo());
+        }
+    }
 
+    /**
+     * Generates and displays a unique crash identifier for this crash report.
+     * This method creates a random 9-character alphanumeric string prefixed with
+     * "id" using {@link StringHelper#generateRandomString(int, String)}. The
+     * formatted crash ID is displayed in a text view with the pattern
+     * "Crash ID#xxxxx".
+     *
+     * <p>The crash ID helps users reference this specific crash when contacting
+     * support, and assists developers in correlating user reports with backend
+     * crash logs.
+     *
+     * @see StringHelper#generateRandomString(int, String)
+     * @see MessageFormat#format(String, Object...)
+     */
+    private void setupCrashId() {
+        String randomString = StringHelper.generateRandomString(9, "id");
+        binding.tvCrashId.setText(MessageFormat.format("{0}#{1}",
+                getString(R.string.label_crash_id), randomString));
+    }
+
+    /**
+     * Initializes all button click listeners for the crash report screen.
+     * This method aggregates the setup calls for each interactive UI component,
+     * ensuring all user input elements respond appropriately to clicks.
+     *
+     * <p><strong>Buttons configured:</strong>
+     * <ul>
+     * <li>Continue button via {@link #setupContinueButton()}</li>
+     * <li>Send Report button via {@link #setupSendReportButton()}</li>
+     * <li>Stacktrace toggle button via {@link #setupStacktraceToggle()}</li>
+     * <li>Crash log visibility button via {@link #setupCrashLogButton()}</li>
+     * </ul>
+     *
+     * @see #setupContinueButton()
+     * @see #setupSendReportButton()
+     * @see #setupStacktraceToggle()
+     * @see #setupCrashLogButton()
+     */
     private void setupButtonClicks() {
         setupContinueButton();
         setupSendReportButton();
         setupStacktraceToggle();
-        setupDeviceInfoButton();
+        setupCrashLogButton();
     }
 
-    private void setupDeviceInfoButton() {
-        binding.btnCheckDeviceInfo.setOnClickListener(view ->
+    /**
+     * Configures the click listener for the "Check Crash Log" button. When clicked,
+     * this method calls {@link #updateTechnicalDetailsState()} to toggle the
+     * visibility of the technical details section based on the checkbox state.
+     *
+     * <p>This button provides an alternative way for users to show or hide
+     * the detailed crash information without interacting with the checkbox directly.
+     *
+     * @see #updateTechnicalDetailsState()
+     */
+    private void setupCrashLogButton() {
+        binding.btnCheckCrashLog.setOnClickListener(view ->
                 updateTechnicalDetailsState());
     }
 
+    /**
+     * Configures the click listener for the "Technical Details" button. When clicked,
+     * this method toggles the visibility of the stacktrace text view between
+     * {@link View#VISIBLE} and {@link View#GONE}. This allows users to expand
+     * or collapse the detailed crash stacktrace for better readability.
+     *
+     * <p>If the stacktrace is currently visible, it becomes hidden; if hidden,
+     * it becomes visible. This provides a simple expand/collapse interaction.
+     */
     private void setupStacktraceToggle() {
         binding.btnTechnicalDetails.setOnClickListener(view ->
                 binding.txtStacktrace.setVisibility(
@@ -150,6 +237,19 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
                                 View.VISIBLE ? View.GONE : View.VISIBLE));
     }
 
+    /**
+     * Configures the click listener for the "Send Report" button. When clicked,
+     * this method retrieves the crash information from the intent, sends it to
+     * the server via the ViewModel, and then programmatically clicks the
+     * "Continue Anyway" button to proceed with app navigation.
+     *
+     * <p>The crash report is sent asynchronously; the user is not blocked while
+     * the network request completes. Even if sending fails, the user can still
+     * continue using the app.
+     *
+     * @see #getCrashedInfoFromIntent()
+     * @see AppCrashedViewModel#sendCrashInfoToServer(AppCrashedInfo)
+     */
     private void setupSendReportButton() {
         binding.btnSendReport.setOnClickListener(view -> {
             AppCrashedInfo crashedInfo = getCrashedInfoFromIntent();
@@ -160,6 +260,15 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
         });
     }
 
+    /**
+     * Configures the click listener for the "Continue Anyway" button. When clicked,
+     * this method navigates back to the {@link LauncherActivity} to restart the
+     * app normally, bypassing the crash loop. A fade animation is applied during
+     * the transition.
+     *
+     * @see LauncherActivity
+     * @see ActivityAnimator#animActivityFade(BaseActivity) (Activity)
+     */
     private void setupContinueButton() {
         binding.btnContinueAnyway.setOnClickListener(view -> {
             Intent intent = new Intent(AppCrashedActivity.this, LauncherActivity.class);
@@ -169,6 +278,16 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
         });
     }
 
+    /**
+     * Toggles the visibility of the technical details section based on the
+     * "Include crash log" checkbox state. When the checkbox is checked, the
+     * "View Technical Details" button becomes visible; otherwise, it is hidden.
+     * Additionally, the stacktrace text view is shown or hidden based on
+     * the visibility of the "View Technical Details" button.
+     *
+     * <p>This method is typically called when the checkbox state changes,
+     * allowing the user to expand or collapse crash details for viewing.
+     */
     private void updateTechnicalDetailsState() {
         binding.btnTechnicalDetails.setVisibility(
                 binding.btnCheckDeviceInfo.isChecked() ? View.VISIBLE : View.GONE);

@@ -211,4 +211,5 @@
     <string name="label_send_report">Send Report</string>
     <string name="label_restart_app">Restart App</string>
     <string name="label_view_technical_details">View Technical Details</string>
+    <string name="label_crash_id">"Crash ID: "</string>
 </resources>
