@@ -2,6 +2,7 @@
 agp = "9.0.1"
 appcompat = "1.7.1"
 androidx_media = "1.8.0"
+material = "1.14.0"
 styled_cardview = "1.0.0"
 converter_gson = "3.0.0"
 desugar_jdk_libs_nio = "2.1.5"
@@ -28,6 +29,7 @@ espresso-core = "3.7.0"
 leak-canary = "2.14"
 
 [libraries]
+material = { module = "com.google.android.material:material", version.ref = "material" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }

@@ -23,7 +23,7 @@
   <color name="color_success">#2ECC71</color>
   <color name="color_success_light">#E9FFF4</color>
   <color name="color_warning">#FFB020</color>
-  <color name="color_error">#FF4D67</color>
+  <color name="color_error">#DB3D37</color>
   <color name="color_divider">#DDE7F5</color>
   <color name="color_divider_light">#4BDDE7F5</color>
 
@@ -34,7 +34,7 @@
   <color name="gradient_middle">#26D9FF</color>
   <color name="gradient_end">#FF8A34</color>
 
-  <style name="style.application" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="style.application" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <item name="android:statusBarColor">@color/color_surface</item>
     <item name="android:navigationBarColor">@color/color_surface</item>
     <item name="android:windowLightStatusBar">true</item>
