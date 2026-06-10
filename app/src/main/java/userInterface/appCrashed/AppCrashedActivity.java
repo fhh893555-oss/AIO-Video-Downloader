@@ -109,8 +109,9 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      */
     @Override
     protected void onLoadedLayout() {
-        setUpCrashStraceInfo();
         setupButtonClicks();
+        setUpCrashStraceInfo();
+        setupCrashId();
     }
 
     /**
@@ -290,7 +291,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      */
     private void updateTechnicalDetailsState() {
         binding.btnTechnicalDetails.setVisibility(
-                binding.btnCheckDeviceInfo.isChecked() ? View.VISIBLE : View.GONE);
+                binding.btnCheckCrashLog.isChecked() ? View.VISIBLE : View.GONE);
 
         binding.txtStacktrace.setVisibility(
                 binding.btnTechnicalDetails.getVisibility() ==
