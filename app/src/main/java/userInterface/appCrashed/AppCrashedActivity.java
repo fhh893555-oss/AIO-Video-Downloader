@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,12 +13,14 @@ import com.nextgen.databinding.ActivityAppCrashed1Binding;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
+import coreUtils.library.views.StylizedToastView;
 import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.openingSplash.LauncherActivity;
@@ -255,10 +258,38 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
         binding.btnSendReport.setOnClickListener(view -> {
             AppCrashedInfo crashedInfo = getCrashedInfoFromIntent();
             if (crashedInfo != null) {
+                crashedInfo.setDetailedInfo(
+                        "User Given Details: " +
+                                getEnteredDescription() +
+                                crashedInfo.getDetailedInfo());
+
+                buttonVibrate();
                 getViewModel().sendCrashInfoToServer(crashedInfo);
+                StylizedToastView.showSuccess(AppCrashedActivity.this,
+                        StringHelper.getText(R.string.hint_feedback_sent_thank_you));
                 binding.btnContinueAnyway.performClick();
             }
         });
+    }
+
+    /**
+     * Retrieves the text content from the description input field as a non-null
+     * String. This method uses {@link Objects#requireNonNull(Object)} to ensure
+     * the returned value is never {@code null}, even if the underlying EditText
+     * returns null (which should not happen under normal circumstances).
+     *
+     * <p>The returned string is trimmed of leading and trailing whitespace before
+     * being returned. If the EditText is empty, an empty string is returned.
+     *
+     * @return The non-null string containing the user's entered description text,
+     * trimmed of leading and trailing whitespace.
+     * @throws NullPointerException If the EditText's text is unexpectedly null.
+     * @see android.widget.EditText#getText()
+     */
+    @NonNull
+    private String getEnteredDescription() {
+        return Objects.requireNonNull(binding.editDescription.getText())
+                .toString();
     }
 
     /**

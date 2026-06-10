@@ -82,7 +82,7 @@
             app:hintTextColor="@color/bg_edittext_stroke">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/description"
+                android:id="@+id/editDescription"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
                 android:fontFamily="@font/font_family_regular"
@@ -251,7 +251,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/bg_stacktrace"
+            android:ellipsize="end"
             android:fontFamily="@font/font_family_regular"
+            android:maxLength="800"
             android:padding="10dp"
             android:textColor="@color/style_color_text_secondary"
             android:textIsSelectable="true"
