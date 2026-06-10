@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
+import coreUtils.library.process.RandomIdGen;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
@@ -168,19 +169,19 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     /**
      * Generates and displays a unique crash identifier for this crash report.
      * This method creates a random 9-character alphanumeric string prefixed with
-     * "id" using {@link StringHelper#generateRandomString(int, String)}. The
+     * "id" using {@link RandomIdGen#generateRandomVideoId(). The
      * formatted crash ID is displayed in a text view with the pattern
      * "Crash ID#xxxxx".
      *
      * <p>The crash ID helps users reference this specific crash when contacting
      * support, and assists developers in correlating user reports with backend
      * crash logs.
+     * </p>
      *
-     * @see StringHelper#generateRandomString(int, String)
      * @see MessageFormat#format(String, Object...)
      */
     private void setupCrashId() {
-        String randomString = StringHelper.generateRandomString(9, "id");
+        String randomString = RandomIdGen.generateRandomVideoId();
         binding.tvCrashId.setText(MessageFormat.format("{0}#{1}",
                 getString(R.string.label_crash_id), randomString));
     }
@@ -260,7 +261,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
             if (crashedInfo != null) {
                 crashedInfo.setDetailedInfo(
                         "User Given Details: " +
-                                getEnteredDescription() +
+                                getEnteredDescription() + "\n" +
                                 crashedInfo.getDetailedInfo());
 
                 buttonVibrate();

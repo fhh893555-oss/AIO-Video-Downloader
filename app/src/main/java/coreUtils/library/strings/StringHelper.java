@@ -94,6 +94,7 @@ public final class StringHelper {
         return builder.toString();
     }
 
+
     /**
      * Safely truncates a string to a specified maximum number of code points.
      * <p>
