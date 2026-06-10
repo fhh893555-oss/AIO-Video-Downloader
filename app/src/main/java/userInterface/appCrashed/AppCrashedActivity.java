@@ -65,10 +65,9 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * Locks the activity's screen orientation to prevent rotation during display.
      * <p>
      * This method returns true to lock the orientation, preventing the system from
-     * recreating the activity when the device is rotated. This ensures smooth animation
-     * playback and avoids disruptions during critical operations like splash screen
-     * display, video playback, or download processes where orientation changes could
-     * cause UI glitches or state loss.
+     * recreating the activity when the device is rotated. This keeps the crash
+     * report screen stable so the user can read details and take action without
+     * UI disruption.
      * </p>
      *
      * @return true to lock orientation, false to allow rotation
@@ -103,8 +102,9 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      *
      * <p><strong>Initialization order:</strong>
      * <ol>
-     * <li>Sets up crash stacktrace display via {@link #setUpCrashStraceInfo()}.</li>
      * <li>Configures all button click listeners via {@link #setupButtonClicks()}.</li>
+     * <li>Populates crash stacktrace display via {@link #setUpCrashStraceInfo()}.</li>
+     * <li>Generates and displays crash ID via {@link #setupCrashId()}.</li>
      * </ol>
      *
      * @see BaseActivity#onLoadedLayout()
@@ -169,7 +169,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     /**
      * Generates and displays a unique crash identifier for this crash report.
      * This method creates a random 9-character alphanumeric string prefixed with
-     * "id" using {@link RandomIdGen#generateRandomVideoId(). The
+     * "id" using {@link RandomIdGen#generateRandomVideoId()}. The
      * formatted crash ID is displayed in a text view with the pattern
      * "Crash ID#xxxxx".
      *
@@ -300,7 +300,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * the transition.
      *
      * @see LauncherActivity
-     * @see ActivityAnimator#animActivityFade(BaseActivity) (Activity)
+     * @see ActivityAnimator#animActivityFade(BaseActivity)
      */
     private void setupContinueButton() {
         binding.btnContinueAnyway.setOnClickListener(view -> {
