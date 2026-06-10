@@ -1,71 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.github.dangiashish.StyledCardView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  app:background_ColorType="gradient_linear"
-  app:background_Gradient_Angle="45"
-  app:background_Gradient_Color0="@color/color_card"
-  app:background_Gradient_Color1="@color/color_surface"
-  app:background_Type="fill_stroke"
-  app:cornerRadius="@dimen/default_radius"
-  app:shadow0_Outer_Alpha=".1"
-  app:shadow0_Outer_Angle="-45"
-  app:shadow0_Outer_Blur="@dimen/_5"
-  app:shadow0_Outer_Color="@color/color_accent_variant"
-  app:shadow0_Outer_Distance="@dimen/_5"
-  app:shadow1_Outer_Alpha="0.1"
-  app:shadow1_Outer_Angle="360"
-  app:shadow1_Outer_Blur="@dimen/_5"
-  app:shadow1_Outer_Color="@color/color_secondary"
-  app:shadow1_Outer_Distance="@dimen/_2"
-  app:shadow_Outer_Area="@dimen/_10"
-  app:stroke_Alpha=".3"
-  app:stroke_ColorType="gradient_sweep"
-  app:stroke_Gradient_Angle="-45"
-  app:stroke_Gradient_Color0="@color/color_accent"
-  app:stroke_Gradient_Color1="@color/color_accent_variant"
-  app:stroke_Gradient_Color2="@color/color_accent_variant"
-  app:stroke_Width=".5dp">
-
-  <LinearLayout
+<com.github.dangiashish.StyledCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/_40"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    app:background_Color="@color/style_color_background"
+    app:background_ColorType="solid"
+    app:background_Type="fill_stroke"
+    app:cornerRadius="5dp"
+    app:stroke_Alpha="1"
+    app:stroke_Color="@color/style_color_border"
+    app:stroke_ColorType="solid"
+    app:stroke_Width="1dp">
 
-    <ImageView
-      android:id="@+id/imgIcon"
-      android:layout_width="@dimen/_26"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:layout_marginLeft="@dimen/_15"
-      android:adjustViewBounds="true"
-      android:importantForAccessibility="no"
-      android:scaleType="fitXY"
-      android:src="@drawable/ic_information"
-      tools:ignore="ImageContrastCheck" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40"
+        android:orientation="horizontal">
 
-    <TextView
-      android:id="@+id/txLabel"
-      style="@style/style_textviews"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:layout_marginLeft="@dimen/_10"
-      android:layout_marginTop="@dimen/_5"
-      android:layout_marginRight="@dimen/_25"
-      android:layout_marginBottom="@dimen/_5"
-      android:ellipsize="end"
-      android:fontFamily="@font/font_family_medium"
-      android:gravity="center_vertical"
-      android:maxLines="1"
-      android:singleLine="true"
-      android:text="@string/label_sample_text_message"
-      android:textColor="@color/color_text_primary"
-      android:textSize="@dimen/message_text_size"
-      tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
-  </LinearLayout>
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="@dimen/_26"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15"
+            android:adjustViewBounds="true"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_information"
+            android:tint="@color/style_color_text_primary"
+            tools:ignore="ImageContrastCheck,UseAppTint" />
+
+        <TextView
+            android:id="@+id/txLabel"
+            style="@style/style_textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/font_family_medium"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/label_sample_text_message"
+            android:textColor="@color/style_color_text_primary"
+            android:textSize="@dimen/message_text_size"
+            tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi" />
+    </LinearLayout>
 
 </com.github.dangiashish.StyledCardView>
