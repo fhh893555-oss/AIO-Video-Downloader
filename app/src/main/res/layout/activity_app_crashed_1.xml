@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content" />
 
                 <include
-                    android:id="@+id/crashInfo"
+                    android:id="@+id/deviceInfoCard"
                     layout="@layout/activity_app_crashed_1_p1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
