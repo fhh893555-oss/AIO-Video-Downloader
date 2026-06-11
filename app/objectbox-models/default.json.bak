@@ -814,7 +814,7 @@
     },
     {
       "id": "9:1686675606944043669",
-      "lastPropertyId": "55:4521715372393958330",
+      "lastPropertyId": "57:954931989610131739",
       "name": "AppConfigs",
       "properties": [
         {
@@ -1092,6 +1092,16 @@
           "id": "55:4521715372393958330",
           "name": "httpUserAgentForBrowser",
           "type": 9
+        },
+        {
+          "id": "56:2671237677719803020",
+          "name": "useYtdlpAsDefaultDownloader",
+          "type": 1
+        },
+        {
+          "id": "57:954931989610131739",
+          "name": "isNewPipeUnavailable",
+          "type": 1
         }
       ],
       "relations": []

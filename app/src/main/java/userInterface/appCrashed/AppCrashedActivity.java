@@ -1,5 +1,6 @@
 package userInterface.appCrashed;
 
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +13,16 @@ import com.nextgen.R;
 import com.nextgen.databinding.ActivityAppCrashed1Binding;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
-import coreUtils.library.process.RandomIdGen;
+import coreUtils.library.strings.ClipboardHelper;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
+import dataRepo.userDetails.AppUserRepo;
 import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.openingSplash.LauncherActivity;
@@ -35,7 +36,7 @@ import userInterface.openingSplash.LauncherActivity;
  *
  * <p><strong>Core responsibilities:</strong>
  * <ul>
- * <li>Displays a unique crash ID for user reference and support tracking.</li>
+ * <li>Shows device &amp; app information (device ID, app version, Android version, crash time).</li>
  * <li>Shows the crash stacktrace in an expandable/collapsible section.</li>
  * <li>Provides a "Send Report" button to upload crash data to the server.</li>
  * <li>Provides a "Continue Anyway" button to restart the app normally.</li>
@@ -104,18 +105,20 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * <ol>
      * <li>Configures all button click listeners via {@link #setupButtonClicks()}.</li>
      * <li>Populates crash stacktrace display via {@link #setUpCrashStraceInfo()}.</li>
-     * <li>Generates and displays crash ID via {@link #setupCrashId()}.</li>
+     * <li>Populates device info card via {@link #setupDeviceInfo()}.</li>
      * </ol>
      *
      * @see BaseActivity#onLoadedLayout()
      * @see #setUpCrashStraceInfo()
      * @see #setupButtonClicks()
+     * @see #setupDeviceInfo()
      */
     @Override
     protected void onLoadedLayout() {
         setupButtonClicks();
         setUpCrashStraceInfo();
-        setupCrashId();
+        setupDeviceInfo();
+        updateTechnicalDetailsState();
     }
 
     /**
@@ -162,28 +165,72 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     private void setUpCrashStraceInfo() {
         AppCrashedInfo appCrashedInfo = getCrashedInfoFromIntent();
         if (appCrashedInfo != null) {
-            binding.txtStacktrace.setText(appCrashedInfo.getStackStraceInfo());
+            String straceInfo = appCrashedInfo.getStackStraceInfo();
+            binding.technicalDetails.txtStacktrace.setText(straceInfo);
         }
     }
 
     /**
-     * Generates and displays a unique crash identifier for this crash report.
-     * This method creates a random 9-character alphanumeric string prefixed with
-     * "id" using {@link RandomIdGen#generateRandomVideoId()}. The
-     * formatted crash ID is displayed in a text view with the pattern
-     * "Crash ID#xxxxx".
-     *
-     * <p>The crash ID helps users reference this specific crash when contacting
-     * support, and assists developers in correlating user reports with backend
-     * crash logs.
+     * Populates the device info card with crash metadata from the intent.
+     * <p>
+     * This method retrieves the {@link AppCrashedInfo} object passed from the
+     * crash handler and fills in the four info rows: device ID, app version,
+     * Android version, and crash timestamp. Each field maps to a corresponding
+     * getter on the crash info object.
      * </p>
      *
-     * @see MessageFormat#format(String, Object...)
+     * <p>If no crash information is available, the text views remain at their
+     * default (empty) state. The device info card itself remains visible.
+     *
+     * @see #getCrashedInfoFromIntent()
+     * @see AppCrashedInfo#getDeviceId()
+     * @see AppCrashedInfo#getApplicationVersion()
+     * @see AppCrashedInfo#getAndroidVersion()
+     * @see AppCrashedInfo#getCrashedTimelog()
      */
-    private void setupCrashId() {
-        String randomString = RandomIdGen.generateRandomVideoId();
-        binding.tvCrashId.setText(MessageFormat.format("{0}#{1}",
-                getString(R.string.label_crash_id), randomString));
+    private void setupDeviceInfo() {
+        AppCrashedInfo crashInfo = getCrashedInfoFromIntent();
+        if (crashInfo != null) {
+            binding.deviceInfoCard.tvUserDeviceId.setText(crashInfo.getDeviceId());
+            binding.deviceInfoCard.tvApplicationVersion.setText(crashInfo.getApplicationVersion());
+            binding.deviceInfoCard.tvAndroidVersion.setText(crashInfo.getAndroidVersion());
+            binding.deviceInfoCard.tvCrashTime.setText(crashInfo.getCrashedTimelog());
+        }
+    }
+
+    /**
+     * Configures the click listener for the copy device ID button. When clicked,
+     * this method copies the displayed device ID text to the system clipboard
+     * and triggers haptic feedback for user confirmation.
+     *
+     * <p>The button provides a quick way for users to copy their device
+     * identifier for support or troubleshooting purposes.
+     *
+     * @see ClipboardManager
+     * @see View#performHapticFeedback(int)
+     */
+    private void setupCopyDeviceId() {
+        binding.deviceInfoCard.btnCopyUserDeviceId.setOnClickListener(view -> {
+            buttonVibrate();
+            String deviceId = AppUserRepo.getUser().userDeviceId;
+            ClipboardHelper.copyTextToClipboard(getApplicationContext(), deviceId);
+        });
+    }
+
+    /**
+     * Configures the click listener for the "Include device & app information"
+     * checkbox. When the checkbox is checked, the device info card is visible;
+     * when unchecked, the card is hidden.
+     *
+     * <p>This gives users control over whether device metadata is displayed
+     * on screen. The data is still included in the crash report regardless
+     * of this setting.
+     */
+    private void setupDeviceInfoCheckbox() {
+        binding.crashInfo.btnCheckDeviceInfo.setOnClickListener(view ->
+                binding.deviceInfoCard.getRoot().setVisibility(
+                        binding.crashInfo.btnCheckDeviceInfo.isChecked()
+                                ? View.VISIBLE : View.GONE));
     }
 
     /**
@@ -197,18 +244,24 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * <li>Send Report button via {@link #setupSendReportButton()}</li>
      * <li>Stacktrace toggle button via {@link #setupStacktraceToggle()}</li>
      * <li>Crash log visibility button via {@link #setupCrashLogButton()}</li>
+     * <li>Copy device ID button via {@link #setupCopyDeviceId()}</li>
+     * <li>Device info checkbox via {@link #setupDeviceInfoCheckbox()}</li>
      * </ul>
      *
      * @see #setupContinueButton()
      * @see #setupSendReportButton()
      * @see #setupStacktraceToggle()
      * @see #setupCrashLogButton()
+     * @see #setupCopyDeviceId()
+     * @see #setupDeviceInfoCheckbox()
      */
     private void setupButtonClicks() {
         setupContinueButton();
         setupSendReportButton();
         setupStacktraceToggle();
         setupCrashLogButton();
+        setupCopyDeviceId();
+        setupDeviceInfoCheckbox();
     }
 
     /**
@@ -222,7 +275,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * @see #updateTechnicalDetailsState()
      */
     private void setupCrashLogButton() {
-        binding.btnCheckCrashLog.setOnClickListener(view ->
+        binding.crashInfo.btnCheckCrashLog.setOnClickListener(view ->
                 updateTechnicalDetailsState());
     }
 
@@ -236,9 +289,9 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * it becomes visible. This provides a simple expand/collapse interaction.
      */
     private void setupStacktraceToggle() {
-        binding.btnTechnicalDetails.setOnClickListener(view ->
-                binding.txtStacktrace.setVisibility(
-                        binding.txtStacktrace.getVisibility() ==
+        binding.technicalDetails.btnTechnicalDetails.setOnClickListener(view ->
+                binding.technicalDetails.txtStacktrace.setVisibility(
+                        binding.technicalDetails.txtStacktrace.getVisibility() ==
                                 View.VISIBLE ? View.GONE : View.VISIBLE));
     }
 
@@ -256,19 +309,16 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * @see AppCrashedViewModel#sendCrashInfoToServer(AppCrashedInfo)
      */
     private void setupSendReportButton() {
-        binding.btnSendReport.setOnClickListener(view -> {
+        binding.actionButtons.btnSendReport.setOnClickListener(view -> {
             AppCrashedInfo crashedInfo = getCrashedInfoFromIntent();
             if (crashedInfo != null) {
-                crashedInfo.setDetailedInfo(
-                        "User Given Details: " +
-                                getEnteredDescription() + "\n" +
-                                crashedInfo.getDetailedInfo());
+                crashedInfo.setUserGivenMessage(getEnteredDescription());
+                getViewModel().sendCrashInfoToServer(crashedInfo);
 
                 buttonVibrate();
-                getViewModel().sendCrashInfoToServer(crashedInfo);
-                StylizedToastView.showSuccess(AppCrashedActivity.this,
-                        StringHelper.getText(R.string.hint_feedback_sent_thank_you));
-                binding.btnContinueAnyway.performClick();
+                String toastMessage = StringHelper.getText(R.string.hint_feedback_sent_thank_you);
+                StylizedToastView.show(AppCrashedActivity.this, toastMessage);
+                binding.actionButtons.btnContinueAnyway.performClick();
             }
         });
     }
@@ -289,7 +339,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      */
     @NonNull
     private String getEnteredDescription() {
-        return Objects.requireNonNull(binding.editDescription.getText())
+        return Objects.requireNonNull(binding.crashInfo.editDescription.getText())
                 .toString();
     }
 
@@ -303,7 +353,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * @see ActivityAnimator#animActivityFade(BaseActivity)
      */
     private void setupContinueButton() {
-        binding.btnContinueAnyway.setOnClickListener(view -> {
+        binding.actionButtons.btnContinueAnyway.setOnClickListener(view -> {
             Intent intent = new Intent(AppCrashedActivity.this, LauncherActivity.class);
             ActivityAnimator.animActivityFade(AppCrashedActivity.this);
             startActivity(intent);
@@ -322,11 +372,11 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      * allowing the user to expand or collapse crash details for viewing.
      */
     private void updateTechnicalDetailsState() {
-        binding.btnTechnicalDetails.setVisibility(
-                binding.btnCheckCrashLog.isChecked() ? View.VISIBLE : View.GONE);
+        binding.technicalDetails.btnTechnicalDetails.setVisibility(
+                binding.crashInfo.btnCheckCrashLog.isChecked() ? View.VISIBLE : View.GONE);
 
-        binding.txtStacktrace.setVisibility(
-                binding.btnTechnicalDetails.getVisibility() ==
+        binding.technicalDetails.txtStacktrace.setVisibility(
+                binding.technicalDetails.btnTechnicalDetails.getVisibility() ==
                         View.VISIBLE ? View.VISIBLE : View.GONE);
     }
 
