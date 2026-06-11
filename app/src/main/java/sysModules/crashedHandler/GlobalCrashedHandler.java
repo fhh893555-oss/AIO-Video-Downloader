@@ -8,6 +8,9 @@ import com.nextgen.BuildConfig;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import coreUtils.base.BaseApplication;
 import coreUtils.library.process.DeviceInfoUtils;
@@ -167,27 +170,44 @@ public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandl
 		
 		return crashedInfo;
 	}
-	
-	@NonNull
-	private static String getCurrentFormattedTimestamp() {
-		java.util.Date now = new java.util.Date();
-		java.text.SimpleDateFormat dayFormat = new java.text.SimpleDateFormat("d", java.util.Locale.US);
-		int day = Integer.parseInt(dayFormat.format(now));
-		String suffix;
-		if (day >= 11 && day <= 13) {
-			suffix = "th";
-		} else {
-			switch (day % 10) {
-				case 1: suffix = "st"; break;
-				case 2: suffix = "nd"; break;
-				case 3: suffix = "rd"; break;
-				default: suffix = "th";
-			}
-		}
-		java.text.SimpleDateFormat fullFormat = new java.text.SimpleDateFormat(
-			"d'" + suffix + "' MMM yyyy '|' hh:mm:ss a", java.util.Locale.US);
-		return fullFormat.format(now);
-	}
+
+    /**
+     * Generates a formatted timestamp with an ordinal suffix for the day of the month
+     * (e.g., "1st", "2nd", "3rd", "4th"). The format follows the pattern:
+     * "d{ordinal} MMM yyyy | hh:mm:ss a" (e.g., "15th Jun 2024 | 03:45:30 PM").
+     *
+     * <p><strong>Ordinal suffix rules:</strong>
+     * <ul>
+     * <li>Days 11, 12, 13 → "th" (exception to normal rules).</li>
+     * <li>Days ending in 1 → "st" (e.g., 1st, 21st, 31st).</li>
+     * <li>Days ending in 2 → "nd" (e.g., 2nd, 22nd).</li>
+     * <li>Days ending in 3 → "rd" (e.g., 3rd, 23rd).</li>
+     * <li>All other days → "th".</li>
+     * </ul>
+     *
+     * @return A formatted timestamp string with ordinal day suffix.
+     * @see SimpleDateFormat
+     */
+    @NonNull
+    private static String getCurrentFormattedTimestamp() {
+        Date now = new Date();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.US);
+        int day = Integer.parseInt(dayFormat.format(now));
+        String suffix;
+        if (day >= 11 && day <= 13) {
+            suffix = "th";
+        } else {
+            suffix = switch (day % 10) {
+                case 1 -> "st";
+                case 2 -> "nd";
+                case 3 -> "rd";
+                default -> "th";
+            };
+        }
+        SimpleDateFormat fullFormat = new SimpleDateFormat(
+                "d'" + suffix + "' MMM yyyy '|' hh:mm:ss a", Locale.US);
+        return fullFormat.format(now);
+    }
 	
 	/**
 	 * Returns a formatted string combining the Android SDK API level and release
