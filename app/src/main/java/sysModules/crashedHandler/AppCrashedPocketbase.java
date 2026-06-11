@@ -23,8 +23,9 @@ import dataRepo.dbManager.PocketBaseClient;
  * <ul>
  * <li>The collection name is expected to be a constant matching a preconfigured
  *     PocketBase collection (e.g., "app_crashes")</li>
- * <li>Field keys (e.g., {@code FIELD_DEVICE_ID}, {@code FIELD_STACKTRACE}) must
- *     align with the server-side schema</li>
+ * <li>Field keys (e.g., {@code FILED_DEVICE_ID}, {@code FIELD_STACKTRACE},
+ *     {@code FIELD_USER_MESSAGE}, {@code FIELD_CRASH_TIMESTAMP}) must align
+ *     with the server-side schema</li>
  * <li>Network failures are logged but do not propagate exceptions to the caller;
  *     {@code null} is returned instead</li>
  * <li>Designed for use within a crash reporting service or uncaught exception
@@ -81,11 +82,11 @@ public final class AppCrashedPocketbase extends PocketBaseClient {
      * {@code null} instead.
      * </p>
      * <ul>
-     * <li>Uses static field keys (e.g., {@code FILED_DEVICE_ID},
-     *     {@code FIELD_ANDROID_VERSION}) for consistent server mapping</li>
-     * <li>The {@code crashInfo.getDetailedInfo()} method is called twice:
-     *     once for {@code FILED_DEVICE_ID} and again for
-     *     {@code FIELD_DETAILED_INFO} (verify mapping correctness)</li>
+     * <li>Uses static field keys for consistent server mapping
+     *     (e.g., {@code FILED_DEVICE_ID}, {@code FIELD_ANDROID_VERSION},
+     *     {@code FIELD_APP_VERSION}, {@code FIELD_USER_COUNTRY},
+     *     {@code FIELD_STACKTRACE}, {@code FIELD_USER_MESSAGE},
+     *     {@code FIELD_CRASH_TIMESTAMP}, {@code FIELD_DETAILED_INFO})</li>
      * <li>Returns the server response as a {@link JSONObject} or {@code null}
      *     if the POST request fails</li>
      * </ul>
