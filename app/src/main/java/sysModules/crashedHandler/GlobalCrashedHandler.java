@@ -163,8 +163,30 @@ public final class GlobalCrashedHandler implements Thread.UncaughtExceptionHandl
 		crashedInfo.setAndroidVersion(getAndroidVersion());
 		crashedInfo.setStackStraceInfo(stackTrace);
 		crashedInfo.setDetailedInfo(DeviceInfoUtils.getDeviceInformation());
+		crashedInfo.setCrashedTimelog(getCurrentFormattedTimestamp());
 		
 		return crashedInfo;
+	}
+	
+	@NonNull
+	private static String getCurrentFormattedTimestamp() {
+		java.util.Date now = new java.util.Date();
+		java.text.SimpleDateFormat dayFormat = new java.text.SimpleDateFormat("d", java.util.Locale.US);
+		int day = Integer.parseInt(dayFormat.format(now));
+		String suffix;
+		if (day >= 11 && day <= 13) {
+			suffix = "th";
+		} else {
+			switch (day % 10) {
+				case 1: suffix = "st"; break;
+				case 2: suffix = "nd"; break;
+				case 3: suffix = "rd"; break;
+				default: suffix = "th";
+			}
+		}
+		java.text.SimpleDateFormat fullFormat = new java.text.SimpleDateFormat(
+			"d'" + suffix + "' MMM yyyy '|' hh:mm:ss a", java.util.Locale.US);
+		return fullFormat.format(now);
 	}
 	
 	/**
