@@ -212,4 +212,8 @@
     <string name="label_restart_app">Restart App</string>
     <string name="label_view_technical_details">View Technical Details</string>
     <string name="label_crash_id">"Crash ID: "</string>
+    <string name="label_app_version">Application Version</string>
+    <string name="label_device_id">Device Id</string>
+    <string name="label_android_version">Android Version</string>
+    <string name="label_system_crashed_at">System Crashed Time</string>
 </resources>
