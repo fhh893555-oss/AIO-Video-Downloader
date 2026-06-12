@@ -12,8 +12,6 @@ import java.io.Serializable;
  * are provided; identity semantics apply. Both constructor parameters are
  * required and must not be {@code null}.
  *
- * @see LanguageAdapter
- * @see LanguageCallback
  */
 public class LanguageItem implements Serializable {
 

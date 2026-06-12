@@ -7,7 +7,6 @@
     android:background="@drawable/bg_button_negative"
     android:buttonTint="@color/bg_radio_button"
 
-    android:checked="true"
     android:ellipsize="end"
     android:fontFamily="@font/font_family_regular"
     android:gravity="center_vertical"
