@@ -95,21 +95,23 @@ public class LanguageViewModel extends ViewModel {
      */
     private void loadLanguages() {
         List<LanguageItem> list = new ArrayList<>();
-        list.add(new LanguageItem("English", "en"));
-        list.add(new LanguageItem("हिन्दी", "hi"));
-        list.add(new LanguageItem("தமிழ்", "ta"));
-        list.add(new LanguageItem("తెలుగు", "te"));
-        list.add(new LanguageItem("ਪੰਜਾਬੀ", "pa"));
-        list.add(new LanguageItem("मराठी", "mr"));
-        list.add(new LanguageItem("ગુજરાતી", "gu"));
-        list.add(new LanguageItem("മലയാളം", "ml"));
-        list.add(new LanguageItem("বাংলা", "bn"));
-        list.add(new LanguageItem("ଓଡ଼ିଆ", "or"));
-        list.add(new LanguageItem("ಕನ್ನಡ", "kn"));
-        list.add(new LanguageItem("অসামীয়া", "as"));
-        list.add(new LanguageItem("भोजपुरी", "bho"));
-        list.add(new LanguageItem("हरियाणवी", "hry"));
-        list.add(new LanguageItem("राजस्थानी", "raj"));
+
+        list.add(new LanguageItem("English (Default)", "en"));
+        list.add(new LanguageItem("हिन्दी (Hindi)", "hi"));
+        list.add(new LanguageItem("தமிழ் (Tamil)", "ta"));
+        list.add(new LanguageItem("తెలుగు (Telugu)", "te"));
+        list.add(new LanguageItem("ਪੰਜਾਬੀ (Punjabi)", "pa"));
+        list.add(new LanguageItem("मराठी (Marathi)", "mr"));
+        list.add(new LanguageItem("ગુજરાતી (Gujarati)", "gu"));
+        list.add(new LanguageItem("മലയാളം (Malayalam)", "ml"));
+        list.add(new LanguageItem("বাংলা (Bengali)", "bn"));
+        list.add(new LanguageItem("ଓଡ଼ିଆ (Odia)", "or"));
+        list.add(new LanguageItem("ಕನ್ನಡ (Kannada)", "kn"));
+        list.add(new LanguageItem("অসমীয়া (Assamese)", "as"));
+        list.add(new LanguageItem("भोजपुरी (Bhojpuri)", "bho"));
+        list.add(new LanguageItem("हरियाणवी (Haryanvi)", "hry"));
+        list.add(new LanguageItem("राजस्थानी (Rajasthani)", "raj"));
+
         languages.setValue(list);
     }
 }

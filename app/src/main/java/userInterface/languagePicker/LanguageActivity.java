@@ -59,10 +59,21 @@ public final class LanguageActivity extends BaseActivity<ActivityLanguage0Bindin
                         inflater.inflate(R.layout.activity_language_0_p3, group, false);
                 radioButton.setText(item.getLanguageName());
                 radioButton.setTag(item);
-                if (i == 0) {
-                    radioButton.setChecked(true);
-                }
                 group.addView(radioButton);
+            }
+
+            int count = group.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof MaterialRadioButton radioButton) {
+                    if (child.getTag() != null) {
+                        String langTag = ((LanguageItem) child.getTag()).getLanguageCode();
+                        String appLanguage = AppConfigsRepo.getConfig().selectedLanguageCode;
+                        if (langTag.equals(appLanguage)) {
+                            child.performClick();
+                        }
+                    }
+                }
             }
         });
     }
