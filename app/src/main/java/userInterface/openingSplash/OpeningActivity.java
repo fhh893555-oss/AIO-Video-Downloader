@@ -38,6 +38,9 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
     ThreadTask<Boolean, Boolean> versionSyncTask = new ThreadTask<>();
     ThreadTask<Boolean, Boolean> configSyncTask = new ThreadTask<>();
 
+    private boolean hasNavigated = false;
+    private UpdateInfo latestUpdateInfo;
+
 
     /**
      * Determines whether the activity's screen orientation should be locked.
@@ -99,6 +102,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
         loadVersionInfo();
         syncDownloadEngineConfig();
         checkUpdatesAndNavigate();
+        scheduleFallbackNavigation();
     }
 
     /**
@@ -178,24 +182,65 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
      */
     private void checkUpdatesAndNavigate() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if(!versionSyncTask.isCancelled()) {
+            if (hasNavigated) return;
+
+            if (!versionSyncTask.isCancelled()) {
                 versionSyncTask.cancel();
             }
 
             versionSyncTask.setMaxExecutionTimeMs(2000);
             versionSyncTask.setBackgroundTask(callback -> {
-                UpdateInfo latestUpdateInfo = getLatestUpdateInfo();
-                if (isUpdateAvailable(getApplicationContext(), latestUpdateInfo)) {
-                    logger.debug("Update available, launching app updater");
-                    launchAppUpdater(latestUpdateInfo);
-                    finish();
-                } else {
-                    logger.debug("No update available, proceeding to next screen");
-                    proceedToNextScreen();
-                }
-                return true;
+                latestUpdateInfo = getLatestUpdateInfo();
+                Context context = getApplicationContext();
+                return isUpdateAvailable(context, latestUpdateInfo);
             });
+            versionSyncTask.setResultTask(updateAvailable -> {
+                if (hasNavigated) return;
+                hasNavigated = true;
+                if (updateAvailable) {
+                    onUpdateAvailable(latestUpdateInfo);
+                } else {
+                    continueWithoutUpdate();
+                }
+            });
+            versionSyncTask.setErrorTask(error -> {
+                if (hasNavigated) return;
+                hasNavigated = true;
+                logger.warning("Version check failed, proceeding without update");
+                continueWithoutUpdate();
+            });
+            versionSyncTask.start();
         }, 500);
+    }
+
+    private void scheduleFallbackNavigation() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (hasNavigated || isFinishing()) return;
+            hasNavigated = true;
+
+            logger.warning("3s timeout reached, forcing navigation");
+
+            if (!configSyncTask.isCancelled()) {
+                configSyncTask.cancel();
+            }
+
+            if (!versionSyncTask.isCancelled()) {
+                versionSyncTask.cancel();
+            }
+
+            proceedToNextScreen();
+        }, 3000);
+    }
+
+    private void onUpdateAvailable(UpdateInfo latestUpdateInfo) {
+        logger.debug("Update available, launching app updater");
+        launchAppUpdater(latestUpdateInfo);
+        finish();
+    }
+
+    private void continueWithoutUpdate() {
+        logger.debug("No update available, proceeding to next screen");
+        proceedToNextScreen();
     }
 
     /**
