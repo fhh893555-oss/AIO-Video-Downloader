@@ -14,6 +14,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.nextgen.R;
+import com.nextgen.databinding.ActivityOpening0Binding;
 import com.nextgen.databinding.ActivityOpening1Binding;
 
 import coreUtils.base.BaseActivity;
@@ -70,7 +71,7 @@ import userInterface.termsConsPolicy.TermsPolicyActivity;
  * @see TermsPolicyActivity
  * @see LanguageActivity
  */
-public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
+public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	
@@ -105,8 +106,9 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 	 * to all views defined in the opening screen layout.
 	 * @see BaseActivity#inflateBinding(LayoutInflater)
 	 */
-	@Override protected ActivityOpening1Binding inflateBinding(LayoutInflater inflater) {
-		return ActivityOpening1Binding.inflate(inflater);
+    @Override
+    protected ActivityOpening0Binding inflateBinding(LayoutInflater inflater) {
+        return ActivityOpening0Binding.inflate(inflater);
 	}
 	
 	/**
@@ -133,10 +135,6 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 	 */
 	@Override
 	protected void onLoadedLayout() {
-		LottieAnimationView animationView = binding.lavLoading;
-		animationView.enableMergePathsForKitKatAndAbove(true);
-		
-		applyGradientToTitle();
 		loadVersionInfo();
 		syncDownloadEngineConfig();
 		checkUpdatesAndNavigate();
@@ -160,42 +158,6 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 		String userDeviceId = AppUserRepo.getUser().userDeviceId;
 		AppConfigs appConfigs = AppConfigsRepo.getConfig();
 		AppConfigsHelper.syncDownloadEngineConfig(userDeviceId, appConfigs);
-	}
-	
-	/**
-	 * Applies a gradient color span to the word "NextGen" within the title text view.
-	 * This method searches for the substring "NextGen" in the full title text and,
-	 * if found, applies a gradient effect using
-	 * {@link TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)}.
-	 *
-	 * <p><strong>Visual effect:</strong>
-	 * The gradient transitions from {@code color_secondary} to
-	 * {@code color_primary_variant}, spanning the 7 characters of the word
-	 * "NextGen". This creates a highlighted, branded appearance for the key
-	 * word in the opening screen title, drawing user attention to the app's
-	 * name or tagline.
-	 *
-	 * <p><strong>Error handling:</strong>
-	 * If the word "NextGen" is not found in the title string (e.g., due to
-	 * localization or layout changes), the method silently does nothing without
-	 * throwing an exception. The start index check ensures the span is only
-	 * applied when the substring exists.
-	 *
-	 * @see TextViewsUtils#applyGradientSpan(TextView, int, int, int, int)
-	 * @see #getColor(int)
-	 */
-	private void applyGradientToTitle() {
-		String fullText = binding.tvTitle.getText().toString();
-		int nextGenStart = fullText.indexOf("NextGen");
-		if (nextGenStart != -1) {
-			TextViewsUtils.applyGradientSpan(
-				binding.tvTitle,
-				getColor(R.color.color_secondary),
-				getColor(R.color.color_primary_variant),
-				nextGenStart,
-				nextGenStart + 7
-			);
-		}
 	}
 	
 	/**
@@ -251,7 +213,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 						finish();
 					} else {
 						logger.debug("No update available, proceeding to next screen");
-						proceedToNextScreen();
+						//proceedToNextScreen();
 					}
 				});
 			}), 500);

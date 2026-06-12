@@ -100,14 +100,11 @@ public class LauncherActivity extends AppCompatActivity {
 			startActivity(intent);
 			finish();
 		} else {
-            debugTestLaunch();
-            //makeAppCrash();
-
-//			Intent intent = new Intent(this, OpeningActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//			overridePendingTransition(R.anim.anim_fade_enter, R.anim.anim_fade_exit);
-//			startActivity(intent);
-//			finish();
+			Intent intent = new Intent(this, OpeningActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			overridePendingTransition(R.anim.anim_fade_enter, R.anim.anim_fade_exit);
+			startActivity(intent);
+			finish();
 		}
 	}
 	
