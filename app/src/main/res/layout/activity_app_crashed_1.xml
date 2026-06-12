@@ -25,33 +25,15 @@
                     android:id="@+id/crashInfo"
                     layout="@layout/activity_app_crashed_1_p0"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    android:id="@+id/deviceInfoCard"
-                    layout="@layout/activity_app_crashed_1_p1"
-                    android:layout_width="match_parent"
+                    android:layout_marginBottom="10dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp" />
-
-                <include
-                    android:id="@+id/technicalDetails"
-                    layout="@layout/activity_app_crashed_1_p2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginTop="50dp" />
             </LinearLayout>
         </ScrollView>
 
         <include
             android:id="@+id/actionButtons"
-            layout="@layout/activity_app_crashed_1_p3"
+            layout="@layout/activity_app_crashed_1_p1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

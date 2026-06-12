@@ -1,9 +1,8 @@
 package userInterface.appCrashed;
 
-import android.content.ClipboardManager;
 import android.content.Intent;
+import android.text.Editable;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +16,10 @@ import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
-import coreUtils.library.strings.ClipboardHelper;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
-import dataRepo.userDetails.AppUserRepo;
 import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.openingSplash.LauncherActivity;
@@ -30,17 +27,16 @@ import userInterface.openingSplash.LauncherActivity;
 
 /**
  * Activity displayed when the application crashes unexpectedly. This screen
- * presents crash information to the user, allowing them to send a crash report
- * to the server, view technical details (stacktrace and device info), and
- * continue using the app after acknowledging the crash.
+ * allows the user to send a crash report to the server, control which data is
+ * shared via checkboxes, and continue using the app after acknowledging the
+ * crash.
  *
  * <p><strong>Core responsibilities:</strong>
  * <ul>
- * <li>Shows device &amp; app information (device ID, app version, Android version, crash time).</li>
- * <li>Shows the crash stacktrace in an expandable/collapsible section.</li>
+ * <li>Collects a user-written description of what they were doing before the crash.</li>
+ * <li>Provides privacy checkboxes to opt out of sharing the crash log and/or device info.</li>
  * <li>Provides a "Send Report" button to upload crash data to the server.</li>
  * <li>Provides a "Continue Anyway" button to restart the app normally.</li>
- * <li>Toggles technical details visibility based on user preference.</li>
  * </ul>
  *
  * <p><strong>Input data:</strong>
@@ -95,30 +91,26 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
         return ActivityAppCrashed1Binding.inflate(inflater);
     }
 
+
     /**
      * Performs post-layout initialization after the content view has been inflated.
      * This method is invoked by the base activity at the end of {@code onCreate()}
-     * and is responsible for populating the crash stacktrace information and
-     * configuring all button click listeners.
+     * and configures both action buttons.
      *
      * <p><strong>Initialization order:</strong>
      * <ol>
-     * <li>Configures all button click listeners via {@link #setupButtonClicks()}.</li>
-     * <li>Populates crash stacktrace display via {@link #setUpCrashStraceInfo()}.</li>
-     * <li>Populates device info card via {@link #setupDeviceInfo()}.</li>
+     * <li>Configures the "Continue Anyway" button via {@link #setupContinueButton()}.</li>
+     * <li>Configures the "Send Report" button via {@link #setupSendReportButton()}.</li>
      * </ol>
      *
      * @see BaseActivity#onLoadedLayout()
-     * @see #setUpCrashStraceInfo()
-     * @see #setupButtonClicks()
-     * @see #setupDeviceInfo()
+     * @see #setupContinueButton()
+     * @see #setupSendReportButton()
      */
     @Override
     protected void onLoadedLayout() {
-        setupButtonClicks();
-        setUpCrashStraceInfo();
-        setupDeviceInfo();
-        updateTechnicalDetailsState();
+        setupContinueButton();
+        setupSendReportButton();
     }
 
     /**
@@ -150,162 +142,20 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     }
 
     /**
-     * Populates the stacktrace text view with crash information from the intent.
-     * This method retrieves the {@link AppCrashedInfo} object passed from the
-     * crash handler and displays the stack trace in the UI for user review.
-     *
-     * <p>If no crash information is available (e.g., the intent is missing the
-     * expected extra), the method does nothing and the stacktrace view remains
-     * empty. This typically occurs when the activity is launched outside of
-     * the expected crash reporting flow.
-     *
-     * @see #getCrashedInfoFromIntent()
-     * @see AppCrashedInfo#getStackStraceInfo()
-     */
-    private void setUpCrashStraceInfo() {
-        AppCrashedInfo appCrashedInfo = getCrashedInfoFromIntent();
-        if (appCrashedInfo != null) {
-            String straceInfo = appCrashedInfo.getStackStraceInfo();
-            binding.technicalDetails.txtStacktrace.setText(straceInfo);
-        }
-    }
-
-    /**
-     * Populates the device info card with crash metadata from the intent.
-     * <p>
-     * This method retrieves the {@link AppCrashedInfo} object passed from the
-     * crash handler and fills in the four info rows: device ID, app version,
-     * Android version, and crash timestamp. Each field maps to a corresponding
-     * getter on the crash info object.
-     * </p>
-     *
-     * <p>If no crash information is available, the text views remain at their
-     * default (empty) state. The device info card itself remains visible.
-     *
-     * @see #getCrashedInfoFromIntent()
-     * @see AppCrashedInfo#getDeviceId()
-     * @see AppCrashedInfo#getApplicationVersion()
-     * @see AppCrashedInfo#getAndroidVersion()
-     * @see AppCrashedInfo#getCrashedTimelog()
-     */
-    private void setupDeviceInfo() {
-        AppCrashedInfo crashInfo = getCrashedInfoFromIntent();
-        if (crashInfo != null) {
-            binding.deviceInfoCard.tvUserDeviceId.setText(crashInfo.getDeviceId());
-            binding.deviceInfoCard.tvApplicationVersion.setText(crashInfo.getApplicationVersion());
-            binding.deviceInfoCard.tvAndroidVersion.setText(crashInfo.getAndroidVersion());
-            binding.deviceInfoCard.tvCrashTime.setText(crashInfo.getCrashedTimelog());
-        }
-    }
-
-    /**
-     * Configures the click listener for the copy device ID button. When clicked,
-     * this method copies the displayed device ID text to the system clipboard
-     * and triggers haptic feedback for user confirmation.
-     *
-     * <p>The button provides a quick way for users to copy their device
-     * identifier for support or troubleshooting purposes.
-     *
-     * @see ClipboardManager
-     * @see View#performHapticFeedback(int)
-     */
-    private void setupCopyDeviceId() {
-        binding.deviceInfoCard.btnCopyUserDeviceId.setOnClickListener(view -> {
-            buttonVibrate();
-            String deviceId = AppUserRepo.getUser().userDeviceId;
-            ClipboardHelper.copyTextToClipboard(getApplicationContext(), deviceId);
-        });
-    }
-
-    /**
-     * Configures the click listener for the "Include device & app information"
-     * checkbox. When the checkbox is checked, the device info card is visible;
-     * when unchecked, the card is hidden.
-     *
-     * <p>This gives users control over whether device metadata is displayed
-     * on screen. The data is still included in the crash report regardless
-     * of this setting.
-     */
-    private void setupDeviceInfoCheckbox() {
-        binding.crashInfo.btnCheckDeviceInfo.setOnClickListener(view ->
-                binding.deviceInfoCard.getRoot().setVisibility(
-                        binding.crashInfo.btnCheckDeviceInfo.isChecked()
-                                ? View.VISIBLE : View.GONE));
-    }
-
-    /**
-     * Initializes all button click listeners for the crash report screen.
-     * This method aggregates the setup calls for each interactive UI component,
-     * ensuring all user input elements respond appropriately to clicks.
-     *
-     * <p><strong>Buttons configured:</strong>
-     * <ul>
-     * <li>Continue button via {@link #setupContinueButton()}</li>
-     * <li>Send Report button via {@link #setupSendReportButton()}</li>
-     * <li>Stacktrace toggle button via {@link #setupStacktraceToggle()}</li>
-     * <li>Crash log visibility button via {@link #setupCrashLogButton()}</li>
-     * <li>Copy device ID button via {@link #setupCopyDeviceId()}</li>
-     * <li>Device info checkbox via {@link #setupDeviceInfoCheckbox()}</li>
-     * </ul>
-     *
-     * @see #setupContinueButton()
-     * @see #setupSendReportButton()
-     * @see #setupStacktraceToggle()
-     * @see #setupCrashLogButton()
-     * @see #setupCopyDeviceId()
-     * @see #setupDeviceInfoCheckbox()
-     */
-    private void setupButtonClicks() {
-        setupContinueButton();
-        setupSendReportButton();
-        setupStacktraceToggle();
-        setupCrashLogButton();
-        setupCopyDeviceId();
-        setupDeviceInfoCheckbox();
-    }
-
-    /**
-     * Configures the click listener for the "Check Crash Log" button. When clicked,
-     * this method calls {@link #updateTechnicalDetailsState()} to toggle the
-     * visibility of the technical details section based on the checkbox state.
-     *
-     * <p>This button provides an alternative way for users to show or hide
-     * the detailed crash information without interacting with the checkbox directly.
-     *
-     * @see #updateTechnicalDetailsState()
-     */
-    private void setupCrashLogButton() {
-        binding.crashInfo.btnCheckCrashLog.setOnClickListener(view ->
-                updateTechnicalDetailsState());
-    }
-
-    /**
-     * Configures the click listener for the "Technical Details" button. When clicked,
-     * this method toggles the visibility of the stacktrace text view between
-     * {@link View#VISIBLE} and {@link View#GONE}. This allows users to expand
-     * or collapse the detailed crash stacktrace for better readability.
-     *
-     * <p>If the stacktrace is currently visible, it becomes hidden; if hidden,
-     * it becomes visible. This provides a simple expand/collapse interaction.
-     */
-    private void setupStacktraceToggle() {
-        binding.technicalDetails.btnTechnicalDetails.setOnClickListener(view ->
-                binding.technicalDetails.txtStacktrace.setVisibility(
-                        binding.technicalDetails.txtStacktrace.getVisibility() ==
-                                View.VISIBLE ? View.GONE : View.VISIBLE));
-    }
-
-    /**
      * Configures the click listener for the "Send Report" button. When clicked,
-     * this method retrieves the crash information from the intent, sends it to
-     * the server via the ViewModel, and then programmatically clicks the
-     * "Continue Anyway" button to proceed with app navigation.
+     * this method retrieves the crash information from the intent, stamps the
+     * user's written description onto the report, applies privacy restrictions
+     * based on checkbox states, sends the report to the server via the ViewModel,
+     * shows a confirmation toast, and programmatically clicks the "Continue
+     * Anyway" button to proceed with app navigation.
      *
      * <p>The crash report is sent asynchronously; the user is not blocked while
      * the network request completes. Even if sending fails, the user can still
      * continue using the app.
      *
      * @see #getCrashedInfoFromIntent()
+     * @see #getEnteredDescription()
+     * @see #applyPrivacyRestrictions(AppCrashedInfo)
      * @see AppCrashedViewModel#sendCrashInfoToServer(AppCrashedInfo)
      */
     private void setupSendReportButton() {
@@ -313,6 +163,7 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
             AppCrashedInfo crashedInfo = getCrashedInfoFromIntent();
             if (crashedInfo != null) {
                 crashedInfo.setUserGivenMessage(getEnteredDescription());
+                applyPrivacyRestrictions(crashedInfo);
                 getViewModel().sendCrashInfoToServer(crashedInfo);
 
                 buttonVibrate();
@@ -324,23 +175,45 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
     }
 
     /**
+     * Replaces sensitive crash data with a "User Denied" placeholder when the
+     * user has left the corresponding privacy checkbox checked.
+     * <p>
+     * If the "Include crash log" checkbox is checked, the stacktrace field is
+     * replaced with "User Denied". If the "Include device & app information"
+     * checkbox is checked, the detailed info field is replaced with
+     * "User Denied".
+     * </p>
+     *
+     * @param crashedInfo the crash info object whose fields will be sanitized
+     *                    in-place based on checkbox states
+     * @see #setupSendReportButton()
+     */
+    private void applyPrivacyRestrictions(AppCrashedInfo crashedInfo) {
+        if (binding.crashInfo.btnCheckCrashLog.isChecked()) {
+            crashedInfo.setStackStraceInfo("User Denied");
+        }
+        if (binding.crashInfo.btnCheckDeviceInfo.isChecked()) {
+            crashedInfo.setDetailedInfo("User Denied");
+        }
+    }
+
+    /**
      * Retrieves the text content from the description input field as a non-null
      * String. This method uses {@link Objects#requireNonNull(Object)} to ensure
      * the returned value is never {@code null}, even if the underlying EditText
      * returns null (which should not happen under normal circumstances).
      *
-     * <p>The returned string is trimmed of leading and trailing whitespace before
-     * being returned. If the EditText is empty, an empty string is returned.
+     * <p>If the EditText is empty, an empty string is returned. Whitespace is
+     * preserved as entered.
      *
-     * @return The non-null string containing the user's entered description text,
-     * trimmed of leading and trailing whitespace.
-     * @throws NullPointerException If the EditText's text is unexpectedly null.
+     * @return The non-null string containing the user's entered description text
+     * @throws NullPointerException If the EditText's text is unexpectedly null
      * @see android.widget.EditText#getText()
      */
     @NonNull
     private String getEnteredDescription() {
-        return Objects.requireNonNull(binding.crashInfo.editDescription.getText())
-                .toString();
+        Editable descriptionText = binding.crashInfo.editDescription.getText();
+        return Objects.requireNonNull(descriptionText).toString();
     }
 
     /**
@@ -359,25 +232,6 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
             startActivity(intent);
             finish();
         });
-    }
-
-    /**
-     * Toggles the visibility of the technical details section based on the
-     * "Include crash log" checkbox state. When the checkbox is checked, the
-     * "View Technical Details" button becomes visible; otherwise, it is hidden.
-     * Additionally, the stacktrace text view is shown or hidden based on
-     * the visibility of the "View Technical Details" button.
-     *
-     * <p>This method is typically called when the checkbox state changes,
-     * allowing the user to expand or collapse crash details for viewing.
-     */
-    private void updateTechnicalDetailsState() {
-        binding.technicalDetails.btnTechnicalDetails.setVisibility(
-                binding.crashInfo.btnCheckCrashLog.isChecked() ? View.VISIBLE : View.GONE);
-
-        binding.technicalDetails.txtStacktrace.setVisibility(
-                binding.technicalDetails.btnTechnicalDetails.getVisibility() ==
-                        View.VISIBLE ? View.VISIBLE : View.GONE);
     }
 
     /**
