@@ -1,83 +1,53 @@
 package userInterface.languagePicker;
 
-import android.widget.TextView;
-
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-
-import coreUtils.base.BaseActivity;
-import coreUtils.library.process.LocaleHelper;
-
 /**
- * Data record representing a single language option available for selection
- * in the language picker screen. This immutable record encapsulates all
- * necessary information to display a language item, including the display name,
- * ISO language code, and resource identifiers for visual presentation.
+ * A simple data model representing a single language option for the language
+ * picker UI. Each instance pairs a human-readable language name with its
+ * corresponding ISO 639-1 language code. The class is immutable after
+ * construction, with both fields exposed only through getters.
  *
- * <p><strong>Field descriptions:</strong>
- * <ul>
- * <li>{@code languageName} - Display name of the language (e.g., "English",
- *     "हिन्दी", "Español").</li>
- * <li>{@code languageCode} - ISO language code (e.g., "EN", "HI", "ES") used
- *     for locale configuration via {@link LocaleHelper}.</li>
- * <li>{@code illustrationResId} - Drawable resource ID for the flag or
- *     illustration representing the language/country.</li>
- * <li>{@code backgroundColorResId} - Color resource ID for the background
- *     of the language item grid cell (provides visual variety).</li>
- * </ul>
+ * <p>No {@code equals()}, {@code hashCode()}, or {@code toString()} overrides
+ * are provided; identity semantics apply. Both constructor parameters are
+ * required and must not be {@code null}.
  *
- * <p><strong>Usage in UI:</strong>
- * The adapter binds these fields to a TextView for the language name and an
- * ImageView for the illustration. The background color is typically applied
- * to the item's root layout or card container.
- *
- * <p>This class is a Java record (immutable data carrier), automatically
- * providing constructor, accessors, {@code equals()}, {@code hashCode()},
- * and {@code toString()} methods.
- *
- * @param languageName         The display name of the language
- * @param languageCode         The ISO code for locale configuration
- * @param illustrationResId    Resource ID of the flag/illustration drawable
- * @param backgroundColorResId Resource ID of the background color
- * @see LocaleHelper#changeLanguage(String, BaseActivity)
  * @see LanguageAdapter
+ * @see LanguageCallback
  */
-public record LanguageItem(String languageName,
-                           String languageCode,
-                           @DrawableRes int illustrationResId,
-                           @ColorRes int backgroundColorResId) {
-	
-	/**
-	 * Returns the drawable resource ID for the language's flag or illustration.
-	 * <p>
-	 * This method provides access to the illustration resource that visually represents
-	 * the language, typically a country flag or cultural icon. The returned resource ID
-	 * can be used with {@link android.widget.ImageView#setImageResource(int)} to display
-	 * the illustration in the language selection UI.
-	 * </p>
-	 *
-	 * @return The drawable resource ID (e.g., R.drawable.ic_flag_uk,
-	 * R.drawable.ic_flag_spain)
-	 */
-	@Override
-	public int illustrationResId() {
-		return illustrationResId;
-	}
-	
-	/**
-	 * Returns the color resource ID for the language item's background styling.
-	 * <p>
-	 * This method provides access to the background color resource associated with the
-	 * language option, allowing for customized visual distinction between different
-	 * language items in the selection grid. The returned resource ID can be used with
-	 * {@link TextView#setBackgroundResource(int)} or similar methods.
-	 * </p>
-	 *
-	 * @return The color resource ID (e.g.,
-	 * R.color.language_bg_english, R.color.language_bg_spanish)
-	 */
-	@Override
-	public int backgroundColorResId() {
-		return backgroundColorResId;
-	}
+public class LanguageItem {
+
+    private final String languageName;
+    private final String languageCode;
+
+    /**
+     * Creates a new language item with the specified display name and code.
+     *
+     * @param languageName The display name of the language in its native
+     *                     script (e.g., "English", "हिन्दी"); must not be null.
+     * @param languageCode The ISO 639-1 two-letter language code
+     *                     (e.g., "en", "hi"); must not be null.
+     */
+    public LanguageItem(String languageName, String languageCode) {
+        this.languageName = languageName;
+        this.languageCode = languageCode;
+    }
+
+    /**
+     * Returns the ISO 639-1 language code associated with this item.
+     *
+     * @return The two-letter language code (e.g., "en", "hi", "zh"),
+     * never {@code null}.
+     */
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    /**
+     * Returns the display name of the language in its native script.
+     *
+     * @return The language name (e.g., "English", "हिन्दी", "中文"),
+     * never {@code null}.
+     */
+    public String getLanguageName() {
+        return languageName;
+    }
 }
