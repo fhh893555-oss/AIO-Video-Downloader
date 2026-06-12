@@ -47,9 +47,9 @@
       </option>
     </JavaCodeStyleSettings>
     <XML>
-      <option name="XML_KEEP_WHITESPACES" value="true" />
       <option name="XML_ATTRIBUTE_WRAP" value="2" />
       <option name="XML_TEXT_WRAP" value="0" />
+      <option name="XML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
       <option name="XML_KEEP_BLANK_LINES" value="1" />
     </XML>
     <codeStyleSettings language="XML">

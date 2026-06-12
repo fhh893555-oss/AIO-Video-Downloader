@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/style_color_background">
+    android:background="@color/style_color_background"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
         tools:ignore="UselessParent">
@@ -45,29 +45,37 @@
             android:textSize="@dimen/message_text_size"
             tools:ignore="SpUsage,TextContrastCheck,VisualLintBounds,TextSizeCheck" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
+
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progressIndicator"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:indeterminate="true"
-            app:indeterminateAnimationType="contiguous"
             app:indicatorColor="@color/style_color_primary"
-            app:trackColor="@color/style_color_primary_variant"
-            app:trackThickness="5dp" />
+            app:trackColor="@color/style_color_primary_light"
+            app:trackCornerRadius="2dp"
+            app:trackThickness="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/font_family_regular"
             android:gravity="center_horizontal"
             android:text="@string/label__"
             android:textColor="@color/style_color_text_hint"
             android:textSize="@dimen/small_text_size"
             tools:ignore="SpUsage,TextContrastCheck,TextSizeCheck" />
-
     </LinearLayout>
 
 </RelativeLayout>
