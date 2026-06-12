@@ -170,6 +170,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
                 String userDeviceId = AppUserRepo.getUser().userDeviceId;
                 AppConfigs appConfigs = AppConfigsRepo.getConfig();
                 AppConfigsHelper.syncDownloadEngineConfig(userDeviceId, appConfigs);
+                logger.debug("Download engine config synced successfully");
                 return true;
             } catch (Exception error) {
                 logger.error("Error syncing download engine: ", error);
