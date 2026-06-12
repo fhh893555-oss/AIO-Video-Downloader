@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 
-import com.nextgen.databinding.ActivityOpening0Binding;
+import com.nextgen.databinding.ActivityOpening1Binding;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.base.BaseApplication;
@@ -55,11 +55,11 @@ import userInterface.termsConsPolicy.TermsPolicyActivity;
  * fires first sets {@link #hasNavigated} and the others become no‑ops.
  *
  * @see BaseActivity
- * @see ActivityOpening0Binding
+ * @see ActivityOpening1Binding
  * @see AppUpdaterUtils
  * @see ThreadTask
  */
-public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding> {
+public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding> {
 
     private final LoggerUtils logger = LoggerUtils.from(getClass());
 
@@ -109,13 +109,13 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
      *
      * @param inflater The layout inflater service used to create the view hierarchy.
      *                 Must not be {@code null}.
-     * @return The {@link ActivityOpening0Binding} instance containing references
+     * @return The {@link ActivityOpening1Binding} instance containing references
      * to all views defined in the opening screen layout.
      * @see BaseActivity#inflateBinding(LayoutInflater)
      */
     @Override
-    protected ActivityOpening0Binding inflateBinding(LayoutInflater inflater) {
-        return ActivityOpening0Binding.inflate(inflater);
+    protected ActivityOpening1Binding inflateBinding(LayoutInflater inflater) {
+        return ActivityOpening1Binding.inflate(inflater);
     }
 
     /**

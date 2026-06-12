@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.nextgen.R;
-import com.nextgen.databinding.ActivityLanguage0Binding;
+import com.nextgen.databinding.ActivityLanguage1Binding;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LocaleHelper;
@@ -39,7 +39,7 @@ import userInterface.mainScreen.MainActivity;
  * @see LanguageViewModel
  * @see LanguageItem
  */
-public final class LanguageActivity extends BaseActivity<ActivityLanguage0Binding> {
+public final class LanguageActivity extends BaseActivity<ActivityLanguage1Binding> {
 
     private final LoggerUtils logger = LoggerUtils.from(getClass());
 
@@ -66,13 +66,13 @@ public final class LanguageActivity extends BaseActivity<ActivityLanguage0Bindin
      *
      * @param inflater The layout inflater service used to create the view hierarchy.
      *                 Must not be {@code null}.
-     * @return The {@link ActivityLanguage0Binding} instance containing references
+     * @return The {@link ActivityLanguage1Binding} instance containing references
      * to all views defined in the language selection screen layout.
      * @see BaseActivity#inflateBinding(LayoutInflater)
      */
     @Override
-    protected ActivityLanguage0Binding inflateBinding(LayoutInflater inflater) {
-        return ActivityLanguage0Binding.inflate(inflater);
+    protected ActivityLanguage1Binding inflateBinding(LayoutInflater inflater) {
+        return ActivityLanguage1Binding.inflate(inflater);
     }
 
     /**
