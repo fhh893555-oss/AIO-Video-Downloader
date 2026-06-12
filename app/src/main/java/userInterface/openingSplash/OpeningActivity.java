@@ -32,13 +32,52 @@ import userInterface.mainScreen.MainActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
 
 
+/**
+ * The initial splash activity shown when the application is launched.
+ * It performs several startup tasks in parallel — displaying the app version,
+ * syncing the download engine configuration, and checking for remote updates —
+ * before routing the user to the appropriate next screen.
+ *
+ * <p><strong>Startup flow:</strong>
+ * <ol>
+ *   <li>Display the current version name and code on screen.</li>
+ *   <li>Fire off a background sync of the download engine configuration
+ *       (2 sec timeout, fire‑and‑forget).</li>
+ *   <li>After 500 ms, fetch the latest update info from the server (background,
+ *       2 sec timeout). On success: navigate to the update screen or proceed;
+ *       on failure: proceed without update.</li>
+ *   <li>Schedule a 3 seconds fallback that force‑navigates if none of the
+ *       above paths have completed yet.</li>
+ * </ol>
+ *
+ * <p>The three navigation paths ({@link #checkUpdatesAndNavigate()} success,
+ * its error handler, and the 3 sec fallback) are mutually exclusive — whichever
+ * fires first sets {@link #hasNavigated} and the others become no‑ops.
+ *
+ * @see BaseActivity
+ * @see ActivityOpening0Binding
+ * @see AppUpdaterUtils
+ * @see ThreadTask
+ */
 public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding> {
-	
-	private final LoggerUtils logger = LoggerUtils.from(getClass());
+
+    private final LoggerUtils logger = LoggerUtils.from(getClass());
+
     ThreadTask<Boolean, Boolean> versionSyncTask = new ThreadTask<>();
     ThreadTask<Boolean, Boolean> configSyncTask = new ThreadTask<>();
 
+    /**
+     * Guards against duplicate navigation. Set to {@code true} by whichever
+     * path completes first (update check result, update check error, or
+     * the 3sec fallback timer). All other paths check this flag and bail.
+     */
     private boolean hasNavigated = false;
+
+    /**
+     * Holds the most recently fetched {@link UpdateInfo} so it can be passed
+     * from the background thread to the main‑thread result callback without
+     * making a second network call.
+     */
     private UpdateInfo latestUpdateInfo;
 
 
@@ -82,20 +121,24 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
     /**
      * Performs post-layout initialization after the content view has been inflated.
      * This method is invoked by the base activity at the end of {@code onCreate()}
-     * and is responsible for loading the app version information, syncing the
-     * download engine configuration, and checking for updates before navigating.
+     * and kicks off all startup tasks in parallel.
      *
      * <p><strong>Initialization order:</strong>
      * <ol>
      * <li>Loads and displays the current app version via {@link #loadVersionInfo()}.</li>
-     * <li>Syncs download engine configuration via {@link #syncDownloadEngineConfig()}.</li>
-     * <li>Checks for updates and navigates via {@link #checkUpdatesAndNavigate()}.</li>
+     * <li>Syncs download engine configuration via {@link #syncDownloadEngineConfig()}
+     *     (background, 2 sec timeout, fire‑and‑forget).</li>
+     * <li>Checks for remote updates via {@link #checkUpdatesAndNavigate()}
+     *     (background, 2 sec timeout, navigates on result/error).</li>
+     * <li>Schedules a 3 second fallback via {@link #scheduleFallbackNavigation()}
+     *     that force‑navigates if nothing else has completed.</li>
      * </ol>
      *
      * @see BaseActivity#onLoadedLayout()
      * @see #loadVersionInfo()
      * @see #syncDownloadEngineConfig()
      * @see #checkUpdatesAndNavigate()
+     * @see #scheduleFallbackNavigation()
      */
     @Override
     protected void onLoadedLayout() {
@@ -120,10 +163,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
      * @see AppConfigsHelper#syncDownloadEngineConfig(String, AppConfigs)
      */
     private void syncDownloadEngineConfig() {
-        if (!configSyncTask.isCancelled()) {
-            configSyncTask.cancel();
-        }
-
+        if (!configSyncTask.isCancelled()) configSyncTask.cancel();
         configSyncTask.setMaxExecutionTimeMs(2000);
         configSyncTask.setBackgroundTask(callback -> {
             try {
@@ -159,34 +199,38 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
         binding.tvVersion.setText(versionInfo);
     }
 
+
     /**
      * Checks for application updates after a 500ms delay, then navigates either
      * to the app updater screen or the next screen based on update availability.
-     * The update check runs in a background thread to avoid blocking the UI,
-     * while navigation logic executes on the main thread.
+     * This method uses a {@link ThreadTask} to perform the network request
+     * asynchronously on a background thread with a 2-second timeout.
      *
      * <p><strong>Execution flow:</strong>
      * <ol>
      * <li>Delays execution by 500ms to allow the opening screen to be visible.</li>
-     * <li>Executes {@link #getLatestUpdateInfo()} in background thread.</li>
-     * <li>On main thread, evaluates whether an update is available via
-     *     {@link AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)}.</li>
-     * <li>If update available, calls {@link #launchAppUpdater(UpdateInfo)} and finishes.</li>
-     * <li>If no update, calls {@link #proceedToNextScreen()}.</li>
-     * </ol>
+     * <li>If navigation has already occurred, returns early.</li>
+     * <li>Configures a ThreadTask with 2 second max execution time.</li>
+     * <li>Executes {@link #getLatestUpdateInfo()} and
+     * {@link AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)} in background thread.</li>
+     * <li>On success, calls {@link #onUpdateAvailable(UpdateInfo)} or
+     *     {@link #continueWithoutUpdate()} based on availability.</li>
+     * <li>On error, logs a warning and proceeds without update.</li>
+     * </ul>
+     *
+     * <p>The {@code hasNavigated} flag prevents duplicate navigation if multiple
+     * callbacks are triggered or if the fallback timeout also fires.
      *
      * @see #getLatestUpdateInfo()
      * @see AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)
-     * @see #launchAppUpdater(UpdateInfo)
-     * @see #proceedToNextScreen()
+     * @see #onUpdateAvailable(UpdateInfo)
+     * @see #continueWithoutUpdate()
+     * @see #scheduleFallbackNavigation()
      */
     private void checkUpdatesAndNavigate() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (hasNavigated) return;
-
-            if (!versionSyncTask.isCancelled()) {
-                versionSyncTask.cancel();
-            }
+            if (!versionSyncTask.isCancelled()) versionSyncTask.cancel();
 
             versionSyncTask.setMaxExecutionTimeMs(2000);
             versionSyncTask.setBackgroundTask(callback -> {
@@ -194,14 +238,13 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
                 Context context = getApplicationContext();
                 return isUpdateAvailable(context, latestUpdateInfo);
             });
+
             versionSyncTask.setResultTask(updateAvailable -> {
                 if (hasNavigated) return;
                 hasNavigated = true;
-                if (updateAvailable) {
-                    onUpdateAvailable(latestUpdateInfo);
-                } else {
-                    continueWithoutUpdate();
-                }
+
+                if (updateAvailable) onUpdateAvailable(latestUpdateInfo);
+                else continueWithoutUpdate();
             });
             versionSyncTask.setErrorTask(error -> {
                 if (hasNavigated) return;
@@ -209,35 +252,77 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
                 logger.warning("Version check failed, proceeding without update");
                 continueWithoutUpdate();
             });
+
             versionSyncTask.start();
         }, 500);
     }
 
+    /**
+     * Schedules a fallback navigation task that triggers after a 3-second timeout.
+     * This method ensures the opening screen does not hang indefinitely if the
+     * update check or configuration sync tasks take too long to complete.
+     *
+     * <p><strong>Behavior:</strong>
+     * <ul>
+     * <li>Posts a delayed runnable to the main thread with a 3000ms delay.</li>
+     * <li>If navigation has already occurred or the activity is finishing, returns early.</li>
+     * <li>Sets the {@code hasNavigated} flag to {@code true} to prevent duplicate navigation.</li>
+     * <li>Logs a warning indicating that timeout has been reached.</li>
+     * <li>Cancels both configuration and version sync tasks if they are still running.</li>
+     * <li>Forces navigation to the next screen via {@link #proceedToNextScreen()}.</li>
+     * </ul>
+     *
+     * <p>This is a defensive mechanism to prevent the user from being stuck on the
+     * opening screen due to network failures or slow API responses.
+     *
+     * @see #proceedToNextScreen()
+     * @see #hasNavigated
+     * @see Handler#postDelayed(Runnable, long)
+     */
     private void scheduleFallbackNavigation() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (hasNavigated || isFinishing()) return;
             hasNavigated = true;
 
             logger.warning("3s timeout reached, forcing navigation");
-
-            if (!configSyncTask.isCancelled()) {
-                configSyncTask.cancel();
-            }
-
-            if (!versionSyncTask.isCancelled()) {
-                versionSyncTask.cancel();
-            }
+            if (!configSyncTask.isCancelled()) configSyncTask.cancel();
+            if (!versionSyncTask.isCancelled()) versionSyncTask.cancel();
 
             proceedToNextScreen();
         }, 3000);
     }
 
+    /**
+     * Handles the scenario where a newer version of the application is available.
+     * This method logs the update availability, launches the app updater screen
+     * via {@link #launchAppUpdater(UpdateInfo)} with the latest update information,
+     * and finishes the current opening activity to prevent returning to it via
+     * the back button after the update flow.
+     *
+     * @param latestUpdateInfo The {@link UpdateInfo} object containing version
+     *                         details, changelog, and download URL. Must not be
+     *                         {@code null} when an update is available.
+     * @see #launchAppUpdater(UpdateInfo)
+     * @see #continueWithoutUpdate()
+     */
     private void onUpdateAvailable(UpdateInfo latestUpdateInfo) {
         logger.debug("Update available, launching app updater");
         launchAppUpdater(latestUpdateInfo);
         finish();
     }
 
+    /**
+     * Handles the scenario where no application update is available or the user
+     * has chosen to skip the update. This method logs the continuation, then
+     * proceeds to the next screen based on the application's configuration state
+     * (terms acceptance and locale configuration) via {@link #proceedToNextScreen()}.
+     *
+     * <p>The next screen may be {@link TermsPolicyActivity}, {@link LanguageActivity},
+     * or {@link MainActivity} depending on the current configuration state.
+     *
+     * @see #proceedToNextScreen()
+     * @see #onUpdateAvailable(UpdateInfo)
+     */
     private void continueWithoutUpdate() {
         logger.debug("No update available, proceeding to next screen");
         proceedToNextScreen();
@@ -302,6 +387,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
         finish();
     }
 
+
     /**
      * Determines the appropriate destination activity based on the current
      * application configuration state. The decision logic evaluates:
@@ -319,7 +405,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening0Binding>
      * origin of the launch for tracking or behavior customization.
      *
      * @return A non-null {@link Intent} targeting the determined destination
-     * {@link BaseActivity} subclass.
+     *         {@link BaseActivity} subclass.
      * @see AppConfigsRepo#getConfig()
      * @see TermsPolicyActivity
      * @see LanguageActivity
