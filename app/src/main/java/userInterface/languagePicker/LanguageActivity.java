@@ -139,7 +139,7 @@ public final class LanguageActivity extends BaseActivity<ActivityLanguage0Bindin
             for (int i = 0; i < languages.size(); i++) {
                 LanguageItem item = languages.get(i);
                 MaterialRadioButton radioButton = (MaterialRadioButton)
-                        inflater.inflate(R.layout.activity_language_0_p3, group, false);
+                        inflater.inflate(R.layout.activity_language_1_p3, group, false);
                 radioButton.setText(item.getLanguageName());
                 radioButton.setTag(item);
                 group.addView(radioButton);

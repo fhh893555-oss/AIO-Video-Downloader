@@ -16,7 +16,6 @@ import sysModules.crashedHandler.AppCrashedInfo;
 import sysModules.crashedHandler.GlobalCrashedHandler;
 import userInterface.appCrashed.AppCrashedActivity;
 import userInterface.languagePicker.LanguageActivity;
-import userInterface.userFeedback.FeedbackActivity;
 
 /**
  * Entry point activity that determines the app's startup destination based on
