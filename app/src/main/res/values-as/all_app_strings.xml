@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">ভাষা নিৰ্বাচন কৰক</string>
+  <string name="label_select_language">ভাষা নিৰ্বাচন কৰক</string>
   <string name="title_skip_for_now">আপাতত বাদ দিয়ক</string>
   <string name="subtext_tubeaio_downloader_tagline">ডাউনলোড কৰক, চাওক আৰু বন্ধুৰ সৈতে শ্বেয়াৰ কৰক</string>
   <string name="subtext_app_splash_credit">ভাৰতত ❤️ ৰে নিৰ্মিত 🇮🇳</string>

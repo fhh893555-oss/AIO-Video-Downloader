@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">ଭାଷା ଚୟନ କରନ୍ତୁ</string>
+  <string name="label_select_language">ଭାଷା ଚୟନ କରନ୍ତୁ</string>
   <string name="title_skip_for_now">ବର୍ତ୍ତମାନ ପାଇଁ ଛାଡନ୍ତୁ</string>
   <string name="subtext_tubeaio_downloader_tagline">ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ଦେଖନ୍ତୁ ଏବଂ ସାଙ୍ଗମାନଙ୍କ ସହିତ ସେୟାର କରନ୍ତୁ</string>
   <string name="subtext_app_splash_credit">ଭାରତରେ ❤️ ସହିତ ନିର୍ମିତ 🇮🇳</string>

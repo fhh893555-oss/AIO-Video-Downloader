@@ -24,7 +24,7 @@
     <string name="code_browser_default_desktop_http_user_agent" translatable="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</string>
     <string name="code_whatsapp_status_folder_path" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
 
-    <string name="title_select_language">Select Language</string>
+    <string name="label_select_language">Select Language</string>
     <string name="title_skip_for_now">Skip For Now</string>
     <string name="subtext_tubeaio_downloader_tagline">Download, Watch &amp; Share With Friends</string>
     <string name="subtext_app_splash_credit">Made With ❤️  In India  🇮🇳</string>
@@ -216,4 +216,8 @@
     <string name="label_device_id">Device Id</string>
     <string name="label_android_version">Android Version</string>
     <string name="label_system_crashed_at">System Crashed Time</string>
+    <string name="hint_select_language">Choose your preferred language to personalize your experience. <b>You can change this at any time later from the app settings.</b></string>
+    <string name="label_continue">Continue</string>
+    <string name="label_skip_for_now">Skip For Now</string>
+    <string name="label_hindi">हिन्दी (Hindi)</string>
 </resources>

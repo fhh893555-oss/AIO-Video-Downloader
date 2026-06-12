@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">மொழியைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="label_select_language">மொழியைத் தேர்ந்தெடுக்கவும்</string>
   <string name="title_skip_for_now">இப்போதைக்குத் தவிர்க்கவும்</string>
   <string name="subtext_tubeaio_downloader_tagline">பதிவிறக்கவும், பார்க்கவும் மற்றும் நண்பர்களுடன் பகிரவும்</string>
   <string name="subtext_app_splash_credit">இந்தியாவில் ❤️ உடன் உருவாக்கப்பட்டது 🇮🇳</string>

@@ -1,5 +1,17 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <AndroidXmlCodeStyleSettings>
+      <option name="LAYOUT_SETTINGS">
+        <value>
+          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
+        </value>
+      </option>
+      <option name="MANIFEST_SETTINGS">
+        <value>
+          <option name="WRAP_ATTRIBUTES" value="1" />
+        </value>
+      </option>
+    </AndroidXmlCodeStyleSettings>
     <JavaCodeStyleSettings>
       <option name="IMPORT_LAYOUT_TABLE">
         <value>
@@ -34,6 +46,12 @@
         </value>
       </option>
     </JavaCodeStyleSettings>
+    <XML>
+      <option name="XML_KEEP_WHITESPACES" value="true" />
+      <option name="XML_ATTRIBUTE_WRAP" value="2" />
+      <option name="XML_TEXT_WRAP" value="0" />
+      <option name="XML_KEEP_BLANK_LINES" value="1" />
+    </XML>
     <codeStyleSettings language="XML">
       <option name="FORCE_REARRANGE_MODE" value="1" />
       <indentOptions>

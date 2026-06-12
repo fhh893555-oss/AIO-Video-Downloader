@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    app:cardBackgroundColor="@color/style_color_card"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/style_color_card_stroke"
+    app:strokeWidth="1dp">
+
+    <RadioGroup
+        android:id="@+id/languageRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_button_negative"
+            android:buttonTint="@color/bg_radio_button"
+
+            android:checked="true"
+            android:ellipsize="end"
+            android:fontFamily="@font/font_family_regular"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="2dp"
+            android:singleLine="true"
+            android:text="@string/label_hindi"
+            android:textColor="@color/style_color_text_primary"
+            android:textSize="@dimen/normal_text_size"
+            tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck,
+            TouchTargetSizeCheck" />
+
+    </RadioGroup>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/style_color_primary_light" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_language"
+            android:tint="@color/style_color_primary"
+            tools:ignore="UseAppTint" />
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/font_family_bold"
+        android:text="@string/label_select_language"
+        android:textColor="@color/style_color_text_primary"
+        android:textSize="@dimen/title_text_size"
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/font_family_regular"
+        android:gravity="center"
+        android:text="@string/hint_select_language"
+        android:textColor="@color/style_color_text_secondary"
+        android:textSize="@dimen/sub_heading_text_size_v2"
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+</LinearLayout>

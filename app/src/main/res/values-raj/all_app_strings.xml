@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">बोली चुणो</string>
+  <string name="label_select_language">बोली चुणो</string>
   <string name="title_skip_for_now">अबै छोड़ो</string>
   <string name="subtext_tubeaio_downloader_tagline">डाउनलोड करो, देखो अर भैल्यां साथै बांटो</string>
   <string name="subtext_app_splash_credit">भारत मांय ❤️ साथै बणायो गयो 🇮🇳</string>

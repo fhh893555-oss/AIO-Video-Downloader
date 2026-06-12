@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">ભાષા પસંદ કરો</string>
+  <string name="label_select_language">ભાષા પસંદ કરો</string>
   <string name="title_skip_for_now">અત્યારે છોડી દો</string>
   <string name="subtext_tubeaio_downloader_tagline">ડાઉનલોડ કરો, જુઓ અને મિત્રો સાથે શેર કરો</string>
   <string name="subtext_app_splash_credit">ભારતમાં ❤️ સાથે બનાવેલ 🇮🇳</string>

@@ -18,7 +18,7 @@
             android:id="@+id/appLogoBg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_error_circle" />
+            android:background="@drawable/bg_color_circle" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivAppLogo"

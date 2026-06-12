@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="title_select_language">భాషను ఎంచుకోండి</string>
+  <string name="label_select_language">భాషను ఎంచుకోండి</string>
   <string name="title_skip_for_now">ప్రస్తుతానికి వదిలేయండి</string>
   <string name="subtext_tubeaio_downloader_tagline">డౌన్‌లోడ్ చేయండి, చూడండి &amp; స్నేహితులతో పంచుకోండి</string>
   <string name="subtext_app_splash_credit">భారతదేశంలో ❤️ తో తయారు చేయబడింది 🇮🇳</string>
