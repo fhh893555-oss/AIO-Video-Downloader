@@ -27,6 +27,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_information_fill"
             android:tint="@color/style_color_surface"
+
             tools:ignore="ImageContrastCheck,UseAppTint" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -46,8 +47,9 @@
             android:singleLine="true"
             android:textColor="@color/style_color_surface"
             android:textSize="@dimen/message_text_size"
+
             tools:ignore="SpUsage,TextSizeCheck,VisualLintSystemUi"
             tools:text="@string/label_sample_text_message" />
-    </LinearLayout>
 
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
