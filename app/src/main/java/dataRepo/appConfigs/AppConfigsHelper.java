@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import coreUtils.library.networks.HttpClientProvider;
 import coreUtils.library.process.LoggerUtils;
-import coreUtils.library.process.ThreadTask;
 import coreUtils.library.strings.StringHelper;
 import dataRepo.dbManager.PocketBaseClient;
 import okhttp3.OkHttpClient;
@@ -71,24 +70,18 @@ public final class AppConfigsHelper {
 	 * @see AppConfigs#isNewPipeUnavailable
 	 */
 	public static void syncDownloadEngineConfig(String deviceId, AppConfigs appConfigs) {
-		ThreadTask.executeInBackground(() -> {
-			try {
-				DownloadEngineConfig engineConfig = getDownloadEngineConfigFromServer(deviceId);
-				if (engineConfig == null) return;
-				
-				String activeEngine = engineConfig.getActiveDownloadEngine();
-				Boolean isNewPipeDown = engineConfig.isNewPipeLibraryDown();
-				
-				if (isNewPipeDown) logger.debug("Newpipe extractor is broken");
-				logger.debug("Active Download Engine: " + activeEngine);
-				
-				appConfigs.useYtdlpAsDefaultDownloader = !NEWPIPE_ENGINE.equals(activeEngine);
-				appConfigs.isNewPipeUnavailable = isNewPipeDown;
-				appConfigs.save();
-			} catch (Exception error) {
-				logger.error("Error syncing download engine: ", error);
-			}
-		});
+        DownloadEngineConfig engineConfig = getDownloadEngineConfigFromServer(deviceId);
+        if (engineConfig == null) return;
+
+        String activeEngine = engineConfig.getActiveDownloadEngine();
+        Boolean isNewPipeDown = engineConfig.isNewPipeLibraryDown();
+
+        if (isNewPipeDown) logger.debug("Newpipe extractor is broken");
+        logger.debug("Active Download Engine: " + activeEngine);
+
+        appConfigs.useYtdlpAsDefaultDownloader = !NEWPIPE_ENGINE.equals(activeEngine);
+        appConfigs.isNewPipeUnavailable = isNewPipeDown;
+        appConfigs.save();
 	}
 	
 	/**
