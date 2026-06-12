@@ -101,6 +101,7 @@ public class LauncherActivity extends AppCompatActivity {
 			finish();
 		} else {
             debugTestLaunch();
+            //makeAppCrash();
 
 //			Intent intent = new Intent(this, OpeningActivity.class);
 //			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
