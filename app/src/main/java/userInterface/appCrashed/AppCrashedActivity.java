@@ -190,10 +190,10 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
      */
     private void applyPrivacyRestrictions(AppCrashedInfo crashedInfo) {
         if (binding.crashInfo.btnCheckCrashLog.isChecked()) {
-            crashedInfo.setStackStraceInfo("User Denied");
+            crashedInfo.setStackStraceInfo("user_denied");
         }
         if (binding.crashInfo.btnCheckDeviceInfo.isChecked()) {
-            crashedInfo.setDetailedInfo("User Denied");
+            crashedInfo.setDetailedInfo("user_denied");
         }
     }
 
