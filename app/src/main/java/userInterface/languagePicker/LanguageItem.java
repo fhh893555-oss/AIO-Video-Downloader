@@ -1,5 +1,7 @@
 package userInterface.languagePicker;
 
+import java.io.Serializable;
+
 /**
  * A simple data model representing a single language option for the language
  * picker UI. Each instance pairs a human-readable language name with its
@@ -13,7 +15,7 @@ package userInterface.languagePicker;
  * @see LanguageAdapter
  * @see LanguageCallback
  */
-public class LanguageItem {
+public class LanguageItem implements Serializable {
 
     private final String languageName;
     private final String languageCode;
