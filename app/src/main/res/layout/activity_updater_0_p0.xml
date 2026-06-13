@@ -64,9 +64,9 @@
         android:id="@+id/containerDownloadError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="0dp"
         android:visibility="gone"
         app:cardBackgroundColor="@color/style_color_card"
@@ -144,9 +144,9 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         app:cardBackgroundColor="@color/style_color_card"
         app:cardCornerRadius="5dp"
@@ -216,7 +216,7 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/style_color_text_secondary"
-                android:textSize="@dimen/message_text_size"
+                android:textSize="@dimen/small_text_size"
 
                 tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText"
                 tools:text="@string/text_demo_update_changelog" />
