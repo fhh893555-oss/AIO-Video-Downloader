@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/style_color_primary_light" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_cloud_download"
+            android:tint="@color/style_color_primary"
+
+            tools:ignore="UseAppTint" />
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:fontFamily="@font/font_family_bold"
+
+        android:text="@string/label_update_available"
+        android:textColor="@color/style_color_text_primary"
+        android:textSize="@dimen/title_text_size"
+
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+
+        android:fontFamily="@font/font_family_regular"
+        android:gravity="center"
+
+        android:text="@string/desc_update_available"
+        android:textColor="@color/style_color_text_secondary"
+        android:textSize="@dimen/sub_heading_text_size_v2"
+
+        tools:ignore="SpUsage,TextSizeCheck" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:cardBackgroundColor="@color/style_color_card"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/style_color_card_stroke"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/style_color_background_secondary"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+
+                tools:ignore="UselessParent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tvVersionName"
+                    android:fontFamily="@font/font_family_medium"
+                    android:gravity="center_vertical"
+
+                    android:text="@string/label_whats_new"
+                    android:textColor="@color/style_color_text_primary"
+                    android:textSize="@dimen/sub_heading_text_size_v2"
+
+                    tools:ignore="SpUsage,TextSizeCheck" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvVersionName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_rd_edit_bg_color"
+                    android:fontFamily="@font/font_family_regular"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/style_color_text_primary"
+                    android:textSize="@dimen/message_text_size"
+
+                    tools:ignore="SpUsage,TextSizeCheck"
+                    tools:text="v2026.05.18 (90)" />
+            </RelativeLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvVersionChangelog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_rd_edit_bg_color"
+                android:fontFamily="@font/font_family_light"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/style_color_text_secondary"
+                android:textSize="@dimen/message_text_size"
+
+                tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText"
+                tools:text="@string/text_demo_update_changelog" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/ic_rd_divide_color" />
+
+            <TableLayout
+                android:id="@+id/updateInfoTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/style_color_border"
+                android:stretchColumns="1">
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="@color/style_color_surface_variant"
+                        android:fontFamily="@font/font_family_regular"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:text="@string/label_current_version"
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/txtCurrentVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/style_color_surface_variant"
+                        android:fontFamily="@font/font_family_light"
+                        android:gravity="end|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck"
+                        tools:text="v2026.05.08" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="@color/style_color_background_secondary"
+                        android:fontFamily="@font/font_family_regular"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:text="@string/label_latest_version"
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/txtLatestVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/style_color_background_secondary"
+                        android:fontFamily="@font/font_family_light"
+                        android:gravity="end|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck"
+                        tools:text="v2026.05.08" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:background="@color/style_color_surface_variant"
+                        android:fontFamily="@font/font_family_regular"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:text="@string/label_release_date"
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/txtReleaseDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/style_color_surface_variant"
+                        android:fontFamily="@font/font_family_light"
+                        android:gravity="end|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck"
+                        tools:text="14/06/2026" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/style_color_background_secondary"
+                        android:fontFamily="@font/font_family_regular"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:text="@string/label_apk_size"
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/txtUpdateSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/style_color_background_secondary"
+                        android:fontFamily="@font/font_family_light"
+
+                        android:gravity="end|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="2dp"
+
+                        android:textColor="@color/style_color_text_primary"
+                        android:textSize="@dimen/small_text_size"
+
+                        tools:ignore="SpUsage,TextSizeCheck"
+                        tools:text="92mb" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

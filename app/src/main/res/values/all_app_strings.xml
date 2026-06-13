@@ -113,11 +113,11 @@
     <string name="label_agree_terms">I have read and agree to the Terms &amp; Conditions</string>
     <string name="btn_agree_continue"><![CDATA[Agree & Continue]]></string>
     <string name="hint_you_must_accept_the_terms">You must accept the terms</string>
-    <string name="title_update_available">Update Available</string>
+    <string name="label_update_available">Update Available</string>
     <string name="subtitle_update_available">We\'ve made TubeAIO even better</string>
     <string name="hint_sample_version_info">2026.05.18</string>
-    <string name="label_latest_version">Latest Version :</string>
-    <string name="title_whats_new">What\'s New</string>
+    <string name="label_latest_version">Latest Version</string>
+    <string name="label_whats_new">What\'s New</string>
     <string name="title_download_from_official_site">Download APK From Official Site</string>
     <string name="btn_install_the_update">Install The Update</string>
     <string name="text_updater_info"><b>A new update is available.</b> It will download securely via our global CDN. Once complete, you can install the APK directly or use the link below to download manually from our official site.</string>
@@ -220,4 +220,13 @@
     <string name="label_continue">Continue</string>
     <string name="label_skip_for_now">Skip For Now</string>
     <string name="label_hindi">हिन्दी (Hindi)</string>
+    <string name="desc_update_available"><b>A new version of the TubeAIO-NextGen is available</b> with improvements and bug fixes.</string>
+    <string name="text_demo_update_changelog">This update includes stability fixes, performance improvements, and minor optimizations under the hood. Keeping your app updated helps us ensure maximum compatibility and makes the downloading features much more reliable.\n\n<b>Changelog:</b>\n• Fixed background network timeout drops on mobile connections.\n• Improved chunk handling for large file transfers.\n• Optimizations to overall memory footprint and core stability.</string>
+    <string name="label_current_version">Current Version</string>
+    <string name="label_release_date">Release Date</string>
+    <string name="label_apk_size">APK Size</string>
+    <string name="desc_secure_update_from_official_source"><![CDATA[Official Update • Verified Source • Safe & Secure]]></string>
+    <string name="label_download_update">Download The Update</string>
+    <string name="label_remind_me_later">Remind Me Later</string>
+    <string name="label_visit_official_site">Visit Official Site</string>
 </resources>
