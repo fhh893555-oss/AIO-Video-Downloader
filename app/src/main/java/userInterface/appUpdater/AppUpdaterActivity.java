@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.nextgen.R;
 import com.nextgen.databinding.ActivityUpdater0Binding;
+import com.nextgen.databinding.ActivityUpdater0P0Binding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -238,19 +239,21 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
             tvProgressSize = null;
             tvSpeedValue = null;
             tvTimeValue = null;
-
-            binding.updateDetails.tvDownloadError.setText(R.string.label_download_has_failed);
-            binding.updateDetails.tvDownloadErrorDetailed.setText(R.string.desc_download_has_failed_reason);
-            binding.updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
+	        
+	        ActivityUpdater0P0Binding updateDetails = binding.updateDetails;
+	        updateDetails.tvDownloadError.setText(R.string.label_download_has_failed);
+            updateDetails.tvDownloadErrorDetailed.setText(R.string.desc_download_has_failed_reason);
+            updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
             return true;
         }
         return false;
     }
 
     private void dismissDownloadError() {
-        binding.updateDetails.tvDownloadError.setText(R.string.label__);
-        binding.updateDetails.tvDownloadErrorDetailed.setText(R.string.label__);
-        binding.updateDetails.containerDownloadError.setVisibility(View.GONE);
+	    ActivityUpdater0P0Binding updateDetails = binding.updateDetails;
+	    updateDetails.tvDownloadError.setText(R.string.label__);
+        updateDetails.tvDownloadErrorDetailed.setText(R.string.label__);
+        updateDetails.containerDownloadError.setVisibility(View.GONE);
     }
 
     @NonNull
