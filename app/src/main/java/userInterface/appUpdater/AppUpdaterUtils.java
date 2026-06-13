@@ -10,10 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.net.URL;
 
 import coreUtils.library.networks.HttpClientProvider;
-import coreUtils.library.networks.URLUtility;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.process.VersionInfo;
 import dataRepo.dbManager.PocketBaseClient;
@@ -31,6 +29,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 
 	public static final String FIELD_WHATS_NEW_JSON = "whatsNewJSON";
     public static final String FIELD_RELEASE_DATE = "releaseDate";
+    public static final String FIELD_APK_FILE_SIZE = "apkFileSize";
 
 	public static final String FIELD_APK_FILE_HASH_CODE_32BIT = "apkFileHashFor32Bit";
 	public static final String FIELD_APK_FILE_HASH_CODE_64BIT = "apkFileHashFor64Bit";
@@ -73,6 +72,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 			String apkHash = record.getString(hashField);
 			String whatsNewJSON = record.optString(FIELD_WHATS_NEW_JSON);
             String releaseDate = record.optString(FIELD_RELEASE_DATE);
+            String apkFileSize = record.optString(FIELD_APK_FILE_SIZE);
 
 			logger.debug("Parsed update - ID: " + id + ", Version: " + versionName +
                     " (" + versionCode + "), APK: " + apkFileName + "Release date: " +
@@ -83,7 +83,6 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 			
 			logger.debug("Constructed APK URL: " + apkFileUrl);
 
-            long apkFileSize = URLUtility.getFileSizeFromURL_OkHttp(new URL(apkFileUrl));
             return new UpdateInfo(versionCode, versionName, apkFileUrl,
                     apkHash, whatsNewJSON, releaseDate, apkFileSize);
 
@@ -111,7 +110,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
         private final String apkFileHash;
         private final String whatsNewJSON;
         private final String releaseDate;
-        private final long apkFileSize;
+        private final String apkFileSize;
 
         public UpdateInfo(int versionCode,
                           String versionName,
@@ -119,7 +118,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
                           String apkFileHash,
                           String whatsNewJSON,
                           String releaseDate,
-                          long apkFileSize) {
+                          String apkFileSize) {
 			this.versionCode = versionCode;
 			this.versionName = versionName;
 			this.apkFileUrl = apkFileUrl;
@@ -153,7 +152,7 @@ public final class AppUpdaterUtils extends PocketBaseClient {
             return releaseDate;
         }
 
-        public long getApkFileSize() {
+        public String getApkFileSize() {
             return apkFileSize;
         }
 	}
