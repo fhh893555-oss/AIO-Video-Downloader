@@ -244,7 +244,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 
             binding.updateDetails.tvDownloadError.setText(R.string.label_download_has_failed);
             binding.updateDetails.tvDownloadErrorDetailed.setText(R.string.desc_download_has_failed_reason);
-			binding.updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
+            binding.updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
 			return true;
 		}
 		return false;

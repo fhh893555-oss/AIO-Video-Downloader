@@ -41,11 +41,11 @@ import userInterface.termsConsPolicy.TermsPolicyActivity;
  * <p><strong>Startup flow:</strong>
  * <ol>
  *   <li>Display the current version name and code on screen.</li>
- *   <li>Fire off a background sync of the download engine configuration
- *       (2 sec timeout, fire‑and‑forget).</li>
+ *  <li>Fire off a background sync of the download engine configuration
+ *       (5 sec timeout, fire‑and‑forget, lifecycle‑aware).</li>
  *   <li>After 500 ms, fetch the latest update info from the server (background,
- *       2 sec timeout). On success: navigate to the update screen or proceed;
- *       on failure: proceed without update.</li>
+ *       5 sec timeout, lifecycle‑aware). On success: navigate to the update
+ *       screen or proceed; on failure: proceed without update.</li>
  *   <li>Schedule a 3 seconds fallback that force‑navigates if none of the
  *       above paths have completed yet.</li>
  * </ol>
@@ -164,7 +164,8 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
      */
     private void syncDownloadEngineConfig() {
         if (!configSyncTask.isCancelled()) configSyncTask.cancel();
-        configSyncTask.setMaxExecutionTimeMs(2000);
+        configSyncTask.setMaxExecutionTimeMs(5000);
+        configSyncTask.observeLifecycle(this);
         configSyncTask.setBackgroundTask(callback -> {
             try {
                 String userDeviceId = AppUserRepo.getUser().userDeviceId;
@@ -205,13 +206,13 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
      * Checks for application updates after a 500ms delay, then navigates either
      * to the app updater screen or the next screen based on update availability.
      * This method uses a {@link ThreadTask} to perform the network request
-     * asynchronously on a background thread with a 2-second timeout.
+     * asynchronously on a background thread with a 5-second timeout.
      *
      * <p><strong>Execution flow:</strong>
      * <ol>
      * <li>Delays execution by 500ms to allow the opening screen to be visible.</li>
      * <li>If navigation has already occurred, returns early.</li>
-     * <li>Configures a ThreadTask with 2 second max execution time.</li>
+     * <li>Configures a ThreadTask with 5 second max execution time.</li>
      * <li>Executes {@link #getLatestUpdateInfo()} and
      * {@link AppUpdaterUtils#isUpdateAvailable(Context, UpdateInfo)} in background thread.</li>
      * <li>On success, calls {@link #onUpdateAvailable(UpdateInfo)} or
@@ -233,7 +234,8 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
             if (hasNavigated) return;
             if (!versionSyncTask.isCancelled()) versionSyncTask.cancel();
 
-            versionSyncTask.setMaxExecutionTimeMs(2000);
+            versionSyncTask.setMaxExecutionTimeMs(5000);
+            versionSyncTask.observeLifecycle(this);
             versionSyncTask.setBackgroundTask(callback -> {
                 latestUpdateInfo = getLatestUpdateInfo();
                 Context context = getApplicationContext();
