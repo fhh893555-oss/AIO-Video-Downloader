@@ -52,7 +52,7 @@
     <item name="android:background">@drawable/bg_button_negative</item>
   </style>
 
-  <style name="style_dialog_window" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+  <style name="style_dialog_window" parent="Theme.MaterialComponents.Dialog.MinWidth">
     <item name="android:windowBackground">@color/transparent</item>
     <item name="android:windowIsFloating">true</item>
     <item name="android:windowIsTranslucent">true</item>

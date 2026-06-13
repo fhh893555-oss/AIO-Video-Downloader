@@ -52,7 +52,7 @@ public final class StylizedDialogBuilder {
 		if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
 		
 		ViewGroup root = activity.findViewById(android.R.id.content);
-		dialogRootView = from(activity).inflate(R.layout.dialog_stylized_window_1, root, false);
+		dialogRootView = from(activity).inflate(R.layout.dialog_stylized_window_0, root, false);
 		LinearLayout mainContent = dialogRootView.findViewById(R.id.mainContent);
 		this.weakMainContentRef = new WeakReference<>(mainContent);
 		
