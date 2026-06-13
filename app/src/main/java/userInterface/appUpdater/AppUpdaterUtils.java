@@ -51,7 +51,8 @@ public final class AppUpdaterUtils extends PocketBaseClient {
                 FIELD_APK_FILE_HASH_CODE_32BIT;
 		
 		String fields = "id," + FIELD_VERSION_CODE + "," + FIELD_VERSION_NAME + "," +
-			apkField + "," + hashField + "," + FIELD_WHATS_NEW_JSON;
+                apkField + "," + hashField + "," + FIELD_WHATS_NEW_JSON + "," +
+                FIELD_RELEASE_DATE + "," + FIELD_APK_FILE_SIZE;
 		
 		logger.debug("Detected architecture: " + (is64Bit ? "64-bit" : "32-bit"));
 		logger.debug("Query fields: " + fields);
@@ -74,9 +75,10 @@ public final class AppUpdaterUtils extends PocketBaseClient {
             String releaseDate = record.optString(FIELD_RELEASE_DATE);
             String apkFileSize = record.optString(FIELD_APK_FILE_SIZE);
 
-			logger.debug("Parsed update - ID: " + id + ", Version: " + versionName +
-                    " (" + versionCode + "), APK: " + apkFileName + "Release date: " +
-                    releaseDate + ", Whats new: " + whatsNewJSON);
+            logger.debug("Parsed update - ID: " + id + ",\nVersion: " + versionName +
+                    " (" + versionCode + "),\nAPK: " + apkFileName + ",\nRelease date: " +
+                    releaseDate + ",\nWhats new: " + whatsNewJSON +
+                    ",\nApk File size: " + apkFileSize);
 			
 			String apkFileUrl = API_ENDPOINT + "/api/files/" + COLLECTION_NAME +
 				"/" + id + "/" + apkFileName;
