@@ -61,10 +61,91 @@
         tools:ignore="SpUsage,TextSizeCheck" />
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/containerDownloadError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="0dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/style_color_card"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/style_color_card_stroke"
+        app:strokeWidth="1dp"
+
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivError"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bg_color_circle"
+                android:contentDescription="@string/label_stay_connected"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_bad_shield_badge"
+                android:tint="@color/style_color_error"
+                app:shapeAppearance="@style/CircularImageView"
+                tools:ignore="UseAppTint,ImageContrastCheck" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDownloadError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_0"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/font_family_bold"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="@string/label_download_has_failed"
+                    android:textColor="@color/style_color_error"
+
+                    android:textSize="@dimen/message_text_size"
+                    tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/tvDownloadErrorDetailed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/font_family_regular"
+                    android:gravity="center_vertical"
+                    android:maxLines="3"
+                    android:singleLine="false"
+                    android:text="@string/desc_download_has_failed_reason"
+                    android:textColor="@color/style_color_text_secondary"
+                    android:textSize="@dimen/small_text_size"
+
+                    tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         app:cardBackgroundColor="@color/style_color_card"

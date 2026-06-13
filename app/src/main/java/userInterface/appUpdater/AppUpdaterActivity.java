@@ -30,12 +30,15 @@ import coreUtils.library.process.TimeFormats;
 import coreUtils.library.process.VersionInfo;
 import coreUtils.library.storage.FileStorageUtility;
 import coreUtils.library.strings.StringHelper;
+import coreUtils.library.views.ActivityAnimator;
 import coreUtils.library.views.MessageDialogBuilder;
 import coreUtils.library.views.StylizedDialogBuilder;
 import coreUtils.library.views.StylizedToastView;
-import coreUtils.library.views.TextViewsUtils;
+import dataRepo.appConfigs.AppConfigs;
+import dataRepo.appConfigs.AppConfigsRepo;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.appUpdater.AppUpdaterViewModel.DownloadStatus;
+import userInterface.mainScreen.MainActivity;
 
 public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 	
@@ -66,26 +69,11 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 
 	@Override
 	protected void onLoadedLayout() {
-		applyGradientToTitle();
 		initializeViewModel();
 		showLatestUpdateVersion();
 		showWhatsNewChangelog();
 		setupButtonClickEvents();
 		observeDownloadStatus();
-	}
-
-	private void applyGradientToTitle() {
-		String fullText = binding.top1.tvUpdaterTitle.getText().toString();
-		int nextGenStart = fullText.indexOf("Available");
-		if (nextGenStart != -1) {
-			TextViewsUtils.applyGradientSpan(
-				binding.top1.tvUpdaterTitle,
-				getColor(R.color.color_secondary),
-				getColor(R.color.color_primary_variant),
-				nextGenStart,
-				nextGenStart + 9
-			);
-		}
 	}
 
 	private void initializeViewModel() {
@@ -99,29 +87,41 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 		return viewModel;
 	}
 
-
     private void showWhatsNewChangelog() {
 		UpdateInfo updateInfo = getUpdateInfoPackageFromIntent();
 		if (updateInfo == null) return;
 		String changeLogHtmlString = updateInfo.getWhatsNewJSON();
-		TextView tvChangelog = binding.top2.tvChangelog;
+        TextView tvChangelog = binding.updateDetails.tvVersionChangelog;
 		tvChangelog.setText(Html.fromHtml(changeLogHtmlString, Html.FROM_HTML_MODE_LEGACY));
 	}
 
 
     private void setupButtonClickEvents() {
-		binding.btnBack.setOnClickListener(view -> finish());
-		binding.top2.btnInstallUpdate.setOnClickListener(view -> validateAndStartDownload());
-		binding.top2.btnDownloadFromSite.setOnClickListener(view -> openOfficialWebsite());
+        binding.actionButtons.btnUpdateNow.setOnClickListener(view -> validateAndStartDownload());
+        binding.actionButtons.btnRemindLater.setOnClickListener(view -> scheduleUpdateReminder());
+        binding.actionButtons.btnVisitOfficial.setOnClickListener(view -> openOfficialWebsite());
 	}
 
+    private void scheduleUpdateReminder() {
+        AppConfigs appConfigs = AppConfigsRepo.getConfig();
+        appConfigs.isUserNeedToRemindForAppUpdate = true;
+        appConfigs.save();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        ActivityAnimator.animActivityFade(this);
+
+        finish();
+    }
 
     private void openOfficialWebsite() {
 		try {
 			String webAddress = StringHelper.getText(R.string.http_tubeaio_official_page_url);
 			IntentLinkHelper.openLinkInSystemBrowser(this, webAddress);
 		} catch (Exception error) {
-			String somethingWentWrong = StringHelper.getText(R.string.label_something_went_wrong);
+			String somethingWentWrong =
+                    StringHelper.getText(R.string.label_something_went_wrong);
 			StylizedToastView.showError(this, somethingWentWrong);
 			logger.error("Error opening system browser for official site: ", error);
 		}
@@ -241,19 +241,19 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 			tvProgressSize = null;
 			tvSpeedValue = null;
 			tvTimeValue = null;
-			
-			binding.top2.tvDownloadError.setText(R.string.title_download_has_failed);
-			binding.top2.tvDownloadErrorDetailed.setText(R.string.title_download_has_failed_reason);
-			binding.top2.containerDownloadError.setVisibility(View.VISIBLE);
+
+            binding.updateDetails.tvDownloadError.setText(R.string.label_download_has_failed);
+            binding.updateDetails.tvDownloadErrorDetailed.setText(R.string.desc_download_has_failed_reason);
+			binding.updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
 			return true;
 		}
 		return false;
 	}
 
 	private void dismissDownloadError() {
-		binding.top2.tvDownloadError.setText(R.string.label__);
-		binding.top2.tvDownloadErrorDetailed.setText(R.string.label__);
-		binding.top2.containerDownloadError.setVisibility(View.GONE);
+		binding.updateDetails.tvDownloadError.setText(R.string.label__);
+		binding.updateDetails.tvDownloadErrorDetailed.setText(R.string.label__);
+		binding.updateDetails.containerDownloadError.setVisibility(View.GONE);
 	}
 
 	@NonNull

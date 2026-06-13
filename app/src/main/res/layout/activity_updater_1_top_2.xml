@@ -1,352 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">
-
-  <com.github.dangiashish.StyledCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:background_ColorType="gradient_linear"
-    app:background_Gradient_Angle="45"
-    app:background_Gradient_Color0="@color/color_card"
-    app:background_Gradient_Color1="@color/color_surface"
-    app:background_Type="fill_stroke"
-    app:cornerRadius="@dimen/default_radius"
-    app:shadow0_Outer_Alpha=".1"
-    app:shadow0_Outer_Angle="-45"
-    app:shadow0_Outer_Blur="@dimen/_5"
-    app:shadow0_Outer_Color="@color/color_primary_variant"
-    app:shadow0_Outer_Distance="@dimen/_5"
-    app:shadow1_Outer_Alpha="0.1"
-    app:shadow1_Outer_Angle="360"
-    app:shadow1_Outer_Blur="@dimen/_5"
-    app:shadow1_Outer_Color="@color/color_secondary"
-    app:shadow1_Outer_Distance="@dimen/_2"
-    app:shadow_Outer_Area="@dimen/_10"
-    app:stroke_Alpha=".3"
-    app:stroke_ColorType="gradient_sweep"
-    app:stroke_Gradient_Angle="-45"
-    app:stroke_Gradient_Color0="@color/color_primary"
-    app:stroke_Gradient_Color1="@color/color_primary_variant"
-    app:stroke_Width="1dp">
+    android:orientation="vertical">
 
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="@dimen/_15">
-
-      <LinearLayout
+    <com.github.dangiashish.StyledCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_rd_background_color"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/_10">
-
-        <ImageView
-          android:layout_width="@dimen/_20"
-          android:layout_height="@dimen/_20"
-          android:layout_marginEnd="@dimen/_10"
-          android:src="@drawable/ic_information"
-          android:tint="@color/color_primary"
-          tools:ignore="ContentDescription,UseAppTint" />
-
-        <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginRight="@dimen/_5"
-          android:fontFamily="@font/font_family_medium"
-          android:text="@string/label_latest_version"
-          android:textColor="@color/color_text_primary"
-          android:textSize="@dimen/small_text_size"
-          tools:ignore="SpUsage,TextSizeCheck" />
-
-        <TextView
-          android:id="@+id/tvAppVersionInfo"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:fontFamily="@font/font_family_bold"
-          android:text="@string/label__"
-          android:textColor="@color/color_primary"
-          android:textSize="@dimen/small_text_size"
-          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
-      </LinearLayout>
-
-      <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15"
-        android:fontFamily="@font/font_family_regular"
-        android:text="@string/text_updater_info"
-        android:textColor="@color/color_text_secondary"
-        android:textSize="@dimen/small_text_size"
-        tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText,TextContrastCheck" />
-
-      <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/_15"
-        android:background="@color/color_divider" />
-
-      <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none">
+        app:background_ColorType="gradient_linear"
+        app:background_Gradient_Angle="45"
+        app:background_Gradient_Color0="@color/color_card"
+        app:background_Gradient_Color1="@color/color_surface"
+        app:background_Type="fill_stroke"
+        app:cornerRadius="@dimen/default_radius"
+        app:shadow0_Outer_Alpha=".1"
+        app:shadow0_Outer_Angle="-45"
+        app:shadow0_Outer_Blur="@dimen/_5"
+        app:shadow0_Outer_Color="@color/color_primary_variant"
+        app:shadow0_Outer_Distance="@dimen/_5"
+        app:shadow1_Outer_Alpha="0.1"
+        app:shadow1_Outer_Angle="360"
+        app:shadow1_Outer_Blur="@dimen/_5"
+        app:shadow1_Outer_Color="@color/color_secondary"
+        app:shadow1_Outer_Distance="@dimen/_2"
+        app:shadow_Outer_Area="@dimen/_10"
+        app:stroke_Alpha=".3"
+        app:stroke_ColorType="gradient_sweep"
+        app:stroke_Gradient_Angle="-45"
+        app:stroke_Gradient_Color0="@color/color_primary"
+        app:stroke_Gradient_Color1="@color/color_primary_variant"
+        app:stroke_Width="1dp">
 
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:clickable="true"
-          android:focusable="true"
-          android:orientation="vertical"
-          android:paddingVertical="@dimen/_10">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_15">
 
-          <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_rd_background_color"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10">
+
+                <ImageView
+                    android:layout_width="@dimen/_20"
+                    android:layout_height="@dimen/_20"
+                    android:layout_marginEnd="@dimen/_10"
+                    android:src="@drawable/ic_information"
+                    android:tint="@color/color_primary"
+                    tools:ignore="ContentDescription,UseAppTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_5"
+                    android:fontFamily="@font/font_family_medium"
+                    android:text="@string/label_latest_version"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="@dimen/small_text_size"
+                    tools:ignore="SpUsage,TextSizeCheck" />
+
+                <TextView
+                    android:id="@+id/tvAppVersionInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_family_bold"
+                    android:text="@string/label__"
+                    android:textColor="@color/color_primary"
+                    android:textSize="@dimen/small_text_size"
+                    tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15"
+                android:fontFamily="@font/font_family_regular"
+                android:text="@string/text_updater_info"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="@dimen/small_text_size"
+                tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText,TextContrastCheck" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_15"
+                android:background="@color/color_divider" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/_10">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/_40"
+                            android:layout_height="@dimen/_40"
+                            android:layout_marginEnd="@dimen/_12"
+                            android:background="@drawable/ic_rd_background_color"
+                            android:padding="@dimen/_5"
+                            android:src="@drawable/ic_star_shine"
+                            android:tint="@color/color_primary"
+                            tools:ignore="ContentDescription,UseAppTint" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/style_textviews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_0"
+                                android:layout_marginRight="@dimen/_0"
+                                android:layout_marginBottom="@dimen/_5"
+                                android:fontFamily="@font/font_family_medium"
+                                android:text="@string/label_whats_new"
+                                android:textColor="@color/color_primary"
+                                android:textSize="@dimen/message_text_size"
+                                tools:ignore="SpUsage,TextSizeCheck" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/font_family_regular"
+                                android:text="@string/desc_whats_new"
+                                android:textColor="@color/color_text_secondary"
+                                android:textSize="@dimen/small_text_size"
+                                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="@dimen/_20"
+                            android:layout_height="@dimen/_20"
+                            android:layout_marginLeft="@dimen/_10"
+                            android:adjustViewBounds="true"
+                            android:rotation="270"
+                            android:src="@drawable/ic_arrow_down"
+                            android:tint="@color/color_text_secondary"
+                            tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvChangelog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_52"
+                        android:layout_marginTop="@dimen/_5"
+                        android:layout_marginRight="@dimen/_5"
+                        android:fontFamily="@font/font_family_light"
+                        android:text="@string/label__"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="@dimen/smaller_text_size"
+                        android:visibility="visible"
+                        tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck,TextContrastCheck" />
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_divider" />
+
+                <RelativeLayout
+                    android:id="@+id/btnInstallUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40"
+                    android:layout_marginLeft="@dimen/_20"
+                    android:layout_marginTop="@dimen/_20"
+                    android:layout_marginRight="@dimen/_20"
+                    android:layout_marginBottom="@dimen/_0"
+                    android:background="@drawable/bg_button_gradient"
+                    android:clickable="true"
+                    android:elevation="@dimen/_2"
+                    android:focusable="true"
+                    tools:ignore="TouchTargetSizeCheck">
+
+                    <TextView
+                        style="@style/style_textviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/font_family_bold"
+                        android:gravity="center"
+                        android:shadowColor="@color/color_primary"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
+                        android:shadowRadius=".1"
+                        android:text="@string/btn_install_the_update"
+                        android:textColor="@color/color_surface"
+                        android:textSize="@dimen/message_text_size"
+                        tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
+          TextSizeCheck,TextContrastCheck" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnDownloadFromSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_10"
+                    android:background="@drawable/bg_button_negative_accent"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/_5"
+                    android:paddingTop="@dimen/_2"
+                    android:paddingRight="@dimen/_5"
+                    android:paddingBottom="@dimen/_2"
+                    tools:ignore="TouchTargetSizeCheck">
+
+                    <TextView
+                        style="@style/style_textviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_0"
+                        android:fontFamily="@font/font_family_medium"
+                        android:gravity="center"
+                        android:text="@string/title_download_from_official_site"
+                        android:textColor="@color/color_accent"
+                        android:textSize="@dimen/small_text_size"
+                        tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.github.dangiashish.StyledCardView>
+
+    <com.github.dangiashish.StyledCardView
+        android:id="@+id/containerDownloadError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        app:background_ColorType="gradient_linear"
+        app:background_Gradient_Angle="45"
+        app:background_Gradient_Color0="@color/color_card"
+        app:background_Gradient_Color1="@color/color_surface"
+        app:background_Type="fill_stroke"
+        app:cornerRadius="@dimen/default_radius"
+        app:shadow0_Outer_Alpha=".1"
+        app:shadow0_Outer_Angle="-45"
+        app:shadow0_Outer_Blur="@dimen/_5"
+        app:shadow0_Outer_Color="@color/color_error"
+        app:shadow0_Outer_Distance="@dimen/_5"
+        app:shadow1_Outer_Alpha="0.1"
+        app:shadow1_Outer_Angle="360"
+        app:shadow1_Outer_Blur="@dimen/_5"
+        app:shadow1_Outer_Color="@color/color_warning"
+        app:shadow1_Outer_Distance="@dimen/_2"
+        app:shadow_Outer_Area="@dimen/_10"
+        app:stroke_Alpha=".5"
+        app:stroke_ColorType="gradient_sweep"
+        app:stroke_Gradient_Angle="-45"
+        app:stroke_Gradient_Color0="@color/color_warning"
+        app:stroke_Gradient_Color1="@color/color_error"
+        app:stroke_Width="1dp"
+        tools:visibility="visible">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/_12">
 
-            <ImageView
-              android:layout_width="@dimen/_40"
-              android:layout_height="@dimen/_40"
-              android:layout_marginEnd="@dimen/_12"
-              android:background="@drawable/ic_rd_background_color"
-              android:padding="@dimen/_5"
-              android:src="@drawable/ic_star_shine"
-              android:tint="@color/color_primary"
-              tools:ignore="ContentDescription,UseAppTint" />
+            <com.github.dangiashish.StyledCardView
+                android:layout_width="@dimen/_40"
+                android:layout_height="@dimen/_40"
+                app:background_ColorType="gradient_linear"
+                app:background_Gradient_Angle="90"
+                app:background_Gradient_Color0="@color/color_error"
+                app:background_Type="fill_stroke"
+                app:cornerRadius="@dimen/default_radius">
+
+                <ImageView
+                    android:id="@+id/ivError"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/label_stay_connected"
+                    android:padding="@dimen/_8"
+                    android:src="@drawable/ic_bad_shield_badge"
+                    android:tint="@color/color_surface"
+                    tools:ignore="UseAppTint" />
+            </com.github.dangiashish.StyledCardView>
 
             <LinearLayout
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:orientation="vertical">
-
-              <TextView
-                style="@style/style_textviews"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_0"
-                android:layout_marginRight="@dimen/_0"
-                android:layout_marginBottom="@dimen/_5"
-                android:fontFamily="@font/font_family_medium"
-                android:text="@string/label_whats_new"
-                android:textColor="@color/color_primary"
-                android:textSize="@dimen/message_text_size"
-                tools:ignore="SpUsage,TextSizeCheck" />
+                android:layout_marginStart="@dimen/_12"
+                android:orientation="vertical">
 
-              <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font_family_regular"
-                android:text="@string/desc_whats_new"
-                android:textColor="@color/color_text_secondary"
-                android:textSize="@dimen/small_text_size"
-                tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
+                <TextView
+                    android:id="@+id/tvDownloadError"
+                    style="@style/style_textviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_0"
+                    android:fontFamily="@font/font_family_medium"
+                    android:text="@string/label__"
+                    android:textColor="@color/color_text_primary"
+                    android:textSize="@dimen/message_text_size"
+                    tools:ignore="SpUsage,TextSizeCheck" />
+
+                <TextView
+                    android:id="@+id/tvDownloadErrorDetailed"
+                    style="@style/style_textviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_0"
+                    android:layout_marginTop="@dimen/_5"
+                    android:layout_marginRight="@dimen/_0"
+                    android:layout_marginBottom="@dimen/_0"
+                    android:fontFamily="@font/font_family_regular"
+                    android:maxLines="3"
+                    android:singleLine="false"
+                    android:text="@string/label__"
+                    android:textColor="@color/color_text_secondary"
+                    android:textSize="@dimen/small_text_size"
+                    tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
             </LinearLayout>
-
-            <ImageView
-              android:layout_width="@dimen/_20"
-              android:layout_height="@dimen/_20"
-              android:layout_marginLeft="@dimen/_10"
-              android:adjustViewBounds="true"
-              android:rotation="270"
-              android:src="@drawable/ic_arrow_down"
-              android:tint="@color/color_text_secondary"
-              tools:ignore="ContentDescription,UseAppTint,ImageContrastCheck" />
-          </LinearLayout>
-
-          <TextView
-            android:id="@+id/tvChangelog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_52"
-            android:layout_marginTop="@dimen/_5"
-            android:layout_marginRight="@dimen/_5"
-            android:fontFamily="@font/font_family_light"
-            android:text="@string/label__"
-            android:textColor="@color/color_text_secondary"
-            android:textSize="@dimen/smaller_text_size"
-            android:visibility="visible"
-            tools:ignore="SpUsage,VisualLintLongText,TextSizeCheck,TextContrastCheck" />
         </LinearLayout>
-      </ScrollView>
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/color_divider" />
-
-        <RelativeLayout
-          android:id="@+id/btnInstallUpdate"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/_40"
-          android:layout_marginLeft="@dimen/_20"
-          android:layout_marginTop="@dimen/_20"
-          android:layout_marginRight="@dimen/_20"
-          android:layout_marginBottom="@dimen/_0"
-          android:background="@drawable/bg_button_gradient"
-          android:clickable="true"
-          android:elevation="@dimen/_2"
-          android:focusable="true"
-          tools:ignore="TouchTargetSizeCheck">
-
-          <TextView
-            style="@style/style_textviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/font_family_bold"
-            android:gravity="center"
-            android:shadowColor="@color/color_primary"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius=".1"
-            android:text="@string/btn_install_the_update"
-            android:textColor="@color/color_surface"
-            android:textSize="@dimen/message_text_size"
-            tools:ignore="RelativeOverlap,SpUsage,UseCompatTextViewDrawableXml,
-          TextSizeCheck,TextContrastCheck" />
-        </RelativeLayout>
-
-        <LinearLayout
-          android:id="@+id/btnDownloadFromSite"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginTop="@dimen/_10"
-          android:background="@drawable/bg_button_negative_accent"
-          android:clickable="true"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          android:paddingLeft="@dimen/_5"
-          android:paddingTop="@dimen/_2"
-          android:paddingRight="@dimen/_5"
-          android:paddingBottom="@dimen/_2"
-          tools:ignore="TouchTargetSizeCheck">
-
-          <TextView
-            style="@style/style_textviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/_0"
-            android:fontFamily="@font/font_family_medium"
-            android:gravity="center"
-            android:text="@string/title_download_from_official_site"
-            android:textColor="@color/color_accent"
-            android:textSize="@dimen/small_text_size"
-            tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
-        </LinearLayout>
-
-      </LinearLayout>
-    </LinearLayout>
-  </com.github.dangiashish.StyledCardView>
-
-  <com.github.dangiashish.StyledCardView
-    android:id="@+id/containerDownloadError"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="-10dp"
-    android:visibility="gone"
-    app:background_ColorType="gradient_linear"
-    app:background_Gradient_Angle="45"
-    app:background_Gradient_Color0="@color/color_card"
-    app:background_Gradient_Color1="@color/color_surface"
-    app:background_Type="fill_stroke"
-    app:cornerRadius="@dimen/default_radius"
-    app:shadow0_Outer_Alpha=".1"
-    app:shadow0_Outer_Angle="-45"
-    app:shadow0_Outer_Blur="@dimen/_5"
-    app:shadow0_Outer_Color="@color/color_error"
-    app:shadow0_Outer_Distance="@dimen/_5"
-    app:shadow1_Outer_Alpha="0.1"
-    app:shadow1_Outer_Angle="360"
-    app:shadow1_Outer_Blur="@dimen/_5"
-    app:shadow1_Outer_Color="@color/color_warning"
-    app:shadow1_Outer_Distance="@dimen/_2"
-    app:shadow_Outer_Area="@dimen/_10"
-    app:stroke_Alpha=".5"
-    app:stroke_ColorType="gradient_sweep"
-    app:stroke_Gradient_Angle="-45"
-    app:stroke_Gradient_Color0="@color/color_warning"
-    app:stroke_Gradient_Color1="@color/color_error"
-    app:stroke_Width="1dp">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_vertical"
-      android:orientation="horizontal"
-      android:padding="@dimen/_12">
-
-      <com.github.dangiashish.StyledCardView
-        android:layout_width="@dimen/_40"
-        android:layout_height="@dimen/_40"
-        app:background_ColorType="gradient_linear"
-        app:background_Gradient_Angle="90"
-        app:background_Gradient_Color0="@color/color_error"
-        app:background_Type="fill_stroke"
-        app:cornerRadius="@dimen/default_radius">
-
-        <ImageView
-          android:id="@+id/ivError"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:contentDescription="@string/label_stay_connected"
-          android:padding="@dimen/_8"
-          android:src="@drawable/ic_bad_shield_badge"
-          android:tint="@color/color_surface"
-          tools:ignore="UseAppTint" />
-      </com.github.dangiashish.StyledCardView>
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_12"
-        android:orientation="vertical">
-
-        <TextView
-          android:id="@+id/tvDownloadError"
-          style="@style/style_textviews"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="@dimen/_0"
-          android:fontFamily="@font/font_family_medium"
-          android:text="@string/label__"
-          android:textColor="@color/color_text_primary"
-          android:textSize="@dimen/message_text_size"
-          tools:ignore="SpUsage,TextSizeCheck" />
-
-        <TextView
-          android:id="@+id/tvDownloadErrorDetailed"
-          style="@style/style_textviews"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="@dimen/_0"
-          android:layout_marginTop="@dimen/_5"
-          android:layout_marginRight="@dimen/_0"
-          android:layout_marginBottom="@dimen/_0"
-          android:fontFamily="@font/font_family_regular"
-          android:maxLines="3"
-          android:singleLine="false"
-          android:text="@string/label__"
-          android:textColor="@color/color_text_secondary"
-          android:textSize="@dimen/small_text_size"
-          tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
-      </LinearLayout>
-    </LinearLayout>
-  </com.github.dangiashish.StyledCardView>
+    </com.github.dangiashish.StyledCardView>
 </LinearLayout>

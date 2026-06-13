@@ -42,6 +42,7 @@ import io.objectbox.annotation.Id;
 	public boolean isLocaleConfigured = false;
 	public boolean isTermsConditionsAgreed = false;
 	public boolean isAppReviewCompleted = false;
+    public boolean isUserNeedToRemindForAppUpdate = false;
 	public boolean hasSkippedBatteryOptimization = false;
 	public boolean hasAppCrashedRecently = false;
 	public String lastProcessedClipboardText = "";
