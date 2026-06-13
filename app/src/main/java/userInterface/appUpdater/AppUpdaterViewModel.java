@@ -73,10 +73,12 @@ public class AppUpdaterViewModel extends ViewModel {
 					downloadStatusLiveData.postValue(DownloadStatus.verifying());
 					
 					String expectedHash = updateInfo.getApkFileHash();
-					if (expectedHash != null && !expectedHash.equalsIgnoreCase(downloadedApkHash)) {
+					if (expectedHash != null &&
+						!expectedHash.equalsIgnoreCase(downloadedApkHash)) {
 						logger.error("Hash mismatch! Expected: " +
 							expectedHash + ", Got: " + downloadedApkHash);
 						downloadStatusLiveData.postValue(DownloadStatus.hashMismatch());
+						
 					} else {
 						logger.debug("Hash verification successful.");
 						downloadStatusLiveData.postValue(DownloadStatus.completed(apkFile));
@@ -103,7 +105,10 @@ public class AppUpdaterViewModel extends ViewModel {
 	
 	public static class DownloadStatus {
 		
-		public enum State {COMPLETED, DOWNLOADING, ERROR, HASH_MISMATCH, PENDING, VERIFYING}
+		public enum State {
+			COMPLETED, DOWNLOADING, ERROR,
+			HASH_MISMATCH, PENDING, VERIFYING
+		}
 		
 		private final State state;
 		private final short progress;
