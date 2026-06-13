@@ -48,7 +48,8 @@ public final class AppUpdaterUtils extends PocketBaseClient {
 		
 		boolean is64Bit = is64BitDevice();
 		String apkField = is64Bit ? FIELD_APK_FILE_64BIT : FIELD_APK_FILE_32BIT;
-		String hashField = is64Bit ? FIELD_APK_FILE_HASH_CODE_64BIT : FIELD_APK_FILE_HASH_CODE_32BIT;
+        String hashField = is64Bit ? FIELD_APK_FILE_HASH_CODE_64BIT :
+                FIELD_APK_FILE_HASH_CODE_32BIT;
 		
 		String fields = "id," + FIELD_VERSION_CODE + "," + FIELD_VERSION_NAME + "," +
 			apkField + "," + hashField + "," + FIELD_WHATS_NEW_JSON;
