@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -39,6 +42,8 @@ public final class StylizedDialogBuilder {
 	private View dialogRootView;
 	private WeakReference<LinearLayout> weakMainContentRef;
 	private WeakReference<View> weakCustomChildViewRef;
+
+	private int dialogMarginPx = -1;
 	
 	public StylizedDialogBuilder(@NonNull BaseActivity<?> activity) {
 		this.weakActivityRef = new WeakReference<>(activity);
@@ -65,6 +70,7 @@ public final class StylizedDialogBuilder {
 			btnClose.setOnClickListener(v -> close());
 		}
 		
+		dialogMarginPx = activity.getResources().getDimensionPixelSize(R.dimen._10);
 		setPositiveButtonIcon(null);
 		enableSlideUpAnimation();
 		setCancelable(true);
@@ -103,6 +109,45 @@ public final class StylizedDialogBuilder {
 		return this;
 	}
 	
+	@NonNull
+	public StylizedDialogBuilder setDialogTitle(@NonNull String title) {
+		if (dialogRootView != null) {
+			TextView tvTitle = dialogRootView.findViewById(R.id.tvDialogTitle);
+			if (tvTitle != null) tvTitle.setText(title);
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setDialogTitle(@StringRes int resId) {
+		BaseActivity<?> activity = weakActivityRef.get();
+		if (activity != null) {
+			return setDialogTitle(activity.getString(resId));
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setDialogMargin(@DimenRes int marginDp) {
+		BaseActivity<?> activity = weakActivityRef.get();
+		if (activity != null) {
+			dialogMarginPx = (int) (marginDp * activity.getResources()
+				.getDisplayMetrics().density);
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setTitleVisible(boolean visible) {
+		if (dialogRootView != null) {
+			View container = dialogRootView.findViewById(R.id.containerTitle);
+			if (container != null) {
+				container.setVisibility(visible ? View.VISIBLE : View.GONE);
+			}
+		}
+		return this;
+	}
+
 	@NonNull
 	public StylizedDialogBuilder enableBackgroundBlur(int blurRadius) {
 		if (alertDialog == null) return this;
@@ -370,6 +415,15 @@ public final class StylizedDialogBuilder {
 				if (alertDialogWindow != null) {
 					int resId = R.color.transparent;
 					alertDialogWindow.setBackgroundDrawableResource(resId);
+				}
+				
+				if (dialogRootView != null && dialogMarginPx >= 0) {
+					FrameLayout.LayoutParams params =
+							new FrameLayout.LayoutParams(
+									ViewGroup.LayoutParams.MATCH_PARENT,
+									ViewGroup.LayoutParams.WRAP_CONTENT);
+					params.setMargins(dialogMarginPx, dialogMarginPx, dialogMarginPx, dialogMarginPx);
+					dialogRootView.setLayoutParams(params);
 				}
 			}
 		} catch (Exception error) {
