@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for the feedback input form. This component provides input fields
+  ~ for collecting user feedback including an optional email address, the
+  ~ feedback message with a 500-character limit, and an optional screenshot
+  ~ attachment section.
+  ~
+  ~ The layout includes:
+  ~   - Email input field (optional, multi-line, max 100 chars)
+  ~   - Feedback message field (required, max 500 chars with counter)
+  ~   - Attachment section (MaterialCardView with upload button)
+  -->
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +20,7 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
+  <!-- Email input field (optional) -->
   <com.google.android.material.textfield.TextInputLayout
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
@@ -38,9 +52,9 @@
       android:textSize="@dimen/normal_text_size"
       tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,
                 VisualLintTextFieldSize,VisualLintTextFieldSize" />
-
   </com.google.android.material.textfield.TextInputLayout>
 
+  <!-- Feedback message field (required, with character counter) -->
   <com.google.android.material.textfield.TextInputLayout
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
@@ -75,9 +89,9 @@
       android:textSize="@dimen/normal_text_size"
       tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,
                 VisualLintTextFieldSize,VisualLintTextFieldSize" />
-
   </com.google.android.material.textfield.TextInputLayout>
 
+  <!-- Screenshot attachment section -->
   <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -94,6 +108,7 @@
       android:orientation="horizontal"
       android:padding="10dp">
 
+      <!-- Text description for attachment feature -->
       <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -123,6 +138,7 @@
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
+      <!-- Upload button container -->
       <FrameLayout
         android:id="@+id/btnUploadPic"
         android:layout_width="0dp"
@@ -134,13 +150,15 @@
         android:orientation="vertical"
         tools:ignore="TouchTargetSizeCheck">
 
+        <!-- Preview image for selected attachment -->
         <com.google.android.material.imageview.ShapeableImageView
           android:id="@+id/ivAttachmentPreview"
-          style="@style/CircularImageView"
+          app:shapeAppearanceOverlay="@style/rounded_image_view"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@drawable/ic_rd_primary_light_color" />
+          android:src="@drawable/ic_rd_primary_light_color" />
 
+        <!-- Add image label with cloud upload icon -->
         <com.google.android.material.textview.MaterialTextView
           android:id="@+id/tvAddImage"
           android:layout_width="wrap_content"

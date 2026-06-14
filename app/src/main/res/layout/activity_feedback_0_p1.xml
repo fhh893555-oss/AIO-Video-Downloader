@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for the feedback reaction selection card. This component displays five
+  ~ sentiment options (Excellent, Good, Average, Poor, Angry) represented by
+  ~ emoji icons and text labels. Users can tap any reaction to provide feedback
+  ~ about their app experience.
+  ~
+  ~ The layout uses a MaterialCardView as the container with rounded corners,
+  ~ a subtle stroke, and a card background. Inside, a horizontal LinearLayout
+  ~ evenly distributes five reaction buttons using weightSum=5 and layout_weight=1.
+  ~
+  ~ Each reaction consists of:
+  ~   - An ImageView with an emoji/face illustration
+  ~   - A MaterialTextView with the reaction label (e.g., "Excellent", "Good")
+  ~
+  ~ The selected reaction is highlighted by changing the background drawable,
+  ~ text color, and font weight (regular → bold) via the parent activity.
+  -->
 <com.google.android.material.card.MaterialCardView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,6 +38,7 @@
     android:paddingRight="10dp"
     android:paddingBottom="10dp">
 
+    <!-- Section title prompting user to rate their experience -->
     <com.google.android.material.textview.MaterialTextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -30,6 +50,7 @@
       android:textSize="@dimen/normal_text_size"
       tools:ignore="SpUsage,TextSizeCheck" />
 
+    <!-- Horizontal container for five evenly distributed reaction buttons -->
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -38,6 +59,7 @@
       android:orientation="horizontal"
       android:weightSum="5">
 
+      <!-- Excellent / Happy reaction -->
       <LinearLayout
         android:id="@+id/btnHappy"
         android:layout_width="0dp"
@@ -68,6 +90,7 @@
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
+      <!-- Good reaction -->
       <LinearLayout
         android:id="@+id/btnGood"
         android:layout_width="0dp"
@@ -98,6 +121,7 @@
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
+      <!-- Average / Neutral reaction -->
       <LinearLayout
         android:id="@+id/btnAverage"
         android:layout_width="0dp"
@@ -128,6 +152,7 @@
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
+      <!-- Poor reaction -->
       <LinearLayout
         android:id="@+id/btnPoor"
         android:layout_width="0dp"
@@ -158,6 +183,7 @@
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
 
+      <!-- Angry reaction -->
       <LinearLayout
         android:id="@+id/btnAngry"
         android:layout_width="0dp"

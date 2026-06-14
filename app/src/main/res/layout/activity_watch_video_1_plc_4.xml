@@ -98,7 +98,7 @@
           android:adjustViewBounds="true"
           android:importantForAccessibility="no"
           android:scaleType="centerCrop"
-          app:shapeAppearance="@style/CircularImageView"
+          app:shapeAppearance="@style/circular_image_view"
           tools:src="@drawable/ic_person_avatar" />
 
         <LinearLayout

@@ -198,7 +198,7 @@
       android:scaleType="centerInside"
       android:src="@drawable/ic_shield_lock_fill"
       android:tint="@color/color_surface"
-      app:shapeAppearance="@style/CircularImageView"
+      app:shapeAppearance="@style/circular_image_view"
       tools:ignore="UseAppTint" />
 
     <LinearLayout

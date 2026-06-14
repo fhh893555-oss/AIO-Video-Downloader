@@ -96,7 +96,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_bad_shield_badge"
                 android:tint="@color/style_color_error"
-                app:shapeAppearance="@style/CircularImageView"
+                app:shapeAppearance="@style/circular_image_view"
                 tools:ignore="UseAppTint,ImageContrastCheck" />
 
             <LinearLayout

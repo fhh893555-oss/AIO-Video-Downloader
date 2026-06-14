@@ -1,8 +1,6 @@
 package userInterface.userFeedback;
 
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
@@ -15,16 +13,12 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.nextgen.R;
 import com.nextgen.databinding.ActivityFeedback0Binding;
 
@@ -87,26 +81,9 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		if (fileName != null && fileName.length() > 0) {
 			Glide.with(this)
 				.asBitmap()
+				.centerCrop()
 				.load(documentFile.getUri())
-				.into(new CustomTarget<Bitmap>() {
-					private final ShapeableImageView attachmentPreview =
-						binding.userMessage.ivAttachmentPreview;
-					
-					@Override
-					public void onResourceReady(@NonNull Bitmap bitmap,
-					                            Transition<? super Bitmap> transition) {
-						Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-						attachmentPreview.setBackground(drawable);
-					}
-					
-					@Override
-					public void onLoadCleared(@Nullable Drawable placeholder) {
-						Drawable defaultPreviewBG = ContextCompat
-							.getDrawable(getApplicationContext(),
-								R.drawable.ic_rd_primary_light_color);
-						attachmentPreview.setBackground(defaultPreviewBG);
-					}
-				});
+				.into(binding.userMessage.ivAttachmentPreview);
 			
 			binding.actionButtons.btnClearAttachment.setVisibility(View.VISIBLE);
 			binding.userMessage.tvAddImage.setVisibility(View.INVISIBLE);
@@ -129,7 +106,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	private void clearAttachmentPreview() {
 		Drawable defaultPreviewBG = ContextCompat
 			.getDrawable(this, R.drawable.ic_rd_primary_light_color);
-		binding.userMessage.ivAttachmentPreview.setBackground(defaultPreviewBG);
+		binding.userMessage.ivAttachmentPreview.setImageDrawable(defaultPreviewBG);
 		
 		binding.userMessage.tvAddImage.setVisibility(View.VISIBLE);
 		binding.actionButtons.btnClearAttachment.setVisibility(View.GONE);

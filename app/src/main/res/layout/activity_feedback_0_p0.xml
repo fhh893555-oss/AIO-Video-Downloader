@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for the top app bar / action bar on the feedback screen.
+  ~ This component provides a back button for navigation and a title
+  ~ indicating the current screen ("Send Feedback").
+  ~
+  ~ The layout includes:
+  ~   - Back button (arrow icon) with touch feedback background
+  ~   - Screen title text (bold, single line, ellipsized if needed)
+  -->
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
@@ -9,8 +20,10 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:ignore="UselessParent">
 
+    <!-- Back navigation button -->
     <ImageView
       android:id="@+id/btnBack"
       android:layout_width="50dp"
@@ -24,6 +37,7 @@
       android:tint="@color/style_color_text_primary"
       tools:ignore="UseAppTint" />
 
+    <!-- Screen title -->
     <com.google.android.material.textview.MaterialTextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
