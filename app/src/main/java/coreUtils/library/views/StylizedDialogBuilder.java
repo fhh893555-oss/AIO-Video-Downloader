@@ -11,11 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -23,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.nextgen.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,8 +65,7 @@ public final class StylizedDialogBuilder {
 			btnClose.setOnClickListener(v -> close());
 		}
 		
-		setPositiveButtonIcons(null, null);
-		enableSlideUpAnimation();
+		setPositiveButtonIcon(null);
 		setCancelable(true);
 	}
 	
@@ -161,8 +158,8 @@ public final class StylizedDialogBuilder {
 	@NonNull
 	public StylizedDialogBuilder setPositiveButtonText(@NonNull String text) {
 		if (dialogRootView != null) {
-			TextView tvRightBtn = dialogRootView.findViewById(R.id.tvDialogRightBtn);
-			if (tvRightBtn != null) tvRightBtn.setText(text);
+			MaterialButton btnRight = dialogRootView.findViewById(R.id.btnDialogRight);
+			if (btnRight != null) btnRight.setText(text);
 		}
 		return this;
 	}
@@ -177,75 +174,23 @@ public final class StylizedDialogBuilder {
 	}
 	
 	@NonNull
-	public StylizedDialogBuilder setPositiveButtonIcons(@Nullable Drawable leftDrawable,
-	                                                    @Nullable Drawable rightDrawable) {
+	public StylizedDialogBuilder setPositiveButtonIcon(@Nullable Drawable iconDrawable) {
 		if (dialogRootView != null) {
-			TextView tvRightBtn = dialogRootView.findViewById(R.id.tvDialogRightBtn);
-			if (tvRightBtn != null) {
-				tvRightBtn.setCompoundDrawablesWithIntrinsicBounds(
-					leftDrawable, null, rightDrawable, null);
+			MaterialButton btnRight = dialogRootView.findViewById(R.id.btnDialogRight);
+			if (btnRight != null) {
+				btnRight.setIcon(iconDrawable);
 			}
 		}
 		return this;
 	}
-	
+
 	@NonNull
-	public StylizedDialogBuilder setPositiveButtonIcons(@DrawableRes int leftResId,
-	                                                    @DrawableRes int rightResId) {
+	public StylizedDialogBuilder setPositiveButtonIcon(@DrawableRes int iconResId) {
 		BaseActivity<?> activity = weakActivityRef.get();
 		if (activity != null) {
-			Drawable leftDrawable = leftResId != 0
-				? ContextCompat.getDrawable(activity, leftResId) : null;
-			Drawable rightDrawable = rightResId != 0
-				? ContextCompat.getDrawable(activity, rightResId) : null;
-			
-			return setPositiveButtonIcons(leftDrawable, rightDrawable);
-		}
-		return this;
-	}
-	
-	@NonNull
-	public StylizedDialogBuilder setDialogImage(@DrawableRes int resId,
-	                                            @DimenRes int imageWidthRes) {
-		if (dialogRootView != null) {
-			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
-			if (imgDialog != null) {
-				imgDialog.setImageResource(resId);
-				imgDialog.setVisibility(View.VISIBLE);
-				
-				BaseActivity<?> activity = weakActivityRef.get();
-				if (activity != null) {
-					int width = activity.getResources().getDimensionPixelSize(imageWidthRes);
-					ViewGroup.LayoutParams params = imgDialog.getLayoutParams();
-					params.width = width;
-					imgDialog.setLayoutParams(params);
-				}
-			}
-		}
-		return this;
-	}
-	
-	@NonNull
-	public StylizedDialogBuilder setDialogImage(@Nullable Drawable drawable,
-	                                            @DimenRes int imageWidthRes) {
-		if (dialogRootView != null) {
-			ImageView imgDialog = dialogRootView.findViewById(R.id.imgDialog);
-			if (imgDialog != null) {
-				if (drawable != null) {
-					imgDialog.setImageDrawable(drawable);
-					imgDialog.setVisibility(View.VISIBLE);
-					
-					BaseActivity<?> activity = weakActivityRef.get();
-					if (activity != null) {
-						int width = activity.getResources().getDimensionPixelSize(imageWidthRes);
-						ViewGroup.LayoutParams params = imgDialog.getLayoutParams();
-						params.width = width;
-						imgDialog.setLayoutParams(params);
-					}
-				} else {
-					imgDialog.setVisibility(View.GONE);
-				}
-			}
+			Drawable iconDrawable = (iconResId != 0)
+				? ContextCompat.getDrawable(activity, iconResId) : null;
+			return setPositiveButtonIcon(iconDrawable);
 		}
 		return this;
 	}
@@ -277,7 +222,87 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-	
+
+	@NonNull
+	public StylizedDialogBuilder setNegativeButtonText(@NonNull String text) {
+		if (dialogRootView != null) {
+			MaterialButton btnLeft = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnLeft != null) btnLeft.setText(text);
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setNegativeButtonText(@StringRes int resId) {
+		BaseActivity<?> activity = weakActivityRef.get();
+		if (activity != null) {
+			return setNegativeButtonText(activity.getString(resId));
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setNegativeButtonIcon(@Nullable Drawable iconDrawable) {
+		if (dialogRootView != null) {
+			MaterialButton btnLeft = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnLeft != null) {
+				btnLeft.setIcon(iconDrawable);
+			}
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setNegativeButtonIcon(@DrawableRes int iconResId) {
+		BaseActivity<?> activity = weakActivityRef.get();
+		if (activity != null) {
+			Drawable iconDrawable = iconResId != 0
+				? ContextCompat.getDrawable(activity, iconResId) : null;
+			return setNegativeButtonIcon(iconDrawable);
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setOnNegativeClickListener(
+			@NonNull View.OnClickListener listener,
+			boolean shouldCloseAfterExecution) {
+		if (dialogRootView != null) {
+			View btnContainer = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnContainer != null) {
+				btnContainer.setOnClickListener(v -> {
+					listener.onClick(v);
+					if (shouldCloseAfterExecution) {
+						close();
+					}
+				});
+			}
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setCloseOnNegativeButtonClick() {
+		if (dialogRootView != null) {
+			View btnContainer = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnContainer != null) {
+				btnContainer.setOnClickListener(v -> close());
+			}
+		}
+		return this;
+	}
+
+	@NonNull
+	public StylizedDialogBuilder setNegativeButtonVisible(boolean visible) {
+		if (dialogRootView != null) {
+			View btnLeft = dialogRootView.findViewById(R.id.btnDialogLeft);
+			if (btnLeft != null) {
+				btnLeft.setVisibility(visible ? View.VISIBLE : View.GONE);
+			}
+		}
+		return this;
+	}
+
 	@NonNull
 	public StylizedDialogBuilder setCloseButtonVisible(boolean visible) {
 		if (dialogRootView != null) {

@@ -76,39 +76,13 @@
       android:layout_marginLeft="7dp"
       android:layout_marginRight="7dp"
       android:layout_marginBottom="5dp"
-      android:orientation="horizontal">
-
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDialogLeft"
-        style="@style/Widget.Material3.Button.IconButton.Outlined"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_weight="0.45"
-        android:ellipsize="end"
-        android:fontFamily="@font/font_family_medium"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:text="@string/label_continue_anyway"
-        android:textColor="@color/style_color_button_outline"
-        android:textSize="@dimen/normal_text_size"
-        app:cornerRadius="5dp"
-        app:icon="@drawable/ic_keyboard_arrow_right"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconSize="24dp"
-        app:iconTint="@color/style_color_button_primary"
-        app:strokeColor="@color/style_color_button_outline"
-        app:strokeWidth="1dp"
-
-        tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck"
-        tools:visibility="gone" />
+      android:orientation="vertical">
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDialogRight"
         style="@style/Widget.Material3.Button.IconButton.Filled"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_weight=".55"
         android:ellipsize="end"
         android:fontFamily="@font/font_family_medium"
         android:maxLines="1"
@@ -117,13 +91,37 @@
         android:textSize="@dimen/normal_text_size"
         app:backgroundTint="@color/style_color_button_primary"
         app:cornerRadius="5dp"
-        app:icon="@drawable/ic_send_email"
+        app:icon="@drawable/ic_okay_check"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
         app:iconSize="24dp"
 
         tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck"
-        tools:text="@string/label_send_report" />
+        tools:text="@string/label_okay" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDialogLeft"
+        style="@style/Widget.Material3.Button.IconButton.Outlined"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/font_family_medium"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/style_color_button_outline"
+        android:textSize="@dimen/normal_text_size"
+        app:cornerRadius="5dp"
+        app:icon="@drawable/ic_close_cross"
+        app:iconGravity="textStart"
+        app:iconPadding="10dp"
+        app:iconSize="24dp"
+        app:iconTint="@color/style_color_button_primary"
+        app:strokeColor="@color/style_color_button_outline"
+        app:strokeWidth="1dp"
+        tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck"
+
+        tools:text="@string/label_cancel"
+        tools:visibility="visible" />
     </LinearLayout>
   </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

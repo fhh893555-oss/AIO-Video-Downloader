@@ -264,9 +264,8 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
         downloadDialog.enableFadeInAnimation();
         downloadDialog.setOnCloseClickListener(view -> stopDownloadingLatestApk());
         downloadDialog.setPositiveButtonText(R.string.label_cancel_installing);
-        downloadDialog.setPositiveButtonIcons(R.drawable.ic_cancel_circle, 0);
+        downloadDialog.setPositiveButtonIcon(R.drawable.ic_cancel_circle);
         downloadDialog.setOnPositiveClickListener(view -> stopDownloadingLatestApk(), true);
-        downloadDialog.setDialogImage(R.drawable.img_updater_act_dialog_top, R.dimen._350);
         downloadDialog.enableBackgroundBlur(60);
         return downloadDialog;
     }
