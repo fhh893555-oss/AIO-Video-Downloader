@@ -25,18 +25,19 @@
       android:orientation="horizontal"
       android:visibility="visible"
 
-      tools:visibility="gone">
+      tools:visibility="visible">
 
       <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/btnCloseDialog"
-        android:fontFamily="@font/font_family_bold"
-        android:gravity="center"
+        android:fontFamily="@font/font_family_medium"
+        android:gravity="center_vertical|center_horizontal"
         android:padding="10dp"
         android:textColor="@color/style_color_text_primary"
-        android:textSize="@dimen/title_text_size"
+        android:textSize="@dimen/sub_heading_text_size"
         tools:ignore="SpUsage,TextSizeCheck"
         tools:text="Dialog Title Goes Here" />
 
@@ -45,17 +46,19 @@
         android:layout_width="@dimen/_40"
         android:layout_height="@dimen/_40"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="right|top"
+        android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
         android:background="@drawable/bg_button_negative"
         android:clickable="true"
         android:importantForAccessibility="no"
-        android:padding="6dp"
+        android:padding="8dp"
         android:src="@drawable/ic_close_cross"
         android:tint="@color/style_color_button_primary"
 
         tools:ignore="ImageContrastCheck,TouchTargetSizeCheck,UseAppTint"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
     </RelativeLayout>
 
     <View
@@ -67,12 +70,11 @@
       android:id="@+id/mainContent"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
       android:layout_marginTop="10dp"
+      android:layout_marginRight="10dp"
       android:layout_marginBottom="6dp"
-      android:orientation="vertical"
-
-      tools:background="@color/style_color_background_secondary"
-      tools:layout_height="100dp" />
+      android:orientation="vertical" />
 
     <LinearLayout
       android:layout_width="match_parent"

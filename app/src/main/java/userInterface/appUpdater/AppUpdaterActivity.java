@@ -257,7 +257,10 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 		downloadDialog.setCustomContentView(R.layout.activity_updater_1_dialog_1);
 		downloadDialog.enableBackgroundBlur(60);
 		downloadDialog.enableFadeInAnimation();
-		downloadDialog.setDialogTitle(R.string.label_downloading_update);
+		downloadDialog.applyBottomPositioning();
+		downloadDialog.enableSlideUpAnimation();
+		
+		downloadDialog.setTitleVisible(false);
 		downloadDialog.setCancelable(false);
 		downloadDialog.setNegativeButtonVisible(false);
 		
