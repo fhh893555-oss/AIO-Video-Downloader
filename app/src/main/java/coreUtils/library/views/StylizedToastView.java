@@ -64,7 +64,7 @@ public class StylizedToastView extends Toast {
      * </ul>
      *
      * <p>The provided view is set as the toast's content view via
-     * {@link #setView(android.view.View)}.
+     * {@link #setView(View)}.
      *
      * @param context The context used to create the toast. Must not be null.
      * @param view    The custom layout view for this toast. Must not be null and
@@ -131,7 +131,7 @@ public class StylizedToastView extends Toast {
      *
      * @return This StylizedToastView instance for method chaining.
      * @see #setIcon(int)
-     * @see android.widget.ImageView#setVisibility(int)
+     * @see ImageView#setVisibility(int)
      */
     public StylizedToastView hideIcon() {
         if (imageView != null) {
@@ -142,18 +142,17 @@ public class StylizedToastView extends Toast {
 
     /**
      * Applies a tint color to the toast icon. This method sets both the
-     * {@link android.widget.ImageView#setImageTintList(android.content.res.ColorStateList)}
+     * {@link ImageView#setImageTintList(android.content.res.ColorStateList)}
      * and a color filter on the icon, ensuring the tint is applied consistently
      * across different Android versions.
      *
      * <p>If the internal ImageView reference is null, this method does nothing
      * and returns the current instance without making any changes.
      *
-     * @param color The ARGB color integer to tint the icon (e.g., from
-     *              {@link android.content.Context#getColor(int)}).
+     * @param color The ARGB color integer to tint the icon (e.g., from {@link Context#getColor(int)}).
      * @return This StylizedToastView instance for method chaining.
-     * @see android.widget.ImageView#setImageTintList(android.content.res.ColorStateList)
-     * @see android.widget.ImageView#setColorFilter(int, android.graphics.PorterDuff.Mode)
+     * @see ImageView#setImageTintList(android.content.res.ColorStateList)
+     * @see ImageView#setColorFilter(int, PorterDuff.Mode)
      */
     public StylizedToastView setIconTint(@ColorInt int color) {
         if (imageView != null) {
@@ -174,7 +173,7 @@ public class StylizedToastView extends Toast {
      * @param message The text to display in the toast. Can be a String,
      *                SpannableString, or any other CharSequence implementation.
      * @return This StylizedToastView instance for method chaining.
-     * @see android.widget.TextView#setText(CharSequence)
+     * @see TextView#setText(CharSequence)
      */
     public StylizedToastView setMessage(CharSequence message) {
         if (textView != null) {
@@ -191,7 +190,7 @@ public class StylizedToastView extends Toast {
      * <p>This method implements the TextView contract for setting text content.
      *
      * @param resId The resource ID of the string to display.
-     * @see android.widget.TextView#setText(int)
+     * @see TextView#setText(int)
      * @see #setMessage(CharSequence)
      */
     @Override
@@ -206,7 +205,7 @@ public class StylizedToastView extends Toast {
      * <p>This method implements the TextView contract for setting text content.
      *
      * @param charSequence The text to display in the toast.
-     * @see android.widget.TextView#setText(CharSequence)
+     * @see TextView#setText(CharSequence)
      * @see #setMessage(CharSequence)
      */
     @Override
@@ -223,10 +222,10 @@ public class StylizedToastView extends Toast {
      * been inflated yet), this method does nothing and returns the current
      * instance without making any changes.
      *
-     * @param color The ARGB color integer (e.g., from {@link android.content.Context#getColor(int)}
+     * @param color The ARGB color integer (e.g., from {@link Context#getColor(int)}
      *              or {@link android.graphics.Color#parseColor(String)}).
      * @return This StylizedToastView instance for method chaining.
-     * @see android.widget.TextView#setTextColor(int)
+     * @see TextView#setTextColor(int)
      */
     public StylizedToastView setTextColor(@ColorInt int color) {
         if (textView != null) {
@@ -293,7 +292,7 @@ public class StylizedToastView extends Toast {
      * @param xOffset Horizontal offset in pixels from the gravity anchor.
      * @param yOffset Vertical offset in pixels from the gravity anchor.
      * @return This StylizedToastView instance for method chaining.
-     * @see android.widget.Toast#setGravity(int, int, int)
+     * @see Toast#setGravity(int, int, int)
      */
     public StylizedToastView setToastGravity(int gravity,
                                              int xOffset, int yOffset) {
@@ -308,7 +307,7 @@ public class StylizedToastView extends Toast {
      * @param duration The duration to show the toast. Can be {@link #LENGTH_SHORT}
      *                 or {@link #LENGTH_LONG}, or a custom millisecond value.
      * @return This StylizedToastView instance for method chaining.
-     * @see android.widget.Toast#setDuration(int)
+     * @see Toast#setDuration(int)
      */
     public StylizedToastView setToastDuration(int duration) {
         setDuration(duration);
