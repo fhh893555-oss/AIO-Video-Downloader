@@ -35,12 +35,12 @@
   <color name="gradient_end">#FF8A34</color>
 
   <style name="style.application" parent="Theme.Material3.DayNight.NoActionBar">
-    <item name="android:statusBarColor">@color/color_surface</item>
-    <item name="android:navigationBarColor">@color/color_surface</item>
-    <item name="android:windowLightStatusBar">true</item>
-    <item name="android:windowLightNavigationBar">true</item>
+    <item name="android:statusBarColor">@color/style_color_primary</item>
+    <item name="android:navigationBarColor">@color/style_color_primary</item>
+    <item name="android:windowLightStatusBar">false</item>
+    <item name="android:windowLightNavigationBar">false</item>
 
-    <item name="android:windowBackground">@color/color_surface</item>
+    <item name="android:windowBackground">@color/style_color_background</item>
     <item name="android:windowActivityTransitions">false</item>
     <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     <item name="android:windowTranslucentStatus">false</item>
@@ -48,10 +48,10 @@
     <item name="android:fitsSystemWindows">true</item>
     <item name="android:autofilledHighlight">@color/transparent</item>
 
-    <item name="colorPrimary">@color/color_primary</item>
-    <item name="colorPrimaryDark">@color/color_primary_variant</item>
-    <item name="colorError">@color/color_error</item>
-    <item name="colorAccent">@color/color_primary_variant</item>
+    <item name="colorPrimary">@color/style_color_primary</item>
+    <item name="colorPrimaryDark">@color/style_color_primary_variant</item>
+    <item name="colorError">@color/style_color_error</item>
+    <item name="colorAccent">@color/style_color_primary_variant</item>
 
     <item name="android:layoutDirection">ltr</item>
 
@@ -60,11 +60,11 @@
     <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
     <item name="android:scrollbarThumbHorizontal">@android:color/transparent</item>
 
-    <item name="android:textColorPrimary">@color/color_text_primary</item>
-    <item name="android:textColorSecondary">@color/color_text_secondary</item>
-    <item name="android:textColorHint">@color/color_secondary_variant</item>
-    <item name="android:textColor">@color/color_text_primary</item>
-    <item name="android:textColorLink">@color/color_secondary</item>
+    <item name="android:textColorPrimary">@color/style_color_text_primary</item>
+    <item name="android:textColorSecondary">@color/style_color_text_secondary</item>
+    <item name="android:textColorHint">@color/style_color_text_hint</item>
+    <item name="android:textColor">@color/style_color_text_primary</item>
+    <item name="android:textColorLink">@color/style_color_text_link</item>
 
     <item name="android:fontFamily">@font/style_app_fonts</item>
     <item name="android:textViewStyle">@style/style_padding_textview_style</item>
