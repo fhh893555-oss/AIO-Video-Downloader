@@ -104,13 +104,13 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 	 * @return {@code true} if server successfully accepted the feedback;
 	 * {@code false} otherwise (network error or server rejection)
 	 */
-	public boolean sendFeedbackToServer(String reaction, String subject,
+	public boolean sendFeedbackToServer(String reaction,
 	                                    String email, String message,
 	                                    @Nullable DocumentFile screenshot) {
 		InputStream inputStream = null;
 		try {
 			logger.debug("Sending feedback - reaction: " + reaction +
-				", subject: " + subject + ", email: " + email +
+				"," + "email: " + email +
 				", message length: " + message.length()
 			);
 			
@@ -122,7 +122,6 @@ public final class FeedbackPocketbase extends PocketBaseClient {
 				.Builder().setType(MultipartBody.FORM);
 			
 			multipartBuilder.addFormDataPart(FIELD_REACTION, reaction);
-			multipartBuilder.addFormDataPart(FIELD_SUBJECT, subject);
 			multipartBuilder.addFormDataPart(FIELD_MESSAGE, message);
 			multipartBuilder.addFormDataPart(FIELD_EMAIL, email);
 			multipartBuilder.addFormDataPart(FIELD_DEVICE_ID, deviceId);

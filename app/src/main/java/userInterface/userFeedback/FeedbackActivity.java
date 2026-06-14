@@ -1,7 +1,9 @@
 package userInterface.userFeedback;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -13,10 +15,16 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.nextgen.R;
 import com.nextgen.databinding.ActivityFeedback0Binding;
 
@@ -24,12 +32,8 @@ import java.util.Objects;
 
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
-import coreUtils.library.storage.FileStorageUtility;
-import coreUtils.library.strings.ClipboardHelper;
 import coreUtils.library.strings.StringHelper;
 import coreUtils.library.views.StylizedToastView;
-import coreUtils.library.views.TextViewsUtils;
-import coreUtils.library.views.listeners.EditTextListener;
 
 public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	
@@ -51,9 +55,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	protected void onLoadedLayout() {
 		initViewModel();
 		initImagePicker();
-		applyGradientToTitle();
 		setupButtonClicks();
-		monitorFeedbackLength();
 		initViewModelObservers();
 		selectExcellentReactionByDefault();
 	}
@@ -68,7 +70,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	}
 	
 	private void initImagePicker() {
-		resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
+		clearAttachmentPreview();
 		imagePickerLauncher = registerForActivityResult(
 			new ActivityResultContracts.GetContent(),
 			this::validateAttachmentFile
@@ -83,12 +85,31 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		
 		String fileName = documentFile.getName();
 		if (fileName != null && fileName.length() > 0) {
-			resetUploadAttachmentContainer(View.VISIBLE, View.GONE);
+			Glide.with(this)
+				.asBitmap()
+				.load(documentFile.getUri())
+				.into(new CustomTarget<Bitmap>() {
+					private final ShapeableImageView attachmentPreview =
+						binding.userMessage.ivAttachmentPreview;
+					
+					@Override
+					public void onResourceReady(@NonNull Bitmap bitmap,
+					                            Transition<? super Bitmap> transition) {
+						Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+						attachmentPreview.setBackground(drawable);
+					}
+					
+					@Override
+					public void onLoadCleared(@Nullable Drawable placeholder) {
+						Drawable defaultPreviewBG = ContextCompat
+							.getDrawable(getApplicationContext(),
+								R.drawable.ic_rd_primary_light_color);
+						attachmentPreview.setBackground(defaultPreviewBG);
+					}
+				});
 			
-			binding.top3.txtFileAttch.setText(fileName);
-			String fileSize = FileStorageUtility.humanReadableSizeOf(documentFile.length());
-			CharSequence text = getText(R.string.label_file_size) + " " + fileSize;
-			binding.top3.txtFileSize.setText(text);
+			binding.actionButtons.btnClearAttachment.setVisibility(View.VISIBLE);
+			binding.userMessage.tvAddImage.setVisibility(View.INVISIBLE);
 		}
 	}
 	
@@ -99,30 +120,19 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 				getViewModel().setSelectedScreenshot(file);
 			} else {
 				vibrate(50);
-				StylizedToastView.showWarning(FeedbackActivity.this,
+				StylizedToastView.show(FeedbackActivity.this,
 					StringHelper.getText(R.string.hint_file_size_exceed_5mb));
 			}
 		}
 	}
 	
-	private void resetUploadAttachmentContainer(int attachmentVisibility,
-	                                            int uploadPicVisibility) {
-		binding.top3.contAttachmentSelected.setVisibility(attachmentVisibility);
-		binding.top3.contUploadPic.setVisibility(uploadPicVisibility);
-	}
-	
-	private void applyGradientToTitle() {
-		String fullText = binding.top1.tvFeedbackTitle.getText().toString();
-		int nextGenStart = fullText.indexOf("Feedback");
-		if (nextGenStart != -1) {
-			TextViewsUtils.applyGradientSpan(
-				binding.top1.tvFeedbackTitle,
-				getColor(R.color.color_secondary),
-				getColor(R.color.color_primary_variant),
-				nextGenStart,
-				nextGenStart + 8
-			);
-		}
+	private void clearAttachmentPreview() {
+		Drawable defaultPreviewBG = ContextCompat
+			.getDrawable(this, R.drawable.ic_rd_primary_light_color);
+		binding.userMessage.ivAttachmentPreview.setBackground(defaultPreviewBG);
+		
+		binding.userMessage.tvAddImage.setVisibility(View.VISIBLE);
+		binding.actionButtons.btnClearAttachment.setVisibility(View.GONE);
 	}
 	
 	private void setupButtonClicks() {
@@ -130,12 +140,11 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		setupReactionListeners();
 		setupUploadButton();
 		setupCancelUploadListener();
-		setupPasteButton();
 		setupFeedbackButton();
 	}
 	
 	private void setupBackButton() {
-		binding.btnBack.setOnClickListener(view -> {
+		binding.topBar.btnBack.setOnClickListener(view -> {
 			buttonVibrate();
 			finish();
 		});
@@ -148,22 +157,22 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		String poor = FeedbackReactions.Poor.name();
 		String angry = FeedbackReactions.Angry.name();
 		
-		ImageView imgHappy = binding.top2.imgHappy;
-		TextView txtHappy = binding.top2.txtHappy;
-		ImageView imgGood = binding.top2.imgGood;
-		TextView txtGood = binding.top2.txtGood;
-		ImageView imgAverage = binding.top2.imgAverage;
-		TextView txtAverage = binding.top2.txtAverage;
-		ImageView imgPoor = binding.top2.imgPoor;
-		TextView txtPoor = binding.top2.txtPoor;
-		ImageView imgAngry = binding.top2.imgAngry;
-		TextView txtAngry = binding.top2.txtAngry;
+		ImageView imgHappy = binding.reactions.imgHappy;
+		TextView txtHappy = binding.reactions.txtHappy;
+		ImageView imgGood = binding.reactions.imgGood;
+		TextView txtGood = binding.reactions.txtGood;
+		ImageView imgAverage = binding.reactions.imgAverage;
+		TextView txtAverage = binding.reactions.txtAverage;
+		ImageView imgPoor = binding.reactions.imgPoor;
+		TextView txtPoor = binding.reactions.txtPoor;
+		ImageView imgAngry = binding.reactions.imgAngry;
+		TextView txtAngry = binding.reactions.txtAngry;
 		
-		LinearLayout btnHappy = binding.top2.btnHappy;
-		LinearLayout btnGood = binding.top2.btnGood;
-		LinearLayout btnAverage = binding.top2.btnAverage;
-		LinearLayout btnPoor = binding.top2.btnPoor;
-		LinearLayout btnAngry = binding.top2.btnAngry;
+		LinearLayout btnHappy = binding.reactions.btnHappy;
+		LinearLayout btnGood = binding.reactions.btnGood;
+		LinearLayout btnAverage = binding.reactions.btnAverage;
+		LinearLayout btnPoor = binding.reactions.btnPoor;
+		LinearLayout btnAngry = binding.reactions.btnAngry;
 		
 		btnHappy.setOnClickListener(view -> applyReactionSelection(excellent, imgHappy, txtHappy));
 		btnGood.setOnClickListener(view -> applyReactionSelection(good, imgGood, txtGood));
@@ -173,48 +182,27 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	}
 	
 	private void setupUploadButton() {
-		binding.top3.btnUploadPic.setOnClickListener(view -> {
+		binding.userMessage.btnUploadPic.setOnClickListener(view -> {
 			buttonVibrate();
 			imagePickerLauncher.launch("image/*");
 		});
 	}
 	
 	private void setupCancelUploadListener() {
-		binding.top3.btnCancelUpload.setOnClickListener(view -> {
+		binding.actionButtons.btnClearAttachment.setOnClickListener(view -> {
 			getViewModel().setSelectedScreenshot(null);
-			resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
-		});
-	}
-	
-	private void setupPasteButton() {
-		binding.top3.btnPasteIcon.setOnClickListener(view -> {
-			buttonVibrate();
-			fillSubjectFromClipboard();
+			clearAttachmentPreview();
 		});
 	}
 	
 	private void setupFeedbackButton() {
-		binding.top3.btnSendFeedback.setOnClickListener(view -> {
+		binding.actionButtons.btnSendReport.setOnClickListener(view -> {
 			buttonVibrate();
 			validateAndSendFeedback();
 		});
 	}
 	
-	private void monitorFeedbackLength() {
-		binding.top3.editFeedback.addTextChangedListener(new EditTextListener() {
-			@Override public void afterTextChanged(Editable editable) {
-				int length = editable.length();
-				String countText = length + "/500";
-				TextView tvCharCount = binding.top3.tvCharCount;
-				tvCharCount.setText(countText);
-				if (length > 500) tvCharCount.setTextColor(getColor(R.color.color_error));
-				else tvCharCount.setTextColor(getColor(R.color.color_text_secondary));
-			}
-		});
-	}
-	
 	private void initViewModelObservers() {
-		handleFeedbackSubmission();
 		observeSubmissionResult();
 		observeSubmissionErrors();
 	}
@@ -222,7 +210,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	private void observeSubmissionErrors() {
 		getViewModel().getSubmissionError().observe(this, errorMessage -> {
 			if (errorMessage != null && !errorMessage.isEmpty()) {
-				StylizedToastView.showError(FeedbackActivity.this, errorMessage);
+				StylizedToastView.show(FeedbackActivity.this, errorMessage);
 				vibrate();
 			}
 		});
@@ -231,7 +219,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	private void observeSubmissionResult() {
 		getViewModel().getSubmissionSuccess().observe(this, isSuccess -> {
 			if (isSuccess != null && isSuccess) {
-				StylizedToastView.showSuccess(FeedbackActivity.this,
+				StylizedToastView.show(FeedbackActivity.this,
 					StringHelper.getText(R.string.hint_feedback_sent_thank_you));
 				resetFeedbackSubmission();
 				vibrate();
@@ -239,23 +227,10 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		});
 	}
 	
-	private void handleFeedbackSubmission() {
-		getViewModel().getIsSubmitting().observe(this, isSubmitting -> {
-			binding.top3.btnSendFeedback.setEnabled(!isSubmitting);
-			binding.top3.btnSendFeedback.setAlpha(isSubmitting ? 0.8f : 1.0f);
-			binding.top3.txtSendFeedback.setText(isSubmitting ?
-				R.string.hint_sending_feedback : R.string.btn_send_feedback);
-			binding.top3.txtSendFeedback.setTextColor(
-				isSubmitting ? getColor(R.color.color_primary) : getColor(R.color.color_surface)
-			);
-		});
-	}
-	
 	private void resetFeedbackSubmission() {
-		binding.top3.editSubject.setText("");
-		binding.top3.editEmail.setText("");
-		binding.top3.editFeedback.setText("");
-		resetUploadAttachmentContainer(View.GONE, View.VISIBLE);
+		binding.userMessage.editEmail.setText("");
+		binding.userMessage.editFeedback.setText("");
+		clearAttachmentPreview();
 		getViewModel().setSelectedScreenshot(null);
 	}
 	
@@ -267,23 +242,24 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		Typeface regular = ResourcesCompat.getFont(this, R.font.font_family_regular);
 		Typeface bold = ResourcesCompat.getFont(this, R.font.font_family_bold);
 		
-		binding.top2.imgHappy.setSelected(false);
-		binding.top2.imgGood.setSelected(false);
-		binding.top2.imgAverage.setSelected(false);
-		binding.top2.imgPoor.setSelected(false);
-		binding.top2.imgAngry.setSelected(false);
+		binding.reactions.imgHappy.setSelected(false);
+		binding.reactions.imgGood.setSelected(false);
+		binding.reactions.imgAverage.setSelected(false);
+		binding.reactions.imgPoor.setSelected(false);
+		binding.reactions.imgAngry.setSelected(false);
 		
-		binding.top2.txtHappy.setTypeface(regular);
-		binding.top2.txtGood.setTypeface(regular);
-		binding.top2.txtAverage.setTypeface(regular);
-		binding.top2.txtPoor.setTypeface(regular);
-		binding.top2.txtAngry.setTypeface(regular);
+		binding.reactions.txtHappy.setTypeface(regular);
+		binding.reactions.txtGood.setTypeface(regular);
+		binding.reactions.txtAverage.setTypeface(regular);
+		binding.reactions.txtPoor.setTypeface(regular);
+		binding.reactions.txtAngry.setTypeface(regular);
 		
-		binding.top2.txtHappy.setTextColor(getColor(R.color.color_text_secondary));
-		binding.top2.txtGood.setTextColor(getColor(R.color.color_text_secondary));
-		binding.top2.txtAverage.setTextColor(getColor(R.color.color_text_secondary));
-		binding.top2.txtPoor.setTextColor(getColor(R.color.color_text_secondary));
-		binding.top2.txtAngry.setTextColor(getColor(R.color.color_text_secondary));
+		int unselectedColor = getColor(R.color.style_color_text_secondary);
+		binding.reactions.txtHappy.setTextColor(unselectedColor);
+		binding.reactions.txtGood.setTextColor(unselectedColor);
+		binding.reactions.txtAverage.setTextColor(unselectedColor);
+		binding.reactions.txtPoor.setTextColor(unselectedColor);
+		binding.reactions.txtAngry.setTextColor(unselectedColor);
 		
 		selectedImage.setSelected(true);
 		selectedTextView.setTextColor(getColor(R.color.color_primary));
@@ -292,56 +268,40 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	
 	private void selectExcellentReactionByDefault() {
 		applyReactionSelection(FeedbackReactions.Excellent.name(),
-			binding.top2.imgHappy, binding.top2.txtHappy);
-	}
-	
-	private void fillSubjectFromClipboard() {
-		Context context = getBaseContext();
-		CharSequence text = ClipboardHelper.getTextFromClipboard(context);
-		if (text.length() > 0) {
-			binding.top3.editSubject.setText(text);
-		}
+			binding.reactions.imgHappy, binding.reactions.txtHappy);
 	}
 	
 	private void validateAndSendFeedback() {
-		String subject = getSubjectText().toString().trim();
-		String message = getFeedbackText().toString().trim();
 		String email = getEmailText().toString().trim();
-		
-		if (subject.isEmpty()) {
-			StylizedToastView.showWarning(this,
-				StringHelper.getText(R.string.hint_please_give_subject));
-			vibrate();
-			return;
-		}
+		String message = getFeedbackText().toString().trim();
 		
 		if (message.isEmpty()) {
-			StylizedToastView.showWarning(this,
-				StringHelper.getText(R.string.hint_please_describe_your_feedback));
+			String toastMessage =
+				StringHelper.getText(R.string.hint_please_describe_feedback);
+			StylizedToastView.show(this, toastMessage);
 			vibrate();
 			return;
 		}
 		
 		if (message.length() > 500) {
-			StylizedToastView.showWarning(this,
-				StringHelper.getText(R.string.hint_feedback_is_too_long));
+			String toastMessage =
+				StringHelper.getText(R.string.hint_feedback_is_too_long);
+			StylizedToastView.show(this, toastMessage);
 			vibrate();
 			return;
 		}
 		
-		getViewModel().sendFeedback(this, getViewModel().getSelectedReaction().getValue(),
-			subject, email, message, getViewModel().getSelectedScreenshot().getValue());
+		String reaction = getViewModel().getSelectedReaction().getValue();
+		DocumentFile attachment = getViewModel().getSelectedScreenshot().getValue();
+		getViewModel().sendFeedback(this, reaction, email, message, attachment);
 	}
 	
 	@NonNull private Editable getEmailText() {
-		return Objects.requireNonNull(binding.top3.editEmail.getText());
+		return Objects.requireNonNull(binding.userMessage.editEmail.getText());
 	}
 	
 	@NonNull private Editable getFeedbackText() {
-		return Objects.requireNonNull(binding.top3.editFeedback.getText());
+		return Objects.requireNonNull(binding.userMessage.editFeedback.getText());
 	}
 	
-	@NonNull private Editable getSubjectText() {
-		return Objects.requireNonNull(binding.top3.editSubject.getText());
-	}
 }

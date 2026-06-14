@@ -30,7 +30,7 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.languagePicker.LanguageActivity;
 import userInterface.mainScreen.MainActivity;
 import userInterface.termsConsPolicy.TermsPolicyActivity;
-
+import userInterface.userFeedback.FeedbackActivity;
 
 /**
  * The initial splash activity shown when the application is launched.
@@ -426,7 +426,8 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 
         if (isLocaleConfigured) nextActivityToOpen = MainActivity.class;
 
-        destinationIntent = new Intent(this, nextActivityToOpen);
+        destinationIntent = new Intent(this, FeedbackActivity.class);
+        //destinationIntent = new Intent(this, nextActivityToOpen);
         destinationIntent.getShortExtra(
                 TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
                 TermsPolicyActivity.LAUNCHED_FROM_OPENING_SCREEN);

@@ -185,7 +185,7 @@ public class FeedbackViewModel extends ViewModel {
 	 * @param screenshot     An optional image file attached to the feedback, or null
 	 */
 	public void sendFeedback(LifecycleOwner lifecycleOwner, String reaction,
-	                         String subject, String email, String message, DocumentFile screenshot) {
+	                         String email, String message, DocumentFile screenshot) {
 		if (isSubmitting.getValue() != null && isSubmitting.getValue()) return;
 		isSubmitting.setValue(true);
 		
@@ -199,7 +199,7 @@ public class FeedbackViewModel extends ViewModel {
 				server.setCustomOKHttpClient(HttpClientProvider.getOkHttpClient(5, 10));
 				
 				boolean isSuccessful = server.sendFeedbackToServer(
-					reaction, subject, email, message, screenshot);
+					reaction, email, message, screenshot);
 				
 				logger.debug("Feedback submit report received, result: " +
 					(isSuccessful ? "Successful" : "Failed"));

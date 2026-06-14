@@ -77,7 +77,7 @@
   <string name="hint_image_attached_successfully">Image attached successfully</string>
   <string name="hint_feedback_sent_thank_you">Feedback sent! Thank you.</string>
   <string name="hint_feedback_sent_failed">Failed sending feedback, try again later.</string>
-  <string name="hint_please_describe_your_feedback">Please describe your feedback</string>
+  <string name="hint_please_describe_feedback">Please describe your feedback</string>
   <string name="hint_feedback_is_too_long">Feedback is too long</string>
   <string name="label_sample_file_size">"File size: 2343 KB"</string>
   <string name="label_file_sample_name">Medical dr. narayan supriya report.pdf</string>
