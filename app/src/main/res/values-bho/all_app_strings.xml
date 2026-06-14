@@ -27,7 +27,7 @@
   <string name="label_unknown">अंजान</string>
   <string name="label_sharing_media_file">मीडिया फाइल साझा कइल जा रहल बा…</string>
 
-  <string name="title_feedback">प्रतिक्रिया</string>
+  <string name="label_send_feedback">प्रतिक्रिया</string>
   <string name="subtitle_feedback">Tube AIO के सुधारे में हमनी के मदद करीं 💙</string>
   <string name="label_experience">रउआ अनुभव कइसन रहल?</string>
   <string name="label_excellent">बहुत नीक</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">बेकार</string>
   <string name="label_amazing">गजब</string>
   <string name="label_subject">विषय</string>
-  <string name="hint_subject">संक्षेप में हमनी के बताईं कि ई काहें के बारे में बा</string>
+  <string name="hint_feedback_subject">संक्षेप में हमनी के बताईं कि ई काहें के बारे में बा</string>
   <string name="label_describe_feedback">अपन प्रतिक्रिया बताईं</string>
   <string name="hint_describe_feedback">हमनी के विस्तार से बताईं ताकि हमनी समझ सकीं अउर सुधार सकीं…</string>
   <string name="label_attach_screenshot">स्क्रीनशॉट जोड़ीं (वैकल्पिक)</string>
   <string name="label_upload_image">फोटो अपलोड करीं</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB तक</string>
   <string name="label_email">ईमेल (वैकल्पिक)</string>
-  <string name="hint_email">अपन ईमेल पता लिखीं</string>
+  <string name="hint_feedback_email">अपन ईमेल पता लिखीं</string>
   <string name="subtext_email">अगर जरूरत पड़ल त हमनी रउआ से संपर्क करब</string>
   <string name="btn_send_feedback">प्रतिक्रिया भेजीं</string>
   <string name="footer_feedback_safe">रउआ प्रतिक्रिया 100% सुरक्षित अउर गोपनीय बा</string>

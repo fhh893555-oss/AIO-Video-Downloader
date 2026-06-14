@@ -27,7 +27,7 @@
   <string name="label_unknown">बेरा कोनी</string>
   <string name="label_sharing_media_file">फाईल सांझी होण लागरही सै…</string>
 
-  <string name="title_feedback">सुजाव</string>
+  <string name="label_send_feedback">सुजाव</string>
   <string name="subtitle_feedback">Tube AIO नै सुधारण में म्हारी मदद करो 💙</string>
   <string name="label_experience">थारा अनुभव किसा रया?</string>
   <string name="label_excellent">घणा बढ़िया</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">बेकार</string>
   <string name="label_amazing">कती ज़हर</string>
   <string name="label_subject">विषय</string>
-  <string name="hint_subject">थौड़ा बोत बताओ ईसके बारे में</string>
+  <string name="hint_feedback_subject">थौड़ा बोत बताओ ईसके बारे में</string>
   <string name="label_describe_feedback">थारा सुजाव बताओ</string>
   <string name="hint_describe_feedback">खोल कै बताओ ताके हमनै बेरा लाग्गै अर हम सुधार सका…</string>
   <string name="label_attach_screenshot">फोटो भी लगा सको हो (मर्जी सै)</string>
   <string name="label_upload_image">फोटो चढ़ाओ</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB तांई</string>
   <string name="label_email">ईमेल (मर्जी सै)</string>
-  <string name="hint_email">थारा ईमेल पता लिखो</string>
+  <string name="hint_feedback_email">थारा ईमेल पता लिखो</string>
   <string name="subtext_email">जरुरत पड़ी तो हम थारे तै बात करांगे</string>
   <string name="btn_send_feedback">सुजाव भेज दो</string>
   <string name="footer_feedback_safe">थारा सुजाव कती सुरक्षित अर गुप्त सै</string>

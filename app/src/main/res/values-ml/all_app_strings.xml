@@ -27,7 +27,7 @@
   <string name="label_unknown">അജ്ഞാതം</string>
   <string name="label_sharing_media_file">മീഡിയ ഫയൽ പങ്കിടുന്നു…</string>
 
-  <string name="title_feedback">അഭിപ്രായം</string>
+  <string name="label_send_feedback">അഭിപ്രായം</string>
   <string name="subtitle_feedback">Tube AIO മെച്ചപ്പെടുത്താൻ ഞങ്ങളെ സഹായിക്കൂ 💙</string>
   <string name="label_experience">നിങ്ങളുടെ അനുഭവം എങ്ങനെയായിരുന്നു?</string>
   <string name="label_excellent">മികച്ചത്</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">മോശം</string>
   <string name="label_amazing">അത്ഭുതകരം</string>
   <string name="label_subject">വിഷയം</string>
-  <string name="hint_subject">ഇത് എന്തിനെക്കുറിച്ചാണെന്ന് ഞങ്ങളോട് ചുരുക്കത്തിൽ പറയുക</string>
+  <string name="hint_feedback_subject">ഇത് എന്തിനെക്കുറിച്ചാണെന്ന് ഞങ്ങളോട് ചുരുക്കത്തിൽ പറയുക</string>
   <string name="label_describe_feedback">നിങ്ങളുടെ അഭിപ്രായം വിവരിക്കുക</string>
   <string name="hint_describe_feedback">ഞങ്ങൾക്ക് മനസ്സിലാക്കാനും മെച്ചപ്പെടുത്താനും വിശദമായി പറയുക…</string>
   <string name="label_attach_screenshot">സ്ക്രീൻഷോട്ട് അറ്റാച്ച് ചെയ്യുക (ഓപ്ഷണൽ)</string>
   <string name="label_upload_image">ചിത്രം അപ്‌ലോഡ് ചെയ്യുക</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB വരെ</string>
   <string name="label_email">ഇമെയിൽ (ഓപ്ഷണൽ)</string>
-  <string name="hint_email">നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകുക</string>
+  <string name="hint_feedback_email">നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകുക</string>
   <string name="subtext_email">ആവശ്യമെങ്കിൽ ഞങ്ങൾ നിങ്ങളെ ബന്ധപ്പെടും</string>
   <string name="btn_send_feedback">അഭിപ്രായം അയക്കുക</string>
   <string name="footer_feedback_safe">നിങ്ങളുടെ അഭിപ്രായം 100% സുരക്ഷിതവും രഹസ്യവുമാണ്</string>

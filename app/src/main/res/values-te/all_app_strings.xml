@@ -27,7 +27,7 @@
   <string name="label_unknown">తెలియదు</string>
   <string name="label_sharing_media_file">మీడియా ఫైల్‌ను షేర్ చేస్తోంది…</string>
 
-  <string name="title_feedback">అభిప్రాయం</string>
+  <string name="label_send_feedback">అభిప్రాయం</string>
   <string name="subtitle_feedback">Tube AIOని మెరుగుపరచడంలో మాకు సహాయపడండి 💙</string>
   <string name="label_experience">మీ అనుభవం ఎలా ఉంది?</string>
   <string name="label_excellent">చాలా బాగుంది</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">బాగా లేదు</string>
   <string name="label_amazing">అద్భుతం</string>
   <string name="label_subject">విషయం</string>
-  <string name="hint_subject">ఇది దేనికి సంబంధించినదో మాకు క్లుప్తంగా చెప్పండి</string>
+  <string name="hint_feedback_subject">ఇది దేనికి సంబంధించినదో మాకు క్లుప్తంగా చెప్పండి</string>
   <string name="label_describe_feedback">మీ అభిప్రాయాన్ని వివరించండి</string>
   <string name="hint_describe_feedback">మేము అర్థం చేసుకుని మెరుగుపరచడానికి మాకు వివరంగా చెప్పండి…</string>
   <string name="label_attach_screenshot">స్క్రీన్‌షాట్ జత చేయండి (ఐచ్ఛికం)</string>
   <string name="label_upload_image">చిత్రాన్ని అప్‌లోడ్ చేయండి</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB వరకు</string>
   <string name="label_email">ఇమెయిల్ (ఐచ్ఛికం)</string>
-  <string name="hint_email">మీ ఇమెయిల్ చిరునామాను నమోదు చేయండి</string>
+  <string name="hint_feedback_email">మీ ఇమెయిల్ చిరునామాను నమోదు చేయండి</string>
   <string name="subtext_email">అవసరమైతే మేము మిమ్మల్ని సంప్రదిస్తాము</string>
   <string name="btn_send_feedback">అభిప్రాయాన్ని పంపండి</string>
   <string name="footer_feedback_safe">మీ అభిప్రాయం 100% సురక్షితం మరియు గోప్యంగా ఉంటుంది</string>

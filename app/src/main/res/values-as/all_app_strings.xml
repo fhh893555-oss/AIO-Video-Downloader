@@ -27,7 +27,7 @@
   <string name="label_unknown">অজ্ঞাত</string>
   <string name="label_sharing_media_file">মিডিয়া ফাইল শ্বেয়াৰ কৰা হৈছে…</string>
 
-  <string name="title_feedback">মতামত</string>
+  <string name="label_send_feedback">মতামত</string>
   <string name="subtitle_feedback">আমাৰ Tube AIO উন্নত কৰাত সহায় কৰক 💙</string>
   <string name="label_experience">আপোনাৰ অভিজ্ঞতা কেনেকুৱা আছিল?</string>
   <string name="label_excellent">উৎকৃষ্ট</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">বেয়া</string>
   <string name="label_amazing">আশ্চৰ্যকৰ</string>
   <string name="label_subject">বিষয়</string>
-  <string name="hint_subject">এইটো কিহৰ বিষয়ে আমাক চমুকৈ কওক</string>
+  <string name="hint_feedback_subject">এইটো কিহৰ বিষয়ে আমাক চমুকৈ কওক</string>
   <string name="label_describe_feedback">আপোনাৰ মতামত বৰ্ণনা কৰক</string>
   <string name="hint_describe_feedback">আমাক বুজিবলৈ আৰু উন্নত কৰাত সহায় কৰিবলৈ বিতংভাবে কওক…</string>
   <string name="label_attach_screenshot">স্ক্ৰীণশ্বট সংলগ্ন কৰক (ঐচ্ছিক)</string>
   <string name="label_upload_image">ছবি আপলোড কৰক</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB লৈকে</string>
   <string name="label_email">ইমেইল (ঐচ্ছিক)</string>
-  <string name="hint_email">আপোনাৰ ইমেইল ঠিকনা লিখক</string>
+  <string name="hint_feedback_email">আপোনাৰ ইমেইল ঠিকনা লিখক</string>
   <string name="subtext_email">প্ৰয়োজন হ’লে আমি আপোনাৰ সৈতে যোগাযোগ কৰিম</string>
   <string name="btn_send_feedback">মতামত পঠিয়াওক</string>
   <string name="footer_feedback_safe">আপোনাৰ মতামত ১০০% সুৰক্ষিত আৰু গোপনীয়</string>

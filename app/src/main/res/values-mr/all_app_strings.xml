@@ -27,7 +27,7 @@
   <string name="label_unknown">अज्ञात</string>
   <string name="label_sharing_media_file">मीडिया फाइल सामायिक करत आहे…</string>
 
-  <string name="title_feedback">अभिप्राय</string>
+  <string name="label_send_feedback">अभिप्राय</string>
   <string name="subtitle_feedback">आम्हाला Tube AIO सुधारण्यात मदत करा 💙</string>
   <string name="label_experience">तुमचा अनुभव कसा होता?</string>
   <string name="label_excellent">उत्कृष्ट</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">वाईट</string>
   <string name="label_amazing">अद्भूत</string>
   <string name="label_subject">विषय</string>
-  <string name="hint_subject">हे कशाबद्दल आहे ते आम्हाला थोडक्यात सांगा</string>
+  <string name="hint_feedback_subject">हे कशाबद्दल आहे ते आम्हाला थोडक्यात सांगा</string>
   <string name="label_describe_feedback">तुमचा अभिप्राय सांगा</string>
   <string name="hint_describe_feedback">आम्हाला समजण्यासाठी आणि सुधारण्यासाठी सविस्तर सांगा…</string>
   <string name="label_attach_screenshot">स्क्रीनशॉट जोडा (पर्यायी)</string>
   <string name="label_upload_image">चित्र अपलोड करा</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB पर्यंत</string>
   <string name="label_email">ईमेल (पर्यायी)</string>
-  <string name="hint_email">तुमचा ईमेल पत्ता प्रविष्ट करा</string>
+  <string name="hint_feedback_email">तुमचा ईमेल पत्ता प्रविष्ट करा</string>
   <string name="subtext_email">गरज भासल्यास आम्ही तुमच्याशी संपर्क साधू</string>
   <string name="btn_send_feedback">अभिप्राय पाठवा</string>
   <string name="footer_feedback_safe">तुमचा अभिप्राय 100% सुरक्षित आणि गोपनीय आहे</string>

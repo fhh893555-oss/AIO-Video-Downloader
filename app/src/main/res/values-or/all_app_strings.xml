@@ -27,7 +27,7 @@
   <string name="label_unknown">ଅଜ୍ଞାତ</string>
   <string name="label_sharing_media_file">ମିଡିଆ ଫାଇଲ୍ ସେୟାର୍ ହେଉଛି…</string>
 
-  <string name="title_feedback">ମତାମତ</string>
+  <string name="label_send_feedback">ମତାମତ</string>
   <string name="subtitle_feedback">Tube AIO କୁ ଉନ୍ନତ କରିବାରେ ଆମକୁ ସାହାଯ୍ୟ କରନ୍ତୁ 💙</string>
   <string name="label_experience">ଆପଣଙ୍କର ଅଭିଜ୍ଞତା କିପରି ଥିଲା?</string>
   <string name="label_excellent">ଉତ୍କୃଷ୍ଟ</string>
@@ -36,14 +36,14 @@
   <string name="label_poor">ଖରାପ</string>
   <string name="label_amazing">ଆଶ୍ଚର୍ଯ୍ୟଜନକ</string>
   <string name="label_subject">ବିଷୟ</string>
-  <string name="hint_subject">ଏହା କ’ଣ ବିଷୟରେ ଆମକୁ ସଂକ୍ଷେପରେ କୁହନ୍ତୁ</string>
+  <string name="hint_feedback_subject">ଏହା କ’ଣ ବିଷୟରେ ଆମକୁ ସଂକ୍ଷେପରେ କୁହନ୍ତୁ</string>
   <string name="label_describe_feedback">ଆପଣଙ୍କର ମତାମତ ବର୍ଣ୍ଣନା କରନ୍ତୁ</string>
   <string name="hint_describe_feedback">ଆମକୁ ବୁଝିବା ଏବଂ ଉନ୍ନତ କରିବାରେ ସାହାଯ୍ୟ କରିବାକୁ ବିସ୍ତୃତ ଭାବରେ କୁହନ୍ତୁ…</string>
   <string name="label_attach_screenshot">ସ୍କ୍ରିନସଟ୍ ସଂଲଗ୍ନ କରନ୍ତୁ (ବିକଳ୍ପ)</string>
   <string name="label_upload_image">ଛବି ଅପଲୋଡ୍ କରନ୍ତୁ</string>
   <string name="label_upload_image_hint">PNG, JPG 5MB ପର୍ଯ୍ୟନ୍ତ</string>
   <string name="label_email">ଇମେଲ୍ (ବିକଳ୍ପ)</string>
-  <string name="hint_email">ଆପଣଙ୍କର ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ</string>
+  <string name="hint_feedback_email">ଆପଣଙ୍କର ଇମେଲ୍ ଠିକଣା ପ୍ରବେଶ କରନ୍ତୁ</string>
   <string name="subtext_email">ଯଦି ଆବଶ୍ୟକ ହୁଏ ଆମେ ଆପଣଙ୍କ ସହିତ ଯୋଗାଯୋଗ କରିବୁ</string>
   <string name="btn_send_feedback">ମତାମତ ପଠାନ୍ତୁ</string>
   <string name="footer_feedback_safe">ଆପଣଙ୍କର ମତାମତ 100% ସୁରକ୍ଷିତ ଏବଂ ଗୋପନୀୟ ଅଟେ</string>

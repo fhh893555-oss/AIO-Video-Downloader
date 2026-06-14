@@ -51,7 +51,7 @@
   <string name="label_unknown">Unknown</string>
   <string name="label_sharing_media_file">Sharing media file…</string>
 
-  <string name="title_feedback">Send Feedback</string>
+  <string name="label_send_feedback">Send Feedback</string>
   <string name="subtitle_feedback">Help us improve Tube AIO 💙</string>
   <string name="label_experience">How was your experience?</string>
   <string name="label_excellent">Excellent</string>
@@ -60,14 +60,14 @@
   <string name="label_poor">Poor</string>
   <string name="label_amazing">Amazing</string>
   <string name="label_subject">Subject</string>
-  <string name="hint_subject">Briefly tell us what this is about</string>
+  <string name="hint_feedback_subject">Briefly tell us what this is about</string>
   <string name="label_describe_feedback">Describe your feedback</string>
   <string name="hint_describe_feedback">Tell us in detail so we can understand and improve…</string>
   <string name="label_attach_screenshot">Attach screenshot (optional)</string>
   <string name="label_upload_image">Upload Image</string>
   <string name="label_upload_image_hint">PNG, JPG up to 5MB</string>
   <string name="label_email">Email (optional)</string>
-  <string name="hint_email">Enter your email address</string>
+  <string name="hint_feedback_email">Enter your email address</string>
   <string name="subtext_email">We will contact you if needed</string>
   <string name="btn_send_feedback">Send Feedback</string>
   <string name="footer_feedback_safe">Your feedback is 100% safe and confidential</string>
@@ -229,4 +229,7 @@
   <string name="label_download_update">Download The Update</string>
   <string name="label_remind_me_later">Remind Me Later</string>
   <string name="label_visit_official_site">Visit Official Site</string>
+  <string name="hint_attach_screenshot">Attach a screenshot to help us understand the issue better.</string>
+  <string name="label_add_image">Add Image</string>
+  <string name="btn_clear_attachment">Clear Attachment</string>
 </resources>
