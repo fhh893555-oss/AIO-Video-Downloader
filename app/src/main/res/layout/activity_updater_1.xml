@@ -24,7 +24,7 @@
 
                 <include
                     android:id="@+id/updateDetails"
-                    layout="@layout/activity_updater_0_p0"
+                    layout="@layout/activity_updater_1_p0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -32,7 +32,7 @@
 
         <include
             android:id="@+id/actionButtons"
-            layout="@layout/activity_updater_0_p1"
+            layout="@layout/activity_updater_1_p1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

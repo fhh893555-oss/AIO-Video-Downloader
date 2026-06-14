@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.nextgen.R;
-import com.nextgen.databinding.ActivityUpdater0Binding;
-import com.nextgen.databinding.ActivityUpdater0P0Binding;
+import com.nextgen.databinding.ActivityUpdater1Binding;
+import com.nextgen.databinding.ActivityUpdater1P0Binding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +41,7 @@ import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
 import userInterface.appUpdater.AppUpdaterViewModel.DownloadStatus;
 import userInterface.mainScreen.MainActivity;
 
-public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
+public class AppUpdaterActivity extends BaseActivity<ActivityUpdater1Binding> {
 	
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	public static final String KEY_INTENT_RECEIVED_KEY = "KEY_INTENT_RECEIVED_KEY";
@@ -54,7 +54,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 	private double smoothedSpeed = 0;
 	private boolean isDownloadActive = false;
 	
-	private TextView tvPercentage, tvProgressSize, tvSpeedValue;
+	private TextView tvPercentage, tvSpeedValue;
 	private TextView tvTimeValue, tvTotalSize;
 	private ProgressBar pbDownload;
 	
@@ -64,8 +64,8 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 	}
 	
 	@Override
-	protected ActivityUpdater0Binding inflateBinding(LayoutInflater inflater) {
-		return ActivityUpdater0Binding.inflate(inflater);
+	protected ActivityUpdater1Binding inflateBinding(LayoutInflater inflater) {
+		return ActivityUpdater1Binding.inflate(inflater);
 	}
 	
 	@Override
@@ -146,7 +146,6 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 		
 		View contentView = downloadDialog.getCustomContentView();
 		tvPercentage = contentView.findViewById(R.id.tvPercentage);
-		tvProgressSize = contentView.findViewById(R.id.tvProgressSize);
 		tvSpeedValue = contentView.findViewById(R.id.tvSpeedValue);
 		tvTimeValue = contentView.findViewById(R.id.tvTimeValue);
 		tvTotalSize = contentView.findViewById(R.id.tvTotalSize);
@@ -170,9 +169,6 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 		
 		if (percentage > 0) tvTotalSize.setText(totalInFormat);
 		else tvTotalSize.setText("--");
-		
-		tvProgressSize.setText(MessageFormat.format("{0} / {1}",
-			downloadedInFormat, totalInFormat));
 		
 		if (lastProgressTime > 0 && currentTime > lastProgressTime) {
 			long timeDelta = currentTime - lastProgressTime;
@@ -236,11 +232,10 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 			tvPercentage = null;
 			pbDownload = null;
 			tvTotalSize = null;
-			tvProgressSize = null;
 			tvSpeedValue = null;
 			tvTimeValue = null;
 			
-			ActivityUpdater0P0Binding updateDetails = binding.updateDetails;
+			ActivityUpdater1P0Binding updateDetails = binding.updateDetails;
 			updateDetails.tvDownloadError.setText(R.string.label_download_has_failed);
 			updateDetails.tvDownloadErrorDetailed.setText(R.string.desc_download_has_failed_reason);
 			updateDetails.containerDownloadError.setVisibility(View.VISIBLE);
@@ -250,7 +245,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 	}
 	
 	private void dismissDownloadError() {
-		ActivityUpdater0P0Binding updateDetails = binding.updateDetails;
+		ActivityUpdater1P0Binding updateDetails = binding.updateDetails;
 		updateDetails.tvDownloadError.setText(R.string.label__);
 		updateDetails.tvDownloadErrorDetailed.setText(R.string.label__);
 		updateDetails.containerDownloadError.setVisibility(View.GONE);
@@ -259,7 +254,7 @@ public class AppUpdaterActivity extends BaseActivity<ActivityUpdater0Binding> {
 	@NonNull
 	private StylizedDialogBuilder getStylizedDialogBuilder() {
 		StylizedDialogBuilder downloadDialog = new StylizedDialogBuilder(this);
-		downloadDialog.setCustomContentView(R.layout.activity_updater_0_dialog_1);
+		downloadDialog.setCustomContentView(R.layout.activity_updater_1_dialog_1);
 		downloadDialog.enableBackgroundBlur(60);
 		downloadDialog.enableFadeInAnimation();
 		downloadDialog.setDialogTitle(R.string.label_downloading_update);

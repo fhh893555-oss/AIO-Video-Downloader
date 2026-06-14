@@ -64,21 +64,6 @@
       app:trackThickness="8dp"
       tools:progress="10" />
 
-    <com.google.android.material.textview.MaterialTextView
-      android:id="@+id/tvProgressSize"
-      android:layout_width="120dp"
-      android:layout_height="wrap_content"
-      android:ellipsize="end"
-      android:fontFamily="@font/font_family_medium"
-      android:gravity="right|center_horizontal"
-      android:maxLines="1"
-      android:paddingLeft="10dp"
-      android:paddingRight="10dp"
-      android:singleLine="true"
-      android:textColor="@color/style_color_text_secondary"
-      android:textSize="@dimen/small_text_size"
-      tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck"
-      tools:text="200Mb / 200Mb" />
   </LinearLayout>
 
   <LinearLayout
