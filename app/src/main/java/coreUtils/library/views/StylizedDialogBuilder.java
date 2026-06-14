@@ -42,7 +42,7 @@ public final class StylizedDialogBuilder {
 	private View dialogRootView;
 	private WeakReference<LinearLayout> weakMainContentRef;
 	private WeakReference<View> weakCustomChildViewRef;
-
+	
 	private int dialogMarginPx = -1;
 	
 	public StylizedDialogBuilder(@NonNull BaseActivity<?> activity) {
@@ -117,7 +117,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setDialogTitle(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -126,7 +126,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setDialogMargin(@DimenRes int marginDp) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -136,7 +136,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setTitleVisible(boolean visible) {
 		if (dialogRootView != null) {
@@ -147,7 +147,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder enableBackgroundBlur(int blurRadius) {
 		if (alertDialog == null) return this;
@@ -232,7 +232,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setPositiveButtonIcon(@DrawableRes int iconResId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -271,7 +271,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setNegativeButtonText(@NonNull String text) {
 		if (dialogRootView != null) {
@@ -280,7 +280,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setNegativeButtonText(@StringRes int resId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -289,7 +289,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setNegativeButtonIcon(@Nullable Drawable iconDrawable) {
 		if (dialogRootView != null) {
@@ -300,7 +300,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setNegativeButtonIcon(@DrawableRes int iconResId) {
 		BaseActivity<?> activity = weakActivityRef.get();
@@ -311,11 +311,11 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setOnNegativeClickListener(
-			@NonNull View.OnClickListener listener,
-			boolean shouldCloseAfterExecution) {
+		@NonNull View.OnClickListener listener,
+		boolean shouldCloseAfterExecution) {
 		if (dialogRootView != null) {
 			View btnContainer = dialogRootView.findViewById(R.id.btnDialogLeft);
 			if (btnContainer != null) {
@@ -329,7 +329,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setCloseOnNegativeButtonClick() {
 		if (dialogRootView != null) {
@@ -340,7 +340,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setNegativeButtonVisible(boolean visible) {
 		if (dialogRootView != null) {
@@ -351,7 +351,7 @@ public final class StylizedDialogBuilder {
 		}
 		return this;
 	}
-
+	
 	@NonNull
 	public StylizedDialogBuilder setCloseButtonVisible(boolean visible) {
 		if (dialogRootView != null) {
@@ -419,10 +419,12 @@ public final class StylizedDialogBuilder {
 				
 				if (dialogRootView != null && dialogMarginPx >= 0) {
 					FrameLayout.LayoutParams params =
-							new FrameLayout.LayoutParams(
-									ViewGroup.LayoutParams.MATCH_PARENT,
-									ViewGroup.LayoutParams.WRAP_CONTENT);
-					params.setMargins(dialogMarginPx, dialogMarginPx, dialogMarginPx, dialogMarginPx);
+						new FrameLayout.LayoutParams(
+							ViewGroup.LayoutParams.MATCH_PARENT,
+							ViewGroup.LayoutParams.WRAP_CONTENT);
+					params.setMargins(dialogMarginPx, dialogMarginPx,
+						dialogMarginPx, dialogMarginPx);
+					
 					dialogRootView.setLayoutParams(params);
 				}
 			}
