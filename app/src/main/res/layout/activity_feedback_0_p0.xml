@@ -4,7 +4,6 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/style_color_primary"
   android:orientation="vertical">
 
   <LinearLayout
@@ -22,7 +21,7 @@
       android:importantForAccessibility="no"
       android:padding="10dp"
       android:src="@drawable/ic_arrow_back"
-      android:tint="@color/style_color_icon_inverse"
+      android:tint="@color/style_color_text_primary"
       tools:ignore="UseAppTint" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -34,13 +33,8 @@
       android:maxLines="1"
       android:singleLine="true"
       android:text="@string/label_send_feedback"
-      android:textColor="@color/style_color_text_inverse"
+      android:textColor="@color/style_color_text_primary"
       android:textSize="@dimen/title_text_size"
       tools:ignore="SpUsage,TextSizeCheck" />
   </LinearLayout>
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@color/style_color_primary_dark" />
 </LinearLayout>

@@ -45,7 +45,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 	protected ActivityFeedback0Binding inflateBinding(LayoutInflater inflater) {
 		return ActivityFeedback0Binding.inflate(inflater);
 	}
-
+	
 	@Override
 	protected boolean shouldLockOrientation() {
 		return true;
@@ -176,7 +176,8 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		
 		btnHappy.setOnClickListener(view -> applyReactionSelection(excellent, imgHappy, txtHappy));
 		btnGood.setOnClickListener(view -> applyReactionSelection(good, imgGood, txtGood));
-		btnAverage.setOnClickListener(view -> applyReactionSelection(average, imgAverage, txtAverage));
+		btnAverage.setOnClickListener(view -> applyReactionSelection(average, imgAverage,
+			txtAverage));
 		btnPoor.setOnClickListener(view -> applyReactionSelection(poor, imgPoor, txtPoor));
 		btnAngry.setOnClickListener(view -> applyReactionSelection(angry, imgAngry, txtAngry));
 	}
@@ -262,7 +263,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback0Binding> {
 		binding.reactions.txtAngry.setTextColor(unselectedColor);
 		
 		selectedImage.setSelected(true);
-		selectedTextView.setTextColor(getColor(R.color.color_primary));
+		selectedTextView.setTextColor(getColor(R.color.style_color_text_primary));
 		selectedTextView.setTypeface(bold);
 	}
 	

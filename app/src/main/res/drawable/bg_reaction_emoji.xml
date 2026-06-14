@@ -1,36 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item
-    android:state_selected="true">
+
+  <!--
+      Selected state
+      - Filled with primary text color
+      - Thick border for emphasis
+      - Used for the currently selected item
+  -->
+  <item android:state_selected="true">
     <shape android:shape="oval">
-      <solid android:color="@color/style_color_primary" />
+
+      <solid android:color="@color/style_color_text_primary" />
+
       <stroke
         android:width="2dp"
-        android:color="@color/style_color_primary" />
+        android:color="@color/style_color_text_primary" />
 
       <size
         android:width="50dp"
         android:height="50dp" />
+
     </shape>
   </item>
 
-  <item
-    android:state_pressed="true">
+  <!--
+      Pressed state
+      - Temporary feedback while the user is touching the view
+      - Uses hint color fill with primary border
+  -->
+  <item android:state_pressed="true">
     <shape android:shape="oval">
-      <solid android:color="@color/style_color_primary_light" />
+
+      <solid android:color="@color/style_color_text_hint" />
 
       <stroke
         android:width="2dp"
-        android:color="@color/style_color_primary" />
+        android:color="@color/style_color_text_primary" />
+
       <size
         android:width="50dp"
         android:height="50dp" />
+
     </shape>
   </item>
 
+  <!--
+      Default state
+      - Neutral card background
+      - Subtle border
+      - Displayed when not selected or pressed
+  -->
   <item>
     <shape android:shape="oval">
-      <solid android:color="@color/style_color_card" />
+
+    <solid android:color="@color/style_color_card" />
 
       <stroke
         android:width="1dp"
@@ -39,6 +62,7 @@
       <size
         android:width="50dp"
         android:height="50dp" />
+
     </shape>
   </item>
 

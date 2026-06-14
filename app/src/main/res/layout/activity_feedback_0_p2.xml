@@ -34,6 +34,7 @@
       android:maxLength="100"
       android:maxLines="6"
       android:textColor="@color/style_color_text_primary"
+      android:textCursorDrawable="@drawable/bg_edittext_cursor"
       android:textSize="@dimen/normal_text_size"
       tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,
                 VisualLintTextFieldSize,VisualLintTextFieldSize" />
@@ -44,6 +45,7 @@
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
     android:hint="@string/label_describe_feedback"
     app:boxBackgroundColor="@color/style_color_input_background"
     app:boxBackgroundMode="outline"
@@ -69,6 +71,7 @@
       android:maxLength="500"
       android:maxLines="6"
       android:textColor="@color/style_color_text_primary"
+      android:textCursorDrawable="@drawable/bg_edittext_cursor"
       android:textSize="@dimen/normal_text_size"
       tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck,
                 VisualLintTextFieldSize,VisualLintTextFieldSize" />
@@ -122,13 +125,14 @@
 
       <FrameLayout
         android:id="@+id/btnUploadPic"
-        android:background="@drawable/bg_button_negative"
-        android:clickable="true"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
         android:layout_weight="0.45"
-        android:orientation="vertical">
+        android:background="@drawable/bg_button_negative"
+        android:clickable="true"
+        android:orientation="vertical"
+        tools:ignore="TouchTargetSizeCheck">
 
         <com.google.android.material.imageview.ShapeableImageView
           android:id="@+id/ivAttachmentPreview"
@@ -155,5 +159,4 @@
       </FrameLayout>
     </LinearLayout>
   </com.google.android.material.card.MaterialCardView>
-
 </LinearLayout>
