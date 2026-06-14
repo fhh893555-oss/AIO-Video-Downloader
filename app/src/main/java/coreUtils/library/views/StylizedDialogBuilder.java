@@ -66,6 +66,7 @@ public final class StylizedDialogBuilder {
 		}
 		
 		setPositiveButtonIcon(null);
+		enableSlideUpAnimation();
 		setCancelable(true);
 	}
 	
@@ -149,8 +150,11 @@ public final class StylizedDialogBuilder {
 	
 	@NonNull
 	public StylizedDialogBuilder setDialogDismissListener(OnDismissListener listener) {
-		if (alertDialog != null) {
-			alertDialog.setOnDismissListener(listener);
+		if (alertDialog != null && listener != null) {
+			alertDialog.setOnDismissListener(dialogInterface -> {
+				listener.onDismiss(dialogInterface);
+				close();
+			});
 		}
 		return this;
 	}
@@ -406,6 +410,7 @@ public final class StylizedDialogBuilder {
 	}
 	
 	private void enableBottomPosition() {
+		if (alertDialog == null) return;
 		if (alertDialog.getWindow() != null) {
 			alertDialog.getWindow().setGravity(Gravity.BOTTOM);
 			WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();

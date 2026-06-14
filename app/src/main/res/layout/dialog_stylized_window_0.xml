@@ -111,6 +111,7 @@
         android:textColor="@color/style_color_button_outline"
         android:textSize="@dimen/normal_text_size"
         app:cornerRadius="5dp"
+        android:visibility="gone"
         app:icon="@drawable/ic_close_cross"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
