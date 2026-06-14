@@ -140,11 +140,11 @@
           android:layout_gravity="center"
           android:drawableLeft="@drawable/ic_cloud_upload"
           android:drawablePadding="10dp"
-          android:drawableTint="@color/style_color_text_primary"
+          android:drawableTint="@color/style_color_icon"
           android:fontFamily="@font/font_family_medium"
           android:gravity="center"
           android:text="@string/label_add_image"
-          android:textColor="@color/style_color_text_primary"
+          android:textColor="@color/style_color_icon"
           android:textSize="@dimen/normal_text_size"
           tools:ignore="SpUsage,TextSizeCheck" />
 
