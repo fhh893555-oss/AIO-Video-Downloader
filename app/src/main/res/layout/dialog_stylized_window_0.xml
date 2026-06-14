@@ -18,12 +18,17 @@
     android:orientation="vertical">
 
     <RelativeLayout
+      android:id="@+id/containerTitle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@color/style_color_background_secondary"
-      android:orientation="horizontal">
+      android:orientation="horizontal"
+      android:visibility="visible"
+
+      tools:visibility="gone">
 
       <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/btnCloseDialog"
@@ -62,12 +67,11 @@
       android:id="@+id/mainContent"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
       android:layout_marginTop="10dp"
-      android:layout_marginRight="10dp"
       android:layout_marginBottom="6dp"
-      android:background="@color/style_color_background_secondary"
       android:orientation="vertical"
+
+      tools:background="@color/style_color_background_secondary"
       tools:layout_height="100dp" />
 
     <LinearLayout
@@ -110,8 +114,8 @@
         android:singleLine="true"
         android:textColor="@color/style_color_button_outline"
         android:textSize="@dimen/normal_text_size"
-        app:cornerRadius="5dp"
         android:visibility="gone"
+        app:cornerRadius="5dp"
         app:icon="@drawable/ic_close_cross"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
