@@ -170,6 +170,8 @@ public final class AppCrashedActivity extends BaseActivity<ActivityAppCrashed1Bi
                 String toastMessage = StringHelper.getText(R.string.hint_feedback_sent_thank_you);
                 StylizedToastView.show(AppCrashedActivity.this, toastMessage);
                 binding.actionButtons.btnContinueAnyway.performClick();
+            } else {
+				logger.debug("AppCrashInfo object is null, failed to submit report.");
             }
         });
     }

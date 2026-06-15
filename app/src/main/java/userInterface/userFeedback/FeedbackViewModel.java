@@ -179,7 +179,6 @@ public class FeedbackViewModel extends ViewModel {
 	 * @param lifecycleOwner The lifecycle owner used to bind the background task
 	 *                       (typically Activity or Fragment)
 	 * @param reaction       The user's selected reaction/rating category
-	 * @param subject        The subject or title of the feedback
 	 * @param email          The contact email address of the sender (optional)
 	 * @param message        The detailed feedback message content
 	 * @param screenshot     An optional image file attached to the feedback, or null

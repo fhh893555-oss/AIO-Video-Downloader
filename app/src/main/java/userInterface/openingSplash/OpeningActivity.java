@@ -24,6 +24,7 @@ import dataRepo.appConfigs.AppConfigs;
 import dataRepo.appConfigs.AppConfigsHelper;
 import dataRepo.appConfigs.AppConfigsRepo;
 import dataRepo.userDetails.AppUserRepo;
+import userInterface.appCrashed.AppCrashedActivity;
 import userInterface.appUpdater.AppUpdaterActivity;
 import userInterface.appUpdater.AppUpdaterUtils;
 import userInterface.appUpdater.AppUpdaterUtils.UpdateInfo;
@@ -426,7 +427,7 @@ public final class OpeningActivity extends BaseActivity<ActivityOpening1Binding>
 
         if (isLocaleConfigured) nextActivityToOpen = MainActivity.class;
 
-        destinationIntent = new Intent(this, FeedbackActivity.class);
+        destinationIntent = new Intent(this, AppCrashedActivity.class);
         //destinationIntent = new Intent(this, nextActivityToOpen);
         destinationIntent.getShortExtra(
                 TermsPolicyActivity.KEY_ACTIVITY_LAUNCHED_LOCATION,
