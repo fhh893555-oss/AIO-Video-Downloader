@@ -232,4 +232,21 @@
   <string name="hint_attach_screenshot">Attach a screenshot to help us understand the issue better.</string>
   <string name="label_add_image">Add Image</string>
   <string name="btn_clear_attachment">Clear Attachment</string>
+  <string name="label_privacy_policy">Privacy Policies</string>
+  <string name="label_privacy_settings">Privacy Settings</string>
+  <string name="label_privacy_data_choices">Choose what data we can collect</string>
+  <string name="desc_data_collection_info">Your data stays secure and under your control. We only collect information necessary to improve app functionality and provide support.</string>
+  <string name="label_your_privacy_matters">Your Privacy Matters</string>
+  <string name="label_crash_report">Crash Reports</string>
+  <string name="desc_crash_report">Help us identify and fix bugs</string>
+  <string name="label_analytics">Analytics</string>
+  <string name="desc_usage_analytics">Anonymous usage statistics</string>
+  <string name="label_personalized_rec">Personalized Recommendations</string>
+  <string name="desc_personalized_rec">Improve suggestions and content</string>
+  <string name="label_how_we_use_ur_data">How We Use Your Data</string>
+  <string name="label_ur_data_is_used_to_">Your data is used to:</string>
+  <string name="label_improve_app_performance">Improve app performance</string>
+  <string name="label_provide_customer_support">Provide customer support</string>
+  <string name="label_fix_bug_and_crashes">Fix bugs and crashes</string>
+  <string name="label_deliver_updates_securely">Deliver updates securely</string>
 </resources>

@@ -43,7 +43,7 @@
       android:layout_gravity="center"
       android:importantForAccessibility="no"
       android:src="@drawable/ic_warning_fill"
-      android:tint="@color/color_error"
+      android:tint="@color/style_color_error"
       tools:ignore="UseAppTint" />
   </FrameLayout>
 
