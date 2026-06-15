@@ -121,7 +121,7 @@
           android:id="@+id/tvDownloadError"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_margin="@dimen/_0"
+          android:layout_margin="0dp"
           android:ellipsize="end"
           android:fontFamily="@font/font_family_bold"
           android:gravity="center_vertical"

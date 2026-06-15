@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for a single language selection radio button item in the language
+  ~ picker screen. This component is dynamically inflated for each language
+  ~ option and added to the RadioGroup container.
+  ~
+  ~ Features:
+  ~   - Custom radio button with background drawable for touch feedback
+  ~   - Right arrow icon indicating selection action
+  ~   - Single-line text with ellipsize for long language names
+  ~   - Consistent height (38dp) for uniform item appearance
+  ~
+  ~ The button tint and drawable tint colors are configured for proper
+  ~ visual feedback on selection state changes.
+  -->
 <com.google.android.material.radiobutton.MaterialRadioButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="38dp"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="38dp"
 
-    android:background="@drawable/bg_button_negative"
-    android:button="@drawable/bg_button_radio"
-    android:buttonTint="@color/bg_radio_button"
+  android:background="@drawable/bg_button_negative"
+  android:button="@drawable/bg_button_radio"
+  android:buttonTint="@color/bg_radio_button"
 
-    android:drawableRight="@drawable/ic_arrow_right_small"
-    android:drawableTint="@color/color_primary_variant"
+  android:drawableRight="@drawable/ic_arrow_right_small"
+  android:drawableTint="@color/color_primary_variant"
 
-    android:ellipsize="end"
-    android:fontFamily="@font/font_family_regular"
-    android:gravity="center_vertical"
-    android:maxLines="1"
-    android:paddingLeft="5dp"
+  android:ellipsize="end"
+  android:fontFamily="@font/font_family_regular"
+  android:gravity="center_vertical"
+  android:maxLines="1"
+  android:paddingLeft="5dp"
+  android:paddingTop="2dp"
+  android:paddingRight="5dp"
+  android:paddingBottom="2dp"
+  android:singleLine="true"
+  android:textColor="@color/style_color_text_primary"
+  android:textSize="@dimen/normal_text_size"
+  app:buttonTint="@color/bg_radio_button"
 
-    android:paddingTop="2dp"
-
-    android:paddingRight="5dp"
-    android:paddingBottom="2dp"
-    android:singleLine="true"
-    android:textColor="@color/style_color_text_primary"
-    android:textSize="@dimen/normal_text_size"
-    app:buttonTint="@color/bg_radio_button"
-
-    tools:checked="true"
-    tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck,TouchTargetSizeCheck"
-    tools:text="@string/label_hindi" />
+  tools:checked="true"
+  tools:ignore="SpUsage,VisualLintButtonSize,TextSizeCheck,TouchTargetSizeCheck"
+  tools:text="@string/label_hindi" />
