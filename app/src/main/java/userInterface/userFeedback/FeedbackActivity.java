@@ -29,6 +29,7 @@ import java.util.Objects;
 import coreUtils.base.BaseActivity;
 import coreUtils.library.process.LoggerUtils;
 import coreUtils.library.strings.StringHelper;
+import coreUtils.library.views.CircularLoadingDialog;
 import coreUtils.library.views.StylizedToastView;
 
 /**
@@ -61,6 +62,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	private final LoggerUtils logger = LoggerUtils.from(getClass());
 	private FeedbackViewModel viewModel;
 	private ActivityResultLauncher<String> imagePickerLauncher;
+	private CircularLoadingDialog circularLoadingDialog;
 	
 	/**
 	 * Inflates the activity's layout using view binding and returns the generated
@@ -138,6 +140,24 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		setupButtonClicks();
 		initViewModelObservers();
 		selectExcellentReactionByDefault();
+	}
+	
+	/**
+	 * Called when the activity is being destroyed. This method performs cleanup
+	 * of the loading dialog reference to prevent memory leaks. The reference is
+	 * set to null after the superclass's {@code onDestroy()} method is called.
+	 *
+	 * <p>The dialog itself should have been closed prior to this point via
+	 * {@link #closeLoadingDialog()}. This final cleanup ensures that any
+	 * lingering reference does not prevent garbage collection.
+	 *
+	 * @see android.app.Activity#onDestroy()
+	 * @see #closeLoadingDialog()
+	 */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		circularLoadingDialog = null;
 	}
 	
 	/**
@@ -520,6 +540,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	 */
 	private void observeSubmissionErrors() {
 		getViewModel().getSubmissionError().observe(this, errorMessage -> {
+			closeLoadingDialog();
 			if (errorMessage != null && !errorMessage.isEmpty()) {
 				StylizedToastView.show(FeedbackActivity.this, errorMessage);
 				vibrate();
@@ -544,6 +565,7 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 	 */
 	private void observeSubmissionResult() {
 		getViewModel().getSubmissionSuccess().observe(this, isSuccess -> {
+			closeLoadingDialog();
 			if (isSuccess != null && isSuccess) {
 				StylizedToastView.show(FeedbackActivity.this,
 					StringHelper.getText(R.string.hint_feedback_sent_thank_you));
@@ -699,6 +721,63 @@ public class FeedbackActivity extends BaseActivity<ActivityFeedback1Binding> {
 		String reaction = getViewModel().getSelectedReaction().getValue();
 		DocumentFile attachment = getViewModel().getSelectedScreenshot().getValue();
 		getViewModel().sendFeedback(this, reaction, email, message, attachment);
+		showLoadingDialog();
+	}
+	
+	/**
+	 * Displays the circular loading dialog to indicate that a background operation
+	 * (e.g., submitting feedback, downloading an update, or loading data) is in
+	 * progress. This method creates the dialog lazily (only once) and configures
+	 * it to be non-cancelable with a background blur effect.
+	 *
+	 * <p><strong>Configuration:</strong>
+	 * <ul>
+	 * <li>Dialog is created lazily on first call to avoid unnecessary allocation.</li>
+	 * <li>Cancelable is set to {@code false} to prevent user dismissal.</li>
+	 * <li>Background blur radius is set to 60px (API 31+ falls back to dim).</li>
+	 * <li>Dialog is shown after configuration.</li>
+	 * </ul>
+	 *
+	 * @see CircularLoadingDialog
+	 */
+	private void showLoadingDialog() {
+		try {
+			circularLoadingDialog = null;
+			circularLoadingDialog = new CircularLoadingDialog(this);
+			circularLoadingDialog.setCancelable(true);
+			circularLoadingDialog.enableBackgroundBlur(60);
+			circularLoadingDialog.show();
+		} catch (Exception error) {
+			logger.error("Error showing loading dialog: ", error);
+		}
+	}
+	
+	/**
+	 * Dismisses and closes the circular loading dialog if it is currently showing.
+	 * This method safely handles null references and exceptions to prevent crashes
+	 * when attempting to close a dialog that may have already been released.
+	 *
+	 * <p><strong>Error handling:</strong>
+	 * <ul>
+	 * <li>Checks if the dialog reference is null before attempting to close.</li>
+	 * <li>Any exception during dismissal is caught and logged without crashing.</li>
+	 * <li>After successful close, the dialog reference is set to null.</li>
+	 * </ul>
+	 *
+	 * <p>This method should be called after the background operation completes,
+	 * fails, or when the activity is being destroyed.
+	 *
+	 * @see CircularLoadingDialog#close()
+	 * @see #showLoadingDialog()
+	 */
+	private void closeLoadingDialog() {
+		try {
+			if (circularLoadingDialog != null) {
+				circularLoadingDialog.close();
+			}
+		} catch (Exception error) {
+			logger.error("Error closing loading dialog: ", error);
+		}
 	}
 	
 	/**

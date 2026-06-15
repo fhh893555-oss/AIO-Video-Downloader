@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for a centered circular loading indicator. This component is typically
+  ~ used as an overlay or dialog content to indicate that an operation is in
+  ~ progress (e.g., downloading an update, submitting feedback, or loading data).
+  ~
+  ~ The layout consists of:
+  ~   - A transparent MaterialCardView container with no visible edges.
+  ~   - A FrameLayout with a semi-transparent circular background (50% opacity)
+  ~     providing visual contrast for the progress indicator.
+  ~   - A CircularProgressIndicator showing indeterminate loading animation.
+  ~
+  ~ @see #progressLoading
+  -->
+<com.google.android.material.card.MaterialCardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="10dp"
+  app:cardBackgroundColor="@color/transparent"
+  app:cardCornerRadius="5dp"
+  app:cardElevation="0dp"
+  app:strokeColor="@color/transparent"
+  app:strokeWidth="1dp">
+
+  <!-- Semi-transparent circular background container -->
+  <FrameLayout
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:layout_gravity="center"
+    android:alpha="1"
+    android:background="@drawable/ic_rd_background_color">
+
+    <!-- Indeterminate circular progress indicator -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      android:id="@+id/progressLoading"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:indeterminate="true"
+      android:visibility="visible"
+      app:indicatorSize="60dp"
+      app:trackThickness="6dp"
+      app:indicatorColor="@color/style_color_primary" />
+
+  </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>
