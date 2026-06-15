@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Layout for the update details section in the AppUpdaterActivity.
+  ~ This component displays comprehensive update information including:
+  ~   - Cloud download icon and title ("Update Available")
+  ~   - Description text prompting user to update
+  ~   - Download error container (shown when download fails)
+  ~   - "What's New" changelog card with version name
+  ~   - Update information table (current version, latest version,
+  ~     release date, APK size)
+  -->
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +19,7 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
+  <!-- Cloud download icon with circular background -->
   <FrameLayout
     android:layout_width="70dp"
     android:layout_height="70dp"
@@ -24,42 +37,37 @@
       android:layout_width="50dp"
       android:layout_height="50dp"
       android:layout_gravity="center"
-
       android:importantForAccessibility="no"
       android:src="@drawable/ic_cloud_download"
       android:tint="@color/style_color_primary"
-
       tools:ignore="UseAppTint" />
   </FrameLayout>
 
+  <!-- Title indicating update availability -->
   <com.google.android.material.textview.MaterialTextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-
     android:fontFamily="@font/font_family_bold"
-
     android:text="@string/label_update_available"
     android:textColor="@color/style_color_text_primary"
     android:textSize="@dimen/title_text_size"
-
     tools:ignore="SpUsage,TextSizeCheck" />
 
+  <!-- Description text prompting user to update -->
   <com.google.android.material.textview.MaterialTextView
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginTop="5dp"
-
     android:fontFamily="@font/font_family_regular"
     android:gravity="center"
-
     android:text="@string/desc_update_available"
     android:textColor="@color/style_color_text_secondary"
     android:textSize="@dimen/sub_heading_text_size_v2"
-
     tools:ignore="SpUsage,TextSizeCheck" />
 
+  <!-- Download error card (visible on download failure) -->
   <com.google.android.material.card.MaterialCardView
     android:id="@+id/containerDownloadError"
     android:layout_width="match_parent"
@@ -74,7 +82,6 @@
     app:cardElevation="0dp"
     app:strokeColor="@color/style_color_card_stroke"
     app:strokeWidth="1dp"
-
     tools:visibility="visible">
 
     <LinearLayout
@@ -82,6 +89,7 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
+      <!-- Error icon -->
       <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivError"
         android:layout_width="30dp"
@@ -99,6 +107,7 @@
         app:shapeAppearance="@style/circular_image_view"
         tools:ignore="UseAppTint,ImageContrastCheck" />
 
+      <!-- Error text container -->
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,7 +128,6 @@
           android:maxLines="1"
           android:text="@string/label_download_has_failed"
           android:textColor="@color/style_color_error"
-
           android:textSize="@dimen/message_text_size"
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
 
@@ -135,12 +143,12 @@
           android:text="@string/desc_download_failed_reason"
           android:textColor="@color/style_color_text_secondary"
           android:textSize="@dimen/small_text_size"
-
           tools:ignore="SpUsage,TextSizeCheck,TextContrastCheck" />
       </LinearLayout>
     </LinearLayout>
   </com.google.android.material.card.MaterialCardView>
 
+  <!-- "What's New" and update info card -->
   <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -159,6 +167,7 @@
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
+      <!-- What's New header with version name -->
       <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -167,7 +176,6 @@
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
-
         tools:ignore="UselessParent">
 
         <com.google.android.material.textview.MaterialTextView
@@ -177,11 +185,9 @@
           android:layout_toLeftOf="@id/tvVersionName"
           android:fontFamily="@font/font_family_medium"
           android:gravity="center_vertical"
-
           android:text="@string/label_whats_new"
           android:textColor="@color/style_color_text_primary"
           android:textSize="@dimen/sub_heading_text_size_v2"
-
           tools:ignore="SpUsage,TextSizeCheck" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -199,11 +205,11 @@
           android:paddingBottom="5dp"
           android:textColor="@color/style_color_text_primary"
           android:textSize="@dimen/message_text_size"
-
           tools:ignore="SpUsage,TextSizeCheck"
           tools:text="v2026.05.18 (90)" />
       </RelativeLayout>
 
+      <!-- Changelog text (HTML supported) -->
       <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvVersionChangelog"
         android:layout_width="match_parent"
@@ -217,10 +223,10 @@
         android:paddingBottom="10dp"
         android:textColor="@color/style_color_text_secondary"
         android:textSize="@dimen/small_text_size"
-
         tools:ignore="SpUsage,TextSizeCheck,VisualLintLongText"
         tools:text="@string/text_demo_update_changelog" />
 
+      <!-- Divider -->
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -229,6 +235,7 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/ic_rd_divide_color" />
 
+      <!-- Update information table -->
       <TableLayout
         android:id="@+id/updateInfoTable"
         android:layout_width="match_parent"
@@ -239,12 +246,11 @@
         android:background="@color/style_color_border"
         android:stretchColumns="1">
 
+        <!-- Current version row -->
         <TableRow>
-
           <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:background="@color/style_color_surface_variant"
             android:fontFamily="@font/font_family_regular"
             android:gravity="left|center_vertical"
@@ -252,11 +258,9 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:text="@string/label_current_version"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck" />
 
           <TextView
@@ -270,20 +274,17 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck"
             tools:text="v2026.05.08" />
         </TableRow>
 
+        <!-- Latest version row -->
         <TableRow>
-
           <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:background="@color/style_color_background_secondary"
             android:fontFamily="@font/font_family_regular"
             android:gravity="left|center_vertical"
@@ -291,11 +292,9 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:text="@string/label_latest_version"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck" />
 
           <TextView
@@ -309,20 +308,17 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck"
             tools:text="v2026.05.08" />
         </TableRow>
 
+        <!-- Release date row -->
         <TableRow>
-
           <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:background="@color/style_color_surface_variant"
             android:fontFamily="@font/font_family_regular"
             android:gravity="left|center_vertical"
@@ -330,11 +326,9 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:text="@string/label_release_date"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck" />
 
           <TextView
@@ -348,16 +342,14 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck"
             tools:text="14/06/2026" />
         </TableRow>
 
+        <!-- APK file size row -->
         <TableRow>
-
           <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -368,11 +360,9 @@
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:text="@string/label_apk_size"
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck" />
 
           <TextView
@@ -381,16 +371,13 @@
             android:layout_height="wrap_content"
             android:background="@color/style_color_background_secondary"
             android:fontFamily="@font/font_family_light"
-
             android:gravity="end|center_vertical"
             android:paddingLeft="5dp"
             android:paddingTop="2dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp"
-
             android:textColor="@color/style_color_text_primary"
             android:textSize="@dimen/small_text_size"
-
             tools:ignore="SpUsage,TextSizeCheck"
             tools:text="92mb" />
         </TableRow>
