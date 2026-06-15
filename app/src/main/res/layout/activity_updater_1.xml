@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 TubeAIO. All rights reserved.
+  ~
+  ~ Main layout for the AppUpdaterActivity. This screen displays update information
+  ~ to the user including version details, release date, file size, changelog,
+  ~ and action buttons to start the download or postpone the update.
+  ~
+  ~ Layout structure:
+  ~   - Scrollable content area containing update details (version info, changelog)
+  ~   - Bottom action buttons (Update Now, Remind Later, Visit Official Website)
+  ~
+  ~ The layout fits system windows to handle status bar and navigation bar insets.
+  -->
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/style_color_background"
+  android:fitsSystemWindows="true"
+  android:orientation="vertical">
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/style_color_background"
-    android:fitsSystemWindows="true"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!-- Scrollable update details area -->
+    <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
+
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    android:id="@+id/updateDetails"
-                    layout="@layout/activity_updater_1_p0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </ScrollView>
-
+        <!-- Update details card (version, release date, file size, changelog) -->
         <include
-            android:id="@+id/actionButtons"
-            layout="@layout/activity_updater_1_p1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="5dp" />
-    </LinearLayout>
+          android:id="@+id/updateDetails"
+          layout="@layout/activity_updater_1_p0"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+      </LinearLayout>
+    </ScrollView>
 
+    <!-- Bottom action buttons (Update Now, Remind Later, Visit Official) -->
+    <include
+      android:id="@+id/actionButtons"
+      layout="@layout/activity_updater_1_p1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginLeft="8dp"
+      android:layout_marginTop="0dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginBottom="5dp" />
+  </LinearLayout>
 </LinearLayout>
