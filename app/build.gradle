@@ -29,9 +29,6 @@ android {
 
     buildTypes {
         debug {
-            debuggable true
-            minifyEnabled false
-            buildConfigField "boolean", "IS_DEBUG_MODE_ON", "true"
         }
 
         release {
